@@ -6,15 +6,12 @@
 
 int main()
 {
-    /*
-     * All Lua contexts are held in this structure. We work with it almost
-     * all the time.
-     */
+    // All Lua contexts are held in this structure. We work with it almost all the time.
     lua_State* lua_state = luaL_newstate();
 
-    luaL_openlibs(lua_state); /* Load Lua libraries */
+    luaL_openlibs(lua_state); // Load Lua libraries
 
-    /* Load the file containing the script we are going to run */
+    // Load the file containing the script we are going to run
     int status = luaL_loadfile(lua_state, "script.lua");
     if (status)
     {
@@ -45,7 +42,8 @@ int main()
      * of the stack, so that after it has been called, the table is at the
      * top of the stack.
      */
-    for (int i = 1; i <= 5; i++) {
+    for (int i = 1; i <= 5; i++)
+    {
         lua_pushnumber(lua_state, i);   // Push the table index
         lua_pushnumber(lua_state, i*2); // Push the cell value
         lua_rawset(lua_state, -3);      // Stores the pair in the table
@@ -55,8 +53,8 @@ int main()
     lua_setglobal(lua_state, "foo");
 
     // Ask Lua to run our little script
-    int result = lua_pcall(lua_state, 0, LUA_MULTRET, 0);
-    if (result)
+    int err = lua_pcall(lua_state, 0, LUA_MULTRET, 0);
+    if (err)
     {
         std::cerr << "Failed to run script: " << lua_tostring(lua_state, -1) << "\n";
         exit(1);
