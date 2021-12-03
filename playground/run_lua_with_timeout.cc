@@ -5,6 +5,8 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+#include "../include/avtomat/LuaState.h"
+
 const std::string the_script =
 R"(
 -- An infinite loop
@@ -38,8 +40,8 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 
 int main()
 {
-    // All Lua contexts are held in this structure. We work with it almost all the time.
-    lua_State* lua_state = luaL_newstate();
+    avto::LuaState the_lua_state;
+    auto lua_state = the_lua_state.get();
 
     luaL_openlibs(lua_state); // Load Lua libraries
 
@@ -103,7 +105,6 @@ int main()
     std::cout << "Script returned: " << sum << "\n";
 
     lua_pop(lua_state, 1);  // Take the returned value out of the stack
-    lua_close(lua_state);   // Cya, Lua
 
     return 0;
 }

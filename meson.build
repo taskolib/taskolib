@@ -98,7 +98,7 @@ pkg.generate(lib,
 
 ## Tests
 
-serverlib_dep = declare_dependency(
+dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
     dependencies : deps,
@@ -109,11 +109,26 @@ serverlib_dep = declare_dependency(
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : serverlib_dep,
+        dependencies : dep,
         include_directories : inc,
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
+)
+
+
+## "Playground" executables
+
+executable('run_lua',
+    files(['playground/run_lua.cc']),
+    dependencies : dep
+)
+
+executable('run_lua_with_timeout',
+    files([
+        'playground/run_lua_with_timeout.cc',
+        ]),
+    dependencies : dep
 )
 
 
