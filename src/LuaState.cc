@@ -86,7 +86,12 @@ std::string LuaState::pop_string()
 {
     throw_if_closed();
 
-    std::string str{ lua_tostring(state_, -1) };
+    const char* lua_str = lua_tostring(state_, -1);
+
+    if (lua_str == nullptr)
+        throw hlc::Error("Unable to pop string from LUA stack");
+
+    std::string str{ lua_str };
     lua_pop(state_, 1);
 
     return str;

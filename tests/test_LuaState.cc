@@ -47,19 +47,47 @@ TEST_CASE("LuaState: Move constructor", "[LuaState]")
     REQUIRE(state2.get() != nullptr);
 }
 
+TEST_CASE("LuaState: close()", "[LuaState]")
+{
+    LuaState state;
+    REQUIRE(state.get() != nullptr);
+
+    state.close();
+    REQUIRE(state.get() == nullptr);
+
+    state.close();
+    REQUIRE(state.get() == nullptr);
+}
+
 TEST_CASE("LuaState: get()", "[LuaState]")
 {
-    LuaState state1;
-    REQUIRE(state1.get() != nullptr);
+    LuaState state;
+    REQUIRE(state.get() != nullptr);
+
+    state.close();
+    REQUIRE(state.get() == nullptr);
 }
 
 TEST_CASE("LuaState: load_string()", "[LuaState]")
 {
     LuaState state;
 
-    state.load_string("");
-    state.load_string("local a = 2");
-    REQUIRE_THROWS_AS(state.load_string("locally a = 2"), hlc::Error); // syntax error
+    SECTION("Valid LUA strings")
+    {
+        state.load_string("");
+        state.load_string("local a = 2");
+    }
+
+    SECTION("Syntax error")
+    {
+        REQUIRE_THROWS_AS(state.load_string("locally a = 2"), hlc::Error);
+    }
+
+    SECTION("Exception thrown when called on closed state")
+    {
+        state.close();
+        REQUIRE_THROWS_AS(state.load_string(""), hlc::Error);
+    }
 }
 
 TEST_CASE("LuaState: operator=(LuaState&&) (move assignment)", "[LuaState]")
@@ -84,6 +112,21 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
     auto initial_stack_pos = lua_gettop(state.get());
     lua_pushstring(state.get(), "Test");
 
-    REQUIRE(state.pop_string() == "Test");
-    REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
+    SECTION("String can be retrieved and stack position is adjusted")
+    {
+        REQUIRE(state.pop_string() == "Test");
+        REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
+    }
+
+    SECTION("Exception thrown when called on closed state")
+    {
+        state.close();
+        REQUIRE_THROWS_AS(state.pop_string(), hlc::Error);
+    }
+
+    SECTION("Exception thrown when there is nothing to pop")
+    {
+        state.pop_string();
+        REQUIRE_THROWS_AS(state.pop_string(), hlc::Error);
+    }
 }

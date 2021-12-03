@@ -66,9 +66,18 @@ public:
     ~LuaState() noexcept;
 
     /**
+     * Close the LUA state.
+     * After closing, most member functions will throw an exception when called. The
+     * object can be safely deleted, however. The function may be called on an already
+     * closed object.
+     */
+    void close() noexcept;
+
+    /**
      * Return a pointer to the LUA state.
-     * This pointer can be used to call functions from the LUA C library directly.
-     * Calling lua_close() on it leads to undefined behavior.
+     * This pointer is null if the LUA state has been closed. Otherwise, it can be used to
+     * call functions from the LUA C library directly. Calling lua_close() on it leads to
+     * undefined behavior.
      */
     lua_State* get() const noexcept { return state_; }
 
@@ -96,9 +105,6 @@ public:
 
 private:
     lua_State* state_ = nullptr;
-
-    // Close the LUA state if one is open and set the state pointer to nullptr.
-    void close() noexcept;
 
     // Throw hlc::Error if this LUA state has already been closed (or moved from).
     void throw_if_closed();
