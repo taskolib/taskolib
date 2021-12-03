@@ -82,6 +82,22 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
     return *this;
 }
 
+double LuaState::pop_number()
+{
+    throw_if_closed();
+
+    int success = 0;
+
+    double val = lua_tonumberx(state_, -1, &success);
+
+    if (!success)
+        throw hlc::Error("Cannot pop number from LUA stack");
+
+    lua_pop(state_, 1);
+
+    return val;
+}
+
 std::string LuaState::pop_string()
 {
     throw_if_closed();

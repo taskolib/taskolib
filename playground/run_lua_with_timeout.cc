@@ -85,12 +85,7 @@ int main()
         exit(1);
     }
 
-    // Get the returned value at the top of the stack (index -1)
-    double sum = lua_tonumber(lua_state, -1);
-
-    std::cout << "Script returned: " << sum << "\n";
-
-    lua_pop(lua_state, 1);  // Take the returned value out of the stack
+    std::cout << "Script returned: " << the_lua_state.pop_number() << "\n";
 
     return 0;
 }

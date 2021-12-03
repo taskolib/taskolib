@@ -100,7 +100,18 @@ public:
      */
     LuaState& operator=(LuaState&& other) noexcept;
 
-    /// Pop a string from the LUA stack and return it.
+    /**
+     * Pop a number from the LUA stack and return it.
+     * \exception hlc::Error is thrown if there is no value to pop from the stack or if
+     *            it cannot be converted to a number.
+     */
+    double pop_number();
+
+    /**
+     * Pop a string from the LUA stack and return it.
+     * \exception hlc::Error is thrown if there is no value to pop from the stack or if
+     *            it cannot be converted to a string.
+     */
     std::string pop_string();
 
 private:

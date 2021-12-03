@@ -105,6 +105,32 @@ TEST_CASE("LuaState: operator=(LuaState&&) (move assignment)", "[LuaState]")
     REQUIRE(state2.get() == state1_ptr);
 }
 
+TEST_CASE("LuaState: pop_number()", "[LuaState]")
+{
+    LuaState state;
+
+    auto initial_stack_pos = lua_gettop(state.get());
+    lua_pushnumber(state.get(), 42.0);
+
+    SECTION("Number can be retrieved and stack position is adjusted")
+    {
+        REQUIRE(state.pop_number() == 42.0);
+        REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
+    }
+
+    SECTION("Exception thrown when called on closed state")
+    {
+        state.close();
+        REQUIRE_THROWS_AS(state.pop_number(), hlc::Error);
+    }
+
+    SECTION("Exception thrown when there is nothing to pop")
+    {
+        state.pop_number();
+        REQUIRE_THROWS_AS(state.pop_number(), hlc::Error);
+    }
+}
+
 TEST_CASE("LuaState: pop_string()", "[LuaState]")
 {
     LuaState state;
