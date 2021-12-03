@@ -69,7 +69,7 @@ void LuaState::load_string(const std::string& script)
     if (err)
     {
         // If something went wrong, error message is at the top of the stack
-        throw Error(cat("Cannot precompile script: ", lua_tostring(state_, -1)));
+        throw Error(cat("Cannot precompile script: ", pop_string()));
     }
 }
 
@@ -80,6 +80,16 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
     state_ = other.state_;
     other.state_ = nullptr;
     return *this;
+}
+
+std::string LuaState::pop_string()
+{
+    throw_if_closed();
+
+    std::string str{ lua_tostring(state_, -1) };
+    lua_pop(state_, 1);
+
+    return str;
 }
 
 void LuaState::throw_if_closed()

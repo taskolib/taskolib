@@ -25,6 +25,7 @@
 #include <type_traits>
 #include <gul14/catch.h>
 #include <hlc/util/exceptions.h>
+#include <lua.h>
 #include "../include/avtomat/LuaState.h"
 
 using namespace avto;
@@ -74,4 +75,15 @@ TEST_CASE("LuaState: operator=(LuaState&&) (move assignment)", "[LuaState]")
     state2 = std::move(state1);
     REQUIRE(state1.get() == nullptr);
     REQUIRE(state2.get() == state1_ptr);
+}
+
+TEST_CASE("LuaState: pop_string()", "[LuaState]")
+{
+    LuaState state;
+
+    auto initial_stack_pos = lua_gettop(state.get());
+    lua_pushstring(state.get(), "Test");
+
+    REQUIRE(state.pop_string() == "Test");
+    REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
 }

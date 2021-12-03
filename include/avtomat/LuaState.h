@@ -91,6 +91,9 @@ public:
      */
     LuaState& operator=(LuaState&& other) noexcept;
 
+    /// Pop a string from the LUA stack and return it.
+    std::string pop_string();
+
 private:
     lua_State* state_ = nullptr;
 
