@@ -10,17 +10,9 @@
 const std::string the_script =
 R"(
 -- An infinite loop
-io.write("The table the script received has:\n");
-x = 0
-for i = 1, #foo do
-  print(i, foo[i])
-  x = x + foo[i]
-end
 while true do
     io.write("Infinite loop!\n");
 end
-io.write("Returning data back to C\n");
-return x
 )";
 
 std::chrono::steady_clock::time_point t0;
@@ -28,7 +20,7 @@ std::chrono::steady_clock::time_point t0;
 
 void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 {
-    constexpr int timeout_s = 5;
+    constexpr int timeout_s = 3;
 
     if (gul14::toc(t0) > timeout_s)
     {
@@ -46,13 +38,7 @@ int main()
     luaL_openlibs(lua_state); // Load Lua libraries
 
     // Load the script we are going to run from the string
-    int status = luaL_loadstring(lua_state, the_script.c_str());
-    if (status)
-    {
-        // If something went wrong, error message is at the top of the stack
-        std::cerr << "Couldn't load script: " << lua_tostring(lua_state, -1) << "\n";
-        exit(1);
-    }
+    the_lua_state.load_string(the_script);
 
     /*
      * Ok, now here we go: We pass data to the lua script on the stack.

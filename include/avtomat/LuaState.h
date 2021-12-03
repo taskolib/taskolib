@@ -25,6 +25,8 @@
 #ifndef AVTOMAT_LUASTATE_H_
 #define AVTOMAT_LUASTATE_H_
 
+#include <string>
+
 struct lua_State; // Forward declaration of struct lua_State from the LUA headers
 
 
@@ -36,8 +38,8 @@ namespace avto {
  * It offers only a small subset of the functionalities of LUA.
  *
  * \note
- * LuaState is a move-only class. Moved-from objects can be deleted safely, but other
- * operations on them invoke undefined behavior.
+ * LuaState is a move-only class. Moved-from objects represent a "closed" LUA state. They
+ * can be deleted safely, but other operations on them may invoke undefined behavior.
  */
 class LuaState
 {
@@ -70,13 +72,22 @@ public:
      */
     lua_State* get() const noexcept { return state_; }
 
+    /**
+     * Load a LUA script from a string without running it.
+     * The script is precompiled into a chunk and its syntax is checked.
+     * \exception hlc::Error is thrown if a syntax error is found, if there is
+     *            insufficient memory, or if the LUA state is closed.
+     */
+    void load_string(const std::string& script);
+
     /// Copy assignment is deleted.
     LuaState& operator=(const LuaState& other) = delete;
 
     /**
      * Move assignment.
      * The existing LUA state is closed and the assigned one is taken over. The moved-from
-     * state can be deleted safely but other operations on it invoke undefined behavior.
+     * state can be deleted safely but other operations on it may invoke undefined
+     * behavior.
      */
     LuaState& operator=(LuaState&& other) noexcept;
 
@@ -85,6 +96,9 @@ private:
 
     // Close the LUA state if one is open and set the state pointer to nullptr.
     void close() noexcept;
+
+    // Throw hlc::Error if this LUA state has already been closed (or moved from).
+    void throw_if_closed();
 };
 
 

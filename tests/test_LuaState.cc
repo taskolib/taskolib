@@ -24,6 +24,7 @@
 
 #include <type_traits>
 #include <gul14/catch.h>
+#include <hlc/util/exceptions.h>
 #include "../include/avtomat/LuaState.h"
 
 using namespace avto;
@@ -49,6 +50,15 @@ TEST_CASE("LuaState: get()", "[LuaState]")
 {
     LuaState state1;
     REQUIRE(state1.get() != nullptr);
+}
+
+TEST_CASE("LuaState: load_string()", "[LuaState]")
+{
+    LuaState state;
+
+    state.load_string("");
+    state.load_string("local a = 2");
+    REQUIRE_THROWS_AS(state.load_string("locally a = 2"), hlc::Error); // syntax error
 }
 
 TEST_CASE("LuaState: operator=(LuaState&&) (move assignment)", "[LuaState]")

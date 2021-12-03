@@ -22,10 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/cat.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include "avtomat/Error.h"
 #include "avtomat/LuaState.h"
+
+using gul14::cat;
 
 namespace avto {
 
@@ -58,6 +61,18 @@ void LuaState::close() noexcept
     state_ = nullptr;
 }
 
+void LuaState::load_string(const std::string& script)
+{
+    throw_if_closed();
+
+    int err = luaL_loadstring(state_, script.c_str());
+    if (err)
+    {
+        // If something went wrong, error message is at the top of the stack
+        throw Error(cat("Cannot precompile script: ", lua_tostring(state_, -1)));
+    }
+}
+
 LuaState& LuaState::operator=(LuaState&& other) noexcept
 {
     close();
@@ -65,6 +80,12 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
     state_ = other.state_;
     other.state_ = nullptr;
     return *this;
+}
+
+void LuaState::throw_if_closed()
+{
+    if (state_ == nullptr)
+        throw Error("LUA state is already closed");
 }
 
 
