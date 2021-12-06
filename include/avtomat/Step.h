@@ -37,6 +37,10 @@ namespace avto {
 class Step
 {
 public:
+    /// An enum class for differentiating the different types of step.
+    enum class Type { task_step, if_step, else_step, elseif_step, end_step, while_step,
+                      try_step, catch_step };
+
     /**
      * Return the script.
      *
@@ -55,14 +59,21 @@ public:
      */
     const std::string& get_script() const { return script_; }
 
+    /// Return the type of this step.
+    Type get_type() const noexcept { return type_; }
+
     /**
      * Set the script that should be executed when this step is run.
      * At this point, no syntax or semantics check takes place.
      */
     void set_script(const std::string& script) { script_ = script; }
 
+    /// Set the type of this step.
+    void set_type(Type type) { type_ = type; }
+
 private:
     std::string script_;
+    Type type_{ Type::task_step };
 };
 
 
