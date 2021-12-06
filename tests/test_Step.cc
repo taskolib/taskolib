@@ -44,6 +44,25 @@ TEST_CASE("Step: get_script()", "[Step]")
     REQUIRE(step.get_script() == "a = 42");
 }
 
+TEST_CASE("Step: get_type()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_type() == Step::Type::task_step);
+    step.set_type(Step::Type::catch_step);
+    REQUIRE(step.get_type() == Step::Type::catch_step);
+    step.set_type(Step::Type::if_step);
+    REQUIRE(step.get_type() == Step::Type::if_step);
+}
+
+TEST_CASE("Step: set_type()", "[Step]")
+{
+    Step step;
+    step.set_type(Step::Type::while_step);
+    REQUIRE(step.get_type() == Step::Type::while_step);
+    step.set_type(Step::Type::end_step);
+    REQUIRE(step.get_type() == Step::Type::end_step);
+}
+
 TEST_CASE("Step: set_script()", "[Step]")
 {
     Step step;
