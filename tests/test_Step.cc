@@ -40,4 +40,13 @@ TEST_CASE("Step: get_script()", "[Step]")
 {
     Step step;
     REQUIRE(step.get_script() == "");
+    step.set_script("a = 42");
+    REQUIRE(step.get_script() == "a = 42");
+}
+
+TEST_CASE("Step: set_script()", "[Step]")
+{
+    Step step;
+    step.set_script("test");
+    REQUIRE(step.get_script() == "test");
 }
