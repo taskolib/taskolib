@@ -31,15 +31,23 @@ namespace avto {
 
 
 /**
- * A step holds a script and can execute it.
- * Steps are the building blocks for sequences.
+ * A step is the main building block of a sequence.
+ *
+ * Each step consists of a label, a script, and various other attributes.
+ * Steps can be of different types (see Step::Type) - for instance, "task" steps hold a
+ * script that can simply be executed, "if" steps hold a script that can be evaluated to
+ * determine if a condition is fulfilled, "end" steps mark the closing of a block in a
+ * sequence.
  */
 class Step
 {
 public:
     /// An enum for differentiating the different types of step.
-    enum Type { type_task, type_if, type_else, type_elseif, type_end, type_while,
-                type_try, type_catch };
+    enum Type
+    {
+        type_task, type_if, type_else, type_elseif, type_end, type_while, type_try,
+        type_catch
+    };
 
     /**
      * Return the script.
@@ -64,7 +72,7 @@ public:
 
     /**
      * Set the script that should be executed when this step is run.
-     * At this point, no syntax or semantics check takes place.
+     * Syntax or semantics of the script are not checked.
      */
     void set_script(const std::string& script) { script_ = script; }
 
