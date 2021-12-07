@@ -1,0 +1,200 @@
+##################################################################################################
+stages:
+    - build
+    - test
+
+##################################################################################################
+build-job-focal:
+    stage: build
+    extends:
+        - .setup_focal
+        - .meson_build
+
+test-job-focal:
+    stage: test
+    extends:
+        - .setup_focal
+        - .meson_test
+    needs:
+        - job: build-job-focal
+          artifacts: true
+
+##################################################################################################
+build-job-bionic:
+    stage: build
+    extends:
+        - .setup_bionic
+        - .meson_build
+
+test-job-bionic:
+    stage: test
+    extends:
+        - .setup_bionic
+        - .meson_test
+    needs:
+        - job: build-job-bionic
+          artifacts: true
+
+##################################################################################################
+build-job-stretch:
+    stage: build
+    extends:
+        - .setup_stretch
+        - .meson_build
+
+test-job-stretch:
+    stage: test
+    extends:
+        - .setup_stretch
+        - .meson_test
+    needs:
+        - job: build-job-stretch
+          artifacts: true
+
+##################################################################################################
+build-job-buster:
+    stage: build
+    extends:
+        - .setup_buster
+        - .meson_build
+
+test-job-buster:
+    stage: test
+    extends:
+        - .setup_buster
+        - .meson_test
+    needs:
+        - job: build-job-buster
+          artifacts: true
+
+##################################################################################################
+# Now the templates ...
+.meson_build:
+    script:
+        - echo "================================================================================"
+        - echo "Build library project with meson/ninja ..."
+        - ls /export/doocs/lib/pkgconfig
+        - meson setup build.release
+            --pkg-config-path=${CI_PROJECT_DIR}/lib/pkgconfig:/export/doocs/lib/pkgconfig
+            --buildtype=release
+            --prefix=/export/doocs
+            --libdir=lib
+            --includedir=lib/include
+        - ninja -C build.release
+        - echo "... done."
+    artifacts:
+        paths:
+            - build.release
+        expire_in: 1 week
+
+.meson_test:
+    script:
+        - echo "================================================================================"
+        - echo "Test library project with meson/ninja ..."
+        - cd build.release; ./libavtomat_test
+        - echo "... done."
+
+.setup_bionic:
+    image: ubuntu:18.04
+    tags:
+        - ubuntu18
+    before_script:
+        # Install build dependencies
+        - echo "Install the basics (wget and gnupg) for setting up the docker bionic image ..."
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            apt update && apt install -y wget gnupg)
+        # Add DOOCS repo with key
+        - echo "Installing MCS DOOCS package repository with key ..."
+        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
+        - echo "deb http://doocspkgs.desy.de/pub/doocs bionic main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        - echo "deb-src http://doocspkgs.desy.de/pub/doocs bionic main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        # Update APT cache
+        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
+        # Install part of the packages required to compile and link DOOCS core libraries on a bionic system
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev build-essential
+            binutils autotools-dev clang gcc-doc fakeroot debhelper cmake ninja-build meson pkg-config liblua5.3-dev)
+        # FIXME Just to make it work for now, use existing libs.
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+        - export DOOCSARCH=Ubuntu-18.04-x86_64
+
+.setup_focal:
+    image: ubuntu:20.04
+    tags:
+        - ubuntu20
+    before_script:
+        # Install build dependencies
+        - echo "Install the basics (wget and gnupg) for setting up the docker focal image ..."
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            apt update && apt install -y wget gnupg)
+        # Add DOOCS repo with key
+        - echo "Installing MCS DOOCS package repository with key ..."
+        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
+        - echo "deb http://doocspkgs.desy.de/pub/doocs focal main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        - echo "deb-src http://doocspkgs.desy.de/pub/doocs focal main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        # Update APT cache
+        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
+        # Install part of the packages required to compile and link DOOCS core libraries on a focal system
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
+            build-essential binutils autotools-dev clang gcc-doc dh-exec dh-autoreconf cmake ninja-build meson pkg-config liblua5.3-dev)
+        # FIXME Just to make it work for now, use existing libs.
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+        - export DOOCSARCH=Ubuntu-20.04-x86_64
+
+.setup_stretch:
+    image: debian:stretch
+    tags:
+        - debian9
+    before_script:
+        # Install build dependencies
+        - echo "Install the basics (wget and gnupg) for setting up the docker stretch image ..."
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            apt update && apt install -y wget gnupg)
+        # Add DOOCS repo with key
+        - echo "Installing MCS DOOCS package repository with key ..."
+        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
+        - echo "deb http://doocspkgs.desy.de/pub/doocs stretch main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        - echo "deb-src http://doocspkgs.desy.de/pub/doocs stretch main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        # Update APT cache
+        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
+        # Install part of the packages required to compile and link DOOCS core libraries on a stretch system
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
+            build-essential binutils autotools-dev clang dh-exec dh-autoreconf expect fakeroot cmake ninja-build meson pkg-config
+            liblua5.3-dev)
+        # FIXME Just to make it work for now, use existing libs.
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+        - export DOOCSARCH=Debian-9-x86_64
+
+.setup_buster:
+    image: debian:10.10
+    tags:
+        - debian10
+    before_script:
+        # Install build dependencies
+        - echo "Install the basics (wget and gnupg) for setting up the docker buster image ..."
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            apt update && apt install -y wget gnupg)
+        # Add DOOCS repo with key
+        - echo "Installing MCS DOOCS package repository with key ..."
+        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
+        - echo "deb http://doocspkgs.desy.de/pub/doocs buster main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        - echo "deb-src http://doocspkgs.desy.de/pub/doocs buster main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
+        # Update APT cache
+        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
+        # Install part of the packages required to compile and link DOOCS core libraries on a buster system
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
+            build-essential binutils autotools-dev clang dh-exec dh-autoreconf cmake ninja-build meson pkg-config liblua5.3-dev)
+        # FIXME Just to make it work for now, use existing libs.
+        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+        - export DOOCSARCH=Debian-10-x86_64
