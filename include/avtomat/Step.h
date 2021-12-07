@@ -25,10 +25,13 @@
 #ifndef AVTOMAT_STEP_H_
 #define AVTOMAT_STEP_H_
 
+#include <chrono>
 #include <string>
 
 namespace avto {
 
+using Clock = std::chrono::system_clock;
+using Timestamp = std::chrono::time_point<Clock>;
 
 /**
  * A step is the main building block of a sequence.
@@ -76,24 +79,59 @@ public:
      */
     const std::string& get_script() const { return script_; }
 
+    /**
+     * Return the timestamp of the last execution of this step's script.
+     * A default-constructed `Timestamp{}` is returned to indicate that the object was
+     * never executed since its creation.
+     */
+    Timestamp get_time_of_last_execution() const { return time_of_last_execution_; }
+
+    /**
+     * Return the timestamp of the last modification of this step's script or label.
+     * A default-constructed `Timestamp{}` is returned to indicate that the object was
+     * never modified since its creation.
+     */
+    Timestamp get_time_of_last_modification() const { return time_of_last_modification_; }
+
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
 
-    /// Set the label.
-    void set_label(const std::string& label) { label_ = label; }
+    /**
+     * Set the label.
+     * This call also updates the time of last modification to the current system time.
+     */
+    void set_label(const std::string& label);
 
     /**
      * Set the script that should be executed when this step is run.
      * Syntax or semantics of the script are not checked.
      */
-    void set_script(const std::string& script) { script_ = script; }
+    void set_script(const std::string& script);
 
-    /// Set the type of this step.
-    void set_type(Type type) { type_ = type; }
+    /**
+     * Set the timestamp of the last execution of this step's script.
+     * This function should be called when an external execution engine starts the
+     * embedded script or when the Step has been restored from serialized form.
+     */
+    void set_time_of_last_execution(Timestamp t) { time_of_last_execution_ = t; }
+
+    /**
+     * Set the timestamp of the last modification of this step's script or label.
+     * This function is only useful to restore a step from some serialized form, e.g. from
+     * a file.
+     */
+    void set_time_of_last_modification(Timestamp t) { time_of_last_modification_ = t; }
+
+    /**
+     * Set the type of this step.
+     * This call also updates the time of last modification to the current system time.
+     */
+    void set_type(Type type);
 
 private:
     std::string label_;
     std::string script_;
+    Timestamp time_of_last_modification_, time_of_last_execution_;
     Type type_{ type_task };
 };
 
