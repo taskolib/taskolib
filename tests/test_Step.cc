@@ -36,6 +36,14 @@ TEST_CASE("Step: Default constructor", "[Step]")
     Step s;
 }
 
+TEST_CASE("Step: get_label()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_label() == "");
+    step.set_label("Do nothing");
+    REQUIRE(step.get_label() == "Do nothing");
+}
+
 TEST_CASE("Step: get_script()", "[Step]")
 {
     Step step;
@@ -52,6 +60,15 @@ TEST_CASE("Step: get_type()", "[Step]")
     REQUIRE(step.get_type() == Step::type_catch);
     step.set_type(Step::type_if);
     REQUIRE(step.get_type() == Step::type_if);
+}
+
+TEST_CASE("Step: set_label()", "[Step]")
+{
+    Step step;
+    step.set_label("Do nothing");
+    REQUIRE(step.get_label() == "Do nothing");
+    step.set_label("Do something");
+    REQUIRE(step.get_label() == "Do something");
 }
 
 TEST_CASE("Step: set_type()", "[Step]")

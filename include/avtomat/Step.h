@@ -50,6 +50,15 @@ public:
     };
 
     /**
+     * Return the label of the step.
+     *
+     * \note
+     * This function returns a reference to an internal member variable, so be aware of
+     * lifetime implications.
+     */
+    const std::string& get_label() const { return label_; }
+
+    /**
      * Return the script.
      *
      * \note
@@ -70,6 +79,9 @@ public:
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
 
+    /// Set the label.
+    void set_label(const std::string& label) { label_ = label; }
+
     /**
      * Set the script that should be executed when this step is run.
      * Syntax or semantics of the script are not checked.
@@ -80,6 +92,7 @@ public:
     void set_type(Type type) { type_ = type; }
 
 private:
+    std::string label_;
     std::string script_;
     Type type_{ type_task };
 };
