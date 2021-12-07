@@ -82,6 +82,12 @@ public:
     lua_State* get() const noexcept { return state_; }
 
     /**
+     * Retrieve the global variable with the specified name, push its value onto the LUA
+     * stack and return its type.
+     */
+    int get_global(const std::string& global_var_name);
+
+    /**
      * Load a LUA script from a string without running it.
      * The script is precompiled into a chunk and its syntax is checked.
      * \exception hlc::Error is thrown if a syntax error is found, if there is
@@ -100,6 +106,9 @@ public:
      */
     LuaState& operator=(LuaState&& other) noexcept;
 
+    /// Push a number onto the LUA stack.
+    void push_number(double value);
+
     /**
      * Pop a number from the LUA stack and return it.
      * \exception hlc::Error is thrown if there is no value to pop from the stack or if
@@ -113,6 +122,12 @@ public:
      *            it cannot be converted to a string.
      */
     std::string pop_string();
+
+    /**
+     * Pops a value from the LUA stack and assigns it to the global variable with the
+     * specified name.
+     */
+    void set_global(const std::string& global_var_name);
 
 private:
     lua_State* state_ = nullptr;

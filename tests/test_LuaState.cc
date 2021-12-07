@@ -68,6 +68,17 @@ TEST_CASE("LuaState: get()", "[LuaState]")
     REQUIRE(state.get() == nullptr);
 }
 
+TEST_CASE("LuaState: get_global()", "[LuaState]")
+{
+    LuaState state;
+    REQUIRE(state.get_global("pippo") == LUA_TNIL);
+
+    state.push_number(42.0);
+    state.set_global("pippo");
+
+    REQUIRE(state.get_global("pippo") == LUA_TNUMBER);
+}
+
 TEST_CASE("LuaState: load_string()", "[LuaState]")
 {
     LuaState state;
@@ -155,4 +166,25 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
         state.pop_string();
         REQUIRE_THROWS_AS(state.pop_string(), hlc::Error);
     }
+}
+
+TEST_CASE("LuaState: push_number()", "[LuaState]")
+{
+    LuaState state;
+
+    auto initial_stack_pos = lua_gettop(state.get());
+
+    state.push_number(42.0);
+    REQUIRE(lua_gettop(state.get()) == initial_stack_pos + 1);
+    REQUIRE(state.pop_number() == 42.0);
+}
+
+TEST_CASE("LuaState: set_global()", "[LuaState]")
+{
+    LuaState state;
+
+    state.push_number(42.0);
+    state.set_global("pippo");
+
+    REQUIRE(state.get_global("pippo") == LUA_TNUMBER);
 }

@@ -61,6 +61,13 @@ void LuaState::close() noexcept
     state_ = nullptr;
 }
 
+int LuaState::get_global(const std::string& global_var_name)
+{
+    throw_if_closed();
+
+    return lua_getglobal(state_, global_var_name.c_str());
+}
+
 void LuaState::load_string(const std::string& script)
 {
     throw_if_closed();
@@ -111,6 +118,20 @@ std::string LuaState::pop_string()
     lua_pop(state_, 1);
 
     return str;
+}
+
+void LuaState::push_number(double value)
+{
+    throw_if_closed();
+
+    lua_pushnumber(state_, value);
+}
+
+void LuaState::set_global(const std::string& global_var_name)
+{
+    throw_if_closed();
+
+    lua_setglobal(state_, global_var_name.c_str());
 }
 
 void LuaState::throw_if_closed()

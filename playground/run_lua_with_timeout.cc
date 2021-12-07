@@ -32,20 +32,19 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 
 int main()
 {
-    avto::LuaState the_lua_state;
-    auto lua_state = the_lua_state.get();
+    avto::LuaState lua_state;
 
-    luaL_openlibs(lua_state); // Load Lua libraries
+    luaL_openlibs(lua_state.get()); // Load Lua libraries
 
     // Load the script we are going to run from the string
-    the_lua_state.load_string(the_script);
+    lua_state.load_string(the_script);
 
     /*
      * Ok, now here we go: We pass data to the lua script on the stack.
      * That is, we first have to prepare Lua's virtual stack the way we
      * want the script to receive it, then ask Lua to run it.
      */
-    lua_newtable(lua_state);    // We will pass a table
+    lua_newtable(lua_state.get());    // We will pass a table
 
     /*
      * To put values into the table, we first push the index, then the
@@ -64,28 +63,28 @@ int main()
      */
     for (int i = 1; i <= 5; i++)
     {
-        lua_pushnumber(lua_state, i);   // Push the table index
-        lua_pushnumber(lua_state, i*2); // Push the cell value
-        lua_rawset(lua_state, -3);      // Stores the pair in the table
+        lua_state.push_number(i);   // Push the table index
+        lua_state.push_number(i*2); // Push the cell value
+        lua_rawset(lua_state.get(), -3);      // Stores the pair in the table
     }
 
     // By what name is the script going to reference our table?
-    lua_setglobal(lua_state, "foo");
+    lua_state.set_global("foo");
 
     // Install a hook that is called after every (1) LUA instruction
-    lua_sethook(lua_state, check_script_timeout, LUA_MASKCOUNT, 1);
+    lua_sethook(lua_state.get(), check_script_timeout, LUA_MASKCOUNT, 1);
 
     t0 = gul14::tic();
 
     // Ask Lua to run our little script
-    int err = lua_pcall(lua_state, 0, LUA_MULTRET, 0);
+    int err = lua_pcall(lua_state.get(), 0, LUA_MULTRET, 0);
     if (err)
     {
-        std::cerr << "Error while executing script: " << lua_tostring(lua_state, -1) << "\n";
+        std::cerr << "Error while executing script: " << lua_tostring(lua_state.get(), -1) << "\n";
         exit(1);
     }
 
-    std::cout << "Script returned: " << the_lua_state.pop_number() << "\n";
+    std::cout << "Script returned: " << lua_state.pop_number() << "\n";
 
     return 0;
 }
