@@ -221,3 +221,23 @@ TEST_CASE("LuaState: set_global()", "[LuaState]")
 
     REQUIRE(state.get_global("pippo") == LUA_TNUMBER);
 }
+
+TEST_CASE("LuaState: set_table()", "[LuaState]")
+{
+    LuaState state;
+
+    SECTION("Store value 42 at table index 1")
+    {
+        state.create_table();
+        state.push_number(1);
+        state.push_number(42.0);
+        state.set_table(-3);
+        REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack (just the table)
+        REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+        state.push_number(1); // index to retrieve
+        lua_gettable(state.get(), -2);
+        REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack (table + result)
+        REQUIRE(state.pop_number() == 42.0);
+    }
+}

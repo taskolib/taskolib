@@ -146,6 +146,13 @@ void LuaState::set_global(const std::string& global_var_name)
     lua_setglobal(state_, global_var_name.c_str());
 }
 
+void LuaState::set_table(int table_stack_index)
+{
+    throw_if_closed();
+
+    lua_settable(state_, table_stack_index);
+}
+
 void LuaState::throw_if_closed()
 {
     if (state_ == nullptr)

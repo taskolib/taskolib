@@ -146,6 +146,24 @@ public:
      */
     void set_global(const std::string& global_var_name);
 
+    /**
+     * Assign a table entry.
+     *
+     * This function does the equivalent of the LUA command "table[key] = value",
+     * including the calling of metamethods, if any. The table is identified by its index
+     * on the LUA stack:
+     *
+     * \param table_stack_index  LUA stack index of the table to be assigned to
+     *
+     * Both the key and the value are taken from the stack: The value is the topmost
+     * element (index -1), the key the second-topmost (index -2). Both elements are popped
+     * from the stack after the assignment.
+     *
+     * \exception hlc::Error is thrown if the assignment cannot be executed. In this case,
+     *            the number of elements on the stack is not modified.
+     */
+    void set_table(int table_stack_index);
+
 private:
     lua_State* state_ = nullptr;
 
