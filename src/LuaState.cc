@@ -63,10 +63,9 @@ void LuaState::close() noexcept
 
 void LuaState::create_table(int num_seq_elements, int num_other_elements)
 {
-    throw_if_closed();
     if (num_seq_elements < 0 || num_other_elements < 0)
     {
-        throw hlc::Error(cat("Invalid parameters for create_table: num_seq_elements = ",
+        throw Error(cat("Invalid parameters for create_table: num_seq_elements = ",
             num_seq_elements, ", num_other_elements = ", num_other_elements));
     }
 
@@ -75,15 +74,11 @@ void LuaState::create_table(int num_seq_elements, int num_other_elements)
 
 int LuaState::get_global(const std::string& global_var_name)
 {
-    throw_if_closed();
-
     return lua_getglobal(state_, global_var_name.c_str());
 }
 
 void LuaState::load_string(const std::string& script)
 {
-    throw_if_closed();
-
     int err = luaL_loadstring(state_, script.c_str());
     if (err)
     {
@@ -103,14 +98,12 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
 
 double LuaState::pop_number()
 {
-    throw_if_closed();
-
     int success = 0;
 
     double val = lua_tonumberx(state_, -1, &success);
 
     if (!success)
-        throw hlc::Error("Cannot pop number from LUA stack");
+        throw Error("Cannot pop number from LUA stack");
 
     lua_pop(state_, 1);
 
@@ -119,12 +112,10 @@ double LuaState::pop_number()
 
 std::string LuaState::pop_string()
 {
-    throw_if_closed();
-
     const char* lua_str = lua_tostring(state_, -1);
 
     if (lua_str == nullptr)
-        throw hlc::Error("Unable to pop string from LUA stack");
+        throw Error("Unable to pop string from LUA stack");
 
     std::string str{ lua_str };
     lua_pop(state_, 1);
@@ -134,29 +125,17 @@ std::string LuaState::pop_string()
 
 void LuaState::push_number(double value)
 {
-    throw_if_closed();
-
     lua_pushnumber(state_, value);
 }
 
 void LuaState::set_global(const std::string& global_var_name)
 {
-    throw_if_closed();
-
     lua_setglobal(state_, global_var_name.c_str());
 }
 
 void LuaState::set_table(int table_stack_index)
 {
-    throw_if_closed();
-
     lua_settable(state_, table_stack_index);
-}
-
-void LuaState::throw_if_closed()
-{
-    if (state_ == nullptr)
-        throw Error("LUA state is already closed");
 }
 
 

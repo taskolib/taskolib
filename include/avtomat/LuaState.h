@@ -58,20 +58,13 @@ public:
     /**
      * Move constructor.
      * The new object takes over the LUA state from the original one. The moved-from
-     * object can be deleted safely but other operations on it invoke undefined behavior.
+     * object can be deleted safely but other operations on it may invoke undefined
+     * behavior.
      */
     LuaState(LuaState&& other);
 
     /// Destructor: Close the LUA state.
     ~LuaState() noexcept;
-
-    /**
-     * Close the LUA state.
-     * After closing, most member functions will throw an exception when called. The
-     * object can be safely deleted, however. The function may be called on an already
-     * closed object.
-     */
-    void close() noexcept;
 
     /**
      * Create an empty table and push it onto the LUA stack.
@@ -167,8 +160,13 @@ public:
 private:
     lua_State* state_ = nullptr;
 
-    // Throw hlc::Error if this LUA state has already been closed (or moved from).
-    void throw_if_closed();
+    /*
+     * Close the LUA state (bring LuaState into a moved-from state).
+     * After closing, most member functions will invoke undefined behavior when called.
+     * The object can be safely deleted, however. The function may be called on an already
+     * closed object.
+     */
+    void close() noexcept;
 };
 
 

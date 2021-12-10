@@ -26,6 +26,7 @@
 #include <gul14/catch.h>
 #include <hlc/util/exceptions.h>
 #include <lua.h>
+#include "../include/avtomat/Error.h"
 #include "../include/avtomat/LuaState.h"
 
 using namespace avto;
@@ -45,18 +46,6 @@ TEST_CASE("LuaState: Move constructor", "[LuaState]")
     LuaState state2{ std::move(state) };
     REQUIRE(state.get() == nullptr);
     REQUIRE(state2.get() != nullptr);
-}
-
-TEST_CASE("LuaState: close()", "[LuaState]")
-{
-    LuaState state;
-    REQUIRE(state.get() != nullptr);
-
-    state.close();
-    REQUIRE(state.get() == nullptr);
-
-    state.close();
-    REQUIRE(state.get() == nullptr);
 }
 
 TEST_CASE("LuaState: create_table()", "[LuaState]")
@@ -79,17 +68,14 @@ TEST_CASE("LuaState: create_table()", "[LuaState]")
     REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
-    REQUIRE_THROWS_AS(state.create_table(-1, 0), hlc::Error);
+    REQUIRE_THROWS_AS(state.create_table(-1, 0), Error);
     REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
 
-    REQUIRE_THROWS_AS(state.create_table(0, -2), hlc::Error);
+    REQUIRE_THROWS_AS(state.create_table(0, -2), Error);
     REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
 
-    REQUIRE_THROWS_AS(state.create_table(-10, -1), hlc::Error);
+    REQUIRE_THROWS_AS(state.create_table(-10, -1), Error);
     REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
-
-    state.close();
-    REQUIRE_THROWS_AS(state.create_table(), hlc::Error);
 }
 
 TEST_CASE("LuaState: get()", "[LuaState]")
@@ -97,7 +83,7 @@ TEST_CASE("LuaState: get()", "[LuaState]")
     LuaState state;
     REQUIRE(state.get() != nullptr);
 
-    state.close();
+    auto state2 = std::move(state);
     REQUIRE(state.get() == nullptr);
 }
 
@@ -124,13 +110,7 @@ TEST_CASE("LuaState: load_string()", "[LuaState]")
 
     SECTION("Syntax error")
     {
-        REQUIRE_THROWS_AS(state.load_string("locally a = 2"), hlc::Error);
-    }
-
-    SECTION("Exception thrown when called on closed state")
-    {
-        state.close();
-        REQUIRE_THROWS_AS(state.load_string(""), hlc::Error);
+        REQUIRE_THROWS_AS(state.load_string("locally a = 2"), Error);
     }
 }
 
@@ -162,16 +142,10 @@ TEST_CASE("LuaState: pop_number()", "[LuaState]")
         REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
     }
 
-    SECTION("Exception thrown when called on closed state")
-    {
-        state.close();
-        REQUIRE_THROWS_AS(state.pop_number(), hlc::Error);
-    }
-
     SECTION("Exception thrown when there is nothing to pop")
     {
         state.pop_number();
-        REQUIRE_THROWS_AS(state.pop_number(), hlc::Error);
+        REQUIRE_THROWS_AS(state.pop_number(), Error);
     }
 }
 
@@ -188,16 +162,10 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
         REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
     }
 
-    SECTION("Exception thrown when called on closed state")
-    {
-        state.close();
-        REQUIRE_THROWS_AS(state.pop_string(), hlc::Error);
-    }
-
     SECTION("Exception thrown when there is nothing to pop")
     {
         state.pop_string();
-        REQUIRE_THROWS_AS(state.pop_string(), hlc::Error);
+        REQUIRE_THROWS_AS(state.pop_string(), Error);
     }
 }
 
