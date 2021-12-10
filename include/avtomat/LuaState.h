@@ -45,8 +45,8 @@ public:
     /**
      * Default constructor.
      *
-     * \exception hlc::Error is thrown if a new LUA state cannot be created. This is
-     *            usually an indication for an out-of-memory condition.
+     * \exception Error is thrown if a new LUA state cannot be created. This is usually an
+     *            indication for an out-of-memory condition.
      */
     LuaState();
 

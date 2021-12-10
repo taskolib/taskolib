@@ -22,9 +22,9 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <hlc/util/exceptions.h>
 #include <lua.h>
 #include <lauxlib.h>
+#include "avtomat/Error.h"
 #include "avtomat/LuaState.h"
 
 namespace avto {
@@ -35,7 +35,7 @@ LuaState::LuaState()
     state_ = luaL_newstate();
 
     if (state_ == nullptr)
-        throw hlc::Error("Unable to create new LUA state");
+        throw Error("Unable to create new LUA state");
 }
 
 LuaState::LuaState(LuaState&& other)

@@ -69,7 +69,6 @@ inc = [ include_directories('include') ]
 
 deps = [
     dependency('libgul14'),
-    dependency('doocs-hlcutillib'),
     dependency('lua5.3'),
 ]
 
