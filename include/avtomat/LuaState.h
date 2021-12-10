@@ -130,6 +130,12 @@ public:
     int get_global(const std::string& global_var_name);
 
     /**
+     * Return the number of elements on the LUA stack.
+     * Zero means that the stack is empty.
+     */
+    int get_top();
+
+    /**
      * Load a LUA script from a string without running it.
      * The script is precompiled into a chunk and its syntax is checked.
      * \exception hlc::Error is thrown if a syntax error is found, if there is

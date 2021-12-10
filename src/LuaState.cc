@@ -77,6 +77,11 @@ int LuaState::get_global(const std::string& global_var_name)
     return lua_getglobal(state_, global_var_name.c_str());
 }
 
+int LuaState::get_top()
+{
+    return lua_gettop(state_);
+}
+
 void LuaState::load_string(const std::string& script)
 {
     int err = luaL_loadstring(state_, script.c_str());

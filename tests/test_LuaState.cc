@@ -56,24 +56,24 @@ TEST_CASE("LuaState: assign_field()", "[LuaState]")
 
     state.create_table();
     state.assign_field(1, 42.0);
-    REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack (just the table)
+    REQUIRE(state.get_top() == 1); // 1 object on stack (just the table)
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
     state.assign_field("mykey", "Hello world!", 1);
-    REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack (just the table)
+    REQUIRE(state.get_top() == 1); // 1 object on stack (just the table)
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
     state.push_number(1); // index to retrieve
     lua_gettable(state.get(), -2);
-    REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack (table + result)
+    REQUIRE(state.get_top() == 2); // 2 objects on stack (table + result)
     REQUIRE(state.pop_number() == 42.0);
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
 
     state.push_string("mykey"); // index to retrieve
     lua_gettable(state.get(), 1);
-    REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack (table + result)
+    REQUIRE(state.get_top() == 2); // 2 objects on stack (table + result)
     REQUIRE(state.pop_string() == "Hello world!");
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
 }
 
 TEST_CASE("LuaState: create_table()", "[LuaState]")
@@ -81,29 +81,29 @@ TEST_CASE("LuaState: create_table()", "[LuaState]")
     LuaState state;
 
     state.create_table();
-    REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack
+    REQUIRE(state.get_top() == 1); // 1 object on stack
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
     state.create_table(0, 10);
-    REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack
+    REQUIRE(state.get_top() == 2); // 2 objects on stack
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
     state.create_table(10, 0);
-    REQUIRE(lua_gettop(state.get()) == 3); // 3 objects on stack
+    REQUIRE(state.get_top() == 3); // 3 objects on stack
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
     state.create_table(10, 10);
-    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+    REQUIRE(state.get_top() == 4); // 4 objects on stack
     REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
     REQUIRE_THROWS_AS(state.create_table(-1, 0), Error);
-    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+    REQUIRE(state.get_top() == 4); // 4 objects on stack
 
     REQUIRE_THROWS_AS(state.create_table(0, -2), Error);
-    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+    REQUIRE(state.get_top() == 4); // 4 objects on stack
 
     REQUIRE_THROWS_AS(state.create_table(-10, -1), Error);
-    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+    REQUIRE(state.get_top() == 4); // 4 objects on stack
 }
 
 TEST_CASE("LuaState: get()", "[LuaState]")
@@ -124,6 +124,15 @@ TEST_CASE("LuaState: get_global()", "[LuaState]")
     state.set_global("pippo");
 
     REQUIRE(state.get_global("pippo") == LUA_TNUMBER);
+}
+
+TEST_CASE("LuaState: get_top()", "[LuaState]")
+{
+    LuaState state;
+    REQUIRE(state.get_top() == 0);
+
+    state.push_number(42);
+    REQUIRE(state.get_top() == 1);
 }
 
 TEST_CASE("LuaState: load_string()", "[LuaState]")
@@ -164,17 +173,17 @@ TEST_CASE("LuaState: pop_integer()", "[LuaState]")
     SECTION("Number can be retrieved and stack position is adjusted")
     {
         state.push_integer(std::numeric_limits<long long>::lowest());
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(state.pop_integer() == std::numeric_limits<long long>::lowest());
-        REQUIRE(lua_gettop(state.get()) == 0);
+        REQUIRE(state.get_top() == 0);
     }
 
     SECTION("Exception thrown if value on stack cannot be converted into integer")
     {
         lua_pushnil(state.get());
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE_THROWS_AS(state.pop_integer(), Error);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
     }
 }
 
@@ -185,17 +194,17 @@ TEST_CASE("LuaState: pop_number()", "[LuaState]")
     SECTION("Number can be retrieved and stack position is adjusted")
     {
         state.push_number(42.0);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(state.pop_number() == 42.0);
-        REQUIRE(lua_gettop(state.get()) == 0);
+        REQUIRE(state.get_top() == 0);
     }
 
     SECTION("Exception thrown if value on stack cannot be converted into number")
     {
         lua_pushnil(state.get());
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE_THROWS_AS(state.pop_number(), Error);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
     }
 }
 
@@ -206,25 +215,25 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
     SECTION("String can be retrieved and stack position is adjusted")
     {
         lua_pushstring(state.get(), "Test");
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(state.pop_string() == "Test");
-        REQUIRE(lua_gettop(state.get()) == 0);
+        REQUIRE(state.get_top() == 0);
     }
 
     SECTION("String with embedded zero byte can be retrieved")
     {
         state.push_string("test1\0test2"s);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(state.pop_string() == "test1\0test2"s);
-        REQUIRE(lua_gettop(state.get()) == 0);
+        REQUIRE(state.get_top() == 0);
     }
 
     SECTION("Exception thrown if value on stack cannot be converted into string")
     {
         lua_pushnil(state.get());
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE_THROWS_AS(state.pop_string(), Error);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
     }
 }
 
@@ -270,15 +279,15 @@ TEST_CASE("LuaState: push_integer()", "[LuaState]")
     LuaState state;
 
     state.push_integer(42);
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
     REQUIRE(state.pop_integer() == 42);
 
     state.push_integer(std::numeric_limits<long long>::max());
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
     REQUIRE(state.pop_integer() == std::numeric_limits<long long>::max());
 
     state.push_integer(std::numeric_limits<long long>::lowest());
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
     REQUIRE(state.pop_integer() == std::numeric_limits<long long>::lowest());
 }
 
@@ -287,15 +296,15 @@ TEST_CASE("LuaState: push_number()", "[LuaState]")
     LuaState state;
 
     state.push_number(42.0);
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
     REQUIRE(state.pop_number() == 42.0);
 
     state.push_number(std::numeric_limits<double>::max());
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
     REQUIRE(state.pop_number() == std::numeric_limits<double>::max());
 
     state.push_number(std::numeric_limits<double>::lowest());
-    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.get_top() == 1);
     REQUIRE(state.pop_number() == std::numeric_limits<double>::lowest());
 }
 
@@ -306,21 +315,21 @@ TEST_CASE("LuaState: push_string()", "[LuaState]")
     SECTION("Null-terminated string")
     {
         state.push_string("Hello World");
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(state.pop_string() == "Hello World");
     }
 
     SECTION("nullptr")
     {
         state.push_string(nullptr);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(lua_type(state.get(), -1) == LUA_TNIL);
     }
 
     SECTION("String with embedded zero bytes")
     {
         state.push_string("test1\0test2"s);
-        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.get_top() == 1);
         REQUIRE(state.pop_string() == "test1\0test2"s);
     }
 }
@@ -345,12 +354,12 @@ TEST_CASE("LuaState: set_table()", "[LuaState]")
         state.push_number(1);
         state.push_number(42.0);
         state.set_table(-3);
-        REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack (just the table)
+        REQUIRE(state.get_top() == 1); // 1 object on stack (just the table)
         REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
 
         state.push_number(1); // index to retrieve
         lua_gettable(state.get(), -2);
-        REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack (table + result)
+        REQUIRE(state.get_top() == 2); // 2 objects on stack (table + result)
         REQUIRE(state.pop_number() == 42.0);
     }
 }
