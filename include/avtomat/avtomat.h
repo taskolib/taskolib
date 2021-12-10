@@ -79,6 +79,8 @@
 #ifndef AVTOMAT_AVTOMAT_H_
 #define AVTOMAT_AVTOMAT_H_
 
+#include "avtomat/Error.h"
+#include "avtomat/LuaState.h"
 #include "avtomat/Step.h"
 
 /// Namespace avto contains all functions and classes of the Avtomat libs.
