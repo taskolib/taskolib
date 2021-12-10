@@ -27,6 +27,7 @@
 
 #include <string>
 #include <type_traits>
+#include <hlc/util/exceptions.h>
 
 struct lua_State; // Forward declaration of struct lua_State from the LUA headers
 
@@ -66,6 +67,36 @@ public:
 
     /// Destructor: Close the LUA state.
     ~LuaState() noexcept;
+
+    /**
+     * Assign a value to the field with a given key in the table at the specified stack
+     * index.
+     *
+     * This call is equivalent to the LUA statement "table[key] = value", including the
+     * calling of metamethods. The call does not change the stack position.
+     *
+     * \param key                The key or table index to which the value should be
+     *                           assigned.
+     * \param value              The value to be assigned.
+     * \param table_stack_index  The LUA stack index of the table in which the assignment
+     *                           should take place. The default stack index of -1 refers
+     *                           to the element at the top of the stack.
+     *
+     * \exception hlc::Error is thrown if a zero stack index is given (which is always
+     *            illegal in LUA).
+     */
+    template <typename KeyType, typename ValueType>
+    void assign_field(KeyType key, ValueType value, int table_stack_index = -1)
+    {
+        if (table_stack_index < 0)
+            table_stack_index -= 2; // adjust relative stack indices by the two elements we are about to push
+        else if (table_stack_index == 0)
+            throw hlc::Error("Zero stack index in assign_field()");
+
+        push(key);
+        push(value);
+        set_table(table_stack_index);
+    }
 
     /**
      * Create an empty table and push it onto the LUA stack.

@@ -64,11 +64,7 @@ int main()
      * top of the stack.
      */
     for (int i = 1; i <= 5; ++i)
-    {
-        lua_state.push_number(i);   // Push the table index
-        lua_state.push_number(i*2); // Push the cell value
-        lua_state.set_table(-3);    // Store the pair in the table
-    }
+        lua_state.assign_field(i, i * 2);
 
     // By what name is the script going to reference our table?
     lua_state.set_global("foo");

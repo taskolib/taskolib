@@ -50,6 +50,32 @@ TEST_CASE("LuaState: Move constructor", "[LuaState]")
     REQUIRE(state2.get() != nullptr);
 }
 
+TEST_CASE("LuaState: assign_field()", "[LuaState]")
+{
+    LuaState state;
+
+    state.create_table();
+    state.assign_field(1, 42.0);
+    REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack (just the table)
+    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+    state.assign_field("mykey", "Hello world!", 1);
+    REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack (just the table)
+    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+    state.push_number(1); // index to retrieve
+    lua_gettable(state.get(), -2);
+    REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack (table + result)
+    REQUIRE(state.pop_number() == 42.0);
+    REQUIRE(lua_gettop(state.get()) == 1);
+
+    state.push_string("mykey"); // index to retrieve
+    lua_gettable(state.get(), 1);
+    REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack (table + result)
+    REQUIRE(state.pop_string() == "Hello world!");
+    REQUIRE(lua_gettop(state.get()) == 1);
+}
+
 TEST_CASE("LuaState: create_table()", "[LuaState]")
 {
     LuaState state;
