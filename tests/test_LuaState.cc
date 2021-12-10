@@ -22,6 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <limits>
 #include <type_traits>
 #include <gul14/catch.h>
 #include <hlc/util/exceptions.h>
@@ -29,6 +30,7 @@
 #include "../include/avtomat/Error.h"
 #include "../include/avtomat/LuaState.h"
 
+using namespace std::literals;
 using namespace avto;
 
 TEST_CASE("LuaState: Default constructor", "[LuaState]")
@@ -129,23 +131,45 @@ TEST_CASE("LuaState: operator=(LuaState&&) (move assignment)", "[LuaState]")
     REQUIRE(state2.get() == state1_ptr);
 }
 
+TEST_CASE("LuaState: pop_integer()", "[LuaState]")
+{
+    LuaState state;
+
+    SECTION("Number can be retrieved and stack position is adjusted")
+    {
+        state.push_integer(std::numeric_limits<long long>::lowest());
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.pop_integer() == std::numeric_limits<long long>::lowest());
+        REQUIRE(lua_gettop(state.get()) == 0);
+    }
+
+    SECTION("Exception thrown if value on stack cannot be converted into integer")
+    {
+        lua_pushnil(state.get());
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE_THROWS_AS(state.pop_integer(), Error);
+        REQUIRE(lua_gettop(state.get()) == 1);
+    }
+}
+
 TEST_CASE("LuaState: pop_number()", "[LuaState]")
 {
     LuaState state;
 
-    auto initial_stack_pos = lua_gettop(state.get());
-    lua_pushnumber(state.get(), 42.0);
-
     SECTION("Number can be retrieved and stack position is adjusted")
     {
+        state.push_number(42.0);
+        REQUIRE(lua_gettop(state.get()) == 1);
         REQUIRE(state.pop_number() == 42.0);
-        REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
+        REQUIRE(lua_gettop(state.get()) == 0);
     }
 
-    SECTION("Exception thrown when there is nothing to pop")
+    SECTION("Exception thrown if value on stack cannot be converted into number")
     {
-        state.pop_number();
+        lua_pushnil(state.get());
+        REQUIRE(lua_gettop(state.get()) == 1);
         REQUIRE_THROWS_AS(state.pop_number(), Error);
+        REQUIRE(lua_gettop(state.get()) == 1);
     }
 }
 
@@ -153,31 +177,89 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
 {
     LuaState state;
 
-    auto initial_stack_pos = lua_gettop(state.get());
-    lua_pushstring(state.get(), "Test");
-
     SECTION("String can be retrieved and stack position is adjusted")
     {
+        lua_pushstring(state.get(), "Test");
+        REQUIRE(lua_gettop(state.get()) == 1);
         REQUIRE(state.pop_string() == "Test");
-        REQUIRE(lua_gettop(state.get()) == initial_stack_pos);
+        REQUIRE(lua_gettop(state.get()) == 0);
     }
 
-    SECTION("Exception thrown when there is nothing to pop")
+    SECTION("String with embedded zero byte can be retrieved")
     {
-        state.pop_string();
-        REQUIRE_THROWS_AS(state.pop_string(), Error);
+        state.push_string("test1\0test2"s);
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.pop_string() == "test1\0test2"s);
+        REQUIRE(lua_gettop(state.get()) == 0);
     }
+
+    SECTION("Exception thrown if value on stack cannot be converted into string")
+    {
+        lua_pushnil(state.get());
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE_THROWS_AS(state.pop_string(), Error);
+        REQUIRE(lua_gettop(state.get()) == 1);
+    }
+}
+
+TEST_CASE("LuaState: push_integer()", "[LuaState]")
+{
+    LuaState state;
+
+    state.push_integer(42);
+    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.pop_integer() == 42);
+
+    state.push_integer(std::numeric_limits<long long>::max());
+    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.pop_integer() == std::numeric_limits<long long>::max());
+
+    state.push_integer(std::numeric_limits<long long>::lowest());
+    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.pop_integer() == std::numeric_limits<long long>::lowest());
 }
 
 TEST_CASE("LuaState: push_number()", "[LuaState]")
 {
     LuaState state;
 
-    auto initial_stack_pos = lua_gettop(state.get());
-
     state.push_number(42.0);
-    REQUIRE(lua_gettop(state.get()) == initial_stack_pos + 1);
+    REQUIRE(lua_gettop(state.get()) == 1);
     REQUIRE(state.pop_number() == 42.0);
+
+    state.push_number(std::numeric_limits<double>::max());
+    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.pop_number() == std::numeric_limits<double>::max());
+
+    state.push_number(std::numeric_limits<double>::lowest());
+    REQUIRE(lua_gettop(state.get()) == 1);
+    REQUIRE(state.pop_number() == std::numeric_limits<double>::lowest());
+}
+
+TEST_CASE("LuaState: push_string()", "[LuaState]")
+{
+    LuaState state;
+
+    SECTION("Null-terminated string")
+    {
+        state.push_string("Hello World");
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.pop_string() == "Hello World");
+    }
+
+    SECTION("nullptr")
+    {
+        state.push_string(nullptr);
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(lua_type(state.get(), -1) == LUA_TNIL);
+    }
+
+    SECTION("String with embedded zero bytes")
+    {
+        state.push_string("test1\0test2"s);
+        REQUIRE(lua_gettop(state.get()) == 1);
+        REQUIRE(state.pop_string() == "test1\0test2"s);
+    }
 }
 
 TEST_CASE("LuaState: set_global()", "[LuaState]")

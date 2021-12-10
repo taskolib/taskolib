@@ -116,20 +116,45 @@ public:
      */
     LuaState& operator=(LuaState&& other) noexcept;
 
+    /// Push an integer onto the LUA stack.
+    void push_integer(long long value);
+
     /// Push a number onto the LUA stack.
     void push_number(double value);
 
     /**
+     * Push a string onto the LUA stack.
+     * If a null pointer is given, a nil value is pushed onto the stack instead.
+     */
+    void push_string(const char* str);
+
+    /// Push a string onto the LUA stack.
+    void push_string(const std::string& str);
+
+    /**
+     * Pop an integer from the LUA stack and return it.
+     *
+     * \exception hlc::Error is thrown if the topmost value on the stack cannot be
+     *            converted to an integer. In this case, the stack position is not
+     *            modified.
+     */
+    long long pop_integer();
+
+    /**
      * Pop a number from the LUA stack and return it.
-     * \exception hlc::Error is thrown if there is no value to pop from the stack or if
-     *            it cannot be converted to a number.
+     *
+     * \exception hlc::Error is thrown if the topmost value on the stack cannot be
+     *            converted into a number. In this case, the stack position is not
+     *            modified.
      */
     double pop_number();
 
     /**
      * Pop a string from the LUA stack and return it.
-     * \exception hlc::Error is thrown if there is no value to pop from the stack or if
-     *            it cannot be converted to a string.
+     *
+     * \exception hlc::Error is thrown if the topmost value on the stack cannot be
+     *            converted into a string. In this case, the stack position is not
+     *            modified.
      */
     std::string pop_string();
 
@@ -152,8 +177,9 @@ public:
      * element (index -1), the key the second-topmost (index -2). Both elements are popped
      * from the stack after the assignment.
      *
-     * \exception hlc::Error is thrown if the assignment cannot be executed. In this case,
-     *            the number of elements on the stack is not modified.
+     * \warning
+     * Calling this function without having a key and a value on the LUA stack causes
+     * undefined behavior.
      */
     void set_table(int table_stack_index);
 

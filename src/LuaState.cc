@@ -96,6 +96,20 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
     return *this;
 }
 
+long long LuaState::pop_integer()
+{
+    int success = 0;
+
+    long long val = lua_tointegerx(state_, -1, &success);
+
+    if (!success)
+        throw Error("Cannot pop integer from LUA stack");
+
+    lua_pop(state_, 1);
+
+    return val;
+}
+
 double LuaState::pop_number()
 {
     int success = 0;
@@ -112,20 +126,36 @@ double LuaState::pop_number()
 
 std::string LuaState::pop_string()
 {
-    const char* lua_str = lua_tostring(state_, -1);
+    size_t len;
+    const char* lua_str = lua_tolstring(state_, -1, &len);
 
     if (lua_str == nullptr)
         throw Error("Unable to pop string from LUA stack");
 
-    std::string str{ lua_str };
+    std::string str{ lua_str, len };
     lua_pop(state_, 1);
 
     return str;
 }
 
+void LuaState::push_integer(long long value)
+{
+    lua_pushinteger(state_, value);
+}
+
 void LuaState::push_number(double value)
 {
     lua_pushnumber(state_, value);
+}
+
+void LuaState::push_string(const std::string& str)
+{
+    lua_pushlstring(state_, str.data(), str.size());
+}
+
+void LuaState::push_string(const char* str)
+{
+    lua_pushstring(state_, str);
 }
 
 void LuaState::set_global(const std::string& global_var_name)
