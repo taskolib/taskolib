@@ -26,6 +26,7 @@
 #define AVTOMAT_LUASTATE_H_
 
 #include <string>
+#include <type_traits>
 
 struct lua_State; // Forward declaration of struct lua_State from the LUA headers
 
@@ -115,6 +116,33 @@ public:
      * behavior.
      */
     LuaState& operator=(LuaState&& other) noexcept;
+
+    /**
+     * Push a value onto the LUA stack.
+     * This function is overloaded for several C++ data types. Floating-point values are
+     * stored on the stack as LUA numbers, integers as LUA integers, strings as LUA
+     * strings.
+     */
+    template <typename FloatType,
+              std::enable_if_t<std::is_floating_point<FloatType>::value, bool> = true>
+    void push(FloatType number)
+    {
+        push_number(number);
+    }
+
+    /// \overload
+    template <typename IntType,
+              std::enable_if_t<std::is_integral<IntType>::value, bool> = true>
+    void push(IntType integer)
+    {
+        push_integer(integer);
+    }
+
+    /// \overload
+    void push(const char* str) { push_string(str); }
+
+    /// \overload
+    void push(const std::string& str) { push_string(str); }
 
     /// Push an integer onto the LUA stack.
     void push_integer(long long value);

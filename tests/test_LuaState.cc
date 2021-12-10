@@ -202,6 +202,43 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
     }
 }
 
+TEST_CASE("LuaState: push()", "[LuaState]")
+{
+    LuaState state;
+
+    state.push(char{ 42 });
+    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.pop_integer() == 42);
+
+    state.push(42);
+    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.pop_integer() == 42);
+
+    state.push(123'456'789ULL);
+    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.pop_integer() == 123'456'789);
+
+    state.push(-43.5);
+    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.pop_number() == -43.5);
+
+    state.push(-43.5L);
+    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.pop_number() == -43.5);
+
+    state.push(nullptr);
+    REQUIRE(lua_type(state.get(), -1) == LUA_TNIL);
+    lua_pop(state.get(), 1);
+
+    state.push("Hello world!");
+    REQUIRE(lua_type(state.get(), -1) == LUA_TSTRING);
+    REQUIRE(state.pop_string() == "Hello world!");
+
+    state.push("Hello\0world!"s);
+    REQUIRE(lua_type(state.get(), -1) == LUA_TSTRING);
+    REQUIRE(state.pop_string() == "Hello\0world!"s);
+}
+
 TEST_CASE("LuaState: push_integer()", "[LuaState]")
 {
     LuaState state;
