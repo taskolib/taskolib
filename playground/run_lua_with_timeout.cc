@@ -44,7 +44,9 @@ int main()
      * That is, we first have to prepare Lua's virtual stack the way we
      * want the script to receive it, then ask Lua to run it.
      */
-    lua_newtable(lua_state.get());    // We will pass a table
+
+    // Push an empty table onto the stack
+    lua_state.create_table();
 
     /*
      * To put values into the table, we first push the index, then the

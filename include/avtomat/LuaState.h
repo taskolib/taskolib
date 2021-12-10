@@ -74,6 +74,23 @@ public:
     void close() noexcept;
 
     /**
+     * Create an empty table and push it onto the LUA stack.
+     *
+     * Although LUA's memory management is fully automatic, it is sometimes useful to
+     * preallocate some space in the table for performance reasons. This can be done with
+     * the following function parameters:
+     *
+     * \param num_seq_elements   A hint for how many sequential ("array") elements should
+     *                           be preallocated.
+     * \param num_other_elements A hint for how many other elements should be
+     *                           preallocated.
+     *
+     * \exception hlc::Error is thrown if the table cannot be created (e.g. if the hints
+     *            for the number of elements are negative).
+     */
+    void create_table(int num_seq_elements = 0, int num_other_elements = 0);
+
+    /**
      * Return a pointer to the LUA state.
      * This pointer is null if the LUA state has been closed. Otherwise, it can be used to
      * call functions from the LUA C library directly. Calling lua_close() on it leads to

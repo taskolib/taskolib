@@ -61,6 +61,18 @@ void LuaState::close() noexcept
     state_ = nullptr;
 }
 
+void LuaState::create_table(int num_seq_elements, int num_other_elements)
+{
+    throw_if_closed();
+    if (num_seq_elements < 0 || num_other_elements < 0)
+    {
+        throw hlc::Error(cat("Invalid parameters for create_table: num_seq_elements = ",
+            num_seq_elements, ", num_other_elements = ", num_other_elements));
+    }
+
+    return lua_createtable(state_, num_seq_elements, num_other_elements);
+}
+
 int LuaState::get_global(const std::string& global_var_name)
 {
     throw_if_closed();

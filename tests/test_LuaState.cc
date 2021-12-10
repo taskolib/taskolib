@@ -59,6 +59,39 @@ TEST_CASE("LuaState: close()", "[LuaState]")
     REQUIRE(state.get() == nullptr);
 }
 
+TEST_CASE("LuaState: create_table()", "[LuaState]")
+{
+    LuaState state;
+
+    state.create_table();
+    REQUIRE(lua_gettop(state.get()) == 1); // 1 object on stack
+    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+    state.create_table(0, 10);
+    REQUIRE(lua_gettop(state.get()) == 2); // 2 objects on stack
+    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+    state.create_table(10, 0);
+    REQUIRE(lua_gettop(state.get()) == 3); // 3 objects on stack
+    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+    state.create_table(10, 10);
+    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+
+    REQUIRE_THROWS_AS(state.create_table(-1, 0), hlc::Error);
+    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+
+    REQUIRE_THROWS_AS(state.create_table(0, -2), hlc::Error);
+    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+
+    REQUIRE_THROWS_AS(state.create_table(-10, -1), hlc::Error);
+    REQUIRE(lua_gettop(state.get()) == 4); // 4 objects on stack
+
+    state.close();
+    REQUIRE_THROWS_AS(state.create_table(), hlc::Error);
+}
+
 TEST_CASE("LuaState: get()", "[LuaState]")
 {
     LuaState state;
