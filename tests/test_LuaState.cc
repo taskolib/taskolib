@@ -75,6 +75,78 @@ TEST_CASE("LuaState: assign_field()", "[LuaState]")
     REQUIRE(state.get_top() == 1);
 }
 
+TEST_CASE("LuaState: call_function()", "[LuaState]")
+{
+    LuaState state;
+
+    SECTION("Calling a valid function with 2 results")
+    {
+        state.load_string(R"(
+            function sum_and_count(...)
+                result = 0
+                local arg = {...}
+                for i = 1, #arg do
+                    result = result + arg[i]
+                end
+                return result, #arg
+            end
+        )");
+
+        REQUIRE(state.get_top() == 1); // 1 object on stack (the chunk)
+        REQUIRE(lua_type(state.get(), -1) == LUA_TFUNCTION);
+        REQUIRE(state.call_function() == 0); // execute chunk to get function definition
+        REQUIRE(state.get_top() == 0);
+
+        state.get_global("sum_and_count");
+        REQUIRE(state.get_top() == 1); // 1 object on stack (the function)
+        REQUIRE(lua_type(state.get(), -1) == LUA_TFUNCTION);
+
+        SECTION("Call without parameters")
+        {
+            REQUIRE(state.call_function() == 2);
+            REQUIRE(state.get_top() == 2); // just the 2 return values are on the stack
+            REQUIRE(state.pop_number() == 0.0); // sum 0.0
+            REQUIRE(state.pop_integer() == 0); // 0 input arguments given
+        }
+
+        SECTION("Call with 1 parameter")
+        {
+            REQUIRE(state.call_function(42.0) == 2);
+            REQUIRE(state.get_top() == 2); // 2 return values
+            REQUIRE(state.pop_integer() == 1); // # input arguments
+            REQUIRE(state.pop_number() == 42.0); // sum
+        }
+
+        SECTION("Call with 2 parameters")
+        {
+            REQUIRE(state.call_function(42.0, -13.0) == 2);
+            REQUIRE(state.get_top() == 2); // 2 return values
+            REQUIRE(state.pop_integer() == 2); // # input arguments
+            REQUIRE(state.pop_number() == 29.0); // sum
+        }
+
+        SECTION("Call with 3 parameters")
+        {
+            state.call_function(42.0, -13.0, "-25");
+            REQUIRE(state.get_top() == 2); // 2 return values
+            REQUIRE(state.pop_integer() == 3); // # input arguments
+            REQUIRE(state.pop_number() == 4.0); // sum
+        }
+    }
+
+    SECTION("Cannot call a function on an empty stack")
+    {
+        REQUIRE(state.get_top() == 0);
+        REQUIRE_THROWS_AS(state.call_function(), Error);
+    }
+
+    SECTION("Cannot call a non-function")
+    {
+        state.push_number(42);
+        REQUIRE_THROWS_AS(state.call_function(), Error);
+    }
+}
+
 TEST_CASE("LuaState: create_table()", "[LuaState]")
 {
     LuaState state;

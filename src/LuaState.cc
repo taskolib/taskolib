@@ -52,6 +52,20 @@ LuaState::~LuaState() noexcept
     close();
 }
 
+void LuaState::call_function_with_n_arguments(int num_args)
+{
+    const int stack_pos = get_top();
+
+    // On the stack we should have the function and all arguments, in that order
+    if (stack_pos <= num_args || lua_type(state_, stack_pos - num_args) != LUA_TFUNCTION)
+        throw Error("Found no callable function on the LUA stack");
+
+    int err = lua_pcall(state_, num_args, LUA_MULTRET, 0);
+
+    if (err != LUA_OK)
+        throw Error(cat("Error while executing script: ", pop_string()));
+}
+
 void LuaState::close() noexcept
 {
     if (state_ == nullptr)

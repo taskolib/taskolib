@@ -99,6 +99,29 @@ public:
     }
 
     /**
+     * Execute the LUA function on top of the stack, passing the given arguments.
+     *
+     * The call removes the function from the stack and leaves all output parameters on
+     * it.
+     *
+     * \returns the number of function results pushed onto the stack.
+     *
+     * \exception Error is thrown if there is no function on the top of the LUA stack or
+     *            if the function call causes a runtime error. In the latter case, the
+     *            function is popped from the stack and no additional values are left on
+     *            it.
+     */
+    template <typename... ArgumentTypes>
+    int call_function(const ArgumentTypes&... args)
+    {
+        const int initial_stack_pos = get_top();
+
+        call_function_with_n_arguments(sizeof...(ArgumentTypes), args...);
+
+        return get_top() - initial_stack_pos + 1; // +1: function was popped from stack
+    }
+
+    /**
      * Create an empty table and push it onto the LUA stack.
      *
      * Although LUA's memory management is fully automatic, it is sometimes useful to
@@ -247,6 +270,23 @@ public:
 
 private:
     lua_State* state_ = nullptr;
+
+    void call_function_with_n_arguments(int num_args);
+
+    template <typename ArgType>
+    void call_function_with_n_arguments(int num_args, const ArgType& arg)
+    {
+        push(arg);
+        call_function_with_n_arguments(num_args);
+    }
+
+    template <typename FirstArgType, typename... OtherArgTypes>
+    void call_function_with_n_arguments(int num_args,
+        const FirstArgType& first_arg, const OtherArgTypes&... other_args)
+    {
+        push(first_arg);
+        call_function_with_n_arguments(num_args, other_args...);
+    }
 
     /*
      * Close the LUA state (bring LuaState into a moved-from state).
