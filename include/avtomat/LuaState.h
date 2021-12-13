@@ -27,7 +27,7 @@
 
 #include <string>
 #include <type_traits>
-#include <hlc/util/exceptions.h>
+#include "avtomat/Error.h"
 
 struct lua_State; // Forward declaration of struct lua_State from the LUA headers
 
@@ -82,8 +82,8 @@ public:
      *                           should take place. The default stack index of -1 refers
      *                           to the element at the top of the stack.
      *
-     * \exception hlc::Error is thrown if a zero stack index is given (which is always
-     *            illegal in LUA).
+     * \exception Error is thrown if a zero stack index is given (which is always illegal
+     *            in LUA).
      */
     template <typename KeyType, typename ValueType>
     void assign_field(KeyType key, ValueType value, int table_stack_index = -1)
@@ -91,7 +91,7 @@ public:
         if (table_stack_index < 0)
             table_stack_index -= 2; // adjust relative stack indices by the two elements we are about to push
         else if (table_stack_index == 0)
-            throw hlc::Error("Zero stack index in assign_field()");
+            throw Error("Zero stack index in assign_field()");
 
         push(key);
         push(value);
@@ -110,8 +110,8 @@ public:
      * \param num_other_elements A hint for how many other elements should be
      *                           preallocated.
      *
-     * \exception hlc::Error is thrown if the table cannot be created (e.g. if the hints
-     *            for the number of elements are negative).
+     * \exception Error is thrown if the table cannot be created (e.g. if the hints for
+     *            the number of elements are negative).
      */
     void create_table(int num_seq_elements = 0, int num_other_elements = 0);
 
@@ -138,8 +138,8 @@ public:
     /**
      * Load a LUA script from a string without running it.
      * The script is precompiled into a chunk and its syntax is checked.
-     * \exception hlc::Error is thrown if a syntax error is found, if there is
-     *            insufficient memory, or if the LUA state is closed.
+     * \exception Error is thrown if a syntax error is found or if there is insufficient
+     *            memory.
      */
     void load_string(const std::string& script);
 
@@ -199,27 +199,24 @@ public:
     /**
      * Pop an integer from the LUA stack and return it.
      *
-     * \exception hlc::Error is thrown if the topmost value on the stack cannot be
-     *            converted to an integer. In this case, the stack position is not
-     *            modified.
+     * \exception Error is thrown if the topmost value on the stack cannot be converted to
+     *            an integer. In this case, the stack position is not modified.
      */
     long long pop_integer();
 
     /**
      * Pop a number from the LUA stack and return it.
      *
-     * \exception hlc::Error is thrown if the topmost value on the stack cannot be
-     *            converted into a number. In this case, the stack position is not
-     *            modified.
+     * \exception Error is thrown if the topmost value on the stack cannot be converted
+     *            into a number. In this case, the stack position is not modified.
      */
     double pop_number();
 
     /**
      * Pop a string from the LUA stack and return it.
      *
-     * \exception hlc::Error is thrown if the topmost value on the stack cannot be
-     *            converted into a string. In this case, the stack position is not
-     *            modified.
+     * \exception Error is thrown if the topmost value on the stack cannot be converted
+     *            into a string. In this case, the stack position is not modified.
      */
     std::string pop_string();
 
@@ -244,7 +241,7 @@ public:
      *
      * \warning
      * Calling this function without having a key and a value on the LUA stack causes
-     * undefined behavior.
+     * undefined behavior. Consider using assign_field() instead.
      */
     void set_table(int table_stack_index);
 

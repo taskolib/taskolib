@@ -25,7 +25,6 @@
 #include <limits>
 #include <type_traits>
 #include <gul14/catch.h>
-#include <hlc/util/exceptions.h>
 #include <lua.h>
 #include "../include/avtomat/Error.h"
 #include "../include/avtomat/LuaState.h"
