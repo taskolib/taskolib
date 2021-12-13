@@ -22,10 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/cat.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include "avtomat/Error.h"
 #include "avtomat/LuaState.h"
+
+using gul14::cat;
 
 namespace avto {
 
@@ -58,6 +61,37 @@ void LuaState::close() noexcept
     state_ = nullptr;
 }
 
+void LuaState::create_table(int num_seq_elements, int num_other_elements)
+{
+    if (num_seq_elements < 0 || num_other_elements < 0)
+    {
+        throw Error(cat("Invalid parameters for create_table: num_seq_elements = ",
+            num_seq_elements, ", num_other_elements = ", num_other_elements));
+    }
+
+    return lua_createtable(state_, num_seq_elements, num_other_elements);
+}
+
+int LuaState::get_global(const std::string& global_var_name)
+{
+    return lua_getglobal(state_, global_var_name.c_str());
+}
+
+int LuaState::get_top()
+{
+    return lua_gettop(state_);
+}
+
+void LuaState::load_string(const std::string& script)
+{
+    int err = luaL_loadstring(state_, script.c_str());
+    if (err)
+    {
+        // If something went wrong, error message is at the top of the stack
+        throw Error(cat("Cannot precompile script: ", pop_string()));
+    }
+}
+
 LuaState& LuaState::operator=(LuaState&& other) noexcept
 {
     close();
@@ -65,6 +99,78 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
     state_ = other.state_;
     other.state_ = nullptr;
     return *this;
+}
+
+long long LuaState::pop_integer()
+{
+    int success = 0;
+
+    long long val = lua_tointegerx(state_, -1, &success);
+
+    if (!success)
+        throw Error("Cannot pop integer from LUA stack");
+
+    lua_pop(state_, 1);
+
+    return val;
+}
+
+double LuaState::pop_number()
+{
+    int success = 0;
+
+    double val = lua_tonumberx(state_, -1, &success);
+
+    if (!success)
+        throw Error("Cannot pop number from LUA stack");
+
+    lua_pop(state_, 1);
+
+    return val;
+}
+
+std::string LuaState::pop_string()
+{
+    size_t len;
+    const char* lua_str = lua_tolstring(state_, -1, &len);
+
+    if (lua_str == nullptr)
+        throw Error("Unable to pop string from LUA stack");
+
+    std::string str{ lua_str, len };
+    lua_pop(state_, 1);
+
+    return str;
+}
+
+void LuaState::push_integer(long long value)
+{
+    lua_pushinteger(state_, value);
+}
+
+void LuaState::push_number(double value)
+{
+    lua_pushnumber(state_, value);
+}
+
+void LuaState::push_string(const std::string& str)
+{
+    lua_pushlstring(state_, str.data(), str.size());
+}
+
+void LuaState::push_string(const char* str)
+{
+    lua_pushstring(state_, str);
+}
+
+void LuaState::set_global(const std::string& global_var_name)
+{
+    lua_setglobal(state_, global_var_name.c_str());
+}
+
+void LuaState::set_table(int table_stack_index)
+{
+    lua_settable(state_, table_stack_index);
 }
 
 

@@ -10,17 +10,9 @@
 const std::string the_script =
 R"(
 -- An infinite loop
-io.write("The table the script received has:\n");
-x = 0
-for i = 1, #foo do
-  print(i, foo[i])
-  x = x + foo[i]
-end
 while true do
     io.write("Infinite loop!\n");
 end
-io.write("Returning data back to C\n");
-return x
 )";
 
 std::chrono::steady_clock::time_point t0;
@@ -28,7 +20,7 @@ std::chrono::steady_clock::time_point t0;
 
 void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 {
-    constexpr int timeout_s = 5;
+    constexpr int timeout_s = 3;
 
     if (gul14::toc(t0) > timeout_s)
     {
@@ -40,26 +32,21 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 
 int main()
 {
-    avto::LuaState the_lua_state;
-    auto lua_state = the_lua_state.get();
+    avto::LuaState lua_state;
 
-    luaL_openlibs(lua_state); // Load Lua libraries
+    luaL_openlibs(lua_state.get()); // Load Lua libraries
 
     // Load the script we are going to run from the string
-    int status = luaL_loadstring(lua_state, the_script.c_str());
-    if (status)
-    {
-        // If something went wrong, error message is at the top of the stack
-        std::cerr << "Couldn't load script: " << lua_tostring(lua_state, -1) << "\n";
-        exit(1);
-    }
+    lua_state.load_string(the_script);
 
     /*
      * Ok, now here we go: We pass data to the lua script on the stack.
      * That is, we first have to prepare Lua's virtual stack the way we
      * want the script to receive it, then ask Lua to run it.
      */
-    lua_newtable(lua_state);    // We will pass a table
+
+    // Push an empty table onto the stack
+    lua_state.create_table();
 
     /*
      * To put values into the table, we first push the index, then the
@@ -76,35 +63,26 @@ int main()
      * of the stack, so that after it has been called, the table is at the
      * top of the stack.
      */
-    for (int i = 1; i <= 5; i++)
-    {
-        lua_pushnumber(lua_state, i);   // Push the table index
-        lua_pushnumber(lua_state, i*2); // Push the cell value
-        lua_rawset(lua_state, -3);      // Stores the pair in the table
-    }
+    for (int i = 1; i <= 5; ++i)
+        lua_state.assign_field(i, i * 2);
 
     // By what name is the script going to reference our table?
-    lua_setglobal(lua_state, "foo");
+    lua_state.set_global("foo");
 
     // Install a hook that is called after every (1) LUA instruction
-    lua_sethook(lua_state, check_script_timeout, LUA_MASKCOUNT, 1);
+    lua_sethook(lua_state.get(), check_script_timeout, LUA_MASKCOUNT, 1);
 
     t0 = gul14::tic();
 
     // Ask Lua to run our little script
-    int err = lua_pcall(lua_state, 0, LUA_MULTRET, 0);
+    int err = lua_pcall(lua_state.get(), 0, LUA_MULTRET, 0);
     if (err)
     {
-        std::cerr << "Error while executing script: " << lua_tostring(lua_state, -1) << "\n";
+        std::cerr << "Error while executing script: " << lua_tostring(lua_state.get(), -1) << "\n";
         exit(1);
     }
 
-    // Get the returned value at the top of the stack (index -1)
-    double sum = lua_tonumber(lua_state, -1);
-
-    std::cout << "Script returned: " << sum << "\n";
-
-    lua_pop(lua_state, 1);  // Take the returned value out of the stack
+    std::cout << "Script returned: " << lua_state.pop_number() << "\n";
 
     return 0;
 }
