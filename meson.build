@@ -3,7 +3,7 @@ project(
   ['cpp'],
 version : '21.7.1',
 default_options : [
-    'cpp_std=c++17',
+    'cpp_std=c++14',
     'warning_level=3',
     'buildtype=release',
     'prefix=/export/doocs',
@@ -30,6 +30,7 @@ install_headers(files([
 # Sources
 sources = files([
     'src/LuaState.cc',
+    'src/Step.cc',
 ])
 
 # Test sources

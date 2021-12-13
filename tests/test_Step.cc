@@ -26,14 +26,23 @@
 #include <gul14/catch.h>
 #include "../include/avtomat/Step.h"
 
+using namespace std::literals;
 using namespace avto;
 
 TEST_CASE("Step: Default constructor", "[Step]")
 {
-    static_assert(std::is_nothrow_default_constructible<Step>::value,
-        "Step is_nothrow_default_constructible");
+    static_assert(std::is_default_constructible<Step>::value,
+        "Step is_default_constructible");
 
     Step s;
+}
+
+TEST_CASE("Step: get_label()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_label() == "");
+    step.set_label("Do nothing");
+    REQUIRE(step.get_label() == "Do nothing");
 }
 
 TEST_CASE("Step: get_script()", "[Step]")
@@ -44,28 +53,104 @@ TEST_CASE("Step: get_script()", "[Step]")
     REQUIRE(step.get_script() == "a = 42");
 }
 
+TEST_CASE("Step: get_time_of_last_execution()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_time_of_last_execution() == Timestamp{});
+
+    auto ts = Clock::now();
+    step.set_time_of_last_execution(ts);
+    REQUIRE(step.get_time_of_last_execution() == ts);
+}
+
+TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+
+    auto ts = Clock::now();
+    step.set_time_of_last_modification(ts);
+    REQUIRE(step.get_time_of_last_modification() == ts);
+}
+
 TEST_CASE("Step: get_type()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_type() == Step::Type::task_step);
-    step.set_type(Step::Type::catch_step);
-    REQUIRE(step.get_type() == Step::Type::catch_step);
-    step.set_type(Step::Type::if_step);
-    REQUIRE(step.get_type() == Step::Type::if_step);
+    REQUIRE(step.get_type() == Step::type_action);
+    step.set_type(Step::type_catch);
+    REQUIRE(step.get_type() == Step::type_catch);
+    step.set_type(Step::type_if);
+    REQUIRE(step.get_type() == Step::type_if);
+}
+
+TEST_CASE("Step: set_label()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+
+    step.set_label("Do nothing");
+    REQUIRE(step.get_label() == "Do nothing");
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+
+    step.set_label("Do something");
+    REQUIRE(step.get_label() == "Do something");
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+}
+
+TEST_CASE("Step: set_time_of_last_execution()", "[Step]")
+{
+    Step step;
+
+    auto ts = Clock::now();
+    step.set_time_of_last_execution(ts);
+    REQUIRE(step.get_time_of_last_execution() == ts);
+
+    step.set_time_of_last_execution(ts - 42s);
+    REQUIRE(step.get_time_of_last_execution() == ts - 42s);
+}
+
+TEST_CASE("Step: set_time_of_last_modification()", "[Step]")
+{
+    Step step;
+
+    auto ts = Clock::now();
+    step.set_time_of_last_modification(ts);
+    REQUIRE(step.get_time_of_last_modification() == ts);
+
+    step.set_time_of_last_modification(ts - 42s);
+    REQUIRE(step.get_time_of_last_modification() == ts - 42s);
 }
 
 TEST_CASE("Step: set_type()", "[Step]")
 {
     Step step;
-    step.set_type(Step::Type::while_step);
-    REQUIRE(step.get_type() == Step::Type::while_step);
-    step.set_type(Step::Type::end_step);
-    REQUIRE(step.get_type() == Step::Type::end_step);
+    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+
+    step.set_type(Step::type_while);
+    REQUIRE(step.get_type() == Step::type_while);
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+
+    step.set_type(Step::type_end);
+    REQUIRE(step.get_type() == Step::type_end);
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
 }
 
 TEST_CASE("Step: set_script()", "[Step]")
 {
     Step step;
+    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+
     step.set_script("test");
     REQUIRE(step.get_script() == "test");
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+
+    step.set_script("test 2");
+    REQUIRE(step.get_script() == "test 2");
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
 }
