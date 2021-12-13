@@ -37,7 +37,7 @@ using Timestamp = std::chrono::time_point<Clock>;
  * A step is the main building block of a sequence.
  *
  * Each step consists of a label, a script, and various other attributes.
- * Steps can be of different types (see Step::Type) - for instance, "task" steps hold a
+ * Steps can be of different types (see Step::Type) - for instance, "action" steps hold a
  * script that can simply be executed, "if" steps hold a script that can be evaluated to
  * determine if a condition is fulfilled, "end" steps mark the closing of a block in a
  * sequence.
@@ -48,7 +48,7 @@ public:
     /// An enum for differentiating the different types of step.
     enum Type
     {
-        type_task, type_if, type_else, type_elseif, type_end, type_while, type_try,
+        type_action, type_if, type_else, type_elseif, type_end, type_while, type_try,
         type_catch
     };
 
@@ -132,7 +132,7 @@ private:
     std::string label_;
     std::string script_;
     Timestamp time_of_last_modification_, time_of_last_execution_;
-    Type type_{ type_task };
+    Type type_{ type_action };
 };
 
 

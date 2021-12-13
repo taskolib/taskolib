@@ -76,7 +76,7 @@ TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
 TEST_CASE("Step: get_type()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_type() == Step::type_task);
+    REQUIRE(step.get_type() == Step::type_action);
     step.set_type(Step::type_catch);
     REQUIRE(step.get_type() == Step::type_catch);
     step.set_type(Step::type_if);
