@@ -37,7 +37,7 @@
  * -lgul14).
  *
  * \note
- * The HLC utility library requires at least C++14.
+ * The Avtomat library requires at least C++14.
  *
  * \author Lars Froehlich (for third-party code see \ref copyright)
  *
@@ -55,7 +55,7 @@
  *
  * <dl>
  * <dt>Code contributed by DESY</dt>
- * <dd>Copyright 2015-2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * <dd>Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -79,6 +79,8 @@
 #ifndef AVTOMAT_AVTOMAT_H_
 #define AVTOMAT_AVTOMAT_H_
 
+#include "avtomat/Error.h"
+#include "avtomat/LuaState.h"
 #include "avtomat/Step.h"
 
 /// Namespace avto contains all functions and classes of the Avtomat libs.

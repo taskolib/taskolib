@@ -21,6 +21,7 @@ package_name = 'doocs-libavtomat'
 # Headers to be installed under ${prefix}/include/
 install_headers(files([
     'include/avtomat/avtomat.h',
+    'include/avtomat/Error.h',
     'include/avtomat/LuaState.h',
     'include/avtomat/Step.h',
     ]),
@@ -33,6 +34,7 @@ sources = files([
 
 # Test sources
 test_src = files([
+    'tests/test_Error.cc',
     'tests/test_LuaState.cc',
     'tests/test_main.cc',
     'tests/test_Step.cc',
@@ -67,7 +69,6 @@ inc = [ include_directories('include') ]
 
 deps = [
     dependency('libgul14'),
-    dependency('doocs-hlcutillib'),
     dependency('lua5.3'),
 ]
 

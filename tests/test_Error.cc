@@ -1,8 +1,8 @@
 /**
- * \file   LuaState.cc
+ * \file   test_Error.cc
  * \author Lars Froehlich
- * \date   Created on December 3, 2021
- * \brief  Implementation of the LuaState class.
+ * \date   Created on December 10, 2021
+ * \brief  Test suite for the Error class.
  *
  * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -22,50 +22,32 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <lua.h>
-#include <lauxlib.h>
-#include "avtomat/Error.h"
-#include "avtomat/LuaState.h"
+#include <string>
+#include <gul14/catch.h>
+#include "../include/avtomat/Error.h"
 
-namespace avto {
+using namespace std::literals;
+using namespace avto;
 
-
-LuaState::LuaState()
+TEST_CASE("Error: Constructor", "[Step]")
 {
-    state_ = luaL_newstate();
-
-    if (state_ == nullptr)
-        throw Error("Unable to create new LUA state");
+    Error e("Test");
 }
 
-LuaState::LuaState(LuaState&& other)
-    : state_{ other.state_ }
+TEST_CASE("Error: Copy constructor", "[Step]")
 {
-    other.state_ = nullptr;
+    Error e("Test");
+    Error e2(e);
+
+    REQUIRE(e.what() == std::string(e2.what()));
 }
 
-LuaState::~LuaState() noexcept
+TEST_CASE("Error: Copy assignment", "[Step]")
 {
-    close();
+    Error e("Test");
+    Error e2("Test2");
+
+    e2 = e;
+
+    REQUIRE(e2.what() == "Test"s);
 }
-
-void LuaState::close() noexcept
-{
-    if (state_ == nullptr)
-        return;
-
-    lua_close(state_);
-    state_ = nullptr;
-}
-
-LuaState& LuaState::operator=(LuaState&& other) noexcept
-{
-    close();
-
-    state_ = other.state_;
-    other.state_ = nullptr;
-    return *this;
-}
-
-
-} // namespace avto

@@ -117,7 +117,7 @@ test-job-buster:
             binutils autotools-dev clang gcc-doc fakeroot debhelper cmake ninja-build meson pkg-config liblua5.3-dev)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Ubuntu-18.04-x86_64
 
 .setup_focal:
@@ -143,7 +143,7 @@ test-job-buster:
             build-essential binutils autotools-dev clang gcc-doc dh-exec dh-autoreconf cmake ninja-build meson pkg-config liblua5.3-dev)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Ubuntu-20.04-x86_64
 
 .setup_stretch:
@@ -170,7 +170,7 @@ test-job-buster:
             liblua5.3-dev)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Debian-9-x86_64
 
 .setup_buster:
@@ -196,5 +196,5 @@ test-job-buster:
             build-essential binutils autotools-dev clang dh-exec dh-autoreconf cmake ninja-build meson pkg-config liblua5.3-dev)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14 dev-doocs-hlcutillib)
+            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Debian-10-x86_64
