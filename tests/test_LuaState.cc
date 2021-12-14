@@ -434,3 +434,18 @@ TEST_CASE("LuaState: set_table()", "[LuaState]")
         REQUIRE(state.pop_number() == 42.0);
     }
 }
+
+
+TEST_CASE("LuaType: Constants match LUA definitions")
+{
+    REQUIRE(static_cast<int>(LuaType::none) == LUA_TNONE);
+    REQUIRE(static_cast<int>(LuaType::nil) == LUA_TNIL);
+    REQUIRE(static_cast<int>(LuaType::boolean) == LUA_TBOOLEAN);
+    REQUIRE(static_cast<int>(LuaType::light_user_data) == LUA_TLIGHTUSERDATA);
+    REQUIRE(static_cast<int>(LuaType::number) == LUA_TNUMBER);
+    REQUIRE(static_cast<int>(LuaType::string) == LUA_TSTRING);
+    REQUIRE(static_cast<int>(LuaType::table) == LUA_TTABLE);
+    REQUIRE(static_cast<int>(LuaType::function) == LUA_TFUNCTION);
+    REQUIRE(static_cast<int>(LuaType::user_data) == LUA_TUSERDATA);
+    REQUIRE(static_cast<int>(LuaType::thread) == LUA_TTHREAD);
+}

@@ -34,6 +34,15 @@ struct lua_State; // Forward declaration of struct lua_State from the LUA header
 
 namespace avto {
 
+/**
+ * An enum for the types of values that can exist on the LUA stack.
+ *
+ * The values are identical to the LUA constants LUA_TNONE, LUA_TNIL, LUA_TBOOLEAN etc.,
+ * but are repeated here to isolate the user from the LUA C headers. Unit tests ensure
+ * matching numeric constants.
+ */
+enum class LuaType { none = -1, nil = 0, boolean = 1, light_user_data = 2, number = 3,
+                     string = 4, table = 5, function = 6, user_data = 7, thread = 8 };
 
 /**
  * This class encapsulates a state of the LUA virtual machine.
