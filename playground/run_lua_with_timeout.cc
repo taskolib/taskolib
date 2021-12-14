@@ -75,14 +75,11 @@ int main()
     t0 = gul14::tic();
 
     // Ask Lua to run our little script
-    int err = lua_pcall(lua_state.get(), 0, LUA_MULTRET, 0);
-    if (err)
-    {
-        std::cerr << "Error while executing script: " << lua_tostring(lua_state.get(), -1) << "\n";
-        exit(1);
-    }
+    int num_results = lua_state.call_function();
 
-    std::cout << "Script returned: " << lua_state.pop_number() << "\n";
+    std::cout << "Script returned:\n";
+    for (int i = 0; i != num_results; ++i)
+        std::cout << "    " << lua_state.pop_number() << "\n";
 
     return 0;
 }
