@@ -2,7 +2,7 @@
  * \file   LuaState.h
  * \author Lars Froehlich
  * \date   Created on December 3, 2021
- * \brief  Declaration of the LuaState and LuaType classes.
+ * \brief  Declaration of the LuaState class and of associated enum classes.
  *
  * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -47,6 +47,15 @@ enum class LuaType : int
     string = 4, table = 5, function = 6, user_data = 7, thread = 8
 };
 
+/// An enum to specify the set of libraries to be loaded into a LUA state.
+enum class LuaLibraries
+{
+    none = 0, ///< No libraries
+    all, ///< All standard LUA libraries
+    safe_subset  ///< Safe subset without I/O (math, string, table, utf8, and a subset of the basic library)
+};
+
+
 /**
  * This class encapsulates a state of the LUA virtual machine.
  * It offers only a small subset of the functionalities of LUA.
@@ -59,12 +68,18 @@ class LuaState
 {
 public:
     /**
-     * Default constructor.
+     * Construct a new LUA state.
      *
-     * \exception Error is thrown if a new LUA state cannot be created. This is usually an
-     *            indication for an out-of-memory condition.
+     * By default, the LUA state is empty and has no preloaded libraries. However,
+     * libraries can be preloaded with the following function parameter:
+     *
+     * \param libraries  specifies the subset of the LUA standard libraries to be loaded
+     *                   (see LuaLibraries for details).
+     *
+     * \exception Error is thrown if the new LUA state cannot be created. This is usually
+     *            an indication for an out-of-memory condition.
      */
-    LuaState();
+    LuaState(LuaLibraries libraries = LuaLibraries::none);
 
     /// Deleted copy constructor.
     LuaState(const LuaState& other) = delete;
@@ -189,6 +204,14 @@ public:
      */
     void load_string(const std::string& script);
 
+    /**
+     * Load a specified subset of the LUA standard libraries into this state.
+     *
+     * \param libraries  specifies the subset of the LUA standard libraries to be loaded
+     *                   (see LuaLibraries for details).
+     */
+    void open_libraries(LuaLibraries libraries);
+
     /// Copy assignment is deleted.
     LuaState& operator=(const LuaState& other) = delete;
 
@@ -199,6 +222,14 @@ public:
      * behavior.
      */
     LuaState& operator=(LuaState&& other) noexcept;
+
+    /**
+     * Pop a number of elements from the LUA stack.
+     *
+     * \param num_elements  the number of elements to be removed from the top of the LUA
+     *                      stack.
+     */
+    void pop(int num_elements = 1);
 
     /**
      * Push a value onto the LUA stack.

@@ -38,6 +38,26 @@ TEST_CASE("LuaState: Default constructor", "[LuaState]")
         "LuaState is_default_constructible");
 
     LuaState state;
+
+    // No library functions may be loaded
+    REQUIRE(state.get_global("print") == LuaType::nil);
+    REQUIRE(state.get_global("ipairs") == LuaType::nil);
+}
+
+TEST_CASE("LuaState: Constructor with LuaLibraries::all", "[LuaState]")
+{
+    LuaState state(LuaLibraries::all);
+
+    REQUIRE(state.get_global("print") == LuaType::function);
+    REQUIRE(state.get_global("ipairs") == LuaType::function);
+}
+
+TEST_CASE("LuaState: Constructor with LuaLibraries::safe_subset", "[LuaState]")
+{
+    LuaState state(LuaLibraries::safe_subset);
+
+    REQUIRE(state.get_global("print") == LuaType::nil);
+    REQUIRE(state.get_global("ipairs") == LuaType::function);
 }
 
 TEST_CASE("LuaState: Move constructor", "[LuaState]")
@@ -243,6 +263,41 @@ TEST_CASE("LuaState: load_string()", "[LuaState]")
     }
 }
 
+TEST_CASE("LuaState: open_libraries()", "[LuaState]")
+{
+    LuaState state;
+
+    SECTION("LuaLibraries::none")
+    {
+        state.open_libraries(LuaLibraries::none);
+        REQUIRE(state.get_global("ipairs") == LuaType::nil);
+        REQUIRE(state.get_global("print") == LuaType::nil);
+        REQUIRE(state.get_global("io") == LuaType::nil);
+        REQUIRE(state.get_global("os") == LuaType::nil);
+        REQUIRE(state.get_global("string") == LuaType::nil);
+    }
+
+    SECTION("LuaLibraries::all")
+    {
+        state.open_libraries(LuaLibraries::all);
+        REQUIRE(state.get_global("ipairs") == LuaType::function);
+        REQUIRE(state.get_global("print") == LuaType::function);
+        REQUIRE(state.get_global("io") == LuaType::table);
+        REQUIRE(state.get_global("os") == LuaType::table);
+        REQUIRE(state.get_global("string") == LuaType::table);
+    }
+
+    SECTION("LuaLibraries::safe_subset")
+    {
+        state.open_libraries(LuaLibraries::safe_subset);
+        REQUIRE(state.get_global("ipairs") == LuaType::function);
+        REQUIRE(state.get_global("print") == LuaType::nil);
+        REQUIRE(state.get_global("io") == LuaType::nil);
+        REQUIRE(state.get_global("os") == LuaType::nil);
+        REQUIRE(state.get_global("string") == LuaType::table);
+    }
+}
+
 TEST_CASE("LuaState: operator=(LuaState&&) (move assignment)", "[LuaState]")
 {
     LuaState state1;
@@ -329,6 +384,23 @@ TEST_CASE("LuaState: pop_string()", "[LuaState]")
     }
 }
 
+TEST_CASE("LuaState: pop()", "[LuaState]")
+{
+    LuaState state;
+
+    state.push_number(42);
+    REQUIRE(state.get_top() == 1);
+
+    state.pop();
+    REQUIRE(state.get_top() == 0);
+
+    state.push_number(42);
+    state.push_string("Hello");
+    REQUIRE(state.get_top() == 2);
+    state.pop(2);
+    REQUIRE(state.get_top() == 0);
+}
+
 TEST_CASE("LuaState: push()", "[LuaState]")
 {
     LuaState state;
@@ -355,7 +427,7 @@ TEST_CASE("LuaState: push()", "[LuaState]")
 
     state.push(nullptr);
     REQUIRE(state.get_type() == LuaType::nil);
-    lua_pop(state.get(), 1);
+    state.pop();
 
     state.push("Hello world!");
     REQUIRE(state.get_type() == LuaType::string);
