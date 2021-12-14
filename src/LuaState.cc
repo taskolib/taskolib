@@ -57,7 +57,7 @@ void LuaState::call_function_with_n_arguments(int num_args)
     const int stack_pos = get_top();
 
     // On the stack we should have the function and all arguments, in that order
-    if (stack_pos <= num_args || lua_type(state_, stack_pos - num_args) != LUA_TFUNCTION)
+    if (stack_pos <= num_args || get_type(stack_pos - num_args) != LuaType::function)
         throw Error("Found no callable function on the LUA stack");
 
     int err = lua_pcall(state_, num_args, LUA_MULTRET, 0);
@@ -86,14 +86,19 @@ void LuaState::create_table(int num_seq_elements, int num_other_elements)
     return lua_createtable(state_, num_seq_elements, num_other_elements);
 }
 
-int LuaState::get_global(const std::string& global_var_name)
+LuaType LuaState::get_global(const std::string& global_var_name)
 {
-    return lua_getglobal(state_, global_var_name.c_str());
+    return static_cast<LuaType>(lua_getglobal(state_, global_var_name.c_str()));
 }
 
 int LuaState::get_top()
 {
     return lua_gettop(state_);
+}
+
+LuaType LuaState::get_type(int stack_index)
+{
+    return static_cast<LuaType>(lua_type(state_, stack_index));
 }
 
 void LuaState::load_string(const std::string& script)

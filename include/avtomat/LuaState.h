@@ -2,7 +2,7 @@
  * \file   LuaState.h
  * \author Lars Froehlich
  * \date   Created on December 3, 2021
- * \brief  Declaration of the LuaState class.
+ * \brief  Declaration of the LuaState and LuaType classes.
  *
  * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -41,8 +41,11 @@ namespace avto {
  * but are repeated here to isolate the user from the LUA C headers. Unit tests ensure
  * matching numeric constants.
  */
-enum class LuaType { none = -1, nil = 0, boolean = 1, light_user_data = 2, number = 3,
-                     string = 4, table = 5, function = 6, user_data = 7, thread = 8 };
+enum class LuaType : int
+{
+    none = -1, nil = 0, boolean = 1, light_user_data = 2, number = 3,
+    string = 4, table = 5, function = 6, user_data = 7, thread = 8
+};
 
 /**
  * This class encapsulates a state of the LUA virtual machine.
@@ -159,13 +162,24 @@ public:
      * Retrieve the global variable with the specified name, push its value onto the LUA
      * stack and return its type.
      */
-    int get_global(const std::string& global_var_name);
+    LuaType get_global(const std::string& global_var_name);
 
     /**
      * Return the number of elements on the LUA stack.
      * Zero means that the stack is empty.
      */
     int get_top();
+
+    /**
+     * Return the type of the value at the given stack index.
+     *
+     * \param stack_index  A LUA stack index; by default (-1), the type of the topmost
+     *                     value on the stack is returned.
+     *
+     * \returns the type of the value at the specified stack index or LuaType::none if the
+     *          stack index is invalid.
+     */
+    LuaType get_type(int stack_index = -1);
 
     /**
      * Load a LUA script from a string without running it.

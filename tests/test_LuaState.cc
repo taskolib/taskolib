@@ -56,11 +56,11 @@ TEST_CASE("LuaState: assign_field()", "[LuaState]")
     state.create_table();
     state.assign_field(1, 42.0);
     REQUIRE(state.get_top() == 1); // 1 object on stack (just the table)
-    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+    REQUIRE(state.get_type() == LuaType::table);
 
     state.assign_field("mykey", "Hello world!", 1);
     REQUIRE(state.get_top() == 1); // 1 object on stack (just the table)
-    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+    REQUIRE(state.get_type() == LuaType::table);
 
     state.push_number(1); // index to retrieve
     lua_gettable(state.get(), -2);
@@ -93,13 +93,13 @@ TEST_CASE("LuaState: call_function()", "[LuaState]")
         )");
 
         REQUIRE(state.get_top() == 1); // 1 object on stack (the chunk)
-        REQUIRE(lua_type(state.get(), -1) == LUA_TFUNCTION);
+        REQUIRE(state.get_type() == LuaType::function);
         REQUIRE(state.call_function() == 0); // execute chunk to get function definition
         REQUIRE(state.get_top() == 0);
 
         state.get_global("sum_and_count");
         REQUIRE(state.get_top() == 1); // 1 object on stack (the function)
-        REQUIRE(lua_type(state.get(), -1) == LUA_TFUNCTION);
+        REQUIRE(state.get_type() == LuaType::function);
 
         SECTION("Call without parameters")
         {
@@ -153,19 +153,19 @@ TEST_CASE("LuaState: create_table()", "[LuaState]")
 
     state.create_table();
     REQUIRE(state.get_top() == 1); // 1 object on stack
-    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+    REQUIRE(state.get_type() == LuaType::table);
 
     state.create_table(0, 10);
     REQUIRE(state.get_top() == 2); // 2 objects on stack
-    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+    REQUIRE(state.get_type() == LuaType::table);
 
     state.create_table(10, 0);
     REQUIRE(state.get_top() == 3); // 3 objects on stack
-    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+    REQUIRE(state.get_type() == LuaType::table);
 
     state.create_table(10, 10);
     REQUIRE(state.get_top() == 4); // 4 objects on stack
-    REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+    REQUIRE(state.get_type() == LuaType::table);
 
     REQUIRE_THROWS_AS(state.create_table(-1, 0), Error);
     REQUIRE(state.get_top() == 4); // 4 objects on stack
@@ -186,15 +186,36 @@ TEST_CASE("LuaState: get()", "[LuaState]")
     REQUIRE(state.get() == nullptr);
 }
 
+TEST_CASE("LuaState: get_type()", "[LuaState]")
+{
+    LuaState state;
+
+    state.push_integer(42);
+    REQUIRE(state.get_type() == LuaType::number);
+
+    state.push_string("Test");
+    REQUIRE(state.get_type() == LuaType::string);
+    REQUIRE(state.get_type(-2) == LuaType::number);
+
+    state.push_number(-1.5);
+    REQUIRE(state.get_type() == LuaType::number);
+    REQUIRE(state.get_type(-2) == LuaType::string);
+    REQUIRE(state.get_type(-3) == LuaType::number);
+
+    REQUIRE(state.get_type(1) == LuaType::number);
+    REQUIRE(state.get_type(2) == LuaType::string);
+    REQUIRE(state.get_type(3) == LuaType::number);
+}
+
 TEST_CASE("LuaState: get_global()", "[LuaState]")
 {
     LuaState state;
-    REQUIRE(state.get_global("pippo") == LUA_TNIL);
+    REQUIRE(state.get_global("pippo") == LuaType::nil);
 
     state.push_number(42.0);
     state.set_global("pippo");
 
-    REQUIRE(state.get_global("pippo") == LUA_TNUMBER);
+    REQUIRE(state.get_global("pippo") == LuaType::number);
 }
 
 TEST_CASE("LuaState: get_top()", "[LuaState]")
@@ -313,35 +334,35 @@ TEST_CASE("LuaState: push()", "[LuaState]")
     LuaState state;
 
     state.push(char{ 42 });
-    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.get_type() == LuaType::number);
     REQUIRE(state.pop_integer() == 42);
 
     state.push(42);
-    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.get_type() == LuaType::number);
     REQUIRE(state.pop_integer() == 42);
 
     state.push(123'456'789ULL);
-    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.get_type() == LuaType::number);
     REQUIRE(state.pop_integer() == 123'456'789);
 
     state.push(-43.5);
-    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.get_type() == LuaType::number);
     REQUIRE(state.pop_number() == -43.5);
 
     state.push(-43.5L);
-    REQUIRE(lua_type(state.get(), -1) == LUA_TNUMBER);
+    REQUIRE(state.get_type() == LuaType::number);
     REQUIRE(state.pop_number() == -43.5);
 
     state.push(nullptr);
-    REQUIRE(lua_type(state.get(), -1) == LUA_TNIL);
+    REQUIRE(state.get_type() == LuaType::nil);
     lua_pop(state.get(), 1);
 
     state.push("Hello world!");
-    REQUIRE(lua_type(state.get(), -1) == LUA_TSTRING);
+    REQUIRE(state.get_type() == LuaType::string);
     REQUIRE(state.pop_string() == "Hello world!");
 
     state.push("Hello\0world!"s);
-    REQUIRE(lua_type(state.get(), -1) == LUA_TSTRING);
+    REQUIRE(state.get_type() == LuaType::string);
     REQUIRE(state.pop_string() == "Hello\0world!"s);
 }
 
@@ -394,7 +415,7 @@ TEST_CASE("LuaState: push_string()", "[LuaState]")
     {
         state.push_string(nullptr);
         REQUIRE(state.get_top() == 1);
-        REQUIRE(lua_type(state.get(), -1) == LUA_TNIL);
+        REQUIRE(state.get_type() == LuaType::nil);
     }
 
     SECTION("String with embedded zero bytes")
@@ -412,7 +433,7 @@ TEST_CASE("LuaState: set_global()", "[LuaState]")
     state.push_number(42.0);
     state.set_global("pippo");
 
-    REQUIRE(state.get_global("pippo") == LUA_TNUMBER);
+    REQUIRE(state.get_global("pippo") == LuaType::number);
 }
 
 TEST_CASE("LuaState: set_table()", "[LuaState]")
@@ -426,7 +447,7 @@ TEST_CASE("LuaState: set_table()", "[LuaState]")
         state.push_number(42.0);
         state.set_table(-3);
         REQUIRE(state.get_top() == 1); // 1 object on stack (just the table)
-        REQUIRE(lua_type(state.get(), -1) == LUA_TTABLE);
+        REQUIRE(state.get_type() == LuaType::table);
 
         state.push_number(1); // index to retrieve
         lua_gettable(state.get(), -2);
