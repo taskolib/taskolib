@@ -1,7 +1,7 @@
 project(
   'libavtomat',
   ['cpp'],
-version : '21.7.1',
+version : '21.12.1',
 default_options : [
     'cpp_std=c++14',
     'warning_level=3',
