@@ -32,41 +32,19 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 
 int main()
 {
-    avto::LuaState lua_state;
+    avto::LuaState lua_state(avto::LuaLibraries::all);
 
-    luaL_openlibs(lua_state.get()); // Load Lua libraries
-
-    // Load the script we are going to run from the string
+    // Load the script we are going to run from the string and put the resulting chunk
+    // onto the LUA stack
     lua_state.load_string(the_script);
 
-    /*
-     * Ok, now here we go: We pass data to the lua script on the stack.
-     * That is, we first have to prepare Lua's virtual stack the way we
-     * want the script to receive it, then ask Lua to run it.
-     */
-
-    // Push an empty table onto the stack
+    // Create a table on the stack and fill it with some values
     lua_state.create_table();
 
-    /*
-     * To put values into the table, we first push the index, then the
-     * value, and then call lua_rawset() with the index of the table in the
-     * stack. Let's see why it's -3: In Lua, the value -1 always refers to
-     * the top of the stack. When you create the table with lua_newtable(),
-     * the table gets pushed into the top of the stack. When you push the
-     * index and then the cell value, the stack looks like:
-     *
-     * <- [stack bottom] -- table, index, value [top]
-     *
-     * So the -1 will refer to the cell value, thus -3 is used to refer to
-     * the table itself. Note that lua_rawset() pops the two last elements
-     * of the stack, so that after it has been called, the table is at the
-     * top of the stack.
-     */
     for (int i = 1; i <= 5; ++i)
         lua_state.assign_field(i, i * 2);
 
-    // By what name is the script going to reference our table?
+    // Assign a global name to the table (and pop it from the stack)
     lua_state.set_global("foo");
 
     // Install a hook that is called after every (1) LUA instruction
@@ -75,14 +53,11 @@ int main()
     t0 = gul14::tic();
 
     // Ask Lua to run our little script
-    int err = lua_pcall(lua_state.get(), 0, LUA_MULTRET, 0);
-    if (err)
-    {
-        std::cerr << "Error while executing script: " << lua_tostring(lua_state.get(), -1) << "\n";
-        exit(1);
-    }
+    int num_results = lua_state.call_function();
 
-    std::cout << "Script returned: " << lua_state.pop_number() << "\n";
+    std::cout << "Script returned:\n";
+    for (int i = 0; i != num_results; ++i)
+        std::cout << "    " << lua_state.pop_number() << "\n";
 
     return 0;
 }

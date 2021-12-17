@@ -2,7 +2,7 @@
  * \file   LuaState.h
  * \author Lars Froehlich
  * \date   Created on December 3, 2021
- * \brief  Declaration of the LuaState class.
+ * \brief  Declaration of the LuaState class and of associated enum classes.
  *
  * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -34,6 +34,27 @@ struct lua_State; // Forward declaration of struct lua_State from the LUA header
 
 namespace avto {
 
+/**
+ * An enum for the types of values that can exist on the LUA stack.
+ *
+ * The values are identical to the LUA constants LUA_TNONE, LUA_TNIL, LUA_TBOOLEAN etc.,
+ * but are repeated here to isolate the user from the LUA C headers. Unit tests ensure
+ * matching numeric constants.
+ */
+enum class LuaType : int
+{
+    none = -1, nil = 0, boolean = 1, light_user_data = 2, number = 3,
+    string = 4, table = 5, function = 6, user_data = 7, thread = 8
+};
+
+/// An enum to specify the set of libraries to be loaded into a LUA state.
+enum class LuaLibraries
+{
+    none = 0, ///< No libraries
+    all, ///< All standard LUA libraries
+    safe_subset  ///< Safe subset without I/O (math, string, table, utf8, and a subset of the basic library)
+};
+
 
 /**
  * This class encapsulates a state of the LUA virtual machine.
@@ -47,12 +68,18 @@ class LuaState
 {
 public:
     /**
-     * Default constructor.
+     * Construct a new LUA state.
      *
-     * \exception Error is thrown if a new LUA state cannot be created. This is usually an
-     *            indication for an out-of-memory condition.
+     * By default, the LUA state is empty and has no preloaded libraries. However,
+     * libraries can be preloaded with the following function parameter:
+     *
+     * \param libraries  specifies the subset of the LUA standard libraries to be loaded
+     *                   (see LuaLibraries for details).
+     *
+     * \exception Error is thrown if the new LUA state cannot be created. This is usually
+     *            an indication for an out-of-memory condition.
      */
-    LuaState();
+    LuaState(LuaLibraries libraries = LuaLibraries::none);
 
     /// Deleted copy constructor.
     LuaState(const LuaState& other) = delete;
@@ -99,6 +126,29 @@ public:
     }
 
     /**
+     * Execute the LUA function on top of the stack, passing the given arguments.
+     *
+     * The call removes the function from the stack and leaves all output parameters on
+     * it.
+     *
+     * \returns the number of function results pushed onto the stack.
+     *
+     * \exception Error is thrown if there is no function on the top of the LUA stack or
+     *            if the function call causes a runtime error. In the latter case, the
+     *            function is popped from the stack and no additional values are left on
+     *            it.
+     */
+    template <typename... ArgumentTypes>
+    int call_function(const ArgumentTypes&... args)
+    {
+        const int initial_stack_pos = get_top();
+
+        call_function_with_n_arguments(sizeof...(ArgumentTypes), args...);
+
+        return get_top() - initial_stack_pos + 1; // +1: function was popped from stack
+    }
+
+    /**
      * Create an empty table and push it onto the LUA stack.
      *
      * Although LUA's memory management is fully automatic, it is sometimes useful to
@@ -127,7 +177,7 @@ public:
      * Retrieve the global variable with the specified name, push its value onto the LUA
      * stack and return its type.
      */
-    int get_global(const std::string& global_var_name);
+    LuaType get_global(const std::string& global_var_name);
 
     /**
      * Return the number of elements on the LUA stack.
@@ -136,12 +186,31 @@ public:
     int get_top();
 
     /**
+     * Return the type of the value at the given stack index.
+     *
+     * \param stack_index  A LUA stack index; by default (-1), the type of the topmost
+     *                     value on the stack is returned.
+     *
+     * \returns the type of the value at the specified stack index or LuaType::none if the
+     *          stack index is invalid.
+     */
+    LuaType get_type(int stack_index = -1);
+
+    /**
      * Load a LUA script from a string without running it.
      * The script is precompiled into a chunk and its syntax is checked.
      * \exception Error is thrown if a syntax error is found or if there is insufficient
      *            memory.
      */
     void load_string(const std::string& script);
+
+    /**
+     * Load a specified subset of the LUA standard libraries into this state.
+     *
+     * \param libraries  specifies the subset of the LUA standard libraries to be loaded
+     *                   (see LuaLibraries for details).
+     */
+    void open_libraries(LuaLibraries libraries);
 
     /// Copy assignment is deleted.
     LuaState& operator=(const LuaState& other) = delete;
@@ -153,6 +222,14 @@ public:
      * behavior.
      */
     LuaState& operator=(LuaState&& other) noexcept;
+
+    /**
+     * Pop a number of elements from the LUA stack.
+     *
+     * \param num_elements  the number of elements to be removed from the top of the LUA
+     *                      stack.
+     */
+    void pop(int num_elements = 1);
 
     /**
      * Push a value onto the LUA stack.
@@ -247,6 +324,23 @@ public:
 
 private:
     lua_State* state_ = nullptr;
+
+    void call_function_with_n_arguments(int num_args);
+
+    template <typename ArgType>
+    void call_function_with_n_arguments(int num_args, const ArgType& arg)
+    {
+        push(arg);
+        call_function_with_n_arguments(num_args);
+    }
+
+    template <typename FirstArgType, typename... OtherArgTypes>
+    void call_function_with_n_arguments(int num_args,
+        const FirstArgType& first_arg, const OtherArgTypes&... other_args)
+    {
+        push(first_arg);
+        call_function_with_n_arguments(num_args, other_args...);
+    }
 
     /*
      * Close the LUA state (bring LuaState into a moved-from state).

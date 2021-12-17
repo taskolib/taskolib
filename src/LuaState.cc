@@ -25,6 +25,7 @@
 #include <gul14/cat.h>
 #include <lua.h>
 #include <lauxlib.h>
+#include <lualib.h>
 #include "avtomat/Error.h"
 #include "avtomat/LuaState.h"
 
@@ -33,12 +34,14 @@ using gul14::cat;
 namespace avto {
 
 
-LuaState::LuaState()
+LuaState::LuaState(LuaLibraries libraries)
 {
     state_ = luaL_newstate();
 
     if (state_ == nullptr)
         throw Error("Unable to create new LUA state");
+
+    open_libraries(libraries);
 }
 
 LuaState::LuaState(LuaState&& other)
@@ -50,6 +53,20 @@ LuaState::LuaState(LuaState&& other)
 LuaState::~LuaState() noexcept
 {
     close();
+}
+
+void LuaState::call_function_with_n_arguments(int num_args)
+{
+    const int stack_pos = get_top();
+
+    // On the stack we should have the function and all arguments, in that order
+    if (stack_pos <= num_args || get_type(stack_pos - num_args) != LuaType::function)
+        throw Error("Found no callable function on the LUA stack");
+
+    int err = lua_pcall(state_, num_args, LUA_MULTRET, 0);
+
+    if (err != LUA_OK)
+        throw Error(cat("Error while executing script: ", pop_string()));
 }
 
 void LuaState::close() noexcept
@@ -72,14 +89,19 @@ void LuaState::create_table(int num_seq_elements, int num_other_elements)
     return lua_createtable(state_, num_seq_elements, num_other_elements);
 }
 
-int LuaState::get_global(const std::string& global_var_name)
+LuaType LuaState::get_global(const std::string& global_var_name)
 {
-    return lua_getglobal(state_, global_var_name.c_str());
+    return static_cast<LuaType>(lua_getglobal(state_, global_var_name.c_str()));
 }
 
 int LuaState::get_top()
 {
     return lua_gettop(state_);
+}
+
+LuaType LuaState::get_type(int stack_index)
+{
+    return static_cast<LuaType>(lua_type(state_, stack_index));
 }
 
 void LuaState::load_string(const std::string& script)
@@ -92,6 +114,38 @@ void LuaState::load_string(const std::string& script)
     }
 }
 
+void LuaState::open_libraries(LuaLibraries libraries)
+{
+    switch (libraries)
+    {
+    case LuaLibraries::none:
+        break;
+
+    case LuaLibraries::all:
+        luaL_openlibs(state_);
+        break;
+
+    case LuaLibraries::safe_subset:
+        luaL_requiref(state_, "_G", luaopen_base, 1);
+        assign_field("assert", nullptr);
+        assign_field("collectgarbage", nullptr);
+        assign_field("debug", nullptr);
+        assign_field("dofile", nullptr);
+        assign_field("load", nullptr);
+        assign_field("loadfile", nullptr);
+        assign_field("print", nullptr);
+        assign_field("require", nullptr);
+        pop();
+
+        luaL_requiref(state_, LUA_MATHLIBNAME, luaopen_math, 1); pop();
+        luaL_requiref(state_, LUA_STRLIBNAME, luaopen_string, 1); pop();
+        luaL_requiref(state_, LUA_TABLIBNAME, luaopen_table, 1); pop();
+        luaL_requiref(state_, LUA_UTF8LIBNAME, luaopen_utf8, 1); pop();
+
+        break;
+    };
+}
+
 LuaState& LuaState::operator=(LuaState&& other) noexcept
 {
     close();
@@ -99,6 +153,11 @@ LuaState& LuaState::operator=(LuaState&& other) noexcept
     state_ = other.state_;
     other.state_ = nullptr;
     return *this;
+}
+
+void LuaState::pop(int num_elements)
+{
+    lua_pop(state_, num_elements);
 }
 
 long long LuaState::pop_integer()
