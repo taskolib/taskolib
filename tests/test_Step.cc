@@ -73,6 +73,15 @@ TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
     REQUIRE(step.get_time_of_last_modification() == ts);
 }
 
+TEST_CASE("Step: get_timeout()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_timeout() == Step::infinite_timeout);
+
+    step.set_timeout(42s);
+    REQUIRE(step.get_timeout() == 42'000ms);
+}
+
 TEST_CASE("Step: get_type()", "[Step]")
 {
     Step step;
@@ -121,6 +130,20 @@ TEST_CASE("Step: set_time_of_last_modification()", "[Step]")
 
     step.set_time_of_last_modification(ts - 42s);
     REQUIRE(step.get_time_of_last_modification() == ts - 42s);
+}
+
+TEST_CASE("Step: set_timeout()", "[Step]")
+{
+    Step step;
+
+    step.set_timeout(42s);
+    REQUIRE(step.get_timeout() == 42s);
+
+    step.set_timeout(-2ms);
+    REQUIRE(step.get_timeout() == 0s);
+
+    step.set_timeout(Step::infinite_timeout);
+    REQUIRE(step.get_timeout() == Step::infinite_timeout);
 }
 
 TEST_CASE("Step: set_type()", "[Step]")

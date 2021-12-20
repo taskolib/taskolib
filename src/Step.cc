@@ -24,6 +24,8 @@
 
 #include "avtomat/Step.h"
 
+using namespace std::literals;
+
 namespace avto {
 
 
@@ -37,6 +39,14 @@ void Step::set_script(const std::string& script)
 {
     script_ = script;
     set_time_of_last_modification(Clock::now());
+}
+
+void Step::set_timeout(std::chrono::milliseconds timeout)
+{
+    if (timeout < 0s)
+        timeout_ = 0s;
+    else
+        timeout_ = timeout;
 }
 
 void Step::set_type(Type type)

@@ -52,6 +52,11 @@ public:
         type_catch
     };
 
+    /// A constant to use for "infinite" timeout durations
+    static constexpr std::chrono::milliseconds
+        infinite_timeout{ std::chrono::milliseconds::max() };
+
+
     /**
      * Return the label of the step.
      *
@@ -93,6 +98,9 @@ public:
      */
     Timestamp get_time_of_last_modification() const { return time_of_last_modification_; }
 
+    /// Return the timeout duration for executing the script.
+    std::chrono::milliseconds get_timeout() const { return timeout_; }
+
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
 
@@ -123,6 +131,12 @@ public:
     void set_time_of_last_modification(Timestamp t) { time_of_last_modification_ = t; }
 
     /**
+     * Set the timeout duration for executing the script.
+     * Negative values set the timeout to zero.
+     */
+    void set_timeout(std::chrono::milliseconds timeout);
+
+    /**
      * Set the type of this step.
      * This call also updates the time of last modification to the current system time.
      */
@@ -132,6 +146,7 @@ private:
     std::string label_;
     std::string script_;
     Timestamp time_of_last_modification_, time_of_last_execution_;
+    std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
 };
 
