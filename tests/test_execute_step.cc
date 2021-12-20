@@ -23,14 +23,60 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
+#include "../include/avtomat/Error.h"
 #include "../include/avtomat/execute_step.h"
 
 using namespace avto;
 
-TEST_CASE("execute_step(): Empty step returns false", "[execute_step]")
+TEST_CASE("execute_step(): Boolean return value from simple scripts", "[execute_step]")
 {
     Context context;
     Step step;
 
-    REQUIRE(execute_step(step, context) == false);
+    SECTION("Empty step returns false")
+    {
+        REQUIRE(execute_step(step, context) == false);
+    }
+
+    SECTION("'return true' returns true")
+    {
+        step.set_script("return true");
+        REQUIRE(execute_step(step, context) == true);
+    }
+
+    SECTION("'return false' returns false")
+    {
+        step.set_script("return true");
+        REQUIRE(execute_step(step, context) == true);
+    }
+
+    SECTION("'return nil' returns false")
+    {
+        step.set_script("return nil");
+        REQUIRE(execute_step(step, context) == false);
+    }
+
+    SECTION("'return 42' returns true")
+    {
+        step.set_script("return true");
+        REQUIRE(execute_step(step, context) == true);
+    }
+}
+
+TEST_CASE("execute_step(): Exceptions", "[execute_step]")
+{
+    Context context;
+    Step step;
+
+    SECTION("Syntax error")
+    {
+        step.set_script("not a lua program");
+        REQUIRE_THROWS_AS(execute_step(step, context), Error);
+    }
+
+    SECTION("Runtime error")
+    {
+        step.set_script("b = nil; b()");
+        REQUIRE_THROWS_AS(execute_step(step, context), Error);
+    }
 }

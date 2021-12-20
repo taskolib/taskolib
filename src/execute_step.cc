@@ -22,13 +22,47 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/cat.h>
+#include "avtomat/Error.h"
 #include "avtomat/execute_step.h"
+
+#define SOL_PRINT_ERRORS 0
+#include "sol/sol.hpp"
+
+using gul14::cat;
 
 namespace avto {
 
 
 bool execute_step(Step& step, Context& context)
 {
+    sol::state lua;
+
+    lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::table,
+                       sol::lib::utf8);
+
+    lua["_G"]["assert"] = nullptr;
+    lua["_G"]["collectgarbage"] = nullptr;
+    lua["_G"]["debug"] = nullptr;
+    lua["_G"]["dofile"] = nullptr;
+    lua["_G"]["load"] = nullptr;
+    lua["_G"]["loadfile"] = nullptr;
+    lua["_G"]["print"] = nullptr;
+    lua["_G"]["require"] = nullptr;
+
+    try
+    {
+        sol::optional<bool> result = lua.safe_script(
+            step.get_script(), sol::script_default_on_error);
+
+        if (result)
+            return *result;
+    }
+    catch (const sol::error& e)
+    {
+        throw Error(cat("Error while executing script: ", e.what()));
+    }
+
     return false;
 }
 

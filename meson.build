@@ -71,7 +71,7 @@ libno_full = '.'.join(libno_parts)
 
 
 ## Build library
-inc = [ include_directories('include') ]
+inc = [ include_directories('include', 'src') ]
 
 deps = [
     dependency('libgul14'),
