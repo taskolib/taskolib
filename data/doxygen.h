@@ -18,7 +18,8 @@
  * \note
  * The Avtomat library requires at least C++17.
  *
- * \author Lars Froehlich (for third-party code see \ref copyright)
+ * \authors Lars Froehlich, Olaf Hensler, Marcus Walla (for third-party code see
+ *          \ref copyright)
  *
  * \copyright
  * See \ref copyright
@@ -52,7 +53,30 @@
  *
  * \section additional_copyright_notices Additional Copyright Notices
  *
- * This library currently contains no third-party code.
+ * This library contains the Sol2 library in the directory src/sol (see
+ * https://github.com/ThePhD/sol2). Sol2 is distributed under the MIT license:
+ *
+ * <dl>
+ * <dt>Sol2 library</dt>
+ * <dd>Copyright (c) 2013-2021 Rapptz, ThePhD, and contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</dd>
+ * </dl>
  */
 
 /**
