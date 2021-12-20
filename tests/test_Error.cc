@@ -29,12 +29,12 @@
 using namespace std::literals;
 using namespace avto;
 
-TEST_CASE("Error: Constructor", "[Step]")
+TEST_CASE("Error: Constructor", "[Error]")
 {
     Error e("Test");
 }
 
-TEST_CASE("Error: Copy constructor", "[Step]")
+TEST_CASE("Error: Copy constructor", "[Error]")
 {
     Error e("Test");
     Error e2(e);
@@ -42,7 +42,7 @@ TEST_CASE("Error: Copy constructor", "[Step]")
     REQUIRE(e.what() == std::string(e2.what()));
 }
 
-TEST_CASE("Error: Copy assignment", "[Step]")
+TEST_CASE("Error: Copy assignment", "[Error]")
 {
     Error e("Test");
     Error e2("Test2");
