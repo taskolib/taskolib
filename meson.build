@@ -3,7 +3,7 @@ project(
   ['cpp'],
 version : '21.12.1',
 default_options : [
-    'cpp_std=c++14',
+    'cpp_std=c++17',
     'warning_level=3',
     'buildtype=release',
     'prefix=/export/doocs',
@@ -21,6 +21,7 @@ package_name = 'doocs-libavtomat'
 # Headers to be installed under ${prefix}/include/
 install_headers(files([
     'include/avtomat/avtomat.h',
+    'include/avtomat/Context.h',
     'include/avtomat/Error.h',
     'include/avtomat/LuaState.h',
     'include/avtomat/Step.h',
@@ -35,6 +36,7 @@ sources = files([
 
 # Test sources
 test_src = files([
+    'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_LuaState.cc',
     'tests/test_main.cc',

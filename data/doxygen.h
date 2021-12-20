@@ -16,7 +16,7 @@
  * \ref design_documents.
  *
  * \note
- * The Avtomat library requires at least C++14.
+ * The Avtomat library requires at least C++17.
  *
  * \author Lars Froehlich (for third-party code see \ref copyright)
  *
