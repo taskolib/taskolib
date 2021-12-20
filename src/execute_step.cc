@@ -22,6 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <limits>
 #include <gul14/cat.h>
 #include "avtomat/Error.h"
 #include "avtomat/execute_step.h"
@@ -31,7 +32,59 @@
 
 using gul14::cat;
 
+
 namespace avto {
+
+
+namespace {
+
+void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
+{
+    sol::state_view lua(lua_state);
+
+    sol::optional<long long> timeout_ms = lua["AVTOMAT_TIMEOUT_MS_SINCE_EPOCH"];
+
+    if (not timeout_ms.has_value())
+    {
+        luaL_error(lua_state, "Timeout time point not found in LUA environment "
+            "(AVTOMAT_TIMEOUT_MS_SINCE_EPOCH)");
+    }
+    else
+    {
+        using std::chrono::milliseconds;
+        using std::chrono::round;
+
+        const long long now_ms =
+            round<milliseconds>(Clock::now().time_since_epoch()).count();
+
+        if (now_ms > *timeout_ms) // TODO remove debug output
+        {
+            double seconds = lua["AVTOMAT_TIMEOUT_S"].get_or(-1.0);
+            luaL_error(lua_state, cat("Timeout: Script took more than ", seconds,
+                                      " s to run").c_str());
+        }
+    }
+}
+
+// Return a time point in milliseconds since the epoch, calculated from the curent time
+// plus the given duration. In case of overflow, the maximum representable time point is
+// returned.
+long long get_future_time_point_in_ms(std::chrono::milliseconds duration_from_now)
+{
+    using std::chrono::milliseconds;
+    using std::chrono::round;
+
+    const long long t0_ms = round<milliseconds>(Clock::now().time_since_epoch()).count();
+    const long long max_dt = std::numeric_limits<long long>::max() - t0_ms;
+    const long long dt_ms = duration_from_now.count();
+
+    if (dt_ms < max_dt)
+        return t0_ms + dt_ms;
+    else
+        return std::numeric_limits<long long>::max();
+}
+
+} // anonymous namespace
 
 
 bool execute_step(Step& step, Context& context)
@@ -41,14 +94,23 @@ bool execute_step(Step& step, Context& context)
     lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::table,
                        sol::lib::utf8);
 
-    lua["_G"]["assert"] = nullptr;
-    lua["_G"]["collectgarbage"] = nullptr;
-    lua["_G"]["debug"] = nullptr;
-    lua["_G"]["dofile"] = nullptr;
-    lua["_G"]["load"] = nullptr;
-    lua["_G"]["loadfile"] = nullptr;
-    lua["_G"]["print"] = nullptr;
-    lua["_G"]["require"] = nullptr;
+    auto globals = lua.globals();
+    globals["assert"] = sol::nil;
+    globals["collectgarbage"] = sol::nil;
+    globals["debug"] = sol::nil;
+    globals["dofile"] = sol::nil;
+    globals["load"] = sol::nil;
+    globals["loadfile"] = sol::nil;
+    globals["print"] = sol::nil;
+    globals["require"] = sol::nil;
+
+    globals["AVTOMAT_TIMEOUT_S"] =
+        std::chrono::duration<double>(step.get_timeout()).count();
+    globals["AVTOMAT_TIMEOUT_MS_SINCE_EPOCH"] =
+        get_future_time_point_in_ms(step.get_timeout());
+
+    // Install a hook that is called after every 10 LUA instructions
+    lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 10);
 
     try
     {
