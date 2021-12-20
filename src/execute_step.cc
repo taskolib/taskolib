@@ -66,17 +66,17 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
     }
 }
 
-// Return a time point in milliseconds since the epoch, calculated from the curent time
-// plus the given duration. In case of overflow, the maximum representable time point is
+// Return a time point in milliseconds since the epoch, calculated from a time point t0
+// plus a duration dt. In case of overflow, the maximum representable time point is
 // returned.
-long long get_future_time_point_in_ms(std::chrono::milliseconds duration_from_now)
+long long get_ms_since_epoch(Timestamp t0, std::chrono::milliseconds dt)
 {
     using std::chrono::milliseconds;
     using std::chrono::round;
 
-    const long long t0_ms = round<milliseconds>(Clock::now().time_since_epoch()).count();
+    const long long t0_ms = round<milliseconds>(t0.time_since_epoch()).count();
     const long long max_dt = std::numeric_limits<long long>::max() - t0_ms;
-    const long long dt_ms = duration_from_now.count();
+    const long long dt_ms = dt.count();
 
     if (dt_ms < max_dt)
         return t0_ms + dt_ms;
@@ -84,18 +84,23 @@ long long get_future_time_point_in_ms(std::chrono::milliseconds duration_from_no
         return std::numeric_limits<long long>::max();
 }
 
-} // anonymous namespace
-
-
-bool execute_step(Step& step, Context& context)
+void install_timeout_hook(sol::state& lua, Timestamp now,
+                          std::chrono::milliseconds timeout)
 {
-    sol::state lua;
+    auto globals = lua.globals();
+    globals["AVTOMAT_TIMEOUT_S"] = std::chrono::duration<double>(timeout).count();
+    globals["AVTOMAT_TIMEOUT_MS_SINCE_EPOCH"] = get_ms_since_epoch(now, timeout);
 
+    // Install a hook that is called after every 10 LUA instructions
+    lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 10);
+}
+
+void open_safe_library_subset(sol::state& lua)
+{
     lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::table,
                        sol::lib::utf8);
 
     auto globals = lua.globals();
-    globals["assert"] = sol::nil;
     globals["collectgarbage"] = sol::nil;
     globals["debug"] = sol::nil;
     globals["dofile"] = sol::nil;
@@ -103,14 +108,20 @@ bool execute_step(Step& step, Context& context)
     globals["loadfile"] = sol::nil;
     globals["print"] = sol::nil;
     globals["require"] = sol::nil;
+}
 
-    globals["AVTOMAT_TIMEOUT_S"] =
-        std::chrono::duration<double>(step.get_timeout()).count();
-    globals["AVTOMAT_TIMEOUT_MS_SINCE_EPOCH"] =
-        get_future_time_point_in_ms(step.get_timeout());
+} // anonymous namespace
 
-    // Install a hook that is called after every 10 LUA instructions
-    lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 10);
+
+bool execute_step(Step& step, Context& context)
+{
+    const auto now = Clock::now();
+    step.set_time_of_last_execution(now);
+
+    sol::state lua;
+
+    open_safe_library_subset(lua);
+    install_timeout_hook(lua, now, step.get_timeout());
 
     try
     {

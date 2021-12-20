@@ -122,3 +122,15 @@ TEST_CASE("execute_step(): Timeout", "[execute_step]")
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
 }
+
+TEST_CASE("execute_step(): Setting 'last executed' timestamp", "[execute_step]")
+{
+    Context context;
+    Step step;
+
+    REQUIRE(step.get_time_of_last_execution() == Timestamp{});
+
+    execute_step(step, context);
+    REQUIRE(Clock::now() - step.get_time_of_last_execution() >= 0s);
+    REQUIRE(Clock::now() - step.get_time_of_last_execution() < 200ms); // leave some time for system hiccups
+}
