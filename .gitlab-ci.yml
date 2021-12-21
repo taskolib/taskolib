@@ -103,6 +103,7 @@ test-job-buster:
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Ubuntu-18.04-x86_64
+        - export CXX=clang++
 
 .setup_focal:
     image: ubuntu:20.04
