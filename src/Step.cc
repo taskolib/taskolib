@@ -29,6 +29,26 @@ using namespace std::literals;
 namespace avto {
 
 
+void Step::set_exported_variable_names(const VariableNames& exported_variable_names)
+{
+    exported_variable_names_ = exported_variable_names;
+}
+
+void Step::set_exported_variable_names(VariableNames&& exported_variable_names)
+{
+    exported_variable_names_ = std::move(exported_variable_names);
+}
+
+void Step::set_imported_variable_names(const VariableNames& imported_variable_names)
+{
+    imported_variable_names_ = imported_variable_names;
+}
+
+void Step::set_imported_variable_names(VariableNames&& imported_variable_names)
+{
+    imported_variable_names_ = std::move(imported_variable_names);
+}
+
 void Step::set_label(const std::string& label)
 {
     label_ = label;

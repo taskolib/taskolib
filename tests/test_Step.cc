@@ -37,6 +37,24 @@ TEST_CASE("Step: Default constructor", "[Step]")
     Step s;
 }
 
+TEST_CASE("Step: get_exported_variable_names()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_exported_variable_names().empty() == true);
+
+    step.set_exported_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_exported_variable_names() == VariableNames{ "a", "b52" });
+}
+
+TEST_CASE("Step: get_imported_variable_names()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_imported_variable_names().empty() == true);
+
+    step.set_imported_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_imported_variable_names() == VariableNames{ "a", "b52" });
+}
+
 TEST_CASE("Step: get_label()", "[Step]")
 {
     Step step;
@@ -90,6 +108,22 @@ TEST_CASE("Step: get_type()", "[Step]")
     REQUIRE(step.get_type() == Step::type_catch);
     step.set_type(Step::type_if);
     REQUIRE(step.get_type() == Step::type_if);
+}
+
+TEST_CASE("Step: set_exported_variable_names()", "[Step]")
+{
+    Step step;
+
+    step.set_exported_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_exported_variable_names() == VariableNames{ "a", "b52" });
+}
+
+TEST_CASE("Step: set_imported_variable_names()", "[Step]")
+{
+    Step step;
+
+    step.set_imported_variable_names(VariableNames{ "c42", "d" });
+    REQUIRE(step.get_imported_variable_names() == VariableNames{ "d", "c42" });
 }
 
 TEST_CASE("Step: set_label()", "[Step]")
