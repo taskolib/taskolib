@@ -36,9 +36,9 @@ namespace avto {
  * This function performs the following steps:
  * 1. A fresh script runtime environment is prepared and safe library components are
  *    loaded into it
- * 2. Selected variables are exported from the context into the runtime environment
+ * 2. Selected variables are imported from the context into the runtime environment
  * 3. The script from the step is loaded into the runtime environment and executed
- * 4. Selected variables are imported from the runtime environment back into the context
+ * 4. Selected variables are exported from the runtime environment back into the context
  *
  * \returns true if the script returns a value that evaluates as true in the scripting
  *          language, or false otherwise (even in the case that the script returns no

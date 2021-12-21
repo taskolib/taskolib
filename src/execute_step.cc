@@ -38,6 +38,9 @@ namespace avto {
 
 namespace {
 
+template <typename>
+inline constexpr bool always_false_v = false;
+
 void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
 {
     sol::state_view lua(lua_state);
@@ -57,11 +60,36 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
         const long long now_ms =
             round<milliseconds>(Clock::now().time_since_epoch()).count();
 
-        if (now_ms > *timeout_ms) // TODO remove debug output
+        if (now_ms > *timeout_ms)
         {
             double seconds = lua["AVTOMAT_TIMEOUT_S"].get_or(-1.0);
             luaL_error(lua_state, cat("Timeout: Script took more than ", seconds,
                                       " s to run").c_str());
+        }
+    }
+}
+
+// Export the variables listed in the step from the LUA state into the context.
+void export_variables_to_context(const Step& step, Context& context, sol::state& lua)
+{
+    const VariableNames export_varnames = step.get_exported_variable_names();
+
+    for (const std::string& varname : export_varnames)
+    {
+        sol::object var = lua.get<sol::object>(varname);
+        switch (var.get_type())
+        {
+            case sol::type::number:
+                if (var.is<long long>())
+                    context[varname] = Variable{ var.as<long long>() };
+                else
+                    context[varname] = Variable{ var.as<double>() };
+                break;
+            case sol::type::string:
+                context[varname] = Variable{ var.as<std::string>() };
+                break;
+            default:
+                break;
         }
     }
 }
@@ -82,6 +110,37 @@ long long get_ms_since_epoch(Timestamp t0, std::chrono::milliseconds dt)
         return t0_ms + dt_ms;
     else
         return std::numeric_limits<long long>::max();
+}
+
+// Import the variables listed in the step from the context into the LUA state.
+void import_variables_from_context(const Step& step, const Context& context,
+    sol::state& lua)
+{
+    VariableNames import_varnames = step.get_imported_variable_names();
+
+    for (const std::string& varname : import_varnames)
+    {
+        auto it = context.find(varname);
+        if (it == context.end())
+            continue;
+
+        std::visit(
+            [&lua, &varname](auto&& value)
+            {
+                using T = std::decay_t<decltype(value)>;
+
+                if constexpr (std::is_same_v<T, double> or std::is_same_v<T, long long> or
+                              std::is_same_v<T, std::string>)
+                {
+                    lua[varname] = value;
+                }
+                else
+                {
+                    static_assert(always_false_v<T>, "Unhandled type in variable import");
+                }
+            },
+            it->second);
+    }
 }
 
 void install_timeout_hook(sol::state& lua, Timestamp now,
@@ -123,10 +182,14 @@ bool execute_step(Step& step, Context& context)
     open_safe_library_subset(lua);
     install_timeout_hook(lua, now, step.get_timeout());
 
+    import_variables_from_context(step, context, lua);
+
     try
     {
         sol::optional<bool> result = lua.safe_script(
             step.get_script(), sol::script_default_on_error);
+
+        export_variables_to_context(step, context, lua);
 
         if (result)
             return *result;

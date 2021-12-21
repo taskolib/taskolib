@@ -134,3 +134,117 @@ TEST_CASE("execute_step(): Setting 'last executed' timestamp", "[execute_step]")
     REQUIRE(Clock::now() - step.get_time_of_last_execution() >= 0s);
     REQUIRE(Clock::now() - step.get_time_of_last_execution() < 200ms); // leave some time for system hiccups
 }
+
+TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]")
+{
+    Context context;
+    Step step;
+
+    SECTION("Importing nothing")
+    {
+        context["a"] = Variable{ 42LL };
+        step.set_script("return a == 42");
+        REQUIRE(execute_step(step, context) == false);
+    }
+
+    SECTION("Importing variables from an empty context")
+    {
+        step.set_imported_variable_names(VariableNames{ "a", "b" });
+        step.set_script("return a == 42");
+        REQUIRE(execute_step(step, context) == false);
+    }
+
+    SECTION("Importing an integer")
+    {
+        context["a"] = Variable{ 42LL };
+        step.set_imported_variable_names(VariableNames{ "b", "a" });
+        step.set_script("return a == 42");
+        REQUIRE(execute_step(step, context) == true);
+    }
+
+    SECTION("Importing a double")
+    {
+        context["a"] = Variable{ 1.5 };
+        step.set_imported_variable_names(VariableNames{ "b", "a" });
+        step.set_script("return a == 1.5");
+        REQUIRE(execute_step(step, context) == true);
+    }
+
+    SECTION("Importing a string")
+    {
+        context["a"] = Variable{ "Hello\0world"s };
+        step.set_imported_variable_names(VariableNames{ "b", "a" });
+        step.set_script("return a == 'Hello\\0world'");
+        REQUIRE(execute_step(step, context) == true);
+    }
+}
+
+TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]")
+{
+    Context context;
+    Step step;
+
+    step.set_script("a = 42; b = 1.5; c = 'string'; d = ipairs");
+
+    SECTION("No exported variables")
+    {
+        context["b"] = "Test";
+        execute_step(step, context);
+        REQUIRE(context.size() == 1);
+        REQUIRE(std::get<std::string>(context["b"]) == "Test");
+    }
+
+    SECTION("Exporting an integer")
+    {
+        step.set_exported_variable_names(VariableNames{ "a" });
+        execute_step(step, context);
+        REQUIRE(context.size() == 1);
+        REQUIRE(std::get<long long>(context["a"]) == 42);
+        REQUIRE_THROWS_AS(std::get<double>(context["a"]), std::bad_variant_access);
+        REQUIRE_THROWS_AS(std::get<std::string>(context["a"]), std::bad_variant_access);
+    }
+
+    SECTION("Exporting a double")
+    {
+        step.set_exported_variable_names(VariableNames{ "b" });
+        execute_step(step, context);
+        REQUIRE(context.size() == 1);
+        REQUIRE_THROWS_AS(std::get<long long>(context["b"]), std::bad_variant_access);
+        REQUIRE(std::get<double>(context["b"]) == 1.5);
+        REQUIRE_THROWS_AS(std::get<std::string>(context["b"]), std::bad_variant_access);
+    }
+
+    SECTION("Exporting a string")
+    {
+        step.set_exported_variable_names(VariableNames{ "c" });
+        execute_step(step, context);
+        REQUIRE(context.size() == 1);
+        REQUIRE_THROWS_AS(std::get<long long>(context["c"]), std::bad_variant_access);
+        REQUIRE_THROWS_AS(std::get<double>(context["c"]), std::bad_variant_access);
+        REQUIRE(std::get<std::string>(context["c"]) == "string");
+    }
+
+    SECTION("Exporting multiple variables")
+    {
+        step.set_exported_variable_names(VariableNames{ "c", "a", "b" });
+        execute_step(step, context);
+        REQUIRE(context.size() == 3);
+        REQUIRE(std::get<long long>(context["a"]) == 42);
+        REQUIRE(std::get<double>(context["b"]) == 1.5);
+        REQUIRE(std::get<std::string>(context["c"]) == "string");
+    }
+
+    SECTION("Exporting unknown types")
+    {
+        step.set_exported_variable_names(VariableNames{ "d" });
+        execute_step(step, context);
+        REQUIRE(context.size() == 0); // d is of type function and does not get exported
+    }
+
+    SECTION("Exporting undefined variables")
+    {
+        step.set_exported_variable_names(VariableNames{ "n" });
+        execute_step(step, context);
+        REQUIRE(context.size() == 0); // n is undefined and does not get exported
+    }
+}
