@@ -36,22 +36,6 @@ test-job-bionic:
           artifacts: true
 
 ##################################################################################################
-build-job-stretch:
-    stage: build
-    extends:
-        - .setup_stretch
-        - .meson_build
-
-test-job-stretch:
-    stage: test
-    extends:
-        - .setup_stretch
-        - .meson_test
-    needs:
-        - job: build-job-stretch
-          artifacts: true
-
-##################################################################################################
 build-job-buster:
     stage: build
     extends:
@@ -145,33 +129,6 @@ test-job-buster:
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Ubuntu-20.04-x86_64
-
-.setup_stretch:
-    image: debian:stretch
-    tags:
-        - debian9
-    before_script:
-        # Install build dependencies
-        - echo "Install the basics (wget and gnupg) for setting up the docker stretch image ..."
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            apt update && apt install -y wget gnupg)
-        # Add DOOCS repo with key
-        - echo "Installing MCS DOOCS package repository with key ..."
-        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
-        - echo "deb http://doocspkgs.desy.de/pub/doocs stretch main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
-        - echo "deb-src http://doocspkgs.desy.de/pub/doocs stretch main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
-        # Update APT cache
-        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
-        # Install part of the packages required to compile and link DOOCS core libraries on a stretch system
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
-            build-essential binutils autotools-dev clang dh-exec dh-autoreconf expect fakeroot cmake ninja-build meson pkg-config
-            liblua5.3-dev)
-        # FIXME Just to make it work for now, use existing libs.
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
-        - export DOOCSARCH=Debian-9-x86_64
 
 .setup_buster:
     image: debian:10.10
