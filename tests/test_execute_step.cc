@@ -248,3 +248,62 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
         REQUIRE(context.size() == 0); // n is undefined and does not get exported
     }
 }
+
+TEST_CASE("execute_step(): Running a step with multiple import and exports",
+    "[execute_step]")
+{
+    Context context;
+    Step step;
+
+    step.set_imported_variable_names(VariableNames{ "str", "num_repetitions", "separator" });
+    step.set_script(R"(
+        if num_repetitions < 0 then
+            return false
+        end
+
+        result = string.rep(str, num_repetitions, separator)
+
+        return true
+        )");
+    step.set_exported_variable_names(VariableNames{ "result" });
+
+    SECTION("Empty context")
+    {
+        REQUIRE_THROWS_AS(execute_step(step, context), Error); // Attempt to compare nil with number
+        REQUIRE(context.empty() == true);
+    }
+
+    SECTION("num_repetitions < 0 returns false")
+    {
+        context["str"] = "Test";
+        context["num_repetitions"] = -1LL;
+        REQUIRE(execute_step(step, context) == false);
+        REQUIRE(context.size() == 2);
+        REQUIRE(std::get<std::string>(context["str"]) == "Test");
+        REQUIRE(std::get<long long>(context["num_repetitions"]) == -1LL);
+    }
+
+    SECTION("num_repetitions == 0 returns empty string")
+    {
+        context["str"] = "Test";
+        context["num_repetitions"] = 0LL;
+        REQUIRE(execute_step(step, context) == true);
+        REQUIRE(context.size() == 3);
+        REQUIRE(std::get<std::string>(context["str"]) == "Test");
+        REQUIRE(std::get<long long>(context["num_repetitions"]) == 0LL);
+        REQUIRE(std::get<std::string>(context["result"]) == "");
+    }
+
+    SECTION("num_repetitions == 2 with separator")
+    {
+        context["str"] = "Test";
+        context["num_repetitions"] = 2LL;
+        context["separator"] = "|";
+        REQUIRE(execute_step(step, context) == true);
+        REQUIRE(context.size() == 4);
+        REQUIRE(std::get<std::string>(context["str"]) == "Test");
+        REQUIRE(std::get<long long>(context["num_repetitions"]) == 2LL);
+        REQUIRE(std::get<std::string>(context["separator"]) == "|");
+        REQUIRE(std::get<std::string>(context["result"]) == "Test|Test");
+    }
+}
