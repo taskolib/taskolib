@@ -147,7 +147,7 @@ TEST_CASE("LuaState: call_function()", "[LuaState]")
 
         SECTION("Call with 3 parameters")
         {
-            state.call_function(42.0, -13.0, "-25");
+            state.call_function(42.0, -13.0, -25LL);
             REQUIRE(state.get_top() == 2); // 2 return values
             REQUIRE(state.pop_integer() == 3); // # input arguments
             REQUIRE(state.pop_number() == 4.0); // sum
