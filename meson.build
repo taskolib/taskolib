@@ -135,17 +135,10 @@ test('all',
 )
 
 
-## "Playground" executables
+## Examples
 
-executable('run_lua',
-    files(['playground/run_lua.cc']),
-    dependencies : dep
-)
-
-executable('run_lua_with_timeout',
-    files([
-        'playground/run_lua_with_timeout.cc',
-        ]),
+executable('execute_step',
+    files(['examples/execute_step.cc']),
     dependencies : dep
 )
 
