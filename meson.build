@@ -31,7 +31,6 @@ install_headers(files([
     'include/avtomat/Context.h',
     'include/avtomat/Error.h',
     'include/avtomat/execute_step.h',
-    'include/avtomat/LuaState.h',
     'include/avtomat/Step.h',
     ]),
     subdir: 'avtomat')
@@ -39,7 +38,6 @@ install_headers(files([
 # Sources
 sources = files([
     'src/execute_step.cc',
-    'src/LuaState.cc',
     'src/Step.cc',
 ])
 
@@ -48,7 +46,6 @@ test_src = files([
     'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_execute_step.cc',
-    'tests/test_LuaState.cc',
     'tests/test_main.cc',
     'tests/test_Step.cc',
 ])
