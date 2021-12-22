@@ -1,90 +1,66 @@
 ##################################################################################################
+
 stages:
-    - build
-    - test
-    - test-with-sanitizers
+    - test-sanitizers
+    - test-release
 
 ##################################################################################################
-build-job-focal:
-    stage: build
-    extends:
-        - .setup_focal
-        - .meson_build
 
-test-job-focal:
-    stage: test
+test-sanitizers-focal:
+    stage: test-sanitizers
     extends:
         - .setup_focal
-        - .meson_test
-    needs:
-        - job: build-job-focal
-          artifacts: true
+        - .meson_test_sanitizers
 
-test-with-sanitizers-job-focal:
-    stage: test-with-sanitizers
+test-release-focal:
+    stage: test-release
     extends:
         - .setup_focal
-        - .meson_test_with_sanitizers
+        - .meson_test_release
     needs:
-        - job: test-job-focal
+        - job: test-sanitizers-focal
           artifacts: false
 
 ##################################################################################################
-build-job-bionic:
-    stage: build
-    extends:
-        - .setup_bionic
-        - .meson_build
 
-test-job-bionic:
-    stage: test
+test-sanitizers-bionic:
+    stage: test-sanitizers
     extends:
         - .setup_bionic
-        - .meson_test
-    needs:
-        - job: build-job-bionic
-          artifacts: true
+        - .meson_test_sanitizers
 
-test-with-sanitizers-job-bionic:
-    stage: test-with-sanitizers
+test-release-bionic:
+    stage: test-release
     extends:
         - .setup_bionic
-        - .meson_test_with_sanitizers
+        - .meson_test_release
     needs:
-        - job: test-job-bionic
+        - job: test-sanitizers-bionic
           artifacts: false
 
 ##################################################################################################
-build-job-buster:
-    stage: build
-    extends:
-        - .setup_buster
-        - .meson_build
 
-test-job-buster:
-    stage: test
+test-sanitizers-buster:
+    stage: test-sanitizers
     extends:
         - .setup_buster
-        - .meson_test
-    needs:
-        - job: build-job-buster
-          artifacts: true
+        - .meson_test_sanitizers
 
-test-with-sanitizers-job-buster:
-    stage: test-with-sanitizers
+test-release-buster:
+    stage: test-release
     extends:
         - .setup_buster
-        - .meson_test_with_sanitizers
+        - .meson_test_release
     needs:
-        - job: test-job-buster
+        - job: test-sanitizers-buster
           artifacts: false
 
 ##################################################################################################
 # Now the templates ...
-.meson_build:
+.meson_test_release:
     script:
         - echo "================================================================================"
-        - echo "Build library in release mode ..."
+        - echo "Build & test library in release mode ..."
         - ls /export/doocs/lib/pkgconfig
         - meson setup build.release
             --pkg-config-path=${CI_PROJECT_DIR}/lib/pkgconfig:/export/doocs/lib/pkgconfig
@@ -93,30 +69,24 @@ test-with-sanitizers-job-buster:
             --libdir=lib
             --includedir=lib/include
         - ninja -C build.release
+        - cd build.release; ./libavtomat_test
         - echo "... done."
     artifacts:
         paths:
             - build.release
         expire_in: 4 weeks
 
-.meson_test:
+.meson_test_sanitizers:
     script:
         - echo "================================================================================"
-        - echo "Test library project with meson/ninja ..."
-        - cd build.release; ./libavtomat_test
-        - echo "... done."
-
-.meson_test_with_sanitizers:
-    script:
-        - echo "================================================================================"
-        - echo "Build library in debug mode with ASAN & UBSAN ..."
+        - echo "Build & test library in debug mode with ASAN & UBSAN ..."
         - ls /export/doocs/lib/pkgconfig
         - meson setup build.debug_asan_ubsan
             --pkg-config-path=${CI_PROJECT_DIR}/lib/pkgconfig:/export/doocs/lib/pkgconfig
             --buildtype=debug
             -Db_sanitize=address,undefined
-        - echo "Run unit tests with ASAN & UBSAN ..."
-        - ninja -C build.debug_asan_ubsan test
+        - ninja -C build.debug_asan_ubsan
+        - cd build.debug_asan_ubsan; ./libavtomat_test
         - echo "... done."
     artifacts:
         paths:
