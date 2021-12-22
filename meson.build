@@ -18,8 +18,11 @@ package_name = 'doocs-libavtomat'
 # Configuration for included Sol3 library
 # SOL_USING_CXX_LUA tells Sol3 that we are using a custom LUA build that was compiled
 # with C++ and therefore properly handles exceptions.
+# SOL_SAFE_NUMERICS tells Sol3 to make several checks so that we can actually
+# differentiate integers from floating-point numbers.
 add_project_arguments(
     '-DSOL_USING_CXX_LUA=1', '-DSOL_ALL_SAFETIES_ON=0', '-DSOL_PRINT_ERRORS=0',
+    '-DSOL_SAFE_NUMERICS=1',
     language : 'cpp')
 
 

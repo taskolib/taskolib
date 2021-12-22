@@ -81,6 +81,7 @@ void export_variables_to_context(const Step& step, Context& context, sol::state&
         switch (var.get_type())
         {
             case sol::type::number:
+                // For this check to work, SOL_SAFE_NUMERICS needs to be set to 1
                 if (var.is<long long>())
                     context[varname] = Variable{ var.as<long long>() };
                 else
