@@ -8,6 +8,13 @@ each step is defined in the LUA scripting language.
 The library API is documented with Doxygen on the web page
 https://ttfinfo.desy.de/doxygen/libavtomat/html/index.html .
 
+License
+-------
+The Avtomat library is free software distributed under the terms of the GNU Lesser General
+Public License version 2.1 (LGPLv2.1). Included third-party software carries additional
+copyright statements and licenses (which are, however, compatible with the LGPLv2.1).
+Please refer to the web page or to the source file data/doxygen.h for details.
+
 Building
 --------
 The library is built with Meson/Ninja. Building is done in two stages: You start by
@@ -20,45 +27,19 @@ library in it:
       meson builddir
       ninja -C builddir
 
-Build directory
----------------
-With Meson you have no fixed build directory. You just specify one at configure time. It
-holds all intermediate and final artefacts. Nothing leaks out of that directory. It can be
-removed to start from scratch.
-
-Usually it should be on a local storage. If it is not and you build from multiple
-different hosts in parallel be sure to name it differently for each host.
-
 By convention, directory names starting with 'build' or subdirectories of a 'build' folder
 are used.
 
-Specifying directories
-----------------------
-When building a library for Unix you always install stuff in specific directories. Here a
-reminder how they are called, the conventional dirs, the doocs specific deviation from the
-norm:
+Debug and Release Builds
+------------------------
+Meson differentiates between debug and release builds at configuration time (when setting
+up the build directory). These are the most often used variants:
 
-Prefix         /usr/               /export/doocs/
-libdir              lib/                         lib/
-includedir          include/                     lib/include/
-data                share/                       ?unknown
+      meson --buildtype=debug builddir
+      meson --buildtype=debugoptimized builddir
+      meson --buildtype=release builddir
 
-Meson prepends the prefix with ${DESTDIR} for packaging purposes. But rpath will be set
-for prefix without DESTDIR.
-
-Build types
------------
-Meson has different typical build scenarios with appropriate flags for any used compiler:
-buildtype [plain, debug, debugoptimized, release, minsize, custom]
-Default here is 'release'.
-
-Inspect parameters
-------------------
-To see all the possible and the active settings, change into the build directory and call
-'meson configure'. You can see some of the built-in possibilities there, like unity builds
-and sanitizer to use.
-
-Building the documentation
+Building the Documentation
 --------------------------
 This library carries documentation embedded in the source code. Run the following command
 from the library root directory to generate HTML documentation:
@@ -67,6 +48,12 @@ from the library root directory to generate HTML documentation:
 
 This runs the open-source tool Doxygen and generates a web page that is accessible via
 the URL https://ttfinfo.desy.de/doxygen/libavtomat/html/index.html .
+
+Inspect Parameters
+------------------
+To see all the possible and the active settings, change into the build directory and call
+'meson configure'. You can see some of the built-in possibilities there, like unity builds
+and sanitizer to use.
 
 Examples
 --------
