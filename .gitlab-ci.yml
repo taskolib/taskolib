@@ -23,20 +23,21 @@ test-release-focal:
 
 ##################################################################################################
 
-test-sanitizers-bionic:
-    stage: test-sanitizers
-    extends:
-        - .setup_bionic
-        - .meson_test_sanitizers
+# Sanitizers are apparently broken on bionic's version of clang
+#test-sanitizers-bionic:
+#    stage: test-sanitizers
+#    extends:
+#        - .setup_bionic
+#        - .meson_test_sanitizers
 
 test-release-bionic:
     stage: test-release
     extends:
         - .setup_bionic
         - .meson_test_release
-    needs:
-        - job: test-sanitizers-bionic
-          artifacts: false
+#    needs:
+#        - job: test-sanitizers-bionic
+#          artifacts: false
 
 ##################################################################################################
 
