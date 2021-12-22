@@ -15,6 +15,13 @@ meson_version : '>=0.49'
 
 package_name = 'doocs-libavtomat'
 
+# Configuration for included Sol3 library
+# SOL_USING_CXX_LUA tells Sol3 that we are using a custom LUA build that was compiled
+# with C++ and therefore properly handles exceptions.
+add_project_arguments(
+    '-DSOL_USING_CXX_LUA=1', '-DSOL_ALL_SAFETIES_ON=0', '-DSOL_PRINT_ERRORS=0',
+    language : 'cpp')
+
 
 ## File lists
 
@@ -70,17 +77,21 @@ libno = '.'.join([ libno_parts[0], libno_parts[1], libno_parts[2].split('-')[0] 
 libno_full = '.'.join(libno_parts)
 
 
+# Generate the static LUA library
+subdir('src/lua')
+
+
 ## Build library
-inc = [ include_directories('include', 'src') ]
+inc = [ include_directories('include', 'src', 'src/lua') ]
 
 deps = [
     dependency('libgul14'),
-    dependency('lua5.3'),
 ]
 
 lib = both_libraries(meson.project_name(),
     sources,
     dependencies : deps,
+    link_with : lua_lib,
     soversion : libno_full,
     darwin_versions : libno,
     include_directories : inc,

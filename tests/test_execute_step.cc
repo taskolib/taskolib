@@ -209,6 +209,7 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
         step.set_exported_variable_names(VariableNames{ "b" });
         execute_step(step, context);
         REQUIRE(context.size() == 1);
+
         REQUIRE_THROWS_AS(std::get<long long>(context["b"]), std::bad_variant_access);
         REQUIRE(std::get<double>(context["b"]) == 1.5);
         REQUIRE_THROWS_AS(std::get<std::string>(context["b"]), std::bad_variant_access);

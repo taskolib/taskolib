@@ -26,8 +26,6 @@
 #include <gul14/cat.h>
 #include "avtomat/Error.h"
 #include "avtomat/execute_step.h"
-
-#define SOL_PRINT_ERRORS 0
 #include "sol/sol.hpp"
 
 using gul14::cat;
@@ -41,7 +39,10 @@ namespace {
 template <typename>
 inline constexpr bool always_false_v = false;
 
-void check_script_timeout(lua_State* lua_state, lua_Debug*) noexcept
+// Check if the timeout from the LUA state has been reached and raise a LUA error if so.
+// As we use a C++ compiled LUA, the error is thrown as an exception that is caught by a
+// LUA-internal handler.
+void check_script_timeout(lua_State* lua_state, lua_Debug*)
 {
     sol::state_view lua(lua_state);
 
