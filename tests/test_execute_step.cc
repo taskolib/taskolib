@@ -142,7 +142,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing nothing")
     {
-        context["a"] = Variable{ 42LL };
+        context["a"] = VariableValue{ 42LL };
         step.set_script("return a == 42");
         REQUIRE(execute_step(step, context) == false);
     }
@@ -156,7 +156,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing an integer")
     {
-        context["a"] = Variable{ 42LL };
+        context["a"] = VariableValue{ 42LL };
         step.set_imported_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 42");
         REQUIRE(execute_step(step, context) == true);
@@ -164,7 +164,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing a double")
     {
-        context["a"] = Variable{ 1.5 };
+        context["a"] = VariableValue{ 1.5 };
         step.set_imported_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 1.5");
         REQUIRE(execute_step(step, context) == true);
@@ -172,7 +172,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing a string")
     {
-        context["a"] = Variable{ "Hello\0world"s };
+        context["a"] = VariableValue{ "Hello\0world"s };
         step.set_imported_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 'Hello\\0world'");
         REQUIRE(execute_step(step, context) == true);

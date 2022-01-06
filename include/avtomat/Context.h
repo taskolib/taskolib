@@ -2,7 +2,7 @@
  * \file   Context.h
  * \author Lars Froehlich
  * \date   Created on December 20, 2021
- * \brief  Declaration of the Context and Variable types.
+ * \brief  Declaration of the Context and VariableValue types.
  *
  * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -27,21 +27,23 @@
 
 #include <unordered_map>
 #include <variant>
+#include "avtomat/VariableName.h"
 
 namespace avto {
 
 /**
- * A variable is a variant over several data types.
- * The Context type associates names with variables.
+ * A VariableValue is a variant over several data types.
+ * The Context type associates names with values.
  */
-using Variable = std::variant<long long, double, std::string>;
+using VariableValue = std::variant<long long, double, std::string>;
 
 /**
  * A context stores variables (which can also be functions) for use in the execution of
  * sequences and steps.
  */
-using Context = std::unordered_map<std::string, Variable>;
+using Context = std::unordered_map<VariableName, VariableValue>;
 
 } // namespace avto
+
 
 #endif

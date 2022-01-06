@@ -4,7 +4,7 @@
  * \date   Created on November 26, 2021
  * \brief  Declaration of the Step class.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -28,12 +28,13 @@
 #include <chrono>
 #include <set>
 #include <string>
+#include "avtomat/Context.h"
 
 namespace avto {
 
 using Clock = std::chrono::system_clock;
 using Timestamp = std::chrono::time_point<Clock>;
-using VariableNames = std::set<std::string>;
+using VariableNames = std::set<VariableName>;
 
 /**
  * A step is the main building block of a sequence.

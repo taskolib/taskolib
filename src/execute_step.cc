@@ -75,20 +75,20 @@ void export_variables_to_context(const Step& step, Context& context, sol::state&
 {
     const VariableNames export_varnames = step.get_exported_variable_names();
 
-    for (const std::string& varname : export_varnames)
+    for (const VariableName& varname : export_varnames)
     {
-        sol::object var = lua.get<sol::object>(varname);
+        sol::object var = lua.get<sol::object>(varname.string());
         switch (var.get_type())
         {
             case sol::type::number:
                 // For this check to work, SOL_SAFE_NUMERICS needs to be set to 1
                 if (var.is<long long>())
-                    context[varname] = Variable{ var.as<long long>() };
+                    context[varname] = VariableValue{ var.as<long long>() };
                 else
-                    context[varname] = Variable{ var.as<double>() };
+                    context[varname] = VariableValue{ var.as<double>() };
                 break;
             case sol::type::string:
-                context[varname] = Variable{ var.as<std::string>() };
+                context[varname] = VariableValue{ var.as<std::string>() };
                 break;
             default:
                 break;
@@ -120,21 +120,21 @@ void import_variables_from_context(const Step& step, const Context& context,
 {
     VariableNames import_varnames = step.get_imported_variable_names();
 
-    for (const std::string& varname : import_varnames)
+    for (const VariableName& varname : import_varnames)
     {
         auto it = context.find(varname);
         if (it == context.end())
             continue;
 
         std::visit(
-            [&lua, &varname](auto&& value)
+            [&lua, varname_str = varname.string()](auto&& value)
             {
                 using T = std::decay_t<decltype(value)>;
 
                 if constexpr (std::is_same_v<T, double> or std::is_same_v<T, long long> or
                               std::is_same_v<T, std::string>)
                 {
-                    lua[varname] = value;
+                    lua[varname_str] = value;
                 }
                 else
                 {
