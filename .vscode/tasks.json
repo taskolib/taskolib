@@ -27,7 +27,7 @@
             "label": "Meson: Run libavtomat_test",
             "dependsOn": [ "Meson: Build all targets" ],
             "presentation":{
-                "clear": true
+                "clear": false
             }
         }
     ]

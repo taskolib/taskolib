@@ -3,7 +3,7 @@ project(
   ['cpp'],
 version : '21.12.1',
 default_options : [
-    'cpp_std=c++14',
+    'cpp_std=c++17',
     'warning_level=3',
     'buildtype=release',
     'prefix=/export/doocs',
@@ -15,30 +15,45 @@ meson_version : '>=0.49'
 
 package_name = 'doocs-libavtomat'
 
+# Configuration for included Sol3 library
+# SOL_USING_CXX_LUA tells Sol3 that we are using a custom LUA build that was compiled
+# with C++ and therefore properly handles exceptions.
+# SOL_SAFE_NUMERICS tells Sol3 to make several checks so that we can actually
+# differentiate integers from floating-point numbers.
+add_project_arguments(
+    '-DSOL_USING_CXX_LUA=1', '-DSOL_ALL_SAFETIES_ON=0', '-DSOL_PRINT_ERRORS=0',
+    '-DSOL_SAFE_NUMERICS=1',
+    language : 'cpp')
+
 
 ## File lists
 
 # Headers to be installed under ${prefix}/include/
 install_headers(files([
     'include/avtomat/avtomat.h',
+    'include/avtomat/Context.h',
     'include/avtomat/Error.h',
-    'include/avtomat/LuaState.h',
+    'include/avtomat/execute_step.h',
     'include/avtomat/Step.h',
+    'include/avtomat/VariableName.h',
     ]),
     subdir: 'avtomat')
 
 # Sources
 sources = files([
-    'src/LuaState.cc',
+    'src/execute_step.cc',
     'src/Step.cc',
+    'src/VariableName.cc',
 ])
 
 # Test sources
 test_src = files([
+    'tests/test_Context.cc',
     'tests/test_Error.cc',
-    'tests/test_LuaState.cc',
+    'tests/test_execute_step.cc',
     'tests/test_main.cc',
     'tests/test_Step.cc',
+    'tests/test_VariableName.cc',
 ])
 
 
@@ -65,17 +80,21 @@ libno = '.'.join([ libno_parts[0], libno_parts[1], libno_parts[2].split('-')[0] 
 libno_full = '.'.join(libno_parts)
 
 
+# Generate the static LUA library
+subdir('src/lua')
+
+
 ## Build library
-inc = [ include_directories('include') ]
+inc = [ include_directories('include', 'src', 'src/lua') ]
 
 deps = [
     dependency('libgul14'),
-    dependency('lua5.3'),
 ]
 
 lib = both_libraries(meson.project_name(),
     sources,
     dependencies : deps,
+    link_with : lua_lib,
     soversion : libno_full,
     darwin_versions : libno,
     include_directories : inc,
@@ -119,17 +138,10 @@ test('all',
 )
 
 
-## "Playground" executables
+## Examples
 
-executable('run_lua',
-    files(['playground/run_lua.cc']),
-    dependencies : dep
-)
-
-executable('run_lua_with_timeout',
-    files([
-        'playground/run_lua_with_timeout.cc',
-        ]),
+executable('execute_step',
+    files(['examples/execute_step.cc']),
     dependencies : dep
 )
 

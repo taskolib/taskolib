@@ -4,7 +4,7 @@
  * \date   Created on November 26, 2021
  * \brief  Declaration of the Step class.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,12 +26,15 @@
 #define AVTOMAT_STEP_H_
 
 #include <chrono>
+#include <set>
 #include <string>
+#include "avtomat/Context.h"
 
 namespace avto {
 
 using Clock = std::chrono::system_clock;
 using Timestamp = std::chrono::time_point<Clock>;
+using VariableNames = std::set<VariableName>;
 
 /**
  * A step is the main building block of a sequence.
@@ -51,6 +54,17 @@ public:
         type_action, type_if, type_else, type_elseif, type_end, type_while, type_try,
         type_catch
     };
+
+    /// A constant to use for "infinite" timeout durations
+    static constexpr std::chrono::milliseconds
+        infinite_timeout{ std::chrono::milliseconds::max() };
+
+
+    /// Retrieve the names of the variables that should be exported from the script.
+    VariableNames get_exported_variable_names() const { return exported_variable_names_; }
+
+    /// Retrieve the names of the variables that should be imported into the script.
+    VariableNames get_imported_variable_names() const { return imported_variable_names_; }
 
     /**
      * Return the label of the step.
@@ -93,8 +107,19 @@ public:
      */
     Timestamp get_time_of_last_modification() const { return time_of_last_modification_; }
 
+    /// Return the timeout duration for executing the script.
+    std::chrono::milliseconds get_timeout() const { return timeout_; }
+
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
+
+    /// Set the names of the variables that should be exported from the script.
+    void set_exported_variable_names(const VariableNames& exported_variable_names);
+    void set_exported_variable_names(VariableNames&& exported_variable_names);
+
+    /// Set the names of the variables that should be imported into the script.
+    void set_imported_variable_names(const VariableNames& imported_variable_names);
+    void set_imported_variable_names(VariableNames&& imported_variable_names);
 
     /**
      * Set the label.
@@ -123,6 +148,12 @@ public:
     void set_time_of_last_modification(Timestamp t) { time_of_last_modification_ = t; }
 
     /**
+     * Set the timeout duration for executing the script.
+     * Negative values set the timeout to zero.
+     */
+    void set_timeout(std::chrono::milliseconds timeout);
+
+    /**
      * Set the type of this step.
      * This call also updates the time of last modification to the current system time.
      */
@@ -131,7 +162,9 @@ public:
 private:
     std::string label_;
     std::string script_;
+    VariableNames exported_variable_names_, imported_variable_names_;
     Timestamp time_of_last_modification_, time_of_last_execution_;
+    std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
 };
 

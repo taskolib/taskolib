@@ -1,78 +1,67 @@
 ##################################################################################################
+
 stages:
-    - build
-    - test
+    - test-sanitizers
+    - test-release
 
 ##################################################################################################
-build-job-focal:
-    stage: build
+
+test-sanitizers-focal:
+    stage: test-sanitizers
     extends:
         - .setup_focal
-        - .meson_build
+        - .meson_test_sanitizers
 
-test-job-focal:
-    stage: test
+test-release-focal:
+    stage: test-release
     extends:
         - .setup_focal
-        - .meson_test
+        - .meson_test_release
     needs:
-        - job: build-job-focal
-          artifacts: true
+        - job: test-sanitizers-focal
+          artifacts: false
 
 ##################################################################################################
-build-job-bionic:
-    stage: build
+
+# Sanitizers are apparently broken on bionic's version of clang
+#test-sanitizers-bionic:
+#    stage: test-sanitizers
+#    extends:
+#        - .setup_bionic
+#        - .meson_test_sanitizers
+
+test-release-bionic:
+    stage: test-release
     extends:
         - .setup_bionic
-        - .meson_build
-
-test-job-bionic:
-    stage: test
-    extends:
-        - .setup_bionic
-        - .meson_test
-    needs:
-        - job: build-job-bionic
-          artifacts: true
+        - .meson_test_release
+#    needs:
+#        - job: test-sanitizers-bionic
+#          artifacts: false
 
 ##################################################################################################
-build-job-stretch:
-    stage: build
-    extends:
-        - .setup_stretch
-        - .meson_build
 
-test-job-stretch:
-    stage: test
-    extends:
-        - .setup_stretch
-        - .meson_test
-    needs:
-        - job: build-job-stretch
-          artifacts: true
-
-##################################################################################################
-build-job-buster:
-    stage: build
+test-sanitizers-buster:
+    stage: test-sanitizers
     extends:
         - .setup_buster
-        - .meson_build
+        - .meson_test_sanitizers
 
-test-job-buster:
-    stage: test
+test-release-buster:
+    stage: test-release
     extends:
         - .setup_buster
-        - .meson_test
+        - .meson_test_release
     needs:
-        - job: build-job-buster
-          artifacts: true
+        - job: test-sanitizers-buster
+          artifacts: false
 
 ##################################################################################################
 # Now the templates ...
-.meson_build:
+.meson_test_release:
     script:
         - echo "================================================================================"
-        - echo "Build library project with meson/ninja ..."
+        - echo "Build & test library in release mode ..."
         - ls /export/doocs/lib/pkgconfig
         - meson setup build.release
             --pkg-config-path=${CI_PROJECT_DIR}/lib/pkgconfig:/export/doocs/lib/pkgconfig
@@ -81,18 +70,29 @@ test-job-buster:
             --libdir=lib
             --includedir=lib/include
         - ninja -C build.release
+        - cd build.release; ./libavtomat_test
         - echo "... done."
     artifacts:
         paths:
             - build.release
-        expire_in: 1 week
+        expire_in: 4 weeks
 
-.meson_test:
+.meson_test_sanitizers:
     script:
         - echo "================================================================================"
-        - echo "Test library project with meson/ninja ..."
-        - cd build.release; ./libavtomat_test
+        - echo "Build & test library in debug mode with ASAN & UBSAN ..."
+        - ls /export/doocs/lib/pkgconfig
+        - meson setup build.debug_asan_ubsan
+            --pkg-config-path=${CI_PROJECT_DIR}/lib/pkgconfig:/export/doocs/lib/pkgconfig
+            --buildtype=debug
+            -Db_sanitize=address,undefined
+        - ninja -C build.debug_asan_ubsan
+        - cd build.debug_asan_ubsan; ./libavtomat_test
         - echo "... done."
+    artifacts:
+        paths:
+            - build.debug_asan_ubsan
+        expire_in: 1 week
 
 .setup_bionic:
     image: ubuntu:18.04
@@ -114,11 +114,12 @@ test-job-buster:
         # Install part of the packages required to compile and link DOOCS core libraries on a bionic system
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev build-essential
-            binutils autotools-dev clang gcc-doc fakeroot debhelper cmake ninja-build meson pkg-config liblua5.3-dev)
+            binutils autotools-dev clang gcc-doc fakeroot debhelper cmake ninja-build meson pkg-config)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Ubuntu-18.04-x86_64
+        - export CXX=clang++
 
 .setup_focal:
     image: ubuntu:20.04
@@ -140,38 +141,11 @@ test-job-buster:
         # Install part of the packages required to compile and link DOOCS core libraries on a focal system
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
-            build-essential binutils autotools-dev clang gcc-doc dh-exec dh-autoreconf cmake ninja-build meson pkg-config liblua5.3-dev)
+            build-essential binutils autotools-dev clang gcc-doc dh-exec dh-autoreconf cmake ninja-build meson pkg-config)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
         - export DOOCSARCH=Ubuntu-20.04-x86_64
-
-.setup_stretch:
-    image: debian:stretch
-    tags:
-        - debian9
-    before_script:
-        # Install build dependencies
-        - echo "Install the basics (wget and gnupg) for setting up the docker stretch image ..."
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            apt update && apt install -y wget gnupg)
-        # Add DOOCS repo with key
-        - echo "Installing MCS DOOCS package repository with key ..."
-        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
-        - echo "deb http://doocspkgs.desy.de/pub/doocs stretch main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
-        - echo "deb-src http://doocspkgs.desy.de/pub/doocs stretch main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
-        # Update APT cache
-        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
-        # Install part of the packages required to compile and link DOOCS core libraries on a stretch system
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
-            build-essential binutils autotools-dev clang dh-exec dh-autoreconf expect fakeroot cmake ninja-build meson pkg-config
-            liblua5.3-dev)
-        # FIXME Just to make it work for now, use existing libs.
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
-        - export DOOCSARCH=Debian-9-x86_64
 
 .setup_buster:
     image: debian:10.10
@@ -193,7 +167,7 @@ test-job-buster:
         # Install part of the packages required to compile and link DOOCS core libraries on a buster system
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev
-            build-essential binutils autotools-dev clang dh-exec dh-autoreconf cmake ninja-build meson pkg-config liblua5.3-dev)
+            build-essential binutils autotools-dev clang dh-exec dh-autoreconf cmake ninja-build meson pkg-config)
         # FIXME Just to make it work for now, use existing libs.
         - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
             DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)

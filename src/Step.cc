@@ -24,8 +24,30 @@
 
 #include "avtomat/Step.h"
 
+using namespace std::literals;
+
 namespace avto {
 
+
+void Step::set_exported_variable_names(const VariableNames& exported_variable_names)
+{
+    exported_variable_names_ = exported_variable_names;
+}
+
+void Step::set_exported_variable_names(VariableNames&& exported_variable_names)
+{
+    exported_variable_names_ = std::move(exported_variable_names);
+}
+
+void Step::set_imported_variable_names(const VariableNames& imported_variable_names)
+{
+    imported_variable_names_ = imported_variable_names;
+}
+
+void Step::set_imported_variable_names(VariableNames&& imported_variable_names)
+{
+    imported_variable_names_ = std::move(imported_variable_names);
+}
 
 void Step::set_label(const std::string& label)
 {
@@ -37,6 +59,14 @@ void Step::set_script(const std::string& script)
 {
     script_ = script;
     set_time_of_last_modification(Clock::now());
+}
+
+void Step::set_timeout(std::chrono::milliseconds timeout)
+{
+    if (timeout < 0s)
+        timeout_ = 0s;
+    else
+        timeout_ = timeout;
 }
 
 void Step::set_type(Type type)

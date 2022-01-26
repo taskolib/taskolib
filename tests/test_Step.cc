@@ -37,6 +37,24 @@ TEST_CASE("Step: Default constructor", "[Step]")
     Step s;
 }
 
+TEST_CASE("Step: get_exported_variable_names()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_exported_variable_names().empty() == true);
+
+    step.set_exported_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_exported_variable_names() == VariableNames{ "a", "b52" });
+}
+
+TEST_CASE("Step: get_imported_variable_names()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_imported_variable_names().empty() == true);
+
+    step.set_imported_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_imported_variable_names() == VariableNames{ "a", "b52" });
+}
+
 TEST_CASE("Step: get_label()", "[Step]")
 {
     Step step;
@@ -73,6 +91,15 @@ TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
     REQUIRE(step.get_time_of_last_modification() == ts);
 }
 
+TEST_CASE("Step: get_timeout()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_timeout() == Step::infinite_timeout);
+
+    step.set_timeout(42s);
+    REQUIRE(step.get_timeout() == 42'000ms);
+}
+
 TEST_CASE("Step: get_type()", "[Step]")
 {
     Step step;
@@ -81,6 +108,22 @@ TEST_CASE("Step: get_type()", "[Step]")
     REQUIRE(step.get_type() == Step::type_catch);
     step.set_type(Step::type_if);
     REQUIRE(step.get_type() == Step::type_if);
+}
+
+TEST_CASE("Step: set_exported_variable_names()", "[Step]")
+{
+    Step step;
+
+    step.set_exported_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_exported_variable_names() == VariableNames{ "a", "b52" });
+}
+
+TEST_CASE("Step: set_imported_variable_names()", "[Step]")
+{
+    Step step;
+
+    step.set_imported_variable_names(VariableNames{ "c42", "d" });
+    REQUIRE(step.get_imported_variable_names() == VariableNames{ "d", "c42" });
 }
 
 TEST_CASE("Step: set_label()", "[Step]")
@@ -121,6 +164,20 @@ TEST_CASE("Step: set_time_of_last_modification()", "[Step]")
 
     step.set_time_of_last_modification(ts - 42s);
     REQUIRE(step.get_time_of_last_modification() == ts - 42s);
+}
+
+TEST_CASE("Step: set_timeout()", "[Step]")
+{
+    Step step;
+
+    step.set_timeout(42s);
+    REQUIRE(step.get_timeout() == 42s);
+
+    step.set_timeout(-2ms);
+    REQUIRE(step.get_timeout() == 0s);
+
+    step.set_timeout(Step::infinite_timeout);
+    REQUIRE(step.get_timeout() == Step::infinite_timeout);
 }
 
 TEST_CASE("Step: set_type()", "[Step]")
