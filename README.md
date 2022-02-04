@@ -63,20 +63,16 @@ like: make
 
 like: make install
       Command: meson builddir
-      Fully optimized build in builddir/, installs in /export/doocs/lib and
-      /export/doocs/lib/include.
+      Fully optimized build in builddir/, installs in /usr/lib and
+      /usr/lib/include.
       This can be used together with debuild (makeDdeb) to create packages, after
       adapting the debian/rules. The staging directory will be transfered via DESTDIR.
 
-like: make localinstall    (install in $DOOCSROOT/$DOOCSARCH/lib)
-      Command: meson --prefix ???/doocs/${DOOCSARCH} builddir
-      Command: meson --prefix `env | grep LD_LIBRARY_PATH | sed "s/.*[=:]\(\/home\/[^:]\+doocs\/${DOOCSARCH}\/\).*/\1/"` builddir
+like: make localinstall    (install in $HOME/???/lib)
+      Command: meson --prefix ???/somewhere builddir
       Installs into the user's home directory. The second solution uses a hopefully set
       LD_LIBRARY_PATH to determine where the user might want to put it.
 
-like: make developmentinstall    (install in: $INSTLIBDIRSDEV/$PKGDIR/$LIBNO)
-      Command: meson --prefix /doocs/doocssvr1/nightly_builds/dev_build/${DOOCSARCH} builddir
-      Probably used by Jenkins?
 
 To use it one has to set LD_LIBRARY_PATH, PKG_CONFIG_PATH, and CPATH (probably).
 
@@ -87,5 +83,3 @@ After the setup phase one can call any of these:
       ninja -C builddir clean
       rm -Rf builddir
 
-Hint 'builddir' in the meson calls above is the selected build directory,
-e.g. 'build_doocsdev16'.
