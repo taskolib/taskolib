@@ -13,7 +13,7 @@ default_options : [
 meson_version : '>=0.49'
 )
 
-package_name = 'doocs-libavtomat'
+package_name = 'libavtomat'
 
 # Configuration for included Sol3 library
 # SOL_USING_CXX_LUA tells Sol3 that we are using a custom LUA build that was compiled
