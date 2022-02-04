@@ -6,7 +6,7 @@ default_options : [
     'cpp_std=c++17',
     'warning_level=3',
     'buildtype=release',
-    'prefix=/export/doocs',
+    'prefix=/usr',
     'libdir=lib',
     'includedir=lib/include'
   ],
