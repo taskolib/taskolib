@@ -148,7 +148,8 @@ executable('execute_step',
 )
 
 ## Include experimental sources for lua/sol. All of the buiild executable will start with
-## 'run_...'
+## 'experiment_...' under folder 'playground'. To disable it you only need to comment it
+## out.
 subdir('playground')
 
 ## Build message
