@@ -309,7 +309,7 @@ TEST_CASE("execute_step(): Running a step with multiple import and exports",
     }
 }
 
-TEST_CASE("execute_step(): External global properties on Lua scripts", "[execute_step]")
+TEST_CASE("execute_step(): External commands on Lua scripts", "[execute_step]")
 {
     Context context;
     Step step;
