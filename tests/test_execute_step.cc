@@ -315,7 +315,7 @@ TEST_CASE("execute_step(): External global properties on Lua scripts", "[execute
     Step step;
 
     step.set_script("os.execute('ls')");
-    SECTION("Must prohibt execution of external command in Lua script")
+    SECTION("Must prohibit execution of external command in Lua script")
     {
         REQUIRE_THROWS_AS(execute_step(step, context), Error);
     }
