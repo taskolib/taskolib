@@ -147,16 +147,10 @@ executable('execute_step',
     dependencies : dep
 )
 
-
-# Marcus (27.01.2022): Build experimental sol3 test cases 
-executable('experiment_sol_variables',
-    files(['playground/run_sol_variables.cc']),
-    dependencies : dep
-)
-executable('experiment_sol_with_function',
-    files(['playground/run_sol_with_function.cc']),
-    dependencies : dep
-)
+## Include experimental sources for lua/sol. All of the buiild executable will start with
+## 'experiment_...' under folder 'playground'. To disable it you only need to comment it
+## out.
+subdir('playground')
 
 ## Build message
 
