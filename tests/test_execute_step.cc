@@ -308,3 +308,15 @@ TEST_CASE("execute_step(): Running a step with multiple import and exports",
         REQUIRE(std::get<std::string>(context["result"]) == "Test|Test");
     }
 }
+
+TEST_CASE("execute_step(): External commands on Lua scripts", "[execute_step]")
+{
+    Context context;
+    Step step;
+
+    step.set_script("os.execute('ls')");
+    SECTION("Must prohibit execution of external command in Lua script")
+    {
+        REQUIRE_THROWS_AS(execute_step(step, context), Error);
+    }
+}
