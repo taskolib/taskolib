@@ -53,37 +53,40 @@ class Sequence
      * There is now presure to phrase an unqmbiguous description but it would be good for
      * other colleagues to fetch the significance.
      * 
-     * \param name [IN] descriptive and clear name.
+     * \param lable [IN] descriptive and clear name.
      */
-    explicit Sequence( const std::string& name ) noexcept: name_{ name } { check_name( name_ ); }
-    explicit Sequence( std::string&& name ) noexcept: name_{ std::move( name ) } { check_name( name_ ); }
+    explicit Sequence( const std::string& lable = "[anonymous]" ) noexcept: lable_{ lable } { check_lable( lable_ ); }
+    explicit Sequence( std::string&& lable = "[anonymous]" ) noexcept: lable_{ std::move( lable ) } { check_lable( lable_ ); }
 
     /**
      * @brief Get the descriptive name.
      * 
      * @return std::string [OUT] descriptive name
      */
-    inline std::string get_name() const noexcept 
+    std::string get_lable() const 
     {
-        return this->name_;
+        return this->lable_;
     }
 
     /**
      * @brief Add \a Step to the sequence.
      * 
-     * @param step [IN/OUT/MOVE] Step
+     * @param step [IN/MOVE] Step
      */
-    inline void add_step( const Step& step ) noexcept { this->steps.push_back( step ); }
-    inline void add_step( Step&& step ) noexcept { this->steps.push_back( std::move( step ) ); }
+    void add_step( const Step& step ) noexcept { this->steps_.push_back( step ); }
+    void add_step( Step&& step ) noexcept { this->steps_.push_back( std::move( step ) ); }
  
     /**
      * @brief Validates if the \a Step 's are correctly enclosed in a proper way.
      * 
      * It is done by validating the step types where each of the following condition:
      * 
-     * -# each type \a avto::Step::Type::type_try must have the corresponding \a avto::Step::Type::type_catch
+     * -# each type \a avto::Step::Type::type_try must have the corresponding 
+     *    \a avto::Step::Type::type_catch
      * -# each type \a avto::Step::Type::type_if , \a avto::Step::Type::type_while , and 
-     *  \a  \a avto::Step::Type::type_try must have the corresponding \a  \a avto::Step::Type::type_end 
+     *  \a avto::Step::Type::type_try must have the corresponding
+     *  \a avto::Step::Type::type_end 
+     * -# must be filled...
      * 
      * If one of those is false an avto::Error exception is thrown.
      * 
@@ -92,7 +95,7 @@ class Sequence
     bool check_correctness_of_steps();
 
     /**
-     * @brief Execute the sequence unter context \a Context with the required variables.
+     * @brief Execute the sequence under context \a Context with required variables.
      * 
      * The variables are copied for step type \a avto::Step::Type::type_action from step to 
      * step with their intermediate changed values from the previous step.
@@ -100,26 +103,28 @@ class Sequence
      * On error the method will throw an \a avto::Error including a precise description
      * where the fault occured. You can also examine the variables in \a avto::Context .
      * 
-     * @param context [IN/OUT] context with starting variable declaration.
+     * @param context [IN/OUT] context with starting variable definition.
      */
     void execute( Context& context );
 
 private:
-    enum E_IF { IF_NONE = 0, HAS_IF, HAS_ELSE_IF, HAS_ELSE };
-    enum E_WHILE { WHILE_NONE = 0, HAS_WHILE };
-    enum E_TRY { TRY_NONE = 0, HAS_TRY, HAS_CATCH };
+    enum E_IF { NO_IF = 0, IF, ELSE_IF, ELSE };
+    enum E_WHILE { NO_WHILE = 0, WHILE };
+    enum E_TRY { NO_TRY = 0, TRY, CATCH };
+    enum E_ACTION { NO_ACTION = 0, ACTION };
+    enum E_END { NO_END, END };
 
-    std::string name_;
-    std::vector<Step> steps;
+    std::string lable_;
+    std::vector<Step> steps_;
 
     /// Check that the given description is valid. If not then throw an avto::Error.
-    void check_name( gul14::string_view name )
+    void check_lable( gul14::string_view lable )
     {
-        if ( name.empty() )
+        if ( lable.empty() )
             throw Error( "Descriptive string may not be empty" );
 
-        if ( name.size() > 64 )
-            throw Error( gul14::cat( "Descriptive string \"", name, "\" is too long (>64 characters)" ) );
+        if ( lable.size() > 64 )
+            throw Error( gul14::cat( "Descriptive string \"", lable, "\" is too long (>64 characters)" ) );
     }
 };
 

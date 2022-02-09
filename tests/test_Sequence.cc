@@ -39,357 +39,675 @@ using namespace avto;
 //     REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcde"), Error );
 // }
 
-TEST_CASE("Sequence: check correctness of try-catch", "[Sequence]")
+TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
 {
-    Step stepTry;
-    Step stepCatch;
-    Step stepTryEnd;
+    /*
+        TRY
+            ACTION
+        CATCH
+        END
+    */
+    Step step_try;
+    Step step_action;
+    Step step_catch;
+    Step step_try_end;
     Context context;
-    Sequence sequence("validating try-catch-end correctness");
+    Sequence sequence("validating try-catch-end 1 correctness");
 
-    stepTry.set_type( Step::type_try );
-    stepCatch.set_type( Step::type_catch );
-    stepTryEnd.set_type( Step::type_end );
+    step_try.set_type( Step::type_try );
+    step_action.set_type( Step::type_action );
+    step_catch.set_type( Step::type_catch );
+    step_try_end.set_type( Step::type_end );
 
-    sequence.add_step( stepTry );
-    sequence.add_step( stepCatch );
-    sequence.add_step( stepTryEnd );
+    sequence.add_step( step_try );
+    sequence.add_step( step_action );
+    sequence.add_step( step_catch );
+    sequence.add_step( step_try_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
+TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
+{
+    /*
+        TRY
+            ACTION
+        CATCH
+            ACTION
+        END
+    */
+    Step step_try;
+    Step step_action1;
+    Step step_catch;
+    Step step_action2;
+    Step step_try_end;
+    Context context;
+    Sequence sequence("validating try-catch-end correctness");
+
+    step_try.set_type( Step::type_try );
+    step_action1.set_type( Step::type_action );
+    step_catch.set_type( Step::type_catch );
+    step_action2.set_type( Step::type_action );
+    step_try_end.set_type( Step::type_end );
+
+    sequence.add_step( step_try );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_catch );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_try_end );
+
+    REQUIRE( sequence.check_correctness_of_steps() == true );
+}
+
+// TODO: Nested levels -> needs more improvement!
+// TEST_CASE("Sequence: check correctness of try-try-catch-end-catch-end", "[Sequence]")
+// {
+//     /*
+//         TRY
+//             TRY
+//                 ACTION
+//             CATCH
+//                 ACTION
+//             END
+//         CATCH
+//             ACTION
+//         END
+//     */
+//     Step step_try1;
+//     Step step_try2;
+//     Step step_action1;
+//     Step step_catch2;
+//     Step step_action2;
+//     Step step_try_end2;
+//     Step step_catch1;
+//     Step step_action3;
+//     Step step_try_end1;
+//     Context context;
+//     Sequence sequence("validating try-try-catch-end-catch-end correctness");
+
+//     step_try1.set_type( Step::type_try );
+//     step_try2.set_type( Step::type_try );
+//     step_action1.set_type( Step::type_action );
+//     step_catch2.set_type( Step::type_catch );
+//     step_action2.set_type( Step::type_action );
+//     step_try_end2.set_type( Step::type_end );
+//     step_catch1.set_type( Step::type_catch );
+//     step_action3.set_type( Step::type_action );
+//     step_try_end1.set_type( Step::type_end );
+
+//     sequence.add_step( step_try1 );
+//     sequence.add_step( step_try2 );
+//     sequence.add_step( step_action1 );
+//     sequence.add_step( step_catch2 );
+//     sequence.add_step( step_action2 );
+//     sequence.add_step( step_try_end2 );
+//     sequence.add_step( step_catch1 );
+//     sequence.add_step( step_action3 );
+//     sequence.add_step( step_try_end1 );
+
+//     REQUIRE( sequence.check_correctness_of_steps() == true );
+// }
+
+TEST_CASE("Sequence: check fault for try", "[Sequence]")
+{
+    /*
+        TRY
+    */
+    Step step_try;
+    Context context;
+    Sequence sequence("validating try-catch correctness");
+
+    step_try.set_type( Step::type_try );
+
+    sequence.add_step( step_try );
+
+    REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
+}
+
+TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
+{
+    /*
+        TRY
+        TRY
+    */
+    Step step_try1;
+    Step step_try2;
+    Context context;
+    Sequence sequence("validating try-catch correctness");
+
+    step_try1.set_type( Step::type_try );
+    step_try2.set_type( Step::type_try );
+
+    sequence.add_step( step_try1 );
+    sequence.add_step( step_try2 );
+
+    REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
+}
+
+TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
+{
+    /*
+        TRY
+            ACTION
+        CATCH
+    */
+    Step step_try;
+    Step step_action;
+    Step step_catch;
+    Context context;
+    Sequence sequence("validating try-catch correctness");
+
+    step_try.set_type( Step::type_try );
+    step_action.set_type( Step::type_action );
+    step_catch.set_type( Step::type_catch );
+
+    sequence.add_step( step_try );
+    sequence.add_step( step_action );
+    sequence.add_step( step_catch );
+
+    REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
+}
+
 TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
 {
-    Step stepTry;
-    Step stepTryEnd;
+    /*
+        TRY
+        END
+    */
+    Step step_try;
+    Step step_try_end;
     Context context;
     Sequence sequence("validating try-end correctness");
 
-    stepTry.set_type( Step::type_try );
-    stepTryEnd.set_type( Step::type_end );
+    step_try.set_type( Step::type_try );
+    step_try_end.set_type( Step::type_end );
 
-    sequence.add_step( stepTry );
-    sequence.add_step( stepTryEnd );
+    sequence.add_step( step_try );
+    sequence.add_step( step_try_end );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
 {
-    Step stepTry;
-    Step stepCatch1;
-    Step stepCatch2;
-    Step stepTryEnd;
+    /*
+        TRY
+            ACTION
+        CATCH
+        CATCH
+        END
+    */
+    Step step_try;
+    Step step_action;
+    Step step_catch1;
+    Step step_catch2;
+    Step step_try_end;
     Context context;
     Sequence sequence("validating try-catch-catch-end correctness");
 
-    stepTry.set_type( Step::type_try );
-    stepCatch1.set_type( Step::type_catch );
-    stepCatch2.set_type( Step::type_catch );
-    stepTryEnd.set_type( Step::type_end );
+    step_try.set_type( Step::type_try );
+    step_action.set_type( Step::type_action );
+    step_catch1.set_type( Step::type_catch );
+    step_catch2.set_type( Step::type_catch );
+    step_try_end.set_type( Step::type_end );
 
-    sequence.add_step( stepTry );
-    sequence.add_step( stepCatch1 );
-    sequence.add_step( stepCatch2 );
-    sequence.add_step( stepTryEnd );
+    sequence.add_step( step_try );
+    sequence.add_step( step_action );
+    sequence.add_step( step_catch1 );
+    sequence.add_step( step_catch2 );
+    sequence.add_step( step_try_end );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
 {
-    Step stepIf;
-    Step stepIfEnd;
+    /*
+        IF
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action; // set implicit type to 'action'
+    Step step_if_end;
     Context context;
     Sequence sequence("validating if-end correctness");
 
-    stepIf.set_type( Step::type_if );
-    stepIfEnd.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
+    step_action.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
 
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfEnd );
+    sequence.add_step( step_if );
+    sequence.add_step( step_action );
+    sequence.add_step( step_if_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
 TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
 {
-    Step stepIf;
-    Step stepIfElse;
-    Step stepIfEnd;
+    /*
+        IF
+            ACTION
+        ELSE
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action1; // set implicit type to 'action'
+    Step step_if_else;
+    Step step_action2; // set implicit type to 'action'
+    Step step_if_end;
     Context context;
     Sequence sequence("validating if-else-end correctness");
 
-    stepIf.set_type( Step::type_if );
-    stepIfElse.set_type( Step::type_else );
-    stepIfEnd.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
+    step_action1.set_type( Step::type_action );
+    step_if_else.set_type( Step::type_else );
+    step_action2.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
 
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfElse );
-    sequence.add_step( stepIfEnd );
-
-    REQUIRE( sequence.check_correctness_of_steps() == true );
-}
-
-TEST_CASE("Sequence: check correctness of if-elseif-end", "[Sequence]")
-{
-    Step stepIf;
-    Step stepIfElseIf;
-    Step stepIfEnd;
-    Context context;
-    Sequence sequence("validating if-elseif-end correctness");
-
-    stepIf.set_type( Step::type_if );
-    stepIfElseIf.set_type( Step::type_elseif );
-    stepIfEnd.set_type( Step::type_end );
-
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfElseIf );
-    sequence.add_step( stepIfEnd );
+    sequence.add_step( step_if );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_if_else );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_if_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
 {
-    Step stepIf;
-    Step stepIfElseIf;
-    Step stepIfElse;
-    Step stepIfEnd;
+    /*
+        IF
+            ACTION
+        ELSE IF
+            ACTION
+        ELSE
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action1; // set implicit type to 'action'
+    Step step_if_else_if;
+    Step step_action2; // set implicit type to 'action'
+    Step step_if_else;
+    Step step_action3; // set implicit type to 'action'
+    Step step_if_end;
     Context context;
     Sequence sequence("validating if-else-end correctness");
 
-    stepIf.set_type( Step::type_if );
-    stepIfElseIf.set_type( Step::type_elseif );
-    stepIfElse.set_type( Step::type_else );
-    stepIfEnd.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
+    step_action1.set_type( Step::type_action );
+    step_if_else_if.set_type( Step::type_elseif );
+    step_action2.set_type( Step::type_action );
+    step_if_else.set_type( Step::type_else );
+    step_action3.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
 
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfElseIf );
-    sequence.add_step( stepIfElse );
-    sequence.add_step( stepIfEnd );
+    sequence.add_step( step_if );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_if_else_if );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_if_else );
+    sequence.add_step( step_action3 );
+    sequence.add_step( step_if_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence]")
 {
-    Step stepIf;
-    Step stepIfElseIf1;
-    Step stepIfElseIf2;
-    Step stepIfElse;
-    Step stepIfEnd;
+    /*
+        IF
+            ACTION
+        ELSE IF <cond>
+            ACTION
+        ELSE IF <cond>
+            ACTION
+        ELSE
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action1; // set implicit type to 'action'
+    Step step_if_else_if1;
+    Step step_action2; // set implicit type to 'action'
+    Step step_if_else_if2;
+    Step step_action3; // set implicit type to 'action'
+    Step step_if_else;
+    Step step_action4; // set implicit type to 'action'
+    Step step_if_end;
     Context context;
     Sequence sequence("validating if-else-end correctness");
 
-    stepIf.set_type( Step::type_if );
-    stepIfElseIf1.set_type( Step::type_elseif );
-    stepIfElseIf2.set_type( Step::type_elseif );
-    stepIfElse.set_type( Step::type_else );
-    stepIfEnd.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
+    step_action1.set_type( Step::type_action );
+    step_if_else_if1.set_type( Step::type_elseif );
+    step_action2.set_type( Step::type_action );
+    step_if_else_if2.set_type( Step::type_elseif );
+    step_action3.set_type( Step::type_action );
+    step_if_else.set_type( Step::type_else );
+    step_action4.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
 
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfElseIf1 );
-    sequence.add_step( stepIfElseIf2 );
-    sequence.add_step( stepIfElse );
-    sequence.add_step( stepIfEnd );
+    sequence.add_step( step_if );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_if_else_if1 );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_if_else_if2 );
+    sequence.add_step( step_action3 );
+    sequence.add_step( step_if_else );
+    sequence.add_step( step_action4 );
+    sequence.add_step( step_if_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
-TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-else-end", "[Sequence]")
+TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Sequence]")
 {
-    Step stepIf;
-    Step stepIfElseIf;
-    Step stepTry;
-    Step stepTryCatch;
-    Step stepTryEnd;
-    Step stepIfElse;
-    Step stepIfEnd;
+    /*
+        IF
+            ACTION
+        ELSE IF <cond>
+            TRY
+                ACTION
+            CATCH
+            END
+        ELSE IF <cond>
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action1; // set implicit type to 'action'
+    Step step_if_else_if;
+    Step step_try;
+    Step step_action2; // set implicit type to 'action'
+    Step step_try_catch;
+    Step step_try_end;
+    Step step_if_else;
+    Step step_action3; // set implicit type to 'action'
+    Step step_if_end;
     Context context;
     Sequence sequence("validating if-elseif-try-catch-end-else-end correctness");
 
-    stepIf.set_type( Step::type_if );
-    stepIfElseIf.set_type( Step::type_elseif );
-    stepTry.set_type( Step::type_try );
-    stepTryCatch.set_type( Step::type_catch );
-    stepTryEnd.set_type( Step::type_end );
-    stepIfElse.set_type( Step::type_else );
-    stepIfEnd.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
+    step_action1.set_type( Step::type_action );
+    step_if_else_if.set_type( Step::type_elseif );
+    step_try.set_type( Step::type_try );
+    step_action2.set_type( Step::type_action );
+    step_try_catch.set_type( Step::type_catch );
+    step_try_end.set_type( Step::type_end );
+    step_if_else.set_type( Step::type_else );
+    step_action3.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
 
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfElseIf );
-    sequence.add_step( stepTry );
-    sequence.add_step( stepTryCatch );
-    sequence.add_step( stepTryEnd );
-    sequence.add_step( stepIfElse );
-    sequence.add_step( stepIfEnd );
+    sequence.add_step( step_if );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_if_else_if );
+    sequence.add_step( step_try );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_try_catch );
+    sequence.add_step( step_try_end );
+    sequence.add_step( step_if_else );
+    sequence.add_step( step_action3 );
+    sequence.add_step( step_if_end );
+
+    REQUIRE_THROWS_AS( sequence.check_correctness_of_steps() == true, Error );
+}
+
+TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "[Sequence]")
+{
+    /*
+        IF
+            ACTION
+        ELSE IF <cond>
+            TRY
+                ACTION
+            CATCH
+                ACTION
+            END
+        ELSE IF <cond>
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action1; // set implicit type to 'action'
+    Step step_if_else_if;
+    Step step_try;
+    Step step_action2; // set implicit type to 'action'
+    Step step_try_catch;
+    Step step_action3; // set implicit type to 'action'
+    Step step_try_end;
+    Step step_if_else;
+    Step step_action4; // set implicit type to 'action'
+    Step step_if_end;
+    Context context;
+    Sequence sequence("validating if-elseif-try-catch-end-else-end correctness");
+
+    step_if.set_type( Step::type_if );
+    step_action1.set_type( Step::type_action );
+    step_if_else_if.set_type( Step::type_elseif );
+    step_try.set_type( Step::type_try );
+    step_action2.set_type( Step::type_action );
+    step_try_catch.set_type( Step::type_catch );
+    step_action3.set_type( Step::type_action );
+    step_try_end.set_type( Step::type_end );
+    step_if_else.set_type( Step::type_else );
+    step_action4.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
+
+    sequence.add_step( step_if );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_if_else_if );
+    sequence.add_step( step_try );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_try_catch );
+    sequence.add_step( step_action3 );
+    sequence.add_step( step_try_end );
+    sequence.add_step( step_if_else );
+    sequence.add_step( step_action4 );
+    sequence.add_step( step_if_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
-// TODO: Improve!
-// TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end", "[Sequence]")
-// {
-//     Step stepIf;
-//     Step stepIfElseIf;
-//     Step stepWhile;
-//     Step stepWhileEnd;
-//     Step stepIfElse;
-//     Step stepIfEnd;
-//     Context context;
-//     Sequence sequence("validating if-elseif-while-end-else-end correctness");
-
-//     stepIf.set_type( Step::type_if );
-//     stepIfElseIf.set_type( Step::type_elseif );
-//     stepWhile.set_type( Step::type_while );
-//     stepWhileEnd.set_type( Step::type_end );
-//     stepIfElse.set_type( Step::type_else );
-//     stepIfEnd.set_type( Step::type_end );
-
-//     sequence.add_step( stepIf );
-//     sequence.add_step( stepIfElseIf );
-//     sequence.add_step( stepWhile );
-//     sequence.add_step( stepWhileEnd );
-//     sequence.add_step( stepIfElse );
-//     sequence.add_step( stepIfEnd );
-
-//     REQUIRE( sequence.check_correctness_of_steps() == true );
-// }
-
-TEST_CASE("Sequence: check correctness of if-elseif-action-else-end", "[Sequence]")
+TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end - we need an AST implementation!", "[Sequence]")
 {
-    Step stepIf;
-    Step stepIfElseIf;
-    Step stepAction;
-    Step stepIfElse;
-    Step stepIfEnd;
+    /*
+        IF
+            ACTION
+        ELSE IF
+            WHILE
+            END
+        ELSE
+            ACTION
+        END
+    */
+    Step step_if;
+    Step step_action1;
+    Step step_if_else_if;
+    Step step_while;
+    Step step_whileEnd;
+    Step step_if_else;
+    Step step_action2;
+    Step step_if_end;
     Context context;
-    Sequence sequence("validating if-elseif-action-else-end correctness");
+    Sequence sequence("validating if-elseif-while-end-else-end correctness");
 
-    stepIf.set_type( Step::type_if );
-    stepIfElseIf.set_type( Step::type_elseif );
-    stepAction.set_type( Step::type_action );
-    stepIfElse.set_type( Step::type_else );
-    stepIfEnd.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
+    step_action1.set_type( Step::type_action );
+    step_if_else_if.set_type( Step::type_elseif );
+    step_while.set_type( Step::type_while );
+    step_whileEnd.set_type( Step::type_end );
+    step_if_else.set_type( Step::type_else );
+    step_action2.set_type( Step::type_action );
+    step_if_end.set_type( Step::type_end );
 
-    sequence.add_step( stepIf );
-    sequence.add_step( stepIfElseIf );
-    sequence.add_step( stepAction );
-    sequence.add_step( stepIfElse );
-    sequence.add_step( stepIfEnd );
+    sequence.add_step( step_if );
+    sequence.add_step( step_action1 );
+    sequence.add_step( step_if_else_if );
+    sequence.add_step( step_while );
+    sequence.add_step( step_whileEnd );
+    sequence.add_step( step_if_else );
+    sequence.add_step( step_action2 );
+    sequence.add_step( step_if_end );
 
     REQUIRE( sequence.check_correctness_of_steps() == true );
+}
+
+TEST_CASE("Sequence: check fault for end", "[Sequence]")
+{
+    /*
+        END
+    */
+    Step step_end;
+    Context context;
+    Sequence sequence("validating end correctness");
+
+    step_end.set_type( Step::type_end );
+
+    sequence.add_step( step_end );
+
+    REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepAction;
+    /*
+        END
+        ACTION
+    */
+    Step step_end;
+    Step step_action;
     Context context;
     Sequence sequence("validating end-action correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepAction.set_type( Step::type_action );
+    step_end.set_type( Step::type_end );
+    step_action.set_type( Step::type_action );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepAction );
+    sequence.add_step( step_end );
+    sequence.add_step( step_action );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepTry;
+    /*
+        END
+        TRY
+    */
+    Step step_end;
+    Step step_try;
     Context context;
     Sequence sequence("validating end-try correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepTry.set_type( Step::type_try );
+    step_end.set_type( Step::type_end );
+    step_try.set_type( Step::type_try );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepTry );
+    sequence.add_step( step_end );
+    sequence.add_step( step_try );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepCatch;
+    /*
+        END
+        CATCH
+    */
+    Step step_end;
+    Step step_catch;
     Context context;
     Sequence sequence("validating end-catch correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepCatch.set_type( Step::type_catch );
+    step_end.set_type( Step::type_end );
+    step_catch.set_type( Step::type_catch );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepCatch );
+    sequence.add_step( step_end );
+    sequence.add_step( step_catch );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepIf;
+    /*
+        END
+        IF
+    */
+    Step step_end;
+    Step step_if;
     Context context;
     Sequence sequence("validating end-if correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepIf.set_type( Step::type_if );
+    step_end.set_type( Step::type_end );
+    step_if.set_type( Step::type_if );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepIf );
+    sequence.add_step( step_end );
+    sequence.add_step( step_if );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepElseIf;
+    /*
+        END
+        ELSE IF
+    */
+    Step step_end;
+    Step step_else_if;
     Context context;
     Sequence sequence("validating end-elseif correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepElseIf.set_type( Step::type_elseif );
+    step_end.set_type( Step::type_end );
+    step_else_if.set_type( Step::type_elseif );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepElseIf );
+    sequence.add_step( step_end );
+    sequence.add_step( step_else_if );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepElse;
+    /*
+        END
+        ELSE
+    */
+    Step step_end;
+    Step step_else;
     Context context;
     Sequence sequence("validating end-else correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepElse.set_type( Step::type_else );
+    step_end.set_type( Step::type_end );
+    step_else.set_type( Step::type_else );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepElse );
+    sequence.add_step( step_end );
+    sequence.add_step( step_else );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
 {
-    Step stepEnd;
-    Step stepWhile;
+    /*
+        END
+        WHILE
+    */
+    Step step_end;
+    Step step_while;
     Context context;
     Sequence sequence("validating end-while correctness");
 
-    stepEnd.set_type( Step::type_end );
-    stepWhile.set_type( Step::type_while );
+    step_end.set_type( Step::type_end );
+    step_while.set_type( Step::type_while );
 
-    sequence.add_step( stepEnd );
-    sequence.add_step( stepWhile );
+    sequence.add_step( step_end );
+    sequence.add_step( step_while );
 
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
