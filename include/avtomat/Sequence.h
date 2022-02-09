@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_SEQEUNCE_H_
-#define AVTOMAT_SEQEUNCE_H_
+#ifndef AVTOMAT_SEQUENCE_H_
+#define AVTOMAT_SEQUENCE_H_
 
 #include <string>
 #include <vector>
@@ -38,8 +38,9 @@ namespace avto {
 /**
  * \brief A sequence of \a Step 's to be executed under a given \a Context .
  * 
- * On executing a validation is performed due to check if the steps are consistent. When a fault
- * is detected an \a Error is thrown including a pricese error message about what fails. 
+ * On executing a validation is performed due to check if the steps are consistent. When
+ * a fault is detected an \a Error is thrown including a pricese error message about what
+ * fails. 
  */
 class Sequence
 {
@@ -97,8 +98,8 @@ class Sequence
     /**
      * @brief Execute the sequence under context \a Context with required variables.
      * 
-     * The variables are copied for step type \a avto::Step::Type::type_action from step to 
-     * step with their intermediate changed values from the previous step.
+     * The variables are copied for step type \a avto::Step::Type::type_action from
+     * step to step with their intermediate changed values from the previous step.
      * 
      * On error the method will throw an \a avto::Error including a precise description
      * where the fault occured. You can also examine the variables in \a avto::Context .
