@@ -1,5 +1,5 @@
 /**
- * \file   avtomat.h
+ * \file   taskomat.h
  * \author Lars Froehlich
  * \date   Created on November 26, 2021
  * \brief  Main include file for the Taskomat Library.
@@ -28,6 +28,7 @@
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
 #include "taskomat/execute_step.h"
+#include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 
 /// Namespace task contains all functions and classes of the Taskomat library.

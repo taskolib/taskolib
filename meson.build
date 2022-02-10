@@ -32,12 +32,12 @@ add_project_arguments(
 
 # Headers to be installed under ${prefix}/include/
 install_headers(files([
-    'include/taskomat/avtomat.h',
     'include/taskomat/Context.h',
     'include/taskomat/Error.h',
     'include/taskomat/execute_step.h',
     'include/taskomat/Sequence.h',
     'include/taskomat/Step.h',
+    'include/taskomat/taskomat.h',
     'include/taskomat/VariableName.h',
     ]),
     subdir: 'taskomat')
