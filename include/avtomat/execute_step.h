@@ -28,7 +28,7 @@
 #include "avtomat/Context.h"
 #include "avtomat/Step.h"
 
-namespace avto {
+namespace task {
 
 /**
  * Execute the script from the given step within the given context.
@@ -49,6 +49,6 @@ namespace avto {
  */
 bool execute_step(Step& step, Context& context);
 
-} // namespace avto
+} // namespace task
 
 #endif

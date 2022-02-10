@@ -6,7 +6,7 @@
  * The Taskomat library helps to automate processes. Its main automatization unit is a
  * sequence of steps which are executed in order or through control flow statements. The
  * behavior of each step is defined in the LUA scripting language. The library uses the
- * namespace \ref avto.
+ * namespace \ref task.
  *
  * To use the library, include the single header file \link avtomat/avtomat.h \endlink and
  * link your code against both this library and the General Utility Library (-lavtomat

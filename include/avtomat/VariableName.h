@@ -30,7 +30,7 @@
 #include <string>
 #include <gul14/string_view.h>
 
-namespace avto {
+namespace task {
 
 /**
  * A variable name is a string with limited functionality and some limitations on the
@@ -98,16 +98,16 @@ private:
     std::string name_;
 };
 
-} // namespace avto
+} // namespace task
 
 
 namespace std {
 
 /// Custom specialization of std::hash for VariableName
 template<>
-struct hash<avto::VariableName>
+struct hash<task::VariableName>
 {
-    std::size_t operator()(const avto::VariableName& name) const noexcept
+    std::size_t operator()(const task::VariableName& name) const noexcept
     {
         return std::hash<std::string>{}(name.string());
     }

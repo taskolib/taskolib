@@ -3,7 +3,7 @@
 
 int main()
 {
-    using namespace avto;
+    using namespace task;
 
     // Set up a step that imports variables "a" and "b" and returns their sum in "sum"
     Step step;

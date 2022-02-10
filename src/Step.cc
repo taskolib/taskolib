@@ -26,7 +26,7 @@
 
 using namespace std::literals;
 
-namespace avto {
+namespace task {
 
 
 void Step::set_exported_variable_names(const VariableNames& exported_variable_names)
@@ -76,4 +76,4 @@ void Step::set_type(Type type)
 }
 
 
-} // namespace avto
+} // namespace task

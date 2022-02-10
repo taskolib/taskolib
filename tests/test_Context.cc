@@ -26,7 +26,7 @@
 #include "../include/avtomat/Context.h"
 
 using namespace std::literals;
-using namespace avto;
+using namespace task;
 
 TEST_CASE("Context: Constructor", "[Context]")
 {

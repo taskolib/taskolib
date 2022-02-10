@@ -30,7 +30,7 @@
 #include <string>
 #include "avtomat/Context.h"
 
-namespace avto {
+namespace task {
 
 using Clock = std::chrono::system_clock;
 using Timestamp = std::chrono::time_point<Clock>;
@@ -169,6 +169,6 @@ private:
 };
 
 
-} // namespace avto
+} // namespace task
 
 #endif

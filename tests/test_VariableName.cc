@@ -27,7 +27,7 @@
 #include "../include/avtomat/VariableName.h"
 
 using namespace std::literals;
-using namespace avto;
+using namespace task;
 
 TEST_CASE("VariableName: VariableName(const char*)", "[VariableName]")
 {

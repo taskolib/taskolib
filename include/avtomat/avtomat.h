@@ -30,7 +30,7 @@
 #include "avtomat/execute_step.h"
 #include "avtomat/Step.h"
 
-/// Namespace avto contains all functions and classes of the Taskomat library.
-namespace avto { }
+/// Namespace task contains all functions and classes of the Taskomat library.
+namespace task { }
 
 #endif

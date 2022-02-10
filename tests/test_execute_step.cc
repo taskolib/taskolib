@@ -28,7 +28,7 @@
 #include "../include/avtomat/execute_step.h"
 
 using namespace std::literals;
-using namespace avto;
+using namespace task;
 
 TEST_CASE("execute_step(): Boolean return value from simple scripts", "[execute_step]")
 {

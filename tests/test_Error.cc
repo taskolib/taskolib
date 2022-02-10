@@ -27,7 +27,7 @@
 #include "../include/avtomat/Error.h"
 
 using namespace std::literals;
-using namespace avto;
+using namespace task;
 
 TEST_CASE("Error: Constructor", "[Error]")
 {

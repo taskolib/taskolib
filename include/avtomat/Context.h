@@ -29,7 +29,7 @@
 #include <variant>
 #include "avtomat/VariableName.h"
 
-namespace avto {
+namespace task {
 
 /**
  * A VariableValue is a variant over several data types.
@@ -43,7 +43,7 @@ using VariableValue = std::variant<long long, double, std::string>;
  */
 using Context = std::unordered_map<VariableName, VariableValue>;
 
-} // namespace avto
+} // namespace task
 
 
 #endif

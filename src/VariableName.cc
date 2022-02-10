@@ -30,12 +30,12 @@
 
 using gul14::cat;
 
-namespace avto {
+namespace task {
 
 
 namespace {
 
-// Check that the given name is a valid variable name or throw an avto::Error.
+// Check that the given name is a valid variable name or throw a task::Error.
 void check_name(gul14::string_view name)
 {
     if (name.empty())
@@ -79,4 +79,4 @@ VariableName::VariableName(std::string&& name)
 }
 
 
-} // namespace avto
+} // namespace task

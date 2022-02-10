@@ -27,7 +27,7 @@
 
 #include <stdexcept>
 
-namespace avto {
+namespace task {
 
 /**
  * A generic exception class carrying a message string.
@@ -38,18 +38,18 @@ namespace avto {
  * \code
  * try
  * {
- *     throw avto::Error("An error has occurred");
+ *     throw task::Error("An error has occurred");
  * }
- * catch (const avto::Error& e)
+ * catch (const task::Error& e)
  * {
  *     std::cerr << e.what() << "\n";
  * }
  * \endcode
  *
  * \note
- * avto::Error is derived from std::runtime_error. It can therefore be caught by
+ * task::Error is derived from std::runtime_error. It can therefore be caught by
  * `catch (const std::exception&)`, `catch (const std::runtime_error&)`, and
- * `catch (const avto::Error&)`.
+ * `catch (const task::Error&)`.
  */
 class Error : public std::runtime_error
 {
@@ -57,6 +57,6 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-} // namespace avto
+} // namespace task
 
 #endif

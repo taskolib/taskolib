@@ -27,7 +27,7 @@
 #include "../include/avtomat/Step.h"
 
 using namespace std::literals;
-using namespace avto;
+using namespace task;
 
 TEST_CASE("Step: Default constructor", "[Step]")
 {

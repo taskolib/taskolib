@@ -31,7 +31,7 @@
 using gul14::cat;
 
 
-namespace avto {
+namespace task {
 
 
 namespace {
@@ -217,4 +217,4 @@ bool execute_step(Step& step, Context& context)
 }
 
 
-} // namespace avto
+} // namespace task
