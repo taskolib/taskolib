@@ -111,7 +111,7 @@ lib = both_libraries(meson.project_name(),
 pkg = import('pkgconfig')
 pkg.generate(lib,
     name : package_name,
-    description : 'Avtomat Library',
+    description : 'Taskomat Library',
     version : libno,
     filebase : package_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],

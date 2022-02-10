@@ -2,7 +2,7 @@
  * \file   test_main.cc
  * \author Lars Froehlich
  * \date   Created on November 26, 2019
- * \brief  Test suite for the Avtomat Library
+ * \brief  Test suite for the Taskomat Library
  *
  * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *

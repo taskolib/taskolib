@@ -1,19 +1,19 @@
-Avtomat Library
-===============
+Taskomat Library
+================
 
-The Avtomat library helps automating processes. Its main automatization unit is a sequence
-of steps which are executed in order or through control flow statements. The behavior of
-each step is defined in the LUA scripting language.
+The Taskomat library helps automating processes. Its main automatization unit is a
+sequence of steps which are executed in order or through control flow statements. The
+behavior of each step is defined in the LUA scripting language.
 
 The library API is documented with Doxygen on the web page
 https://ttfinfo.desy.de/doxygen/libavtomat/html/index.html .
 
 License
 -------
-The Avtomat library is free software distributed under the terms of the GNU Lesser General
-Public License version 2.1 (LGPLv2.1). Included third-party software carries additional
-copyright statements and licenses (which are, however, compatible with the LGPLv2.1).
-Please refer to the web page or to the source file data/doxygen.h for details.
+The Taskomat library is free software distributed under the terms of the GNU Lesser
+General Public License version 2.1 (LGPLv2.1). Included third-party software carries
+additional copyright statements and licenses (which are, however, compatible with the
+LGPLv2.1). Please refer to the web page or to the source file data/doxygen.h for details.
 
 Building
 --------
