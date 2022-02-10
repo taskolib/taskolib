@@ -54,19 +54,19 @@ class Sequence
      * There is now presure to phrase an unqmbiguous description but it would be good for
      * other colleagues to fetch the significance.
      *
-     * \param lable [IN] descriptive and clear name.
+     * \param label [IN] descriptive and clear name.
      */
-    explicit Sequence( const std::string& lable = "[anonymous]" ) noexcept: lable_{ lable } { check_lable( lable_ ); }
-    explicit Sequence( std::string&& lable = "[anonymous]" ) noexcept: lable_{ std::move( lable ) } { check_lable( lable_ ); }
+    explicit Sequence( const std::string& label = "[anonymous]" ) noexcept: label_{ label } { check_label( label_ ); }
+    explicit Sequence( std::string&& label = "[anonymous]" ) noexcept: label_{ std::move( label ) } { check_label( label_ ); }
 
     /**
      * @brief Get the descriptive name.
      *
      * @return std::string [OUT] descriptive name
      */
-    std::string get_lable() const
+    std::string get_label() const
     {
-        return this->lable_;
+        return this->label_;
     }
 
     /**
@@ -115,20 +115,20 @@ private:
     enum E_ACTION { NO_ACTION = 0, ACTION };
     enum E_END { NO_END, END };
 
-    std::string lable_;
+    std::string label_;
     std::vector<Step> steps_;
 
     /// Check that the given description is valid. If not then throw an task::Error.
-    void check_lable( gul14::string_view lable )
+    void check_label( gul14::string_view label )
     {
-        if ( lable.empty() )
+        if ( label.empty() )
             throw Error( "Descriptive string may not be empty" );
 
-        if ( lable.size() > 64 )
-            throw Error( gul14::cat( "Descriptive string \"", lable, "\" is too long (>64 characters)" ) );
+        if ( label.size() > 64 )
+            throw Error( gul14::cat( "Descriptive string \"", label, "\" is too long (>64 characters)" ) );
     }
 };
 
-}
+} // namespace task
 
 #endif
