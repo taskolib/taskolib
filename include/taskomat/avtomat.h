@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_AVTOMAT_H_
-#define AVTOMAT_AVTOMAT_H_
+#ifndef TASKOMAT_TASKOMAT_H_
+#define TASKOMAT_TASKOMAT_H_
 
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"

@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_ERROR_H_
-#define AVTOMAT_ERROR_H_
+#ifndef TASKOMAT_ERROR_H_
+#define TASKOMAT_ERROR_H_
 
 #include <stdexcept>
 

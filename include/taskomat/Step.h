@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_STEP_H_
-#define AVTOMAT_STEP_H_
+#ifndef TASKOMAT_STEP_H_
+#define TASKOMAT_STEP_H_
 
 #include <chrono>
 #include <set>

@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_EXECUTE_STEP_H_
-#define AVTOMAT_EXECUTE_STEP_H_
+#ifndef TASKOMAT_EXECUTE_STEP_H_
+#define TASKOMAT_EXECUTE_STEP_H_
 
 #include "taskomat/Context.h"
 #include "taskomat/Step.h"

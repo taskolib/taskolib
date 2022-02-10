@@ -23,8 +23,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_VARIABLENAME_H_
-#define AVTOMAT_VARIABLENAME_H_
+#ifndef TASKOMAT_VARIABLENAME_H_
+#define TASKOMAT_VARIABLENAME_H_
 
 #include <functional>
 #include <string>

@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_CONTEXT_H_
-#define AVTOMAT_CONTEXT_H_
+#ifndef TASKOMAT_CONTEXT_H_
+#define TASKOMAT_CONTEXT_H_
 
 #include <unordered_map>
 #include <variant>
