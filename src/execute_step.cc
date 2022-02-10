@@ -24,8 +24,8 @@
 
 #include <limits>
 #include <gul14/cat.h>
-#include "avtomat/Error.h"
-#include "avtomat/execute_step.h"
+#include "taskomat/Error.h"
+#include "taskomat/execute_step.h"
 #include "sol/sol.hpp"
 
 using gul14::cat;

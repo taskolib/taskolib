@@ -22,10 +22,10 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include "avtomat/Sequence.h"
-#include "avtomat/execute_step.h"
+#include "taskomat/execute_step.h"
+#include "taskomat/Sequence.h"
 
-namespace avto
+namespace task
 {
 
 bool Sequence::check_correctness_of_steps()
@@ -50,7 +50,7 @@ bool Sequence::check_correctness_of_steps()
                 action_block = NO_ACTION;
                 end_block = NO_END;
                 break;
-   
+
             case Step::Type::type_catch:
                 if ( TRY != try_block )
                     throw Error( gul14::cat( "Syntax error: 'CATCH' without 'TRY' (line ", line, ")" ) );
@@ -60,7 +60,7 @@ bool Sequence::check_correctness_of_steps()
                 action_block = NO_ACTION;
                 end_block = NO_END;
                 break;
-            
+
             // if block ...
             case Step::Type::type_if: // type_elif is not counted because it somewhere in between if and end.
                 if ( IF == if_block )
@@ -139,7 +139,7 @@ bool Sequence::check_correctness_of_steps()
                         throw Error( gul14::cat( "Syntax error: missing 'ACTION' in if-then clause (line ", line , ")" ) );
                     if_block = NO_IF;
                 }
-                
+
                 // while ...
                 else if ( NO_WHILE != while_block )
                 {
@@ -167,4 +167,4 @@ void Sequence::execute( Context& context )
         execute_step( step, context );
 }
 
-}
+} // namespace task

@@ -25,8 +25,8 @@
 #include <algorithm>
 #include <cctype>
 #include <gul14/cat.h>
-#include "avtomat/Error.h"
-#include "avtomat/VariableName.h"
+#include "taskomat/Error.h"
+#include "taskomat/VariableName.h"
 
 using gul14::cat;
 

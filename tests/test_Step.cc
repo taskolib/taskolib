@@ -24,7 +24,7 @@
 
 #include <type_traits>
 #include <gul14/catch.h>
-#include "../include/avtomat/Step.h"
+#include "../include/taskomat/Step.h"
 
 using namespace std::literals;
 using namespace task;

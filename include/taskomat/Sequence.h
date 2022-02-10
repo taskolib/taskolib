@@ -22,38 +22,38 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_SEQUENCE_H_
-#define AVTOMAT_SEQUENCE_H_
+#ifndef TASKOMAT_SEQUENCE_H_
+#define TASKOMAT_SEQUENCE_H_
 
 #include <string>
 #include <vector>
 #include <gul14/string_view.h>
 #include <gul14/cat.h>
-#include "avtomat/Error.h"
-#include "avtomat/Context.h"
-#include "avtomat/Step.h"
+#include "taskomat/Error.h"
+#include "taskomat/Context.h"
+#include "taskomat/Step.h"
 
-namespace avto {
+namespace task {
 
 /**
  * \brief A sequence of \a Step 's to be executed under a given \a Context .
- * 
+ *
  * On executing a validation is performed due to check if the steps are consistent. When
  * a fault is detected an \a Error is thrown including a pricese error message about what
- * fails. 
+ * fails.
  */
 class Sequence
 {
     public:
     /**
      * \brief Construct a Sequence with descriptive name.
-     * 
+     *
      * By declaring a Sequence with an empty name or exceeding a length of 64 characters
      * will throw an \a Error exception.
-     * 
+     *
      * There is now presure to phrase an unqmbiguous description but it would be good for
      * other colleagues to fetch the significance.
-     * 
+     *
      * \param lable [IN] descriptive and clear name.
      */
     explicit Sequence( const std::string& lable = "[anonymous]" ) noexcept: lable_{ lable } { check_lable( lable_ ); }
@@ -61,49 +61,49 @@ class Sequence
 
     /**
      * @brief Get the descriptive name.
-     * 
+     *
      * @return std::string [OUT] descriptive name
      */
-    std::string get_lable() const 
+    std::string get_lable() const
     {
         return this->lable_;
     }
 
     /**
      * @brief Add \a Step to the sequence.
-     * 
+     *
      * @param step [IN/MOVE] Step
      */
     void add_step( const Step& step ) noexcept { this->steps_.push_back( step ); }
     void add_step( Step&& step ) noexcept { this->steps_.push_back( std::move( step ) ); }
- 
+
     /**
      * @brief Validates if the \a Step 's are correctly enclosed in a proper way.
-     * 
+     *
      * It is done by validating the step types where each of the following condition:
-     * 
-     * -# each type \a avto::Step::Type::type_try must have the corresponding 
+     *
+     * -# each type \a avto::Step::Type::type_try must have the corresponding
      *    \a avto::Step::Type::type_catch
-     * -# each type \a avto::Step::Type::type_if , \a avto::Step::Type::type_while , and 
+     * -# each type \a avto::Step::Type::type_if , \a avto::Step::Type::type_while , and
      *  \a avto::Step::Type::type_try must have the corresponding
-     *  \a avto::Step::Type::type_end 
+     *  \a avto::Step::Type::type_end
      * -# must be filled...
-     * 
+     *
      * If one of those is false an avto::Error exception is thrown.
-     * 
+     *
      * @param return always true - only for the sake of the test cases.
      */
     bool check_correctness_of_steps();
 
     /**
      * @brief Execute the sequence under context \a Context with required variables.
-     * 
+     *
      * The variables are copied for step type \a avto::Step::Type::type_action from
      * step to step with their intermediate changed values from the previous step.
-     * 
+     *
      * On error the method will throw an \a avto::Error including a precise description
      * where the fault occured. You can also examine the variables in \a avto::Context .
-     * 
+     *
      * @param context [IN/OUT] context with starting variable definition.
      */
     void execute( Context& context );

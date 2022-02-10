@@ -23,9 +23,9 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
-#include "../include/avtomat/Sequence.h"
+#include "../include/taskomat/Sequence.h"
 
-using namespace avto;
+using namespace task;
 
 // Question: why does this test fails?
 // TEST_CASE("Sequence: constructor without discriptive name", "[Sequence]")

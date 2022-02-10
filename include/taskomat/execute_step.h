@@ -25,8 +25,8 @@
 #ifndef AVTOMAT_EXECUTE_STEP_H_
 #define AVTOMAT_EXECUTE_STEP_H_
 
-#include "avtomat/Context.h"
-#include "avtomat/Step.h"
+#include "taskomat/Context.h"
+#include "taskomat/Step.h"
 
 namespace task {
 

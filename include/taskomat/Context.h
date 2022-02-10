@@ -1,10 +1,10 @@
 /**
- * \file   avtomat.h
+ * \file   Context.h
  * \author Lars Froehlich
- * \date   Created on November 26, 2021
- * \brief  Main include file for the Taskomat Library.
+ * \date   Created on December 20, 2021
+ * \brief  Declaration of the Context and VariableValue types.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,15 +22,28 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef AVTOMAT_AVTOMAT_H_
-#define AVTOMAT_AVTOMAT_H_
+#ifndef AVTOMAT_CONTEXT_H_
+#define AVTOMAT_CONTEXT_H_
 
-#include "avtomat/Context.h"
-#include "avtomat/Error.h"
-#include "avtomat/execute_step.h"
-#include "avtomat/Step.h"
+#include <unordered_map>
+#include <variant>
+#include "taskomat/VariableName.h"
 
-/// Namespace task contains all functions and classes of the Taskomat library.
-namespace task { }
+namespace task {
+
+/**
+ * A VariableValue is a variant over several data types.
+ * The Context type associates names with values.
+ */
+using VariableValue = std::variant<long long, double, std::string>;
+
+/**
+ * A context stores variables (which can also be functions) for use in the execution of
+ * sequences and steps.
+ */
+using Context = std::unordered_map<VariableName, VariableValue>;
+
+} // namespace task
+
 
 #endif

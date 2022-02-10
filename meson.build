@@ -32,22 +32,22 @@ add_project_arguments(
 
 # Headers to be installed under ${prefix}/include/
 install_headers(files([
-    'include/avtomat/avtomat.h',
-    'include/avtomat/Context.h',
-    'include/avtomat/Error.h',
-    'include/avtomat/execute_step.h',
-    'include/avtomat/Step.h',
-    'include/avtomat/VariableName.h',
-    'include/avtomat/Sequence.h'
+    'include/taskomat/avtomat.h',
+    'include/taskomat/Context.h',
+    'include/taskomat/Error.h',
+    'include/taskomat/execute_step.h',
+    'include/taskomat/Sequence.h',
+    'include/taskomat/Step.h',
+    'include/taskomat/VariableName.h',
     ]),
-    subdir: 'avtomat')
+    subdir: 'taskomat')
 
 # Sources
 sources = files([
     'src/execute_step.cc',
+    'src/Sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
-    'src/Sequence.cc'
 ])
 
 # Test sources
@@ -56,9 +56,9 @@ test_src = files([
     'tests/test_Error.cc',
     'tests/test_execute_step.cc',
     'tests/test_main.cc',
+    'tests/test_Sequence.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
-    'tests/test_Sequence.cc'
 ])
 
 

@@ -24,7 +24,7 @@
 
 #include <string>
 #include <gul14/catch.h>
-#include "../include/avtomat/Error.h"
+#include "../include/taskomat/Error.h"
 
 using namespace std::literals;
 using namespace task;
