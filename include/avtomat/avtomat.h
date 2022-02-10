@@ -2,9 +2,9 @@
  * \file   avtomat.h
  * \author Lars Froehlich
  * \date   Created on November 26, 2021
- * \brief  Main include file for the Avtomat Library.
+ * \brief  Main include file for the Taskomat Library.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -30,7 +30,7 @@
 #include "avtomat/execute_step.h"
 #include "avtomat/Step.h"
 
-/// Namespace avto contains all functions and classes of the Avtomat libs.
+/// Namespace avto contains all functions and classes of the Taskomat library.
 namespace avto { }
 
 #endif

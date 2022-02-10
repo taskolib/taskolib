@@ -33,7 +33,7 @@ namespace avto {
  * A generic exception class carrying a message string.
  *
  * The Error class is used as the standard exception by many functions throughout the
- * Avtomat library. It can be used directly or inherited from.
+ * Taskomat library. It can be used directly or inherited from.
  *
  * \code
  * try
