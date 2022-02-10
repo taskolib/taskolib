@@ -82,14 +82,14 @@ class Sequence
      *
      * It is done by validating the step types where each of the following condition:
      *
-     * -# each type \a avto::Step::Type::type_try must have the corresponding
-     *    \a avto::Step::Type::type_catch
-     * -# each type \a avto::Step::Type::type_if , \a avto::Step::Type::type_while , and
-     *  \a avto::Step::Type::type_try must have the corresponding
-     *  \a avto::Step::Type::type_end
+     * -# each type \a task::Step::Type::type_try must have the corresponding
+     *    \a task::Step::Type::type_catch
+     * -# each type \a task::Step::Type::type_if , \a task::Step::Type::type_while , and
+     *  \a task::Step::Type::type_try must have the corresponding
+     *  \a task::Step::Type::type_end
      * -# must be filled...
      *
-     * If one of those is false an avto::Error exception is thrown.
+     * If one of those is false an task::Error exception is thrown.
      *
      * @param return always true - only for the sake of the test cases.
      */
@@ -98,11 +98,11 @@ class Sequence
     /**
      * @brief Execute the sequence under context \a Context with required variables.
      *
-     * The variables are copied for step type \a avto::Step::Type::type_action from
+     * The variables are copied for step type \a task::Step::Type::type_action from
      * step to step with their intermediate changed values from the previous step.
      *
-     * On error the method will throw an \a avto::Error including a precise description
-     * where the fault occured. You can also examine the variables in \a avto::Context .
+     * On error the method will throw an \a task::Error including a precise description
+     * where the fault occured. You can also examine the variables in \a task::Context .
      *
      * @param context [IN/OUT] context with starting variable definition.
      */
@@ -118,7 +118,7 @@ private:
     std::string lable_;
     std::vector<Step> steps_;
 
-    /// Check that the given description is valid. If not then throw an avto::Error.
+    /// Check that the given description is valid. If not then throw an task::Error.
     void check_lable( gul14::string_view lable )
     {
         if ( lable.empty() )

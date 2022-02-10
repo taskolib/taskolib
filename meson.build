@@ -1,5 +1,5 @@
 project(
-  'libavtomat',
+  'libtaskomat',
   ['cpp'],
 version : '21.12.1',
 default_options : [
@@ -13,7 +13,7 @@ default_options : [
 meson_version : '>=0.49'
 )
 
-package_name = 'libavtomat'
+package_name = 'libtaskomat'
 
 # Configuration for included Sol3 library
 # SOL_USING_CXX_LUA tells Sol3 that we are using a custom LUA build that was compiled

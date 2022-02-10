@@ -9,7 +9,7 @@
  * namespace \ref task.
  *
  * To use the library, include the single header file \link taskomat/avtomat.h \endlink and
- * link your code against both this library and the General Utility Library (-lavtomat
+ * link your code against both this library and the General Utility Library (-ltaskomat
  * -lgul14).
  *
  * The evolving design goals of the library are documented in a series of
