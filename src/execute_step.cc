@@ -4,7 +4,7 @@
  * \date   Created on December 20, 2021
  * \brief  Implementation of the execute_step() function.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -36,6 +36,11 @@ namespace avto {
 
 namespace {
 
+static const char step_timeout_ms_since_epoch_key[] =
+    "TASKOMAT_STEP_TIMEOUT_MS_SINCE_EPOCH";
+static const char step_timeout_s_key[] =
+    "TASKOMAT_STEP_TIMEOUT_S";
+
 template <typename>
 inline constexpr bool always_false_v = false;
 
@@ -46,12 +51,13 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
 {
     sol::state_view lua(lua_state);
 
-    sol::optional<long long> timeout_ms = lua["AVTOMAT_TIMEOUT_MS_SINCE_EPOCH"];
+    const auto registry = lua.registry();
+    sol::optional<long long> timeout_ms = registry[step_timeout_ms_since_epoch_key];
 
     if (not timeout_ms.has_value())
     {
-        luaL_error(lua_state, "Timeout time point not found in LUA environment "
-            "(AVTOMAT_TIMEOUT_MS_SINCE_EPOCH)");
+        luaL_error(lua_state, "Timeout time point not found in LUA registry (%s)",
+            step_timeout_ms_since_epoch_key);
     }
     else
     {
@@ -63,7 +69,7 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
 
         if (now_ms > *timeout_ms)
         {
-            double seconds = lua["AVTOMAT_TIMEOUT_S"].get_or(-1.0);
+            double seconds = registry[step_timeout_s_key].get_or(-1.0);
             luaL_error(lua_state, cat("Timeout: Script took more than ", seconds,
                                       " s to run").c_str());
         }
@@ -148,9 +154,9 @@ void import_variables_from_context(const Step& step, const Context& context,
 void install_timeout_hook(sol::state& lua, Timestamp now,
                           std::chrono::milliseconds timeout)
 {
-    auto globals = lua.globals();
-    globals["AVTOMAT_TIMEOUT_S"] = std::chrono::duration<double>(timeout).count();
-    globals["AVTOMAT_TIMEOUT_MS_SINCE_EPOCH"] = get_ms_since_epoch(now, timeout);
+    auto registry = lua.registry();
+    registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
+    registry[step_timeout_ms_since_epoch_key] = get_ms_since_epoch(now, timeout);
 
     // Install a hook that is called after every 10 LUA instructions
     lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 10);
