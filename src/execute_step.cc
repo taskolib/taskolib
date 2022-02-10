@@ -56,6 +56,9 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
 
     if (not timeout_ms.has_value())
     {
+        // Throw an error and repeat that when returning to LUA execution (helps break out
+        // of pcalls)
+        lua_sethook(lua_state, check_script_timeout, LUA_MASKLINE, 0);
         luaL_error(lua_state, "Timeout time point not found in LUA registry (%s)",
             step_timeout_ms_since_epoch_key);
     }
@@ -70,6 +73,9 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
         if (now_ms > *timeout_ms)
         {
             double seconds = registry[step_timeout_s_key].get_or(-1.0);
+            // Throw an error and repeat that when returning to LUA execution (helps break
+            // out of pcalls)
+            lua_sethook(lua_state, check_script_timeout, LUA_MASKLINE, 0);
             luaL_error(lua_state, cat("Timeout: Script took more than ", seconds,
                                       " s to run").c_str());
         }
@@ -158,8 +164,8 @@ void install_timeout_hook(sol::state& lua, Timestamp now,
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
     registry[step_timeout_ms_since_epoch_key] = get_ms_since_epoch(now, timeout);
 
-    // Install a hook that is called after every 10 LUA instructions
-    lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 10);
+    // Install a hook that is called after every 100 LUA instructions
+    lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 100);
 }
 
 void open_safe_library_subset(sol::state& lua)

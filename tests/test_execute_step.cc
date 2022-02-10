@@ -4,7 +4,7 @@
  * \date   Created on December 20, 2021
  * \brief  Test suite for the execute_step() function.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -112,10 +112,31 @@ TEST_CASE("execute_step(): Timeout", "[execute_step]")
     Context context;
     Step step;
 
-    SECTION("Infinite loop is terminated")
+    SECTION("Simple infinite loop is terminated")
     {
         auto t0 = gul14::tic();
         step.set_script("while true do end; return true");
+        step.set_timeout(20ms);
+        REQUIRE_THROWS_AS(execute_step(step, context), Error);
+        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
+        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
+    }
+
+    SECTION("Infinite loop is terminated despite pcall protection")
+    {
+        auto t0 = gul14::tic();
+        step.set_script(R"(
+            local function infinite_loop()
+                while true do
+                    for i = 1, 10000 do
+                    end
+                end
+            end
+
+            while true do
+                pcall(infinite_loop)
+            end
+            )");
         step.set_timeout(20ms);
         REQUIRE_THROWS_AS(execute_step(step, context), Error);
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
