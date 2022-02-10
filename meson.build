@@ -38,6 +38,7 @@ install_headers(files([
     'include/avtomat/execute_step.h',
     'include/avtomat/Step.h',
     'include/avtomat/VariableName.h',
+    'include/avtomat/Sequence.h'
     ]),
     subdir: 'avtomat')
 
@@ -46,6 +47,7 @@ sources = files([
     'src/execute_step.cc',
     'src/Step.cc',
     'src/VariableName.cc',
+    'src/Sequence.cc'
 ])
 
 # Test sources
@@ -56,6 +58,7 @@ test_src = files([
     'tests/test_main.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
+    'tests/test_Sequence.cc'
 ])
 
 
