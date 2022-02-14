@@ -56,7 +56,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
@@ -78,7 +78,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 // TODO: Nested levels -> needs more improvement!
@@ -127,7 +127,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
 //     sequence.add_step( step_action3 );
 //     sequence.add_step( step_try_end1 );
 
-//     REQUIRE( sequence.check_correctness_of_steps() == true );
+//     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 // }
 
 TEST_CASE("Sequence: check fault for try", "[Sequence]")
@@ -225,7 +225,7 @@ TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
@@ -246,7 +246,7 @@ TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
@@ -271,7 +271,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence]")
@@ -300,7 +300,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Sequence]")
@@ -331,7 +331,7 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS( sequence.check_correctness_of_steps() == true, Error );
+    REQUIRE_THROWS_AS(sequence.check_correctness_of_steps(), Error);
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "[Sequence]")
@@ -364,7 +364,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "
     sequence.add_step(Step{ Step::type_end });
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE( sequence.check_correctness_of_steps() == true );
+    REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
 
 // TODO: Nested levels -> needs more improvement!
@@ -409,7 +409,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "
 //     sequence.add_step( step_action2 );
 //     sequence.add_step( step_if_end );
 
-//     REQUIRE( sequence.check_correctness_of_steps() == true );
+//     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 // }
 
 TEST_CASE("Sequence: check fault for end", "[Sequence]")

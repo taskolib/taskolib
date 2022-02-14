@@ -30,7 +30,7 @@ using gul14::cat;
 namespace task
 {
 
-bool Sequence::check_correctness_of_steps()
+void Sequence::check_correctness_of_steps()
 {
     E_IF if_block{ NO_IF };
     E_WHILE while_block{ NO_WHILE };
@@ -158,8 +158,6 @@ bool Sequence::check_correctness_of_steps()
 
     if ( !this->steps_.empty() && !( ACTION == action_block || END == end_block ) )
         throw Error( cat( "Syntax error: missing 'ACTION' or 'END' (line ", line, ")" ) );
-
-    return true;
 }
 
 void Sequence::execute( Context& context )
