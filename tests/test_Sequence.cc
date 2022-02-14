@@ -27,19 +27,17 @@
 
 using namespace task;
 
-// Question: why does this test fails?
-// TEST_CASE("Sequence: constructor without discriptive name", "[Sequence]")
-// {
-//     REQUIRE_THROWS_AS( Sequence(""), Error );
-// }
+TEST_CASE("Sequence: constructor without discriptive name", "[Sequence]")
+{
+    REQUIRE_THROWS_AS( Sequence(""), Error );
+}
 
-// Question: why does this test fails?
-// TEST_CASE("Sequence: constructor with a too large discriptive name (65 characters)",
-// "[Sequence]")
-// {
-//     REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghij"
-//     "ABCDEFGHIJabcde"), Error );
-// }
+TEST_CASE("Sequence: constructor with a too large discriptive name (65 characters)",
+"[Sequence]")
+{
+    REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghij"
+    "ABCDEFGHIJabcde"), Error );
+}
 
 TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
 {
