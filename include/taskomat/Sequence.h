@@ -56,9 +56,9 @@ class Sequence
      *
      * \param label [IN] descriptive and clear name.
      */
-    explicit Sequence( const std::string& label = "[anonymous]" ) noexcept: label_{ 
+    explicit Sequence( const std::string& label = "[anonymous]" ): label_{ 
         label } { check_label( label_ ); }
-    explicit Sequence( std::string&& label = "[anonymous]" ) noexcept: label_{ 
+    explicit Sequence( std::string&& label = "[anonymous]" ): label_{ 
         std::move( label ) } { check_label( label_ ); }
 
     /**
