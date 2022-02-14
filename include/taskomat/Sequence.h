@@ -92,10 +92,8 @@ class Sequence
      * -# must be filled...
      *
      * If one of those is false an task::Error exception is thrown.
-     *
-     * @param return always true - only for the sake of the test cases.
      */
-    bool check_correctness_of_steps();
+    void check_correctness_of_steps();
 
     /**
      * @brief Execute the sequence under context \a Context with required variables.
