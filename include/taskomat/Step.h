@@ -63,6 +63,11 @@ public:
     static constexpr short max_indentation_level{ 20 };
 
 
+    /// Construct a Step of a certain type.
+    explicit Step(Type type = type_action)
+        : type_{ type }
+    {}
+
     /// Retrieve the names of the variables that should be exported from the script.
     VariableNames get_exported_variable_names() const { return exported_variable_names_; }
 
