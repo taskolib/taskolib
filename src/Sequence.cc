@@ -32,6 +32,9 @@ namespace task
 
 void Sequence::check_correctness_of_steps()
 {
+    if (not indentation_error_.empty())
+        throw Error(indentation_error_);
+
     E_IF if_block{ NO_IF };
     E_WHILE while_block{ NO_WHILE };
     E_TRY try_block{ NO_TRY };
