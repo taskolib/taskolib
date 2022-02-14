@@ -45,7 +45,8 @@ bool Sequence::check_correctness_of_steps()
             // try block ...
             case Step::Type::type_try:
                 if ( TRY == try_block )
-                    throw Error( gul14::cat( "Syntax error: called 'TRY' statement twice (line ", line, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: called 'TRY' statement twice"
+                    " (line ", line, ")" ) );
                 try_block = TRY;
                 action_block = NO_ACTION;
                 end_block = NO_END;
@@ -53,18 +54,21 @@ bool Sequence::check_correctness_of_steps()
 
             case Step::Type::type_catch:
                 if ( TRY != try_block )
-                    throw Error( gul14::cat( "Syntax error: 'CATCH' without 'TRY' (line ", line, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: 'CATCH' without 'TRY' (line ",
+                    line, ")" ) );
                 else if ( NO_ACTION == action_block )
-                    throw Error( gul14::cat( "Syntax error: try-catch block without 'ACTION' (previous line ", line-1, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: try-catch block without "
+                    "'ACTION' (previous line ", line-1, ")" ) );
                 try_block = CATCH;
                 action_block = NO_ACTION;
                 end_block = NO_END;
                 break;
 
             // if block ...
-            case Step::Type::type_if: // type_elif is not counted because it somewhere in between if and end.
+            case Step::Type::type_if: // type_elif is not counted
                 if ( IF == if_block )
-                    throw Error( gul14::cat( "Syntax error: called 'IF' statement twice (line ", line, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: called 'IF' statement twice"
+                    " (line ", line, ")" ) );
                 if_block = IF;
                 action_block = NO_ACTION;
                 end_block = NO_END;
@@ -72,15 +76,20 @@ bool Sequence::check_correctness_of_steps()
 
             case Step::Type::type_elseif:
                 if ( IF != if_block && ELSE_IF != if_block )
-                    throw Error( gul14::cat( "Syntax error: 'ELSE IF' without 'IF' (line ", line, ")" ) );
-                else if ( NO_ACTION == action_block && NO_TRY == try_block && NO_WHILE == while_block )
+                    throw Error( gul14::cat( "Syntax error: 'ELSE IF' without 'IF' (line "
+                    , line, ")" ) );
+                else if ( NO_ACTION == action_block && NO_TRY == try_block 
+                && NO_WHILE == while_block )
                 {
                     if ( NO_ACTION == action_block )
-                        throw Error( gul14::cat( "Syntax error: 'IF' block without 'ACTION' (previous line ", line-1, ")" ) );
+                        throw Error( gul14::cat( "Syntax error: 'IF' block without "
+                        "'ACTION' (previous line ", line-1, ")" ) );
                     else if ( NO_TRY == try_block )
-                        throw Error( gul14::cat( "Syntax error: 'IF' block without 'TRY' (previous line ", line-1, ")" ) );
+                        throw Error( gul14::cat( "Syntax error: 'IF' block without "
+                        "'TRY' (previous line ", line-1, ")" ) );
                     else
-                        throw Error( gul14::cat( "Syntax error: 'IF' block without 'WHILE' (previous line ", line-1, ")" ) );
+                        throw Error( gul14::cat( "Syntax error: 'IF' block without "
+                        "'WHILE' (previous line ", line-1, ")" ) );
                 }
                 if_block = ELSE_IF;
                 action_block = NO_ACTION;
@@ -89,9 +98,11 @@ bool Sequence::check_correctness_of_steps()
 
             case Step::Type::type_else:
                 if ( IF != if_block && ELSE_IF != if_block )
-                    throw Error( gul14::cat( "Syntax error: 'ELSE' without 'IF' or 'ELSE IF' (line ", line, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: 'ELSE' without 'IF' or "
+                    "'ELSE IF' (line ", line, ")" ) );
                 else if ( NO_ACTION == action_block )
-                    throw Error( gul14::cat( "Syntax error: 'IF' or 'ELSE IF' clause without 'ACTION' (previous line ", line-1, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: 'IF' or 'ELSE IF' clause"
+                    " without 'ACTION' (previous line ", line-1, ")" ) );
                 if_block = ELSE;
                 action_block = NO_ACTION;
                 end_block = NO_END;
@@ -100,7 +111,8 @@ bool Sequence::check_correctness_of_steps()
             // while block ...
             case Step::Type::type_while:
                 if ( WHILE == while_block )
-                    throw Error( gul14::cat( "Syntax error: called 'WHILE' statement twice (line ", line, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: called 'WHILE' statement"
+                    " twice (line ", line, ")" ) );
                 while_block = WHILE;
                 action_block = NO_ACTION;
                 end_block = NO_END;
@@ -119,15 +131,18 @@ bool Sequence::check_correctness_of_steps()
 
                 // check if none of the initial control element is set ...
                 if ( NO_TRY == try_block && NO_IF == if_block && NO_WHILE == while_block )
-                    throw Error( gul14::cat( "Syntax error: single 'END' block without initiale 'IF'/'TRY/'WHILE' (line ", line, ")" ) );
+                    throw Error( gul14::cat( "Syntax error: single 'END' block without"
+                    " initiale 'IF'/'TRY/'WHILE' (line ", line, ")" ) );
 
                 // try ...
                 if ( NO_TRY != try_block ) // 'try' clause
                 {
                     if ( TRY == try_block && NO_ACTION == action_block )
-                        throw Error( gul14::cat( "Syntax error: missing 'ACTION' in try-catch block (line ", line, ")" ) );
+                        throw Error( gul14::cat( "Syntax error: missing 'ACTION' in"
+                        " try-catch block (line ", line, ")" ) );
                     else if ( TRY == try_block ) // 'try' without 'catch'
-                        throw Error( gul14::cat( "Syntax error: missing 'CATCH' in try-catch block (line ", line, ")" ) );
+                        throw Error( gul14::cat( "Syntax error: missing 'CATCH' in"
+                        " try-catch block (line ", line, ")" ) );
                     else
                         try_block = NO_TRY;
                 }
@@ -136,7 +151,8 @@ bool Sequence::check_correctness_of_steps()
                 else if ( NO_IF != if_block )
                 {
                     if ( WHILE != while_block && NO_ACTION == action_block )
-                        throw Error( gul14::cat( "Syntax error: missing 'ACTION' in if-then clause (line ", line , ")" ) );
+                        throw Error( gul14::cat( "Syntax error: missing 'ACTION' in"
+                        " if-then clause (line ", line , ")" ) );
                     if_block = NO_IF;
                 }
 
@@ -145,7 +161,8 @@ bool Sequence::check_correctness_of_steps()
                 {
                     // Remove? Because it can also be a while-end loop without any action!
                     if ( NO_ACTION == action_block )
-                        throw Error( gul14::cat( "Syntax error: missing 'ACTION' in while block (line ", line , ")" ) );
+                        throw Error( gul14::cat( "Syntax error: missing 'ACTION' in while"
+                        " block (line ", line , ")" ) );
                     while_block = NO_WHILE;
                 }
 
@@ -155,7 +172,8 @@ bool Sequence::check_correctness_of_steps()
     }
 
     if ( !this->steps_.empty() && !( ACTION == action_block || END == end_block ) )
-        throw Error( gul14::cat( "Syntax error: missing 'ACTION' or 'END' (line ", line, ")" ) );
+        throw Error( gul14::cat( "Syntax error: missing 'ACTION' or 'END' (line ", line,
+        ")" ) );
 
     return true;
 }
