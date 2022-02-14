@@ -56,8 +56,10 @@ class Sequence
      *
      * \param label [IN] descriptive and clear name.
      */
-    explicit Sequence( const std::string& label = "[anonymous]" ) noexcept: label_{ label } { check_label( label_ ); }
-    explicit Sequence( std::string&& label = "[anonymous]" ) noexcept: label_{ std::move( label ) } { check_label( label_ ); }
+    explicit Sequence( const std::string& label = "[anonymous]" ) noexcept: label_{ 
+        label } { check_label( label_ ); }
+    explicit Sequence( std::string&& label = "[anonymous]" ) noexcept: label_{ 
+        std::move( label ) } { check_label( label_ ); }
 
     /**
      * @brief Get the descriptive name.
@@ -125,7 +127,8 @@ private:
             throw Error( "Descriptive string may not be empty" );
 
         if ( label.size() > 64 )
-            throw Error( gul14::cat( "Descriptive string \"", label, "\" is too long (>64 characters)" ) );
+            throw Error( gul14::cat( "Descriptive string \"", label, "\" is too long (>64"
+            " characters)" ) );
     }
 };
 

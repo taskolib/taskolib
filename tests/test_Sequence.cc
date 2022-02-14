@@ -34,9 +34,11 @@ using namespace task;
 // }
 
 // Question: why does this test fails?
-// TEST_CASE("Sequence: constructor with a too large discriptive name (65 characters)", "[Sequence]")
+// TEST_CASE("Sequence: constructor with a too large discriptive name (65 characters)",
+// "[Sequence]")
 // {
-//     REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcde"), Error );
+//     REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghij"
+//     "ABCDEFGHIJabcde"), Error );
 // }
 
 TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
@@ -456,7 +458,8 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps() == true, Error );
 }
 
-TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "[Sequence]")
+TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", 
+"[Sequence]")
 {
     /*
         IF
@@ -513,7 +516,8 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "
 }
 
 // TODO: Nested levels -> needs more improvement!
-// TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end - we need an AST implementation!", "[Sequence]")
+// TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end - we need an "
+// "AST implementation!", "[Sequence]")
 // {
 //     /*
 //         IF
