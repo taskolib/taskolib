@@ -55,6 +55,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
     sequence.add_step(Step{ Step::type_catch });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -76,6 +77,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -137,6 +139,7 @@ TEST_CASE("Sequence: check fault for try", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_try });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -151,6 +154,7 @@ TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
     sequence.add_step(Step{ Step::type_try });
     sequence.add_step(Step{ Step::type_try });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -167,6 +171,7 @@ TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_catch });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -181,6 +186,7 @@ TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_try });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -201,6 +207,7 @@ TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_catch });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -217,6 +224,7 @@ TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -237,6 +245,7 @@ TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -261,6 +270,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -289,6 +299,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -319,6 +330,7 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps() == true, Error );
 }
 
@@ -351,6 +363,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE( sequence.check_correctness_of_steps() == true );
 }
 
@@ -408,6 +421,7 @@ TEST_CASE("Sequence: check fault for end", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -422,6 +436,7 @@ TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_action });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -436,6 +451,7 @@ TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_try });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -450,6 +466,7 @@ TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_catch });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -464,6 +481,7 @@ TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_if });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -478,6 +496,7 @@ TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_elseif });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -492,6 +511,7 @@ TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_else });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
 
@@ -506,5 +526,6 @@ TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_while });
 
+    REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }

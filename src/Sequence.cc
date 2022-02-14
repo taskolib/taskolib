@@ -25,6 +25,8 @@
 #include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
 
+using gul14::cat;
+
 namespace task
 {
 
@@ -37,7 +39,7 @@ bool Sequence::check_correctness_of_steps()
     E_END end_block{ NO_END };
     Step::Type type = Step::Type::type_end;
     int line{ 1 };
-    for( auto step: this->steps_ )
+    for (const Step& step : this->steps_)
     {
         type = step.get_type();
         switch( type )
@@ -165,6 +167,78 @@ void Sequence::execute( Context& context )
     check_correctness_of_steps();
     for( auto step: this->steps_ )
         execute_step( step, context );
+}
+
+void Sequence::indent() noexcept
+{
+    short level = 0;
+
+    indentation_error_.clear();
+
+    for (Step& step : steps_)
+    {
+        short step_level;
+
+        switch (step.get_type())
+        {
+            case Step::type_action:
+                step_level = level;
+                break;
+            case Step::type_if:
+            case Step::type_try:
+            case Step::type_while:
+                step_level = level;
+                ++level;
+                break;
+            case Step::type_catch:
+            case Step::type_else:
+            case Step::type_elseif:
+                step_level = level - 1;
+                break;
+            case Step::type_end:
+                step_level = level - 1;
+                --level;
+                break;
+        };
+
+        if (step_level < 0)
+        {
+            step_level = 0;
+
+            if (indentation_error_.empty())
+                indentation_error_ = "Steps are not nested correctly";
+        }
+
+        step.set_indentation_level(step_level); // cannot throw because we check step_level
+
+        if (level < 0)
+        {
+            level = 0;
+            if (indentation_error_.empty())
+            {
+                indentation_error_ = "Steps are not nested correctly (every END must "
+                    "correspond to one IF, TRY, or WHILE)";
+            }
+        }
+        else if (level > Step::max_indentation_level)
+        {
+            level = Step::max_indentation_level;
+            if (indentation_error_.empty())
+            {
+                indentation_error_ = cat("Steps are nested too deeply (max. level: ",
+                                         Step::max_indentation_level, ')');
+            }
+        }
+    }
+
+    if (level != 0)
+    {
+        if (indentation_error_.empty())
+        {
+            indentation_error_ = "Steps are not nested correctly (there must be one END "
+                "for each IF, TRY, WHILE)";
+        }
+    }
 }
 
 } // namespace task
