@@ -45,6 +45,9 @@ namespace task {
 class Sequence
 {
 public:
+    using SizeType = std::uint16_t;
+    using size_type = SizeType;
+
     /**
      * \brief Construct a Sequence with descriptive name.
      *
@@ -108,6 +111,16 @@ public:
      * @returns a descriptive name for the sequence.
      */
     const std::string& get_label() const noexcept { return label_; }
+
+    /**
+     * Access the step at a given index.
+     *
+     * The index operator can only be used for read access to the sequence steps.
+     */
+    const Step& operator[](SizeType idx) const { return steps_[idx]; }
+
+    /// Return the number of steps contained in this sequence.
+    SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
 private:
     enum E_IF { NO_IF = 0, IF, ELSE_IF, ELSE };

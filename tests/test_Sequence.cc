@@ -55,6 +55,12 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
     sequence.add_step(Step{ Step::type_catch });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.size() == 4u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
 }
@@ -76,6 +82,13 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
     sequence.add_step(Step{ Step::type_catch });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 5u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 1);
+    REQUIRE(sequence[4].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
@@ -139,6 +152,9 @@ TEST_CASE("Sequence: check fault for try", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_try });
 
+    REQUIRE(sequence.size() == 1u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -153,6 +169,10 @@ TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_try });
     sequence.add_step(Step{ Step::type_try });
+
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
 
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
@@ -171,6 +191,11 @@ TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_catch });
 
+    REQUIRE(sequence.size() == 3u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -185,6 +210,10 @@ TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_try });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
@@ -207,6 +236,13 @@ TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_catch });
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.size() == 5u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 0);
+    REQUIRE(sequence[4].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -223,6 +259,11 @@ TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_if });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 3u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
@@ -244,6 +285,13 @@ TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_else });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 5u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 1);
+    REQUIRE(sequence[4].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
@@ -269,6 +317,15 @@ TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
     sequence.add_step(Step{ Step::type_else });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 7u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 1);
+    REQUIRE(sequence[4].get_indentation_level() == 0);
+    REQUIRE(sequence[5].get_indentation_level() == 1);
+    REQUIRE(sequence[6].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
@@ -298,6 +355,17 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
     sequence.add_step(Step{ Step::type_else });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 9u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 1);
+    REQUIRE(sequence[4].get_indentation_level() == 0);
+    REQUIRE(sequence[5].get_indentation_level() == 1);
+    REQUIRE(sequence[6].get_indentation_level() == 0);
+    REQUIRE(sequence[7].get_indentation_level() == 1);
+    REQUIRE(sequence[8].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
@@ -329,6 +397,18 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     sequence.add_step(Step{ Step::type_else });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 10u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 1);
+    REQUIRE(sequence[4].get_indentation_level() == 2);
+    REQUIRE(sequence[5].get_indentation_level() == 1);
+    REQUIRE(sequence[6].get_indentation_level() == 1);
+    REQUIRE(sequence[7].get_indentation_level() == 0);
+    REQUIRE(sequence[8].get_indentation_level() == 1);
+    REQUIRE(sequence[9].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_THROWS_AS(sequence.check_correctness_of_steps(), Error);
@@ -362,6 +442,19 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end", "
     sequence.add_step(Step{ Step::type_else });
     sequence.add_step(Step{ Step::type_action });
     sequence.add_step(Step{ Step::type_end });
+
+    REQUIRE(sequence.size() == 11u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 1);
+    REQUIRE(sequence[2].get_indentation_level() == 0);
+    REQUIRE(sequence[3].get_indentation_level() == 1);
+    REQUIRE(sequence[4].get_indentation_level() == 2);
+    REQUIRE(sequence[5].get_indentation_level() == 1);
+    REQUIRE(sequence[6].get_indentation_level() == 2);
+    REQUIRE(sequence[7].get_indentation_level() == 1);
+    REQUIRE(sequence[8].get_indentation_level() == 0);
+    REQUIRE(sequence[9].get_indentation_level() == 1);
+    REQUIRE(sequence[10].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
     REQUIRE_NOTHROW(sequence.check_correctness_of_steps());
@@ -421,6 +514,9 @@ TEST_CASE("Sequence: check fault for end", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_end });
 
+    REQUIRE(sequence.size() == 1u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -435,6 +531,10 @@ TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_action });
+
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
@@ -451,6 +551,10 @@ TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_try });
 
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -465,6 +569,10 @@ TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_catch });
+
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
@@ -481,6 +589,10 @@ TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_if });
 
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -495,6 +607,10 @@ TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_elseif });
+
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
@@ -511,6 +627,10 @@ TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_else });
 
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
+
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
 }
@@ -525,6 +645,10 @@ TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
 
     sequence.add_step(Step{ Step::type_end });
     sequence.add_step(Step{ Step::type_while });
+
+    REQUIRE(sequence.size() == 2u);
+    REQUIRE(sequence[0].get_indentation_level() == 0);
+    REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
     REQUIRE_THROWS_AS( sequence.check_correctness_of_steps(), Error );
