@@ -169,6 +169,18 @@ void Sequence::check_correctness_of_steps()
         throw Error( cat( "Syntax error: missing 'ACTION' or 'END' (line ", line, ")" ) );
 }
 
+void Sequence::check_label(gul14::string_view label)
+{
+    if (label.empty())
+        throw Error("Sequence label may not be empty");
+
+    if (label.size() > max_label_length)
+    {
+        throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
+                        " characters)"));
+    }
+}
+
 void Sequence::execute( Context& context )
 {
     check_correctness_of_steps();

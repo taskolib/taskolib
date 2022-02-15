@@ -36,10 +36,10 @@
 namespace task {
 
 /**
- * \brief A sequence of \a Step 's to be executed under a given \a Context .
+ * A sequence of \a Step 's to be executed under a given \a Context .
  *
  * On executing a validation is performed due to check if the steps are consistent. When
- * a fault is detected an \a Error is thrown including a pricese error message about what
+ * a fault is detected an \a Error is thrown including a precise error message about what
  * fails.
  */
 class Sequence
@@ -48,6 +48,8 @@ public:
     using SizeType = std::uint16_t;
     using size_type = SizeType;
 
+    static constexpr std::size_t max_label_length = 128;
+
     /**
      * Construct a Sequence with a descriptive name.
      *
@@ -55,8 +57,8 @@ public:
      *
      * \param label [IN] descriptive and clear label.
      *
-     * \exception Error is thrown if the label is empty or if its length exceeds 64
-     *            characters.
+     * \exception Error is thrown if the label is empty or if its length exceeds
+     *            max_label_length characters.
      */
     explicit Sequence(gul14::string_view label = "[anonymous]");
 
@@ -136,15 +138,8 @@ private:
     std::string label_;
     std::vector<Step> steps_;
 
-    /// Check that the given description is valid. If not then throw an task::Error.
-    void check_label( gul14::string_view label )
-    {
-        if ( label.empty() )
-            throw Error( "Descriptive string may not be empty" );
-
-        if ( label.size() > 64 )
-            throw Error( gul14::cat( "Descriptive string \"", label, "\" is too long (>64 characters)" ) );
-    }
+    /// Check that the given description is valid. If not then throw a task::Error.
+    void check_label(gul14::string_view label);
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.

@@ -39,9 +39,10 @@ TEST_CASE("Sequence: Constructor without descriptive name", "[Sequence]")
     REQUIRE_THROWS_AS(Sequence(""), Error);
 }
 
-TEST_CASE("Sequence: Constructor with too long descriptive name (65 characters)", "[Sequence]")
+TEST_CASE("Sequence: Constructor with too long descriptive name", "[Sequence]")
 {
-    REQUIRE_THROWS_AS(Sequence(std::string(65, 'c')), Error);
+    REQUIRE_THROWS_AS(Sequence(std::string(Sequence::max_label_length + 1, 'c')), Error);
+    REQUIRE_NOTHROW(Sequence(std::string(Sequence::max_label_length, 'c')));
 }
 
 TEST_CASE("Sequence: empty()", "[Sequence]")
