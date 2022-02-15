@@ -60,16 +60,6 @@ public:
     explicit Sequence( std::string&& label = "[anonymous]" ) noexcept: label_{ std::move( label ) } { check_label( label_ ); }
 
     /**
-     * @brief Get the descriptive name.
-     *
-     * @return std::string [OUT] descriptive name
-     */
-    std::string get_label() const
-    {
-        return this->label_;
-    }
-
-    /**
      * @brief Add \a Step to the sequence.
      *
      * @param step [IN/MOVE] Step
@@ -111,6 +101,13 @@ public:
      * string if the nesting is correct.
      */
     const std::string& get_indentation_error() const noexcept { return indentation_error_; }
+
+    /**
+     * Return the sequence label.
+     *
+     * @returns a descriptive name for the sequence.
+     */
+    const std::string& get_label() const noexcept { return label_; }
 
 private:
     enum E_IF { NO_IF = 0, IF, ELSE_IF, ELSE };
