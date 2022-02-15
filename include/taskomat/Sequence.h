@@ -49,18 +49,16 @@ public:
     using size_type = SizeType;
 
     /**
-     * \brief Construct a Sequence with descriptive name.
+     * Construct a Sequence with a descriptive name.
      *
-     * By declaring a Sequence with an empty name or exceeding a length of 64 characters
-     * will throw an \a Error exception.
+     * The label should describe the function of the sequence clearly and concisely.
      *
-     * There is now presure to phrase an unqmbiguous description but it would be good for
-     * other colleagues to fetch the significance.
+     * \param label [IN] descriptive and clear label.
      *
-     * \param label [IN] descriptive and clear name.
+     * \exception Error is thrown if the label is empty or if its length exceeds 64
+     *            characters.
      */
-    explicit Sequence( const std::string& label = "[anonymous]" ) noexcept: label_{ label } { check_label( label_ ); }
-    explicit Sequence( std::string&& label = "[anonymous]" ) noexcept: label_{ std::move( label ) } { check_label( label_ ); }
+    explicit Sequence(gul14::string_view label = "[anonymous]");
 
     /**
      * @brief Add \a Step to the sequence.

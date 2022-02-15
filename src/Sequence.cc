@@ -30,6 +30,12 @@ using gul14::cat;
 namespace task
 {
 
+Sequence::Sequence(gul14::string_view label)
+{
+    check_label(label);
+    label_ = std::string{ label };
+}
+
 void Sequence::check_correctness_of_steps()
 {
     if (not indentation_error_.empty())

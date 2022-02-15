@@ -34,17 +34,15 @@ TEST_CASE("Sequence: Construct empty sequence", "[Sequence]")
     REQUIRE(seq.size() == 0);
 }
 
-// Question: why does this test fails?
-// TEST_CASE("Sequence: constructor without discriptive name", "[Sequence]")
-// {
-//     REQUIRE_THROWS_AS( Sequence(""), Error );
-// }
+TEST_CASE("Sequence: Constructor without descriptive name", "[Sequence]")
+{
+    REQUIRE_THROWS_AS(Sequence(""), Error);
+}
 
-// Question: why does this test fails?
-// TEST_CASE("Sequence: constructor with a too large discriptive name (65 characters)", "[Sequence]")
-// {
-//     REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcde"), Error );
-// }
+TEST_CASE("Sequence: Constructor with too long descriptive name (65 characters)", "[Sequence]")
+{
+    REQUIRE_THROWS_AS(Sequence(std::string(65, 'c')), Error);
+}
 
 TEST_CASE("Sequence: empty()", "[Sequence]")
 {
