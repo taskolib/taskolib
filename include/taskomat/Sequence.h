@@ -86,6 +86,9 @@ public:
      */
     void check_correctness_of_steps();
 
+    /// Determine whether the sequence contains no steps.
+    bool empty() const noexcept { return steps_.empty(); }
+
     /**
      * @brief Execute the sequence under context \a Context with required variables.
      *

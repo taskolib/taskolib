@@ -27,6 +27,13 @@
 
 using namespace task;
 
+TEST_CASE("Sequence: Construct empty sequence", "[Sequence]")
+{
+    Sequence seq;
+    REQUIRE(seq.empty());
+    REQUIRE(seq.size() == 0);
+}
+
 // Question: why does this test fails?
 // TEST_CASE("Sequence: constructor without discriptive name", "[Sequence]")
 // {
@@ -38,6 +45,14 @@ using namespace task;
 // {
 //     REQUIRE_THROWS_AS( Sequence("abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcde"), Error );
 // }
+
+TEST_CASE("Sequence: empty()", "[Sequence]")
+{
+    Sequence seq;
+    REQUIRE(seq.empty());
+    seq.add_step(Step{});
+    REQUIRE(seq.empty() == false);
+}
 
 TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
 {
