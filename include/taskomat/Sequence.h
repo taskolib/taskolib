@@ -36,48 +36,39 @@
 namespace task {
 
 /**
- * \brief A sequence of \a Step 's to be executed under a given \a Context .
+ * A sequence of \a Step 's to be executed under a given \a Context .
  *
  * On executing a validation is performed due to check if the steps are consistent. When
- * a fault is detected an \a Error is thrown including a pricese error message about what
+ * a fault is detected an \a Error is thrown including a precise error message about what
  * fails.
  */
 class Sequence
 {
-    public:
-    /**
-     * \brief Construct a Sequence with descriptive name.
-     *
-     * By declaring a Sequence with an empty name or exceeding a length of 64 characters
-     * will throw an \a Error exception.
-     *
-     * There is now presure to phrase an unqmbiguous description but it would be good for
-     * other colleagues to fetch the significance.
-     *
-     * \param label [IN] descriptive and clear name.
-     */
-    explicit Sequence( const std::string& label = "[anonymous]" ): label_{ 
-        label } { check_label( label_ ); }
-    explicit Sequence( std::string&& label = "[anonymous]" ): label_{ 
-        std::move( label ) } { check_label( label_ ); }
+public:
+    using SizeType = std::uint16_t;
+    using size_type = SizeType;
+
+    static constexpr std::size_t max_label_length = 128;
 
     /**
-     * @brief Get the descriptive name.
+     * Construct a Sequence with a descriptive name.
      *
-     * @return std::string [OUT] descriptive name
+     * The label should describe the function of the sequence clearly and concisely.
+     *
+     * \param label [IN] descriptive and clear label.
+     *
+     * \exception Error is thrown if the label is empty or if its length exceeds
+     *            max_label_length characters.
      */
-    std::string get_label() const
-    {
-        return this->label_;
-    }
+    explicit Sequence(gul14::string_view label = "[anonymous]");
 
     /**
      * @brief Add \a Step to the sequence.
      *
      * @param step [IN/MOVE] Step
      */
-    void add_step( const Step& step ) noexcept { this->steps_.push_back( step ); }
-    void add_step( Step&& step ) noexcept { this->steps_.push_back( std::move( step ) ); }
+    void add_step( const Step& step ) { this->steps_.push_back(step); indent(); }
+    void add_step( Step&& step ) { this->steps_.push_back(std::move(step)); indent(); }
 
     /**
      * @brief Validates if the \a Step 's are correctly enclosed in a proper way.
@@ -95,6 +86,9 @@ class Sequence
      */
     void check_correctness_of_steps();
 
+    /// Determine whether the sequence contains no steps.
+    bool empty() const noexcept { return steps_.empty(); }
+
     /**
      * @brief Execute the sequence under context \a Context with required variables.
      *
@@ -108,6 +102,29 @@ class Sequence
      */
     void execute( Context& context );
 
+    /**
+     * Return an error string if the sequence is not consistently nested, or an empty
+     * string if the nesting is correct.
+     */
+    const std::string& get_indentation_error() const noexcept { return indentation_error_; }
+
+    /**
+     * Return the sequence label.
+     *
+     * @returns a descriptive name for the sequence.
+     */
+    const std::string& get_label() const noexcept { return label_; }
+
+    /**
+     * Access the step at a given index.
+     *
+     * The index operator can only be used for read access to the sequence steps.
+     */
+    const Step& operator[](SizeType idx) const { return steps_[idx]; }
+
+    /// Return the number of steps contained in this sequence.
+    SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
+
 private:
     enum E_IF { NO_IF = 0, IF, ELSE_IF, ELSE };
     enum E_WHILE { NO_WHILE = 0, WHILE };
@@ -115,19 +132,23 @@ private:
     enum E_ACTION { NO_ACTION = 0, ACTION };
     enum E_END { NO_END, END };
 
+    /// Empty if indentation is correct and complete, error message otherwise
+    std::string indentation_error_;
+
     std::string label_;
     std::vector<Step> steps_;
 
-    /// Check that the given description is valid. If not then throw an task::Error.
-    void check_label( gul14::string_view label )
-    {
-        if ( label.empty() )
-            throw Error( "Descriptive string may not be empty" );
+    /// Check that the given description is valid. If not then throw a task::Error.
+    void check_label(gul14::string_view label);
 
-        if ( label.size() > 64 )
-            throw Error( gul14::cat( "Descriptive string \"", label, "\" is too long (>64"
-            " characters)" ) );
-    }
+    /**
+     * Assign indentation levels to all steps according to their logical nesting.
+     *
+     * If errors in the logical nesting are found, an approximate indentation is assigned
+     * and the member string indentation_error_ is filled with an error message. If the
+     * nesting is correct and complete, indentation_error_ is set to an empty string.
+     */
+    void indent() noexcept;
 };
 
 } // namespace task

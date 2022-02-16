@@ -24,6 +24,7 @@
 
 #include <type_traits>
 #include <gul14/catch.h>
+#include "../include/taskomat/Error.h"
 #include "../include/taskomat/Step.h"
 
 using namespace std::literals;
@@ -53,6 +54,15 @@ TEST_CASE("Step: get_imported_variable_names()", "[Step]")
 
     step.set_imported_variable_names(VariableNames{ "b52", "a" });
     REQUIRE(step.get_imported_variable_names() == VariableNames{ "a", "b52" });
+}
+
+TEST_CASE("Step: get_indentation_level()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.get_indentation_level() == 0);
+
+    step.set_indentation_level(3);
+    REQUIRE(step.get_indentation_level() == 3);
 }
 
 TEST_CASE("Step: get_label()", "[Step]")
@@ -124,6 +134,25 @@ TEST_CASE("Step: set_imported_variable_names()", "[Step]")
 
     step.set_imported_variable_names(VariableNames{ "c42", "d" });
     REQUIRE(step.get_imported_variable_names() == VariableNames{ "d", "c42" });
+}
+
+TEST_CASE("Step: set_indentation_level()", "[Step]")
+{
+    Step step;
+
+    step.set_indentation_level(3);
+    REQUIRE(step.get_indentation_level() == 3);
+
+    step.set_indentation_level(0);
+    REQUIRE(step.get_indentation_level() == 0);
+
+    step.set_indentation_level(Step::max_indentation_level);
+    REQUIRE(step.get_indentation_level() == Step::max_indentation_level);
+
+    REQUIRE_THROWS_AS(step.set_indentation_level(-1), Error);
+    REQUIRE_THROWS_AS(step.set_indentation_level(-42), Error);
+    REQUIRE_THROWS_AS(step.set_indentation_level(Step::max_indentation_level + 1), Error);
+    REQUIRE_THROWS_AS(step.set_indentation_level(30'000), Error);
 }
 
 TEST_CASE("Step: set_label()", "[Step]")
