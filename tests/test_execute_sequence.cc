@@ -84,7 +84,7 @@ TEST_CASE("execute_sequence(): complex sequence with context change",
     sequence.add_step(stepAction1);
     sequence.add_step(stepAction2);
 
-    context["a"] = VariableValue{ 0LL };
+    context["a"] = VariableValue{ 1LL };
     
     stepAction1.set_label("Action1");
     stepAction1.set_type(Step::type_action);
@@ -95,5 +95,5 @@ TEST_CASE("execute_sequence(): complex sequence with context change",
     stepAction2.set_script("print('a='..a)");
  
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
-    REQUIRE(std::get<long long>(context["a"] ) == 1LL );
+    REQUIRE(std::get<long long>(context["a"] ) == 2LL );
 }
