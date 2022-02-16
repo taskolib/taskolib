@@ -22,9 +22,12 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/cat.h>
+#include "taskomat/Error.h"
 #include "taskomat/Step.h"
 
 using namespace std::literals;
+using gul14::cat;
 
 namespace task {
 
@@ -47,6 +50,20 @@ void Step::set_imported_variable_names(const VariableNames& imported_variable_na
 void Step::set_imported_variable_names(VariableNames&& imported_variable_names)
 {
     imported_variable_names_ = std::move(imported_variable_names);
+}
+
+void Step::set_indentation_level(short level)
+{
+    if (level < 0)
+        throw Error(cat("Cannot set negative indentation level (", level, ')'));
+
+    if (level > max_indentation_level)
+    {
+        throw Error(cat("Indentation level exceeds maximum (", level, " > ",
+                        max_indentation_level, ')'));
+    }
+
+    indentation_level_ = level;
 }
 
 void Step::set_label(const std::string& label)
