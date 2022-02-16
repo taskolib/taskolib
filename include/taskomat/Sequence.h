@@ -30,13 +30,12 @@
 #include <gul14/string_view.h>
 #include <gul14/cat.h>
 #include "taskomat/Error.h"
-#include "taskomat/Context.h"
 #include "taskomat/Step.h"
 
 namespace task {
 
 /**
- * \brief A sequence of \a Step 's to be executed under a given \a Context .
+ * \brief A sequence of \a Step 's to be executed under a given context .
  *
  * On executing a validation is performed due to check if the steps are consistent. When
  * a fault is detected an \a Error is thrown including a pricese error message about what
@@ -44,7 +43,11 @@ namespace task {
  */
 class Sequence
 {
-    public:
+public:
+
+    /// Abbraviation for steps.
+    typedef std::vector<Step> Steps;
+
     /**
      * \brief Construct a Sequence with descriptive name.
      *
@@ -96,17 +99,14 @@ class Sequence
     void check_correctness_of_steps();
 
     /**
-     * @brief Execute the sequence under context \a Context with required variables.
-     *
-     * The variables are copied for step type \a task::Step::Type::type_action from
-     * step to step with their intermediate changed values from the previous step.
-     *
-     * On error the method will throw an \a task::Error including a precise description
-     * where the fault occured. You can also examine the variables in \a task::Context .
-     *
-     * @param context [IN/OUT] context with starting variable definition.
+     * @brief Get the steps object to be executed with a free function.
+     * 
+     * @return Steps& steps.
      */
-    void execute( Context& context );
+    Steps& get_steps() noexcept
+    {
+        return steps_;
+    }
 
 private:
     enum E_IF { NO_IF = 0, IF, ELSE_IF, ELSE };
@@ -116,7 +116,7 @@ private:
     enum E_END { NO_END, END };
 
     std::string label_;
-    std::vector<Step> steps_;
+    Steps steps_;
 
     /// Check that the given description is valid. If not then throw an task::Error.
     void check_label( gul14::string_view label )
