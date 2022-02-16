@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# File: 	check_changelog
+#
+# Author:	Gerhard Grygiel <gerhard.grygiel@desy.de>
+#	 	Copyright 1999-2021
+#
+#		This program is free software; you can redistribute it
+#		and/or  modify it under  the terms of  the GNU General
+#		Public  License as  published  by  the  Free  Software
+#		Foundation;  either  version 2 of the License, or  (at
+#		your option) any later version.
+#
+
+#
+# get LIBNO
+#
+LIBNO=`grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g' -e 's/\./-/g' `
+VERSION=`grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g' `
+
+#
+# check version number in changelog
+#
+LIKELY=`head -1 debian/changelog | grep $LIBNO`
+
+#
+# if LIBNO and version in debian/changelog differs
+# add changelog entry
+if [ -z "$LIKELY" ] ; then
+FIRSTLINE="libtaskomat-$LIBNO ($VERSION) unstable; urgency=low"
+MAINTAINER=`grep Maintainer debian/control | sed -e "s/Maintainer: //g"`
+DATE=`date --rfc-822`
+
+echo "$FIRSTLINE"					>  debian/changelog.NEW
+echo							>> debian/changelog.NEW
+echo "  * automatically added debian changelog entry"	>> debian/changelog.NEW
+echo "    by the DOOCS script check_changelog"		>> debian/changelog.NEW
+echo							>> debian/changelog.NEW
+echo " -- $MAINTAINER  $DATE"				>> debian/changelog.NEW
+echo							>> debian/changelog.NEW
+
+cat debian/changelog.NEW debian/changelog > debian/changelog.tmp
+rm debian/changelog.NEW
+mv debian/changelog.tmp debian/changelog
+
+fi

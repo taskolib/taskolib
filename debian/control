@@ -1,0 +1,19 @@
+Source: libtaskomat-0-0-1
+Section: devel
+Priority: optional
+Maintainer: Lars Froehlich <Lars.Froehlich@desy.de>
+Standards-Version: 3.9.8
+
+Package: libtaskomat-0-0-1
+Section: net
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Taskomat automatization library (libtaskomat)
+ Binary files for the Taskomat automatization library.
+
+Package: dev-libtaskomat
+Section: net
+Architecture: any
+Depends: libtaskomat-0-0-1
+Description: Development files for the Taskomat automatization library
+ Development files for the Taskomat automatization library.
