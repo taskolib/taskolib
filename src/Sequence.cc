@@ -176,11 +176,4 @@ void Sequence::check_correctness_of_steps()
         ")" ) );
 }
 
-void Sequence::execute( Context& context )
-{
-    check_correctness_of_steps();
-    for( auto step: this->steps_ )
-        execute_step( step, context );
-}
-
 } // namespace task
