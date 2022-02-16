@@ -59,12 +59,28 @@ public:
     static constexpr std::chrono::milliseconds
         infinite_timeout{ std::chrono::milliseconds::max() };
 
+    /// Maximum allowed level of indentation (or nesting of steps)
+    static constexpr short max_indentation_level{ 20 };
+
+
+    /// Construct a Step of a certain type.
+    explicit Step(Type type = type_action)
+        : type_{ type }
+    {}
 
     /// Retrieve the names of the variables that should be exported from the script.
     VariableNames get_exported_variable_names() const { return exported_variable_names_; }
 
     /// Retrieve the names of the variables that should be imported into the script.
     VariableNames get_imported_variable_names() const { return imported_variable_names_; }
+
+    /**
+     * Return the indentation level of this step.
+     *
+     * Zero indicates a top-level step and each additional level stands for one level of
+     * nesting inside a block statement such as IF, WHILE, CATCH, and so on.
+     */
+    short get_indentation_level() const noexcept { return indentation_level_; }
 
     /**
      * Return the label of the step.
@@ -122,6 +138,17 @@ public:
     void set_imported_variable_names(VariableNames&& imported_variable_names);
 
     /**
+     * Set the indentation level of this step.
+     *
+     * \param level  New indentation level; Zero indicates a top-level step and each
+     *               additional level stands for one level of nesting inside a block
+     *               statement such as IF, WHILE, CATCH, and so on.
+     *
+     * \exception Error is thrown if level < 0 or level > max_indentation_level.
+     */
+    void set_indentation_level(short level);
+
+    /**
      * Set the label.
      * This call also updates the time of last modification to the current system time.
      */
@@ -166,6 +193,7 @@ private:
     Timestamp time_of_last_modification_, time_of_last_execution_;
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
+    short indentation_level_{ 0 };
 };
 
 
