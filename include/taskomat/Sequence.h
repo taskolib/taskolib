@@ -84,7 +84,7 @@ public:
      *
      * If one of those is false an task::Error exception is thrown.
      */
-    void check_correctness_of_steps();
+    void check_correctness_of_steps() const;
 
     /// Determine whether the sequence contains no steps.
     bool empty() const noexcept { return steps_.empty(); }

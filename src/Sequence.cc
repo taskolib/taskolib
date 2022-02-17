@@ -36,7 +36,7 @@ Sequence::Sequence(gul14::string_view label)
     label_ = std::string{ label };
 }
 
-void Sequence::check_correctness_of_steps()
+void Sequence::check_correctness_of_steps() const
 {
     if (not indentation_error_.empty())
         throw Error(indentation_error_);
