@@ -11,7 +11,7 @@ Depends: ${shlibs:Depends}
 Description: Taskomat automatization library (libtaskomat)
  Binary files for the Taskomat automatization library.
 
-Package: dev-libtaskomat
+Package: libtaskomat-dev
 Section: net
 Architecture: any
 Depends: libtaskomat-0-0-1
