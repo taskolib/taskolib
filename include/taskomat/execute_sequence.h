@@ -37,8 +37,8 @@ namespace task {
  * - verifies the correct nesting of block statements
  * - executes each step
  *  
- * The variables are copied for step type \a task::Step::Type::type_action from
- * step to step with their intermediate changed values from the previous step.
+ * The variables in Context are moved from step to step and extracted when the sequence
+ * exits.
  *
  * \par sequence [IN/OUT] sequence to execute
  * \par context [IN/OUT] context with given variable declaration
