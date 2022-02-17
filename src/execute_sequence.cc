@@ -24,18 +24,13 @@
 #include "taskomat/execute_sequence.h"
 #include "taskomat/execute_step.h"
 
-#include <iostream>
-
 namespace task {
 
 void execute_sequence(Sequence& sequence, Context& context)
 {
     sequence.check_correctness_of_steps();
     for(auto& step: sequence.get_steps())
-    {
         execute_step(step, context);
-        std::cout << step.get_label() << std::endl;
-    }
 }
 
 }

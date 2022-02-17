@@ -34,7 +34,7 @@ namespace task {
  * \brief Execute a sequence within a given context.
  *
  * This function performs the following steps:
- * - iterates throw the steps
+ * - verifies the correct nesting of block statements
  * - executes each step
  *  
  * The variables are copied for step type \a task::Step::Type::type_action from

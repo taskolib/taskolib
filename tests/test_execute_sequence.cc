@@ -28,7 +28,6 @@
 #include "../include/taskomat/execute_sequence.h"
 #include "../include/taskomat/execute_step.h"
 
-using namespace std::literals;
 using namespace task;
 
 TEST_CASE("execute_sequence(): simple sequence", "[execute_sequence]")
@@ -39,60 +38,40 @@ TEST_CASE("execute_sequence(): simple sequence", "[execute_sequence]")
     Sequence sequence("Simple sequence");
     sequence.add_step(step);
 
-    SECTION("Simple sequence")
-    {
-        REQUIRE_NOTHROW(execute_sequence(sequence, context));
-    }
-    
-    SECTION("Simple sequence with unchanged context")
-    {
-        context["a"] = VariableValue{ 0LL };
-        REQUIRE_NOTHROW(execute_sequence(sequence, context));
-        REQUIRE(context["a"] == VariableValue{ 0LL } );
-    }
+    REQUIRE_NOTHROW(execute_sequence(sequence, context));
 }
-
-TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
+    
+TEST_CASE("execute_sequence(): Simple sequence with unchanged context", "[execute_sequence]")
 {
     Context context;
-    Step stepAction1;
-    Step stepAction2;
+    context["a"] = VariableValue{ 0LL };
 
-    Sequence sequence("Complex sequence");
-    sequence.add_step(stepAction1);
-    sequence.add_step(stepAction2);
+    Step step;
+    step.set_imported_variable_names(VariableNames{"a"});
+    step.set_exported_variable_names(VariableNames{"a"});
 
-    SECTION("Complex sequence without context change")
-    {
-        context["a"] = VariableValue{ 0LL };
-        stepAction1.set_script("print('Hello World!");
-        stepAction1.set_script("print('a='..a)");
-        REQUIRE_NOTHROW(execute_sequence(sequence, context));
-        REQUIRE(context["a"] == VariableValue{ 0LL } );
-    }
+    Sequence sequence("Simple sequence");
+    sequence.add_step(step);
 
+    REQUIRE_NOTHROW(execute_sequence(sequence, context));
+    REQUIRE(context["a"] == VariableValue{ 0LL } );
 }
 
 TEST_CASE("execute_sequence(): complex sequence with context change",
 "[execute_sequence]")
 {
     Context context;
-    Step stepAction1;
-    Step stepAction2;
+    context["a"] = VariableValue{ 1LL };
+
+    Step step_action1;
+    step_action1.set_label("Action1");
+    step_action1.set_type(Step::type_action);
+    step_action1.set_imported_variable_names(VariableNames{"a"});
+    step_action1.set_exported_variable_names(VariableNames{"a"});
+    step_action1.set_script("a=a+1");
 
     Sequence sequence("Complex sequence");
-    sequence.add_step(stepAction1);
-    sequence.add_step(stepAction2);
-
-    context["a"] = VariableValue{ 1LL };
-    
-    stepAction1.set_label("Action1");
-    stepAction1.set_type(Step::type_action);
-    stepAction1.set_script("a=a+1");
-    
-    stepAction2.set_label("Action2");
-    stepAction2.set_type(Step::type_action);
-    stepAction2.set_script("print('a='..a)");
+    sequence.add_step(step_action1);
  
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
     REQUIRE(std::get<long long>(context["a"] ) == 2LL );
