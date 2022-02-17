@@ -28,6 +28,7 @@
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
 #include "taskomat/execute_step.h"
+#include "taskomat/execute_sequence.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 
