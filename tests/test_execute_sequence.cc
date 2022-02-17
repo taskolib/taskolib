@@ -57,6 +57,46 @@ TEST_CASE("execute_sequence(): Simple sequence with unchanged context", "[execut
     REQUIRE(context["a"] == VariableValue{ 0LL } );
 }
 
+TEST_CASE("execute_sequence(): complex sequence with unallowed 'function'",
+"[execute_sequence]")
+{
+    Context context;
+
+    Step step;
+    step.set_label("Action");
+    step.set_type(Step::type_action);
+    step.set_script("print('Hello world!')");
+
+    Sequence sequence("Complex sequence");
+    sequence.add_step(step);
+ 
+    REQUIRE_THROWS(execute_sequence(sequence, context));
+}
+
+TEST_CASE("execute_sequence(): complex sequence with unallowed 'function' and context "
+ "change", "[execute_sequence]")
+{
+    Context context;
+    context["a"] = VariableValue{ 1LL };
+
+    Step step_action1;
+    step_action1.set_label("Action");
+    step_action1.set_type(Step::type_action);
+    step_action1.set_script("print('Hello world!')");
+
+    Step step_action2;
+    step_action2.set_label("Action");
+    step_action2.set_type(Step::type_action);
+    step_action2.set_script("a=a+1");
+
+    Sequence sequence("Complex sequence");
+    sequence.add_step(step_action1);
+    sequence.add_step(step_action2);
+ 
+    REQUIRE_THROWS(execute_sequence(sequence, context));
+    REQUIRE(std::get<long long>(context["a"] ) == 1LL );
+}
+
 TEST_CASE("execute_sequence(): complex sequence with context change",
 "[execute_sequence]")
 {
@@ -66,8 +106,6 @@ TEST_CASE("execute_sequence(): complex sequence with context change",
     Step step_action1;
     step_action1.set_label("Action1");
     step_action1.set_type(Step::type_action);
-    step_action1.set_imported_variable_names(VariableNames{"a"});
-    step_action1.set_exported_variable_names(VariableNames{"a"});
     step_action1.set_script("a=a+1");
 
     Sequence sequence("Complex sequence");

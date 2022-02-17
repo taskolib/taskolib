@@ -28,9 +28,22 @@ namespace task {
 
 void execute_sequence(Sequence& sequence, Context& context)
 {
+    // syntax check
     sequence.check_correctness_of_steps();
+    
+    // 'move' variable names from context to temporay set 
+    VariableNames variable_names;
+    for( const auto& variable: context)
+        variable_names.insert(variable.first);
+
     for(auto& step: sequence.get_steps())
+    {
+        // set variables names to step for import/export
+        step.set_imported_variable_names(variable_names);
+        step.set_exported_variable_names(variable_names);
+
         execute_step(step, context);
+    }
 }
 
 }
