@@ -11,7 +11,7 @@ LIBNO=$(shell grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g')
 override_dh_auto_configure:
 	debian/check_control
 	debian/check_changelog
-	CC=/usr/bin/gcc CXX=/usr/bin/c++ meson setup build/${DEB_BUILD_GNU_TYPE} \
+	CC=/usr/bin/gcc CXX=/usr/bin/c++ dh_auto_configure -- \
 		--buildtype=debugoptimized \
 		--prefix=/export/doocs \
 		--libdir=lib \
@@ -19,20 +19,6 @@ override_dh_auto_configure:
 		--wrap-mode=nofallback \
 		--build.pkg-config-path=/export/doocs/lib/pkgconfig \
 		-Dversion=${LIBNO}
-
-override_dh_auto_build:
-	ninja -C build/${DEB_BUILD_GNU_TYPE}
-
-override_dh_auto_install:
-	DESTDIR=`pwd`/debian/tmp ninja -C build/${DEB_BUILD_GNU_TYPE} install
-
-override_dh_auto_test:
-	ninja -C build/${DEB_BUILD_GNU_TYPE} test
-
-override_dh_auto_clean:
-	if [ -d "build/${DEB_BUILD_GNU_TYPE}" ]; then \
-		rm -R build/${DEB_BUILD_GNU_TYPE}; \
-	fi
 
 override_dh_strip:
 # Do not strip library symbols
