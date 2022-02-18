@@ -65,7 +65,7 @@ TEST_CASE("execute_sequence(): complex sequence with unallowed 'function'",
     Step step;
     step.set_label("Action");
     step.set_type(Step::type_action);
-    step.set_script("print('Hello world!')");
+    step.set_script("print('Hello world!')"); // provokes Error exception
 
     Sequence sequence("Complex sequence");
     sequence.add_step(step);
@@ -82,7 +82,7 @@ TEST_CASE("execute_sequence(): complex sequence with unallowed 'function' and co
     Step step_action1;
     step_action1.set_label("Action");
     step_action1.set_type(Step::type_action);
-    step_action1.set_script("print('Hello world!')");
+    step_action1.set_script("print('Hello world!')"); // provokes Error exception
 
     Step step_action2;
     step_action2.set_label("Action");
@@ -107,6 +107,8 @@ TEST_CASE("execute_sequence(): complex sequence with context change",
     step_action1.set_label("Action1");
     step_action1.set_type(Step::type_action);
     step_action1.set_script("a=a+1");
+    step_action1.set_imported_variable_names(VariableNames{"a"});
+    step_action1.set_exported_variable_names(VariableNames{"a"});
 
     Sequence sequence("Complex sequence");
     sequence.add_step(step_action1);
