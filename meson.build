@@ -13,7 +13,6 @@ project(
         'buildtype=release',
         'prefix=/usr',
         'libdir=lib',
-        'includedir=lib/include'
     ],
     meson_version : '>=0.49'
 )
