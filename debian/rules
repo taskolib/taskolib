@@ -12,12 +12,8 @@ override_dh_auto_configure:
 	debian/check_control
 	debian/check_changelog
 	CC=/usr/bin/gcc CXX=/usr/bin/c++ dh_auto_configure -- \
-		--buildtype=debugoptimized \
-		--prefix=/export/doocs \
-		--libdir=lib \
-		--includedir=lib/include \
 		--wrap-mode=nofallback \
-		--build.pkg-config-path=/export/doocs/lib/pkgconfig \
+		--pkg-config-path=/export/doocs/lib/pkgconfig \
 		-Dversion=${LIBNO}
 
 override_dh_strip:
