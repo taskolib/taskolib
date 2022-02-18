@@ -3,7 +3,7 @@
 # File:   debian/rules
 #
 
-LIBNO=$(shell grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g')
+VERSION=$(shell cat version.txt)
 
 %:
 	dh $@
@@ -15,7 +15,7 @@ override_dh_auto_configure:
 		--libdir=lib \
 		--wrap-mode=nofallback \
 		--pkg-config-path=/export/doocs/lib/pkgconfig \
-		-Dversion=${LIBNO}
+		-Dversion=${VERSION}
 
 override_dh_strip:
 # Do not strip library symbols

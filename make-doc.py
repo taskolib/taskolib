@@ -27,17 +27,9 @@ import stat
 import subprocess
 import sys
 
-file = open('LIBNO', mode='r')
-entire_file = file.read()
+file = open('version.txt', mode='r')
+version_str = file.read().strip()
 file.close()
-
-matches = re.match(r'^(.*=)?(.*)', entire_file, re.S)
-
-if matches is None or not matches.group(2):
-    sys.exit("Unable to find version in LIBNO")
-
-version_str = matches.group(2).strip()
-print(version_str)
 
 file = open('data/Doxyfile', mode='r')
 
