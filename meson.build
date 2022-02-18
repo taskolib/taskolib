@@ -1,16 +1,16 @@
 project(
-  'taskomat',
-  ['cpp'],
-version : '21.12.1',
-default_options : [
-    'cpp_std=c++17',
-    'warning_level=3',
-    'buildtype=release',
-    'prefix=/usr',
-    'libdir=lib',
-    'includedir=lib/include'
-  ],
-meson_version : '>=0.49'
+    'taskomat',
+    ['cpp'],
+    version : '21.12.1',
+    default_options : [
+        'cpp_std=c++17',
+        'warning_level=3',
+        'buildtype=release',
+        'prefix=/usr',
+        'libdir=lib',
+        'includedir=lib/include'
+    ],
+    meson_version : '>=0.49'
 )
 
 pkg_config_name = 'libtaskomat'
