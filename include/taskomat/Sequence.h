@@ -63,7 +63,7 @@ public:
     explicit Sequence(gul14::string_view label = "[anonymous]");
 
     /**
-     * @brief Add \a Step to the sequence.
+     * Add \a Step to the sequence.
      *
      * @param step [IN/MOVE] Step
      */
@@ -71,7 +71,7 @@ public:
     void add_step( Step&& step ) { this->steps_.push_back(std::move(step)); indent(); }
 
     /**
-     * @brief Validates if the \a Step 's are correctly enclosed in a proper way.
+     * Validates if the \a Step 's are correctly enclosed in a proper way.
      *
      * It is done by validating the step types where each of the following condition:
      *
@@ -90,7 +90,7 @@ public:
     bool empty() const noexcept { return steps_.empty(); }
 
     /**
-     * @brief Get the steps object to be executed with a free function.
+     * Get the steps object to be executed with a free function.
      * 
      * @return Steps& steps.
      */

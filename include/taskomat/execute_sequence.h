@@ -31,7 +31,7 @@
 namespace task {
 
 /**
- * \brief Execute a sequence within a given context.
+ * Execute a sequence within a given context.
  *
  * This function performs the following steps:
  * - verifies the correct nesting of block statements
