@@ -109,7 +109,7 @@ lib = both_libraries(meson.project_name(),
     darwin_versions : libno,
     include_directories : inc,
     build_rpath : meson.current_build_dir(),
-    install_rpath : join_paths(get_option('prefix'),get_option('libdir')),
+    install_rpath : get_option('prefix') / get_option('libdir'),
     #gnu_symbol_visibility : 'hidden',
     install : true)
 
