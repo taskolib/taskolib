@@ -1,5 +1,5 @@
 /**
- * \file   Sequencer.h
+ * \file   Sequence.h
  * \author Marcus Walla
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.

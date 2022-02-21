@@ -240,7 +240,7 @@ void Sequence::indent() noexcept
 
     for (Step& step : steps_)
     {
-        short step_level;
+        short step_level = -1;
 
         switch (step.get_type())
         {
