@@ -31,7 +31,7 @@ void execute_sequence(Sequence& sequence, Context& context)
     // syntax check
     sequence.check_correctness_of_steps();
 
-    for(auto& step: sequence.get_steps())
+    for(auto& step: sequence)
         execute_step(step, context);
 }
 

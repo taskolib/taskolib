@@ -86,9 +86,6 @@ public:
      */
     void check_correctness_of_steps() const;
 
-    /// Determine whether the sequence contains no steps.
-    bool empty() const noexcept { return steps_.empty(); }
-
     /**
      * Get the steps object to be executed with a free function.
      * 
@@ -112,12 +109,21 @@ public:
      */
     const std::string& get_label() const noexcept { return label_; }
 
+    /// Determine whether the sequence contains no steps.
+    bool empty() const noexcept { return steps_.empty(); }
+
     /**
      * Access the step at a given index.
      *
      * The index operator can only be used for read access to the sequence steps.
      */
     const Step& operator[](SizeType idx) const { return steps_[idx]; }
+
+    Steps::iterator begin() noexcept { return steps_.begin(); }
+    constexpr Steps::const_iterator begin() const noexcept { return steps_.begin(); }
+
+    Steps::iterator end() noexcept { return steps_.end(); }
+    constexpr Steps::const_iterator end() const noexcept { return steps_.end(); }
 
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
