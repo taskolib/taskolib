@@ -85,7 +85,7 @@ public:
      * If one of those is false an task::Error exception is thrown.
      */
     void check_correctness_of_steps() const;
-    
+
     /**
      * Return an error string if the sequence is not consistently nested, or an empty
      * string if the nesting is correct.
@@ -110,12 +110,12 @@ public:
     const Step& operator[](SizeType idx) const { return steps_[idx]; }
 
     /// Return Steps iterator to the first element of the container.
-    Steps::iterator begin() noexcept { return steps_.begin(); }
+    constexpr Steps::iterator begin() noexcept { return steps_.begin(); }
     /// Return constant Steps iterator to the first element of the container.
     constexpr Steps::const_iterator begin() const noexcept { return steps_.begin(); }
 
     /// Return Steps iterator to the element following the last element of the container.
-     Steps::iterator end() noexcept { return steps_.end(); }
+    constexpr Steps::iterator end() noexcept { return steps_.end(); }
     /// Return constant Steps iterator to the element following the last element of the
     /// container.
     constexpr Steps::const_iterator end() const noexcept { return steps_.end(); }
