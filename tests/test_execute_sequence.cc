@@ -57,7 +57,7 @@ TEST_CASE("execute_sequence(): Simple sequence with unchanged context", "[execut
     REQUIRE(context["a"] == VariableValue{ 0LL } );
 }
 
-TEST_CASE("execute_sequence(): complex sequence with unallowed 'function'",
+TEST_CASE("execute_sequence(): complex sequence with disallowed 'function'",
 "[execute_sequence]")
 {
     Context context;
@@ -73,7 +73,7 @@ TEST_CASE("execute_sequence(): complex sequence with unallowed 'function'",
     REQUIRE_THROWS(execute_sequence(sequence, context));
 }
 
-TEST_CASE("execute_sequence(): complex sequence with unallowed 'function' and context "
+TEST_CASE("execute_sequence(): complex sequence with disallowed 'function' and context "
  "change", "[execute_sequence]")
 {
     Context context;
