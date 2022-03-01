@@ -21,13 +21,13 @@ The library is built with Meson/Ninja. Building is done in two stages: You start
 setting up the build system with a call to Meson. All configurable options are set in this
 step. Then, you start the actual build with the ninja command.
 
-To set up a build directory "builddir" with the default configuration and build the
+To set up a build directory "`builddir`" with the default configuration and build the
 library in it:
 
       meson builddir
       ninja -C builddir
 
-By convention, directory names starting with 'build' or subdirectories of a 'build' folder
+By convention, directory names starting with `build` or subdirectories of a `build*/` folder
 are used.
 
 Debug and Release Builds
@@ -52,31 +52,42 @@ the URL https://ttfinfo.desy.de/doxygen/libtaskomat/html/index.html .
 Inspect Parameters
 ------------------
 To see all the possible and the active settings, change into the build directory and call
-'meson configure'. You can see some of the built-in possibilities there, like unity builds
+`meson configure`. You can see some of the built-in possibilities there, like unity builds
 and sanitizer to use.
 
 Examples
 --------
-like: make
-      Command: meson --buildtype debug builddir
-      Not optimized build in builddir/ (optimized for debugging in gdb for ex.)
 
-like: make install
-      Command: meson builddir
-      Fully optimized build in builddir/, installs in /usr/lib and
-      /usr/lib/include.
-      This can be used together with debuild (makeDdeb) to create packages, after
-      adapting the debian/rules. The staging directory will be transfered via DESTDIR.
+#### like: make
 
-like: make localinstall    (install in $HOME/???/lib)
-      Command: meson --prefix ???/somewhere builddir
-      Installs into the user's home directory. The second solution uses a hopefully set
-      LD_LIBRARY_PATH to determine where the user might want to put it.
+      meson --buildtype debug builddir
 
+Not optimized build in `builddir/` (optimized for debugging in `gdb` for ex.)
 
-To use it one has to set LD_LIBRARY_PATH, PKG_CONFIG_PATH, and CPATH (probably).
+#### like: make install
 
-After the setup phase one can call any of these:
+      meson builddir
+
+Fully optimized build in `builddir/`, installs in `/usr/lib` and
+`/usr/lib/include`.
+
+This can be used together with `debuild` to create packages, after
+adapting the debian/rules (not recommended, just use the existing rules).
+The staging directory will be transfered via `DESTDIR`.
+
+#### like: make localinstall
+_(install in `$HOME/???/lib`)_
+
+      meson --prefix ???/somewhere builddir
+
+Installs into the user's home directory.
+
+To use it one has to set `LD_LIBRARY_PATH`, `PKG_CONFIG_PATH`, and `CPATH` (probably).
+
+#### After the setup phase
+
+... one can call any of these:
+
       ninja -C builddir
       ninja -C builddir test
       ninja -C builddir install
