@@ -30,7 +30,7 @@ LIKELY=`grep "Source: ${LIBNAME}-${LIBNO}" debian/control`
 #
 if [ -z "$LIKELY" ] ; then
     cat debian/control | \
-        sed -e "s/${LIBNAME}-.*/${LIBNAME}-$LIBNO/g" > \
+        sed -e "s/${LIBNAME}-[0-9].*/${LIBNAME}-$LIBNO/g" > \
         debian/control.tmp
     mv debian/control.tmp debian/control
 fi
