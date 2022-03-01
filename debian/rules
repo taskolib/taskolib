@@ -12,6 +12,7 @@ override_dh_auto_configure:
 	debian/check_control
 	debian/check_changelog
 	CC=/usr/bin/gcc CXX=/usr/bin/c++ dh_auto_configure -- \
+		--buildtype=debugoptimized \
 		--libdir=lib \
 		--wrap-mode=nofallback \
 		--pkg-config-path=/export/doocs/lib/pkgconfig \
