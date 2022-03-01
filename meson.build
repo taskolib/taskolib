@@ -1,19 +1,23 @@
 project(
-  'libtaskomat',
-  ['cpp'],
-version : '21.12.1',
-default_options : [
-    'cpp_std=c++17',
-    'warning_level=3',
-    'buildtype=release',
-    'prefix=/usr',
-    'libdir=lib',
-    'includedir=lib/include'
-  ],
-meson_version : '>=0.49'
+    'taskomat',
+    ['cpp'],
+    version : run_command([
+            find_program('cat'),
+            meson.current_source_dir() / 'LIBNO'
+        ],
+        check : true,
+    ).stdout().split('=')[1].strip(),
+    default_options : [
+        'cpp_std=c++17',
+        'warning_level=3',
+        'buildtype=release',
+        'prefix=/usr',
+        'libdir=lib',
+    ],
+    meson_version : '>=0.49'
 )
 
-package_name = 'libtaskomat'
+pkg_config_name = 'libtaskomat'
 
 # Configuration for included Sol3 library
 # SOL_USING_CXX_LUA tells Sol3 that we are using a custom LUA build that was compiled
@@ -107,7 +111,7 @@ lib = both_libraries(meson.project_name(),
     darwin_versions : libno,
     include_directories : inc,
     build_rpath : meson.current_build_dir(),
-    install_rpath : join_paths(get_option('prefix'),get_option('libdir')),
+    install_rpath : get_option('prefix') / get_option('libdir'),
     #gnu_symbol_visibility : 'hidden',
     install : true)
 
@@ -116,10 +120,10 @@ lib = both_libraries(meson.project_name(),
 
 pkg = import('pkgconfig')
 pkg.generate(lib,
-    name : package_name,
+    name : pkg_config_name,
     description : 'Taskomat Library',
     version : libno,
-    filebase : package_name,
+    filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
 )

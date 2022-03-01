@@ -27,16 +27,17 @@ import stat
 import subprocess
 import sys
 
-file = open('meson.build', mode='r')
+file = open('LIBNO', mode='r')
 entire_file = file.read()
 file.close()
 
-matches = re.match(r'^\s*project\s*\(.*?version\s*:\s*\'(.*?)\'.*?\)', entire_file, re.S)
+matches = re.match(r'^(.*=)?(.*)', entire_file, re.S)
 
-if matches is None:
-    sys.exit("Unable to find version in meson.build")
+if matches is None or not matches.group(2):
+    sys.exit("Unable to find version in LIBNO")
 
-version_str = matches.group(1)
+version_str = matches.group(2).strip()
+print(version_str)
 
 file = open('data/Doxyfile', mode='r')
 
