@@ -3,10 +3,10 @@ project(
     ['cpp'],
     version : run_command([
             find_program('cat'),
-            meson.current_source_dir() / 'version.txt'
+            meson.current_source_dir() / 'LIBNO'
         ],
         check : true,
-    ).stdout().strip(),
+    ).stdout().split('=')[1].strip(),
     default_options : [
         'cpp_std=c++17',
         'warning_level=3',

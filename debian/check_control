@@ -15,7 +15,8 @@
 #
 # get LIBNO
 #
-LIBNO=`cat version.txt | sed -e 's/[[:space:]]//g' -e 's/\./-/g' `
+LIBNO=`grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g' -e 's/\./-/g' `
+VERSION=`grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g' `
 
 #
 # check version number in control file
