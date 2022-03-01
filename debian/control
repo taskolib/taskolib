@@ -15,6 +15,6 @@ Description: Taskomat automatization library - runtime
 Package: libtaskomat-dev
 Section: libdevel
 Architecture: any
-Depends: libtaskomat-0-0-1
+Depends: ${S:Source}
 Description: Taskomat automatization library - dev files
  Development files for the Taskomat automatization library.
