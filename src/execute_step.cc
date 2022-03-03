@@ -194,6 +194,10 @@ bool execute_step(Step& step, Context& context)
     sol::state lua;
 
     open_safe_library_subset(lua);
+
+    if (context.lua_init_function)
+        context.lua_init_function(lua);
+
     install_timeout_hook(lua, now, step.get_timeout());
 
     import_variables_from_context(step, context, lua);

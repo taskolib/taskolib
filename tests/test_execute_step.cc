@@ -343,3 +343,42 @@ TEST_CASE("execute_step(): External commands on Lua scripts", "[execute_step]")
         REQUIRE_THROWS_AS(execute_step(step, context), Error);
     }
 }
+
+TEST_CASE("execute_step(): LUA initialization function", "[execute_step]")
+{
+    Context context;
+    context.variables["a"] = 41LL;
+
+    Step step;
+    step.set_imported_variable_names(VariableNames{ "a" });
+    step.set_exported_variable_names(VariableNames{ "a", "b" });
+    step.set_script("a = a + 1");
+
+    SECTION("Missing init function does not throw")
+    {
+        context.lua_init_function = nullptr;
+        REQUIRE_NOTHROW(execute_step(step, context));
+        REQUIRE(std::get<long long>(context.variables["a"]) == 42LL);
+    }
+
+    SECTION("Init function injecting a variable")
+    {
+        context.lua_init_function = [](sol::state& s) { s["b"] = 13; };
+        REQUIRE_NOTHROW(execute_step(step, context));
+        REQUIRE(std::get<long long>(context.variables["b"]) == 13LL);
+        REQUIRE(std::get<long long>(context.variables["a"]) == 42LL);
+    }
+
+    SECTION("Init function injecting a function")
+    {
+        context.lua_init_function =
+            [](sol::state& s)
+            {
+                s["f"] = [](long long n) { return n + 1LL; };
+            };
+        step.set_script("b = f(12); a = a + 1");
+        REQUIRE_NOTHROW(execute_step(step, context));
+        REQUIRE(std::get<long long>(context.variables["a"]) == 42LL);
+        REQUIRE(std::get<long long>(context.variables["b"]) == 13LL);
+    }
+}
