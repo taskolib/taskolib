@@ -21,7 +21,7 @@ The library is built with Meson/Ninja. Building is done in two stages: You start
 setting up the build system with a call to Meson. All configurable options are set in this
 step. Then, you start the actual build with the ninja command.
 
-To set up a build directory "`builddir`" with the default configuration and build the
+To set up a build directory `builddir` with the default configuration and build the
 library in it:
 
       meson builddir
