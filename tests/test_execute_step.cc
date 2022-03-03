@@ -163,7 +163,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing nothing")
     {
-        context["a"] = VariableValue{ 42LL };
+        context.variables["a"] = VariableValue{ 42LL };
         step.set_script("return a == 42");
         REQUIRE(execute_step(step, context) == false);
     }
@@ -177,7 +177,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing an integer")
     {
-        context["a"] = VariableValue{ 42LL };
+        context.variables["a"] = VariableValue{ 42LL };
         step.set_imported_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 42");
         REQUIRE(execute_step(step, context) == true);
@@ -185,7 +185,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing a double")
     {
-        context["a"] = VariableValue{ 1.5 };
+        context.variables["a"] = VariableValue{ 1.5 };
         step.set_imported_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 1.5");
         REQUIRE(execute_step(step, context) == true);
@@ -193,7 +193,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing a string")
     {
-        context["a"] = VariableValue{ "Hello\0world"s };
+        context.variables["a"] = VariableValue{ "Hello\0world"s };
         step.set_imported_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 'Hello\\0world'");
         REQUIRE(execute_step(step, context) == true);
@@ -209,65 +209,67 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
 
     SECTION("No exported variables")
     {
-        context["b"] = "Test";
+        context.variables["b"] = "Test";
         execute_step(step, context);
-        REQUIRE(context.size() == 1);
-        REQUIRE(std::get<std::string>(context["b"]) == "Test");
+        REQUIRE(context.variables.size() == 1);
+        REQUIRE(std::get<std::string>(context.variables["b"]) == "Test");
     }
 
     SECTION("Exporting an integer")
     {
         step.set_exported_variable_names(VariableNames{ "a" });
         execute_step(step, context);
-        REQUIRE(context.size() == 1);
-        REQUIRE(std::get<long long>(context["a"]) == 42);
-        REQUIRE_THROWS_AS(std::get<double>(context["a"]), std::bad_variant_access);
-        REQUIRE_THROWS_AS(std::get<std::string>(context["a"]), std::bad_variant_access);
+        REQUIRE(context.variables.size() == 1);
+        REQUIRE(std::get<long long>(context.variables["a"]) == 42);
+        REQUIRE_THROWS_AS(std::get<double>(context.variables["a"]),
+                          std::bad_variant_access);
+        REQUIRE_THROWS_AS(std::get<std::string>(context.variables["a"]),
+                          std::bad_variant_access);
     }
 
     SECTION("Exporting a double")
     {
         step.set_exported_variable_names(VariableNames{ "b" });
         execute_step(step, context);
-        REQUIRE(context.size() == 1);
+        REQUIRE(context.variables.size() == 1);
 
-        REQUIRE_THROWS_AS(std::get<long long>(context["b"]), std::bad_variant_access);
-        REQUIRE(std::get<double>(context["b"]) == 1.5);
-        REQUIRE_THROWS_AS(std::get<std::string>(context["b"]), std::bad_variant_access);
+        REQUIRE_THROWS_AS(std::get<long long>(context.variables["b"]), std::bad_variant_access);
+        REQUIRE(std::get<double>(context.variables["b"]) == 1.5);
+        REQUIRE_THROWS_AS(std::get<std::string>(context.variables["b"]), std::bad_variant_access);
     }
 
     SECTION("Exporting a string")
     {
         step.set_exported_variable_names(VariableNames{ "c" });
         execute_step(step, context);
-        REQUIRE(context.size() == 1);
-        REQUIRE_THROWS_AS(std::get<long long>(context["c"]), std::bad_variant_access);
-        REQUIRE_THROWS_AS(std::get<double>(context["c"]), std::bad_variant_access);
-        REQUIRE(std::get<std::string>(context["c"]) == "string");
+        REQUIRE(context.variables.size() == 1);
+        REQUIRE_THROWS_AS(std::get<long long>(context.variables["c"]), std::bad_variant_access);
+        REQUIRE_THROWS_AS(std::get<double>(context.variables["c"]), std::bad_variant_access);
+        REQUIRE(std::get<std::string>(context.variables["c"]) == "string");
     }
 
     SECTION("Exporting multiple variables")
     {
         step.set_exported_variable_names(VariableNames{ "c", "a", "b" });
         execute_step(step, context);
-        REQUIRE(context.size() == 3);
-        REQUIRE(std::get<long long>(context["a"]) == 42);
-        REQUIRE(std::get<double>(context["b"]) == 1.5);
-        REQUIRE(std::get<std::string>(context["c"]) == "string");
+        REQUIRE(context.variables.size() == 3);
+        REQUIRE(std::get<long long>(context.variables["a"]) == 42);
+        REQUIRE(std::get<double>(context.variables["b"]) == 1.5);
+        REQUIRE(std::get<std::string>(context.variables["c"]) == "string");
     }
 
     SECTION("Exporting unknown types")
     {
         step.set_exported_variable_names(VariableNames{ "d" });
         execute_step(step, context);
-        REQUIRE(context.size() == 0); // d is of type function and does not get exported
+        REQUIRE(context.variables.size() == 0); // d is of type function and does not get exported
     }
 
     SECTION("Exporting undefined variables")
     {
         step.set_exported_variable_names(VariableNames{ "n" });
         execute_step(step, context);
-        REQUIRE(context.size() == 0); // n is undefined and does not get exported
+        REQUIRE(context.variables.size() == 0); // n is undefined and does not get exported
     }
 }
 
@@ -292,41 +294,41 @@ TEST_CASE("execute_step(): Running a step with multiple import and exports",
     SECTION("Empty context")
     {
         REQUIRE_THROWS_AS(execute_step(step, context), Error); // Attempt to compare nil with number
-        REQUIRE(context.empty() == true);
+        REQUIRE(context.variables.empty() == true);
     }
 
     SECTION("num_repetitions < 0 returns false")
     {
-        context["str"] = "Test";
-        context["num_repetitions"] = -1LL;
+        context.variables["str"] = "Test";
+        context.variables["num_repetitions"] = -1LL;
         REQUIRE(execute_step(step, context) == false);
-        REQUIRE(context.size() == 2);
-        REQUIRE(std::get<std::string>(context["str"]) == "Test");
-        REQUIRE(std::get<long long>(context["num_repetitions"]) == -1LL);
+        REQUIRE(context.variables.size() == 2);
+        REQUIRE(std::get<std::string>(context.variables["str"]) == "Test");
+        REQUIRE(std::get<long long>(context.variables["num_repetitions"]) == -1LL);
     }
 
     SECTION("num_repetitions == 0 returns empty string")
     {
-        context["str"] = "Test";
-        context["num_repetitions"] = 0LL;
+        context.variables["str"] = "Test";
+        context.variables["num_repetitions"] = 0LL;
         REQUIRE(execute_step(step, context) == true);
-        REQUIRE(context.size() == 3);
-        REQUIRE(std::get<std::string>(context["str"]) == "Test");
-        REQUIRE(std::get<long long>(context["num_repetitions"]) == 0LL);
-        REQUIRE(std::get<std::string>(context["result"]) == "");
+        REQUIRE(context.variables.size() == 3);
+        REQUIRE(std::get<std::string>(context.variables["str"]) == "Test");
+        REQUIRE(std::get<long long>(context.variables["num_repetitions"]) == 0LL);
+        REQUIRE(std::get<std::string>(context.variables["result"]) == "");
     }
 
     SECTION("num_repetitions == 2 with separator")
     {
-        context["str"] = "Test";
-        context["num_repetitions"] = 2LL;
-        context["separator"] = "|";
+        context.variables["str"] = "Test";
+        context.variables["num_repetitions"] = 2LL;
+        context.variables["separator"] = "|";
         REQUIRE(execute_step(step, context) == true);
-        REQUIRE(context.size() == 4);
-        REQUIRE(std::get<std::string>(context["str"]) == "Test");
-        REQUIRE(std::get<long long>(context["num_repetitions"]) == 2LL);
-        REQUIRE(std::get<std::string>(context["separator"]) == "|");
-        REQUIRE(std::get<std::string>(context["result"]) == "Test|Test");
+        REQUIRE(context.variables.size() == 4);
+        REQUIRE(std::get<std::string>(context.variables["str"]) == "Test");
+        REQUIRE(std::get<long long>(context.variables["num_repetitions"]) == 2LL);
+        REQUIRE(std::get<std::string>(context.variables["separator"]) == "|");
+        REQUIRE(std::get<std::string>(context.variables["result"]) == "Test|Test");
     }
 }
 
