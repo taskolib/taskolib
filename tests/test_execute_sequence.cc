@@ -30,9 +30,16 @@
 
 using namespace task;
 
-TEST_CASE("execute_sequence(): simple sequence", "[execute_sequence]")
+TEST_CASE("execute_sequence(): empty sequence", "[execute_sequence]")
 {
     Context context;
+    Sequence sequence("Empty sequence");
+
+    REQUIRE_NOTHROW(execute_sequence(sequence, context));
+}
+
+TEST_CASE("execute_sequence(): simple sequence", "[execute_sequence]")
+{    Context context;
     Step step;
 
     Sequence sequence("Simple sequence");
@@ -124,11 +131,11 @@ TEST_CASE("execute_sequence(): if-else sequence", "[execute_sequence]")
     a = 1/2
 
     script:
-    if a == 1
-        a = 2
-    else
-        a = 3
-    end
+    0: if a == 1 then
+    1:     a = 2
+    2: else
+    4:     a = 3
+    5: end
 
     post-condition:
     a = 2/3
@@ -191,11 +198,11 @@ TEST_CASE("execute_sequence(): if-elseif sequence", "[execute_sequence]")
     a = 0/1/2
 
     script:
-    if a == 1
-        a = 2
-    else if a == 2
-        a = 3
-    end
+    0: if a == 1 then
+    1:     a = 2
+    2: elseif a == 2 then
+    4:     a = 3
+    5: end
 
     post-condition:
     a = 0/2/3
@@ -269,13 +276,13 @@ TEST_CASE("execute_sequence(): if-elseif-else sequence", "[execute_sequence]")
     a = 1/2/3
 
     script:
-    if a == 1
-        a = 2
-    else if a == 2
-        a = 3
-    else
-        a = 4
-    end
+    0: if a == 1 then
+    1:     a = 2
+    2: elseif a == 2 then
+    3:     a = 3
+    4: else
+    5:     a = 4
+    6: end
 
     post-condition:
     a = 2/3/4
@@ -362,13 +369,13 @@ TEST_CASE("execute_sequence(): if-elseif-elseif sequence", "[execute_sequence]")
     a = 0/1/2/3
 
     script:
-    if a == 1
-        a = 2
-    else if a == 2
-        a = 3
-    else if a == 3
-        a = 4
-    end
+    0: if a == 1 then
+    1:     a = 2
+    2: elseif a == 2 then
+    3:     a = 3
+    4: else if a == 3 then
+    5:     a = 4
+    6: end
 
     post-condition:
     a = 0/2/3/4
@@ -380,7 +387,7 @@ TEST_CASE("execute_sequence(): if-elseif-elseif sequence", "[execute_sequence]")
     Step step_elseif1_action {Step::type_action};
     Step step_elseif2        {Step::type_elseif};
     Step step_elseif2_action {Step::type_action};
-    Step step_if_end            {Step::type_end};
+    Step step_if_end         {Step::type_end};
 
     step_if.set_label("if a == 1");
     step_if.set_imported_variable_names(VariableNames{"a"});
@@ -391,7 +398,7 @@ TEST_CASE("execute_sequence(): if-elseif-elseif sequence", "[execute_sequence]")
     step_if_action.set_exported_variable_names(VariableNames{"a"});
     step_if_action.set_script("a = 2");
 
-    step_elseif1.set_label("elseif1");
+    step_elseif1.set_label("elseif");
     step_elseif1.set_imported_variable_names(VariableNames{"a"});
     step_elseif1.set_script("return a == 2");
 
@@ -400,11 +407,11 @@ TEST_CASE("execute_sequence(): if-elseif-elseif sequence", "[execute_sequence]")
     step_elseif1_action.set_exported_variable_names(VariableNames{"a"});
     step_elseif1_action.set_script("a = 3");
 
-    step_elseif2.set_label("elseif2");
+    step_elseif2.set_label("elseif");
     step_elseif2.set_imported_variable_names(VariableNames{"a"});
     step_elseif2.set_script("return a == 3");
 
-    step_elseif2_action.set_label("else: set a to 4");
+    step_elseif2_action.set_label("elseif [action] a=4");
     step_elseif2_action.set_imported_variable_names(VariableNames{"a"});
     step_elseif2_action.set_exported_variable_names(VariableNames{"a"});
     step_elseif2_action.set_script("a = 4");
@@ -464,15 +471,15 @@ TEST_CASE("execute_sequence(): if-elseif-elseif-else sequence", "[execute_sequen
     a = 0/1/2/3
 
     script:
-    if a == 1
-        a = 2
-    else if a == 2
-        a = 3
-    else if a == 3
-        a = 4
-    else
-        a = 5
-    end
+    0: if a == 1 then
+    1:     a = 2
+    2: elseif a == 2 then
+    3:     a = 3
+    4: elseif a == 3 then
+    5:     a = 4
+    6: else
+    7:     a = 5
+    8: end
 
     post-condition:
     a = 5/2/3/4
@@ -573,6 +580,76 @@ TEST_CASE("execute_sequence(): if-elseif-elseif-else sequence", "[execute_sequen
     }
 }
 
+TEST_CASE("execute_sequence(): faulty if-else-elseif sequence", "[execute_sequence]")
+{
+    /*
+    pre-condition:
+    a = 0
+
+    script:
+    0: if a == 1 then
+    1:     a = 2
+    2: else
+    3:     a = 3
+    4: elseif a == 3 then <= throws error due to swapping of 'else' and 'elseif'
+    5:     a = 4
+    6: end
+
+    post-condition:
+    throw Error exception
+
+    */
+    Step step_if               {Step::type_if};
+    Step step_if_action        {Step::type_action};
+    Step step_if_else          {Step::type_else};
+    Step step_if_else_action   {Step::type_action};
+    Step step_if_elseif        {Step::type_elseif};
+    Step step_if_elseif_action {Step::type_action};
+    Step step_if_end           {Step::type_end};
+
+    step_if.set_label("if a == 1 then");
+    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_script("return a == 1");
+
+    step_if_action.set_label("if: set a to 2");
+    step_if_action.set_imported_variable_names(VariableNames{"a"});
+    step_if_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_action.set_script("a = 2");
+
+    step_if_else.set_label("else");
+    step_if_else.set_imported_variable_names(VariableNames{"a"});
+
+    step_if_else_action.set_label("elseif: set a to 3");
+    step_if_else_action.set_imported_variable_names(VariableNames{"a"});
+    step_if_else_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_else_action.set_script("a = 3");
+
+    step_if_elseif.set_label("elseif");
+    step_if_elseif.set_imported_variable_names(VariableNames{"a"});
+    step_if_elseif.set_script("return a == 3");
+
+    step_if_elseif_action.set_label("else: set a to 4");
+    step_if_elseif_action.set_imported_variable_names(VariableNames{"a"});
+    step_if_elseif_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_elseif_action.set_script("a = 4");
+
+    step_if_end.set_label("if: end");
+
+    Sequence sequence;
+    sequence.add_step(step_if);
+    sequence.add_step(step_if_action);
+    sequence.add_step(step_if_else);
+    sequence.add_step(step_if_else_action);
+    sequence.add_step(step_if_elseif);
+    sequence.add_step(step_if_elseif_action);
+    sequence.add_step(step_if_end);
+
+    Context context;
+    context["a"] = VariableValue{ 0LL };
+
+    REQUIRE_THROWS_AS(execute_sequence(sequence, context), Error);
+}
+
 TEST_CASE("execute_sequence(): while sequence", "[execute_sequence]")
 {
     /*
@@ -580,9 +657,9 @@ TEST_CASE("execute_sequence(): while sequence", "[execute_sequence]")
     a = 0
 
     script:
-    while a < 10
-        a = a + 1
-    end
+    1: while a < 10
+    2:     a = a + 1
+    3: end
 
     post-condition:
     a = 10
@@ -626,11 +703,11 @@ TEST_CASE("execute_sequence(): try sequence with success", "[execute_sequence]")
     a = 0
 
     script:
-    try
-        a = 1
-    catch
-        a = 2
-    end
+    0: try
+    1:     a = 1
+    3: catch
+    4:     a = 2
+    5: end
 
     post-condition:
     a = 1
@@ -679,12 +756,12 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
     a = 0
 
     script:
-    try
-        a = 1
-        this line crash lua
-    catch
-        a = 2
-    end
+    0: try
+    1:     a = 1
+    2:     this line crashes lua
+    3: catch
+    4:     a = 2
+    5: end
 
     post-condition:
     a = 2
@@ -707,7 +784,7 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
     step_try_action2.set_label("try[action2]: this line crash lua");
     step_try_action2.set_imported_variable_names(VariableNames{"a"});
     step_try_action2.set_exported_variable_names(VariableNames{"a"});
-    step_try_action2.set_script("this line crash lua");
+    step_try_action2.set_script("this line crashes lua");
 
     step_try_catch.set_label("try: catch");
 
@@ -731,4 +808,617 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
 
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
     REQUIRE(std::get<long long>(context["a"] ) == 2LL );
+}
+
+TEST_CASE("execute_sequence(): complex try sequence with fault", "[execute_sequence]")
+{
+    /*
+    pre-condition:
+    a = 0
+
+    script:
+    00: try
+    01:     a = 1
+    02:     this line crashes lua
+    03: catch
+    
+    04:     try
+    05:         a = 2
+    06:         and again crashes lua
+    07:     catch
+    08:         a = 3
+    09:     end
+    
+    10: end
+
+    post-condition:
+    a = 2
+
+    */
+    Step step_00  {Step::type_try};
+    Step step_01  {Step::type_action};
+    Step step_02  {Step::type_action};
+    Step step_03  {Step::type_catch};
+
+    Step step_04  {Step::type_try};
+    Step step_05  {Step::type_action};
+    Step step_06  {Step::type_action};
+    Step step_07  {Step::type_catch};
+    Step step_08  {Step::type_action};
+    Step step_09  {Step::type_end};
+    
+    Step step_10  {Step::type_end};
+
+    step_00.set_label("try");
+
+    step_01.set_script("a = 1");
+    step_01.set_label("try [action]: a = 1");
+    step_01.set_imported_variable_names(VariableNames{"a"});
+    step_01.set_exported_variable_names(VariableNames{"a"});
+
+    step_02.set_script("this line crashes lua");
+    step_02.set_label("try [action]: this line crash lua");
+    step_02.set_imported_variable_names(VariableNames{"a"});
+    step_02.set_exported_variable_names(VariableNames{"a"});
+
+    step_03.set_label("try [catch]");
+
+    step_04.set_label("try");
+
+    step_05.set_script("a = 2");
+    step_05.set_label("try [action] a = 2");
+    step_05.set_imported_variable_names(VariableNames{"a"});
+    step_05.set_exported_variable_names(VariableNames{"a"});
+
+    step_06.set_script("and again crashes lua");
+    step_06.set_label("try [action] and again crashes lua");
+    step_06.set_imported_variable_names(VariableNames{"a"});
+    step_06.set_exported_variable_names(VariableNames{"a"});
+
+    step_07.set_label("try [catch]");
+
+    step_08.set_script("a = 3");
+    step_08.set_label("catch[action] a = 3");
+    step_08.set_imported_variable_names(VariableNames{"a"});
+    step_08.set_exported_variable_names(VariableNames{"a"});
+
+    step_09.set_label("try [end]");
+
+    step_10.set_label("try [end]");
+
+    Sequence sequence;
+    sequence.add_step(step_00);
+    sequence.add_step(step_01);
+    sequence.add_step(step_02);
+    sequence.add_step(step_03);
+    sequence.add_step(step_04);
+    sequence.add_step(step_05);
+    sequence.add_step(step_06);
+    sequence.add_step(step_07);
+    sequence.add_step(step_08);
+    sequence.add_step(step_09);
+    sequence.add_step(step_10);
+
+    Context context;
+    context["a"] = VariableValue{ 0LL };
+
+    REQUIRE_NOTHROW(execute_sequence(sequence, context));
+    REQUIRE(std::get<long long>(context["a"] ) == 3LL );
+}
+
+TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
+{
+    /*
+    pre-condition:
+    a=0/0/0/0, b=0/0/0/0, c=0/0/0/0, d=0/1/2/1, e=1/1/5/2, f=1/1/3/3, g=1/1/2/4
+
+    script:
+     0: while a < 10
+
+     1:     try
+     2:         b = 1
+     3:     catch
+     4:         b = 2
+     5:     end
+    
+     6:     c = 1
+    
+     7:     if d == 1 then
+
+     8:         if e == 1 then
+     9:             e = 2
+    10:         elseif e == 2 then
+    11:             e = 3
+    12:         else
+
+    13:             try
+    14:                 f = 1
+    15:                 this line crashes lua
+    16:             catch
+    17:                 f = 2
+    18:             end
+
+    19:             if g == 2 then
+    20:                 g = 1
+    21:             else
+    22:                 g = 2
+    23:             end
+
+    24:             e = 4
+
+    25:         end
+
+    26:         d = 2
+
+    27:     elseif d == 2 then
+    28:         d = 3
+    29:     end
+
+    30:     a = a + 1
+    
+    31: end
+
+    post-condition:
+    a=10/10/10/10, b=1/1/1/1, c=1/1/1/1, d=0/3/3/3, e=1/2/5/4, f=1/1//3/2, g=1/1/2/2
+
+    */
+
+    // 32 steps
+    Step step_00{Step::type_while};
+    
+    Step step_01{Step::type_try};
+    Step step_02{Step::type_action};
+    Step step_03{Step::type_catch};
+    Step step_04{Step::type_action};
+    Step step_05{Step::type_end};
+    
+    Step step_06{Step::type_action};
+    
+    Step step_07{Step::type_if};
+    
+    Step step_08{Step::type_if};
+    Step step_09{Step::type_action};
+    Step step_10{Step::type_elseif};
+    Step step_11{Step::type_action};
+    Step step_12{Step::type_else};
+
+    Step step_13{Step::type_try};
+    Step step_14{Step::type_action};
+    Step step_15{Step::type_action};
+    Step step_16{Step::type_catch};
+    Step step_17{Step::type_action};
+    Step step_18{Step::type_end};
+
+    Step step_19{Step::type_if};
+    Step step_20{Step::type_action};
+    Step step_21{Step::type_else};
+    Step step_22{Step::type_action};
+    Step step_23{Step::type_end};
+
+    Step step_24{Step::type_action};
+
+    Step step_25{Step::type_end};
+
+    Step step_26{Step::type_action};
+
+    Step step_27{Step::type_elseif};
+    Step step_28{Step::type_action};
+    Step step_29{Step::type_end};
+
+    Step step_30{Step::type_action};
+
+    Step step_31{Step::type_end};
+
+    step_00.set_label("while a < 10");
+    step_00.set_script("return a < 10");
+    step_00.set_imported_variable_names(VariableNames{"a"});
+    step_00.set_exported_variable_names(VariableNames{"a"});
+
+    step_01.set_label("try");
+
+    step_02.set_label("try [action] b = 1");
+    step_02.set_script("b = 1");
+    step_02.set_imported_variable_names(VariableNames{"b"});
+    step_02.set_exported_variable_names(VariableNames{"b"});
+
+    step_03.set_label("try [catch]");
+
+    step_04.set_label("try [action] b = 2");
+    step_04.set_script("b = 2");
+    step_04.set_imported_variable_names(VariableNames{"b"});
+    step_04.set_exported_variable_names(VariableNames{"b"});
+
+    step_05.set_label("try [end]");
+
+    step_06.set_label("[action] c = 1");
+    step_06.set_script("c = 1");
+    step_06.set_imported_variable_names(VariableNames{"c"});
+    step_06.set_exported_variable_names(VariableNames{"c"});
+
+    step_07.set_label("if d == 1");
+    step_07.set_script("return d == 1");
+    step_07.set_imported_variable_names(VariableNames{"d"});
+    step_07.set_exported_variable_names(VariableNames{"d"});
+
+    step_08.set_label("if e == 1");
+    step_08.set_script("return e == 1");
+    step_08.set_imported_variable_names(VariableNames{"e"});
+    step_08.set_exported_variable_names(VariableNames{"e"});
+
+    step_09.set_label("if [action] e = 2");
+    step_09.set_script("e = 2");
+    step_09.set_imported_variable_names(VariableNames{"e"});
+    step_09.set_exported_variable_names(VariableNames{"e"});
+
+    step_10.set_label("if [elseif] e == 2");
+    step_10.set_script("return e == 3");
+    step_10.set_imported_variable_names(VariableNames{"e"});
+    step_10.set_exported_variable_names(VariableNames{"e"});
+
+    step_11.set_label("if [action] e = 3");
+    step_11.set_script("e = 3");
+    step_11.set_imported_variable_names(VariableNames{"e"});
+    step_11.set_exported_variable_names(VariableNames{"e"});
+
+    step_12.set_label("if [else]");
+
+    step_13.set_label("try");
+
+    step_14.set_label("try [action] f = 1");
+    step_14.set_script("f = 1");
+    step_14.set_imported_variable_names(VariableNames{"f"});
+    step_14.set_exported_variable_names(VariableNames{"f"});
+
+    step_15.set_label("try [action] this line crashes lua");
+    step_15.set_script("this line crashes lua");
+
+    step_16.set_label("try [catch]");
+
+    step_17.set_label("try [action] f=2");
+    step_17.set_script("f=2");
+    step_17.set_imported_variable_names(VariableNames{"f"});
+    step_17.set_exported_variable_names(VariableNames{"f"});
+
+    step_18.set_label("try [end]");
+ 
+    step_19.set_label("if g == 2");
+    step_19.set_script("return g == 2");
+    step_19.set_imported_variable_names(VariableNames{"g"});
+    step_19.set_exported_variable_names(VariableNames{"g"});
+
+    step_20.set_label("if [action] g = 1");
+    step_20.set_script("g = 1");
+    step_20.set_imported_variable_names(VariableNames{"g"});
+    step_20.set_exported_variable_names(VariableNames{"g"});
+
+    step_21.set_label("if [else]");
+
+    step_22.set_label("if [action] g = 2");
+    step_22.set_script("g = 2");
+    step_22.set_imported_variable_names(VariableNames{"g"});
+    step_22.set_exported_variable_names(VariableNames{"g"});
+
+    step_23.set_label("if [end]");
+
+    step_24.set_label("[action] e = 4");
+    step_24.set_script("e = 4");
+    step_24.set_imported_variable_names(VariableNames{"e"});
+    step_24.set_exported_variable_names(VariableNames{"e"});
+
+    step_25.set_label("if [end]");
+
+    step_26.set_label("[action] d = 2");
+    step_26.set_script("d = 2");
+    step_26.set_imported_variable_names(VariableNames{"d"});
+    step_26.set_exported_variable_names(VariableNames{"d"});
+
+    step_27.set_label("if [elseif] d == 2");
+    step_27.set_script("return d == 2");
+    step_27.set_imported_variable_names(VariableNames{"d"});
+    step_27.set_exported_variable_names(VariableNames{"d"});
+
+    step_28.set_label("if [action] d = 3");
+    step_28.set_script("d = 3");
+    step_28.set_imported_variable_names(VariableNames{"d"});
+    step_28.set_exported_variable_names(VariableNames{"d"});
+
+    step_29.set_label("if [end]");
+
+    step_30.set_label("a=a+1");
+    step_30.set_script("a=a+1");
+    step_30.set_imported_variable_names(VariableNames{"a"});
+    step_30.set_exported_variable_names(VariableNames{"a"});
+
+    step_31.set_label("while [end]");
+ 
+    Sequence sequence;
+    // 32 steps
+    sequence.add_step(step_00);
+    
+    sequence.add_step(step_01);   
+    sequence.add_step(step_02);
+    sequence.add_step(step_03);
+    sequence.add_step(step_04);
+    sequence.add_step(step_05);
+
+    sequence.add_step(step_06);
+    
+    sequence.add_step(step_07);
+    
+    sequence.add_step(step_08);
+    sequence.add_step(step_09);
+    sequence.add_step(step_10);
+    sequence.add_step(step_11);
+    sequence.add_step(step_12);
+    
+    sequence.add_step(step_13);
+    sequence.add_step(step_14);
+    sequence.add_step(step_15);
+    sequence.add_step(step_16);
+    sequence.add_step(step_17);
+    sequence.add_step(step_18);
+
+    sequence.add_step(step_19);
+    sequence.add_step(step_20);
+    sequence.add_step(step_21);
+    sequence.add_step(step_22);
+    sequence.add_step(step_23);
+    
+    sequence.add_step(step_24);
+
+    sequence.add_step(step_25);
+    
+    sequence.add_step(step_26);
+
+    sequence.add_step(step_27);
+    sequence.add_step(step_28);
+    sequence.add_step(step_29);
+
+    sequence.add_step(step_30);
+    
+    sequence.add_step(step_31);
+    
+    SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 0->0, e: 1->1, f: 1->1, "
+            "g: 1->1")
+    {
+        Context context;
+        // a=0, b=0, c=0, d=0/1/2, e=1/2/3, f=0, g=2/1
+        context["a"] = VariableValue{0LL};
+        context["b"] = VariableValue{0LL};
+        context["c"] = VariableValue{0LL};
+        context["d"] = VariableValue{0LL};
+        context["e"] = VariableValue{1LL};
+        context["f"] = VariableValue{1LL};
+        context["g"] = VariableValue{1LL};
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+
+        // a=10, b=1, c=1, d=0/2/3, e=1/3/4, f=2, g=1/2
+        REQUIRE(std::get<long long>(context["a"] ) == 10LL );
+        REQUIRE(std::get<long long>(context["b"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["c"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["d"] ) == 0LL );
+        REQUIRE(std::get<long long>(context["e"] ) == 1LL ); // not touched
+        REQUIRE(std::get<long long>(context["f"] ) == 1LL ); // not touched
+        REQUIRE(std::get<long long>(context["g"] ) == 1LL ); // not touched
+    }
+    
+    SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 1->3, e: 1->2, f: 1->1, "
+            "g: 1->1")
+    {
+        Context context;
+        context["a"] = VariableValue{0LL};
+        context["b"] = VariableValue{0LL};
+        context["c"] = VariableValue{0LL};
+        context["d"] = VariableValue{1LL};
+        context["e"] = VariableValue{1LL};
+        context["f"] = VariableValue{1LL};
+        context["g"] = VariableValue{1LL};
+
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+        REQUIRE(std::get<long long>(context["a"] ) == 10LL );
+        REQUIRE(std::get<long long>(context["b"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["c"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["d"] ) == 3LL );
+        REQUIRE(std::get<long long>(context["e"] ) == 2LL );
+        REQUIRE(std::get<long long>(context["f"] ) == 1LL ); // not touched
+        REQUIRE(std::get<long long>(context["g"] ) == 1LL ); // not touched
+    }
+    
+    SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 2->3, e: 5->5, f: 2->2, "
+            "g: 3->3")
+    {
+        Context context;
+        context["a"] = VariableValue{0LL};
+        context["b"] = VariableValue{0LL};
+        context["c"] = VariableValue{1LL};
+        context["d"] = VariableValue{2LL};
+        context["e"] = VariableValue{5LL};
+        context["f"] = VariableValue{3LL};
+        context["g"] = VariableValue{2LL};
+
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+        REQUIRE(std::get<long long>(context["a"] ) == 10LL );
+        REQUIRE(std::get<long long>(context["b"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["c"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["d"] ) == 3LL );
+        REQUIRE(std::get<long long>(context["e"] ) == 5LL ); // not touched
+        REQUIRE(std::get<long long>(context["f"] ) == 3LL ); // not touched
+        REQUIRE(std::get<long long>(context["g"] ) == 2LL ); // not touched
+    }
+    
+    SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 1->3, e: 2->4, f: 3->2, "
+            "g: 4->2")
+    {
+        Context context;
+        context["a"] = VariableValue{0LL};
+        context["b"] = VariableValue{0LL};
+        context["c"] = VariableValue{1LL};
+        context["d"] = VariableValue{1LL};
+        context["e"] = VariableValue{2LL};
+        context["f"] = VariableValue{3LL};
+        context["g"] = VariableValue{4LL};
+
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+        REQUIRE(std::get<long long>(context["a"] ) == 10LL );
+        REQUIRE(std::get<long long>(context["b"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["c"] ) == 1LL );
+        REQUIRE(std::get<long long>(context["d"] ) == 3LL );
+        REQUIRE(std::get<long long>(context["e"] ) == 4LL );
+        REQUIRE(std::get<long long>(context["f"] ) == 2LL ); // not touched
+        REQUIRE(std::get<long long>(context["g"] ) == 2LL ); // not touched
+    }
+}
+
+TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_sequence]")
+{
+    /*
+    pre-condition:
+    not needed because syntax checker throws exception on index 12
+
+    script:
+     0: while a < 10
+
+     1:     try
+     2:         b = 1
+     3:     catch
+     4:         b = 2
+     5:     end
+    
+     6:     c = 1
+    
+     7:     if d == 1 then
+
+     8:         if e == 1 then
+     9:             e = 2
+    10:         else
+    11:             e = 3
+    12:         elseif e == 2 then <== FAULT
+
+    13:             try
+    14:                 f = 1
+    15:                 this line crashes lua
+    16:             catch
+    17:                 f = 2
+    18:             end
+
+    19:             if g == 2 then
+    20:                 g == 1
+    21:             else
+    22:                 g == 2
+    23:             end
+
+    24:             e = 4
+
+    25:         end
+
+    26:         d = 2
+
+    27:     elseif d == 2 then
+    28:         d = 3
+    29:     end
+
+    30:     a = a + 1
+    
+    31: end
+
+    post-condition:
+    not needed because syntax checker throws exception on index 12
+
+    */
+
+    // 32 steps
+    Step step_00{Step::type_while};
+    
+    Step step_01{Step::type_try};
+    Step step_02{Step::type_action};
+    Step step_03{Step::type_catch};
+    Step step_04{Step::type_action};
+    Step step_05{Step::type_end};
+    
+    Step step_06{Step::type_action};
+    
+    Step step_07{Step::type_if};
+    
+    Step step_08{Step::type_if};
+    Step step_09{Step::type_action};
+    Step step_10{Step::type_else};
+    Step step_11{Step::type_action};
+    Step step_12{Step::type_elseif};
+
+    Step step_13{Step::type_try};
+    Step step_14{Step::type_action};
+    Step step_15{Step::type_action};
+    Step step_16{Step::type_catch};
+    Step step_17{Step::type_action};
+    Step step_18{Step::type_end};
+
+    Step step_19{Step::type_if};
+    Step step_20{Step::type_action};
+    Step step_21{Step::type_else};
+    Step step_22{Step::type_action};
+    Step step_23{Step::type_end};
+
+    Step step_24{Step::type_action};
+
+    Step step_25{Step::type_end};
+
+    Step step_26{Step::type_action};
+
+    Step step_27{Step::type_elseif};
+    Step step_28{Step::type_action};
+    Step step_29{Step::type_end};
+
+    Step step_30{Step::type_action};
+
+    Step step_31{Step::type_end};
+
+    Sequence sequence;
+    // 32 steps
+    sequence.add_step(step_00);
+    
+    sequence.add_step(step_01);   
+    sequence.add_step(step_02);
+    sequence.add_step(step_03);
+    sequence.add_step(step_04);
+    sequence.add_step(step_05);
+
+    sequence.add_step(step_06);
+    
+    sequence.add_step(step_07);
+    
+    sequence.add_step(step_08);
+    sequence.add_step(step_09);
+    sequence.add_step(step_10);
+    sequence.add_step(step_11);
+    sequence.add_step(step_12);
+    
+    sequence.add_step(step_13);
+    sequence.add_step(step_14);
+    sequence.add_step(step_15);
+    sequence.add_step(step_16);
+    sequence.add_step(step_17);
+    sequence.add_step(step_18);
+
+    sequence.add_step(step_19);
+    sequence.add_step(step_20);
+    sequence.add_step(step_21);
+    sequence.add_step(step_22);
+    sequence.add_step(step_23);
+    
+    sequence.add_step(step_24);
+
+    sequence.add_step(step_25);
+    
+    sequence.add_step(step_26);
+
+    sequence.add_step(step_27);
+    sequence.add_step(step_28);
+    sequence.add_step(step_29);
+
+    sequence.add_step(step_30);
+    
+    sequence.add_step(step_31);
+
+    Context context;
+    REQUIRE_THROWS_AS(execute_sequence(sequence, context), Error);
 }

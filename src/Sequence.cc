@@ -21,6 +21,8 @@
  */
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
+#include <limits>
+#include <optional>
 
 #include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
@@ -36,188 +38,184 @@ Sequence::Sequence(gul14::string_view label)
     label_ = std::string{ label };
 }
 
-void Sequence::check_correctness_of_steps() const
+void Sequence::syntax_checker() const
 {
     if (not indentation_error_.empty())
         throw Error(indentation_error_);
 
-    E_IF if_block{ NO_IF };
-    E_WHILE while_block{ NO_WHILE };
-    E_TRY try_block{ NO_TRY };
-    E_ACTION action_block{ NO_ACTION };
-    E_END end_block{ NO_END };
-    Step::Type type = Step::Type::type_end;
-    int line{ 1 };
-    for (const Step& step : this->steps_)
+    if (not steps_.empty())
+        syntax_checker(0, 0);
+}
+
+static const std::string HEAD = "[syntax check] ";
+
+short Sequence::extract_indentation_level(const Sequence::SizeType idx) const
+{
+    const short step_indentation_level = steps_[idx].get_indentation_level();
+    if (step_indentation_level > Step::max_indentation_level )
     {
-        type = step.get_type();
-        switch( type )
-        {
-            // try block ...
-            case Step::Type::type_try:
-                if ( TRY == try_block )
-                {
-                    throw Error( cat( "Syntax error: called 'TRY' statement twice (line ",
-                                      line, ")" ) );
-                }
-                try_block = TRY;
-                action_block = NO_ACTION;
-                end_block = NO_END;
-                break;
-
-            case Step::Type::type_catch:
-                if ( TRY != try_block )
-                {
-                    throw Error( cat( "Syntax error: 'CATCH' without 'TRY' (line ", line,
-                                      ")" ) );
-                }
-                else if ( NO_ACTION == action_block )
-                {
-                    throw Error( cat( "Syntax error: try-catch block without 'ACTION' "
-                                      "(previous line ", line-1, ")" ) );
-                }
-                try_block = CATCH;
-                action_block = NO_ACTION;
-                end_block = NO_END;
-                break;
-
-            // if block ...
-            case Step::Type::type_if: // type_elif is not counted
-                if ( IF == if_block )
-                {
-                    throw Error( cat( "Syntax error: called 'IF' statement twice (line ",
-                                     line, ")" ) );
-                }
-                if_block = IF;
-                action_block = NO_ACTION;
-                end_block = NO_END;
-                break;
-
-            case Step::Type::type_elseif:
-                if ( IF != if_block && ELSE_IF != if_block )
-                {
-                    throw Error( cat( "Syntax error: 'ELSE IF' without 'IF' (line ", line,
-                                      ")" ) );
-                }
-                else if ( NO_ACTION == action_block && NO_TRY == try_block
-                          && NO_WHILE == while_block )
-                {
-                    if ( NO_ACTION == action_block )
-                    {
-                        throw Error( cat( "Syntax error: 'IF' block without 'ACTION' "
-                                          "(previous line ", line-1, ")" ) );
-                    }
-                    else if ( NO_TRY == try_block )
-                    {
-                        throw Error( cat( "Syntax error: 'IF' block without 'TRY' "
-                                          "(previous line ", line-1, ")" ) );
-                    }
-                    else
-                    {
-                        throw Error( cat( "Syntax error: 'IF' block without 'WHILE' "
-                                          "(previous line ", line-1, ")" ) );
-                    }
-                }
-                if_block = ELSE_IF;
-                action_block = NO_ACTION;
-                end_block = NO_END;
-                break;
-
-            case Step::Type::type_else:
-                if ( IF != if_block && ELSE_IF != if_block )
-                {
-                    throw Error( cat( "Syntax error: 'ELSE' without 'IF' or "
-                                      "'ELSE IF' (line ", line, ")" ) );
-                }
-                else if ( NO_ACTION == action_block )
-                {
-                    throw Error( cat( "Syntax error: 'IF' or 'ELSE IF' clause without "
-                                      "'ACTION' (previous line ", line-1, ")" ) );
-                }
-                if_block = ELSE;
-                action_block = NO_ACTION;
-                end_block = NO_END;
-                break;
-
-            // while block ...
-            case Step::Type::type_while:
-                if ( WHILE == while_block )
-                {
-                    throw Error( cat( "Syntax error: called 'WHILE' statement twice "
-                                      "(line ", line, ")" ) );
-                }
-                while_block = WHILE;
-                action_block = NO_ACTION;
-                end_block = NO_END;
-                break;
-
-            // action block ...
-            case Step::Type::type_action:
-                action_block = ACTION;
-                end_block = NO_END;
-                break;
-
-            // end block ...
-            case Step::Type::type_end:
-                end_block = END;
-                // order is important
-
-                // check if none of the initial control element is set ...
-                if ( NO_TRY == try_block && NO_IF == if_block && NO_WHILE == while_block )
-                {
-                    throw Error( cat( "Syntax error: single 'END' block without"
-                                      " initial 'IF'/'TRY/'WHILE' (line ", line, ")" ) );
-                }
-
-                // try ...
-                if ( NO_TRY != try_block ) // 'try' clause
-                {
-                    if ( TRY == try_block && NO_ACTION == action_block )
-                    {
-                        throw Error( cat( "Syntax error: missing 'ACTION' in try-catch "
-                                          "block (line ", line, ")" ) );
-                    }
-                    else if ( TRY == try_block ) // 'try' without 'catch'
-                    {
-                        throw Error( cat( "Syntax error: missing 'CATCH' in try-catch "
-                                          "block (line ", line, ")" ) );
-                    }
-                    else
-                    {
-                        try_block = NO_TRY;
-                    }
-                }
-
-                // if ...
-                else if ( NO_IF != if_block )
-                {
-                    if ( WHILE != while_block && NO_ACTION == action_block )
-                    {
-                        throw Error( cat( "Syntax error: missing 'ACTION' in"
-                                          " if-then clause (line ", line , ")" ) );
-                    }
-                    if_block = NO_IF;
-                }
-
-                // while ...
-                else if ( NO_WHILE != while_block )
-                {
-                    // Remove? Because it can also be a while-end loop without any action!
-                    if ( NO_ACTION == action_block )
-                    {
-                        throw Error( cat( "Syntax error: missing 'ACTION' in while block"
-                                          " (line ", line , ")" ) );
-                    }
-                    while_block = NO_WHILE;
-                }
-
-                break;
-        }
-        ++line;
+        throw Error(cat(HEAD, "exceed maximum indentation level (",
+        Step::max_indentation_level, "): ", step_indentation_level,
+        " (index=", idx, ")"));
+    }
+    else if ( idx >= steps_.size() )
+    {
+        throw Error(cat(HEAD, "index on steps is out of range (", steps_.size() ,"): ",
+        idx, ")"));
     }
 
-    if ( !this->steps_.empty() && !( ACTION == action_block || END == end_block ) )
-        throw Error( cat( "Syntax error: missing 'ACTION' or 'END' (line ", line, ")" ) );
+    return step_indentation_level;
+}
+
+void Sequence::syntax_checker(const short level, Sequence::SizeType idx) const
+{
+    do
+    {
+        const short step_indention_level = extract_indentation_level(idx);
+
+        if (step_indention_level > level)
+            syntax_checker(step_indention_level, idx);
+        else if (step_indention_level == level)
+        {
+            switch(steps_[idx].get_type())
+            {
+                case Step::type_while:
+                    idx = syntax_checker_for_while(step_indention_level, idx);
+                    break;
+                case Step::type_try:
+                    idx = syntax_checker_for_try(step_indention_level, idx);
+                    break;
+                case Step::type_if:
+                    idx = syntax_checker_for_if(step_indention_level, idx);
+                    break;
+                
+                default:
+                    break;   
+            }
+        }
+    } while(++idx < steps_.size());
+}
+
+Sequence::SizeType Sequence::syntax_checker_for_while(const short level,
+    Sequence::SizeType idx) const
+{
+    const Sequence::SizeType while_idx = idx;
+    
+    while(++idx < steps_.size())
+    {
+        if (steps_[idx].get_indentation_level() == level)
+        {
+            switch(steps_[idx].get_type())
+            {
+                case Step::type_end:
+                    if (while_idx + 1 < idx)
+                        return level == 0 ? while_idx : idx;
+                    // fallthrough
+
+                default:
+                    throw Error(cat(HEAD, "ill-formed while-clause: missing action or "
+                    "control-flow token before 'end'. level=", level, ", index=", idx,
+                    ", previous 'while' indication=", while_idx));
+            }
+        }
+    }
+
+    throw Error(cat(HEAD, "ill-formed while-clause: missing 'end' token. level=", level, 
+    ", previous 'while' indication=", while_idx));
+}
+
+Sequence::SizeType Sequence::syntax_checker_for_try(const short level,
+    Sequence::SizeType idx) const
+{
+    const Sequence::SizeType try_idx = idx;
+    Sequence::SizeType counter = idx;
+    while(++idx < steps_.size())
+    {
+        if (steps_[idx].get_indentation_level() == level)
+        {
+            switch(steps_[idx].get_type())
+            {
+                case Step::type_catch:
+                    if (counter + 1 >= idx)
+                    {
+                        throw Error(cat(HEAD, "ill-formed try-clause: missing action or "
+                        "control-flow token before 'catch'. level=", level, ", index=",
+                        idx, ", previous 'try' indication=", try_idx));
+                    }
+                    counter = idx;
+                    break;
+
+                case Step::type_end:
+                    if (counter + 1 < idx)
+                        return level == 0 ? try_idx : idx;
+                    // fallthrough
+
+                default:
+                    throw Error(cat(HEAD, "ill-formed try-clause: missing action or "
+                    "control-flow token before 'end'. level=", level, ", index=", idx,
+                    ", previous 'try' indication=", try_idx));
+            }
+        }
+    }
+
+    throw Error(cat(HEAD, "ill-formed try-clause: missing 'end' token. level=", level, 
+    ", previous 'try' indication=", try_idx));
+}
+
+Sequence::SizeType Sequence::syntax_checker_for_if(const short level,
+    Sequence::SizeType idx) const
+{
+    const SizeType if_idx = idx;
+    SizeType counter = idx;
+    bool find_else = false;
+    while(++idx < steps_.size())
+    {
+        if (steps_[idx].get_indentation_level() == level)
+        {
+            switch(steps_[idx].get_type())
+            {
+                case Step::type_elseif:
+                    if (counter + 1 >= idx)
+                    {
+                        throw Error(cat(HEAD, "ill-formed if-clause: missing action or "
+                        "control-flow token. level=", level, ", index=", idx,
+                        ", previous 'if' indication=", if_idx));
+                    }
+                    else if (find_else)
+                    {
+                        throw Error(cat(HEAD, "ill-formed if-clause: 'else' before 'else "
+                        "if' token. level=", level, ", index=", idx, ", previous 'if' "
+                        "indication=", if_idx));
+                    }
+                    counter = idx;
+                    break;
+
+                case Step::type_else:
+                    if (counter + 1 >= idx)
+                    {
+                        throw Error(cat(HEAD, "ill-formed if-clause: missing action or " 
+                        "control-flow token. level=", level, ", index=", idx,
+                        ", previous 'if' indication=", if_idx));
+                    }
+                    counter = idx;
+                    find_else = true;
+                    break;
+
+                case Step::type_end:
+                    if (counter + 1 < idx)
+                        return level == 0 ? if_idx : idx;
+                    // fallthrough
+
+                default:
+                    throw Error(cat(HEAD, "ill-formed if-clause: missing action or "
+                    "control-flow token before 'end'. level=", level, ", index=", idx, 
+                    ", previous 'if' indication=", if_idx));
+            }
+        }
+    }
+
+    throw Error(cat(HEAD, "ill-formed if-clause: missing 'end' token. level=", level, 
+    ", previous 'if' indication=", if_idx));
 }
 
 void Sequence::check_label(gul14::string_view label)
@@ -272,7 +270,7 @@ void Sequence::indent() noexcept
                 indentation_error_ = "Steps are not nested correctly";
         }
 
-        step.set_indentation_level(step_level); // cannot throw because we check step_level
+        step.set_indentation_level(step_level);// cannot throw because we check step_level
 
         if (level < 0)
         {
