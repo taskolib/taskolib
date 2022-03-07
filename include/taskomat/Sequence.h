@@ -65,34 +65,26 @@ public:
     /**
      * Add \a Step to the sequence.
      *
-     * @param step [IN] Step
+     * @param step [IN/MOVE] Step
      */
-    void add_step( const Step& step ) { steps_.push_back(step); indent(); }
-    /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [MOVE] Step
-     */
-    void add_step( Step&& step ) { steps_.push_back(std::move(step)); indent(); }
+    void add_step( const Step& step ) { this->steps_.push_back(step); indent(); }
+    void add_step( Step&& step ) { this->steps_.push_back(std::move(step)); indent(); }
 
     /**
-     * Validates if the \a Step 's token are correctly enclosed in a proper way.
+     * Validates if the \a Step 's are correctly enclosed in a proper way.
      *
-     * It is done by validating the step types where each must fit to one of the
-     * following conditions:
+     * It is done by validating the step types where each of the following condition:
      *
-     * -# each type \a Step::type_try must have the corresponding
-     *    \a Step::type_catch and \a Step::type_end
-     * -# each type \a Step::type_if must have n-times \a Step::type_elseif and/or
-     *  \a Step::type_else with a tailing \a Step::type_end, n >= 0.
-     * -# each type \a Step::while must have the corresponding \a Step::type_end
+     * -# each type \a task::Step::Type::type_try must have the corresponding
+     *    \a task::Step::Type::type_catch
+     * -# each type \a task::Step::Type::type_if , \a task::Step::Type::type_while , and
+     *  \a task::Step::Type::type_try must have the corresponding
+     *  \a task::Step::Type::type_end
+     * -# must be filled...
      *
-     * As a body of each surrounding token must have at least one \a Step::type_action 
-     * token.
-     * 
-     * If one of those is ill-formed an \a Error exception is thrown.
+     * If one of those is false an task::Error exception is thrown.
      */
-    void syntax_checker() const;
+    void check_correctness_of_steps() const;
 
     /**
      * Return an error string if the sequence is not consistently nested, or an empty
@@ -132,6 +124,11 @@ public:
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
 private:
+    enum E_IF { NO_IF = 0, IF, ELSE_IF, ELSE };
+    enum E_WHILE { NO_WHILE = 0, WHILE };
+    enum E_TRY { NO_TRY = 0, TRY, CATCH };
+    enum E_ACTION { NO_ACTION = 0, ACTION };
+    enum E_END { NO_END, END };
 
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
@@ -141,62 +138,6 @@ private:
 
     /// Check that the given description is valid. If not then throw a task::Error.
     void check_label(gul14::string_view label);
-
-    /**
-     * Extracts from Steps-index the corresponding indentation level. 
-     * 
-     * Will throw an \a Error exception when the maximum indentation is exceeded or the 
-     * index is out of range of the stored \a Step.
-     * 
-     * @param idx step index
-     * @return const short indentation level
-     * @exception Error maximum indentation is exceeded  or the index is out of range
-     */
-    short extract_indentation_level(const Sequence::SizeType idx) const;
-
-    /**
-     * Internal syntax checker who did all of the job to validate the syntax tree
-     * including nested statements.
-     * 
-     * @param level nested indention level to check. Base level is 0.
-     * @param idx index of step in sequence.
-     * @exception throws an \a Error exception if an ill-formed token is found.
-     */
-    void syntax_checker(const short level, SizeType idx) const;
-
-    /**
-     * Internal syntax check for while-clauses. Invoked by 
-     * \a syntax_checker(const int, SizeType).
-     * 
-     * @param level nested indention level to check.
-     * @param idx index of step in sequence.
-     * @return new evaluated index for next token.
-     * @exception throws an \a Error exception if an ill-formed 'while' token is found.
-     */
-    SizeType syntax_checker_for_while(const short level, SizeType idx) const;
-
-    /**
-     * Internal syntax check for try-catch-clauses. Invoked by 
-     * \a syntax_checker(const int, SizeType).
-     * 
-     * @param level nested indention level to check.
-     * @param idx index of step in sequence.
-     * @return new evaluated index for next token.
-     * @exception throws an \a Error exception if an ill-formed 'try' token is found.
-     */
-    SizeType syntax_checker_for_try(const short level, SizeType idx) const;
-
-    /**
-     * Internal syntax check for if-elseif-else-clauses. Invoked by 
-     * \a syntax_checker(const int, SizeType).
-     * 
-     * @param level nested indention level to check.
-     * @param idx index of step in sequence.
-     * @return new evaluated index for next token.
-     * @exception throws an \a Error exception if an ill-formed 'if-elseif-else' token
-     * is found.
-     */
-    SizeType syntax_checker_for_if(const short level, SizeType idx) const;
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.
