@@ -79,7 +79,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
     REQUIRE(sequence[3].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
@@ -108,7 +108,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
     REQUIRE(sequence[4].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of try-try-catch-end-catch-end", "[Sequence]")
@@ -138,7 +138,7 @@ TEST_CASE("Sequence: check correctness of try-try-catch-end-catch-end", "[Sequen
 
     Context context;
 
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check fault for try", "[Sequence]")
@@ -154,7 +154,7 @@ TEST_CASE("Sequence: check fault for try", "[Sequence]")
     REQUIRE(sequence[0].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS( sequence.syntax_checker(), Error );
+    REQUIRE_THROWS_AS( sequence.check_syntax(), Error );
 }
 
 TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
@@ -173,7 +173,7 @@ TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 1);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
@@ -195,7 +195,7 @@ TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
     REQUIRE(sequence[2].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
@@ -214,7 +214,7 @@ TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
@@ -242,7 +242,7 @@ TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
     REQUIRE(sequence[4].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
@@ -264,7 +264,7 @@ TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
     REQUIRE(sequence[2].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
@@ -292,7 +292,7 @@ TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
     REQUIRE(sequence[4].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
@@ -326,7 +326,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
     REQUIRE(sequence[6].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence]")
@@ -366,7 +366,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
     REQUIRE(sequence[8].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Sequence]")
@@ -409,7 +409,7 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     REQUIRE(sequence[9].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end",
@@ -456,7 +456,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end",
     REQUIRE(sequence[10].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check fault of if-elseif-while-end-else-end", "[Sequence]")
@@ -493,7 +493,7 @@ TEST_CASE("Sequence: check fault of if-elseif-while-end-else-end", "[Sequence]")
     
     Context context;
 
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end", "[Sequence]")
@@ -531,7 +531,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end", "[Seque
     REQUIRE(sequence[7].get_indentation_level() == 1);
     REQUIRE(sequence[8].get_indentation_level() == 0);
 
-    REQUIRE_NOTHROW(sequence.syntax_checker());
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check fault for end", "[Sequence]")
@@ -547,7 +547,7 @@ TEST_CASE("Sequence: check fault for end", "[Sequence]")
     REQUIRE(sequence[0].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
@@ -566,7 +566,7 @@ TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
@@ -585,7 +585,7 @@ TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
@@ -604,7 +604,7 @@ TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
@@ -623,7 +623,7 @@ TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
@@ -642,7 +642,7 @@ TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }
 
 TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
@@ -661,7 +661,7 @@ TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS( sequence.syntax_checker(), Error );
+    REQUIRE_THROWS_AS( sequence.check_syntax(), Error );
 }
 
 TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
@@ -680,5 +680,5 @@ TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
     REQUIRE(sequence[1].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() != "");
-    REQUIRE_THROWS_AS(sequence.syntax_checker(), Error);
+    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
 }

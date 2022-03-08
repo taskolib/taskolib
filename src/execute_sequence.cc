@@ -26,7 +26,7 @@
 
 namespace task {
 
-const std::string HEAD = "[script] ";
+const std::string head = "[script] ";
 
 /// Find previous 'while' token begining from 'end' with successive decrement on index.
 Sequence::SizeType find_previous_while_token(Sequence& sequence, const short level
@@ -42,7 +42,7 @@ Sequence::SizeType find_previous_while_token(Sequence& sequence, const short lev
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'end' of 'while' indication=", while_end_idx));
 }
 
@@ -59,7 +59,7 @@ Sequence::SizeType find_while_end_token(Sequence& sequence, const short level
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'while' indication=", while_idx));
 }
 
@@ -76,7 +76,7 @@ Sequence::SizeType find_next_try_catch_token(Sequence& sequence, const short lev
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'try' indication=", try_idx));
 }
 
@@ -93,7 +93,7 @@ Sequence::SizeType find_next_try_end_token(Sequence& sequence, const short level
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'catch' indication=", catch_idx));
 }
 
@@ -113,7 +113,7 @@ Sequence::SizeType find_next_elseif_or_else_or_end_token(Sequence& sequence
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'if' indication=", if_idx));
 }
 
@@ -131,7 +131,7 @@ Sequence::SizeType find_next_else_or_end_token(Sequence& sequence, const short l
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'elseif' or 'else' indication=", elseif_or_else_idx));
 }
 
@@ -148,7 +148,7 @@ Sequence::SizeType find_next_if_end_token(Sequence& sequence, const short level
                 return idx;
     }
 
-    throw std::runtime_error(gul14::cat(HEAD, "exceed limit of sequence steps. level=",
+    throw std::runtime_error(gul14::cat(head, "exceed limit of sequence steps. level=",
         level, ", previous 'if', 'elseif', or 'else' indication=", if_elseif_else_idx));
 }
 
@@ -292,7 +292,7 @@ Sequence::SizeType execute_sequence_impl(Sequence& sequence, Context& context,
                 else
                 {
                     // Lua throws a runtime error that is not caught by a try block ...
-                    throw Error{gul14::cat(HEAD, "runtime error [index=", idx, "]: "
+                    throw Error{gul14::cat(head, "runtime error [index=", idx, "]: "
                         , e.what())};
                 }
             }
@@ -306,7 +306,7 @@ Sequence::SizeType execute_sequence_impl(Sequence& sequence, Context& context,
 void execute_sequence(Sequence& sequence, Context& context)
 {
     // syntax check
-    sequence.syntax_checker();
+    sequence.check_syntax();
 
     execute_sequence_impl(sequence, context, 0, 0, false, 0);
 }

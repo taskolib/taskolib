@@ -35,43 +35,25 @@ Sequence::Sequence(gul14::string_view label)
     label_ = std::string{ label };
 }
 
-void Sequence::syntax_checker() const
+void Sequence::check_syntax() const
 {
     if (not indentation_error_.empty())
         throw Error(indentation_error_);
 
     if (not steps_.empty())
-        syntax_checker(0, 0);
+        check_syntax(0, 0);
 }
 
-static const std::string HEAD = "[syntax check] ";
+static const std::string head = "[syntax check] ";
 
-short Sequence::extract_indentation_level(const Sequence::SizeType idx) const
-{
-    const short step_indentation_level = steps_[idx].get_indentation_level();
-    if (step_indentation_level > Step::max_indentation_level )
-    {
-        throw Error(cat(HEAD, "exceed maximum indentation level (",
-        Step::max_indentation_level, "): ", step_indentation_level,
-        " (index=", idx, ")"));
-    }
-    else if ( idx >= steps_.size() )
-    {
-        throw Error(cat(HEAD, "index on steps is out of range (", steps_.size() ,"): ",
-        idx, ")"));
-    }
-
-    return step_indentation_level;
-}
-
-void Sequence::syntax_checker(const short level, Sequence::SizeType idx) const
+void Sequence::check_syntax(const short level, Sequence::SizeType idx) const
 {
     do
     {
-        const short step_indention_level = extract_indentation_level(idx);
+        const short step_indention_level = steps_[idx].get_indentation_level();
 
         if (step_indention_level > level)
-            syntax_checker(step_indention_level, idx);
+            check_syntax(step_indention_level, idx);
         else if (step_indention_level == level)
         {
             switch(steps_[idx].get_type())
@@ -110,14 +92,14 @@ Sequence::SizeType Sequence::syntax_checker_for_while(const short level,
                     // fallthrough
 
                 default:
-                    throw Error(cat(HEAD, "ill-formed while-clause: missing action or "
+                    throw Error(cat(head, "ill-formed while-clause: missing action or "
                     "control-flow token before 'end'. indent=", level, ", index=", idx,
                     ", previous 'while' indication=", while_idx));
             }
         }
     }
 
-    throw Error(cat(HEAD, "ill-formed while-clause: missing 'end' token. indent=", level, 
+    throw Error(cat(head, "ill-formed while-clause: missing 'end' token. indent=", level, 
     ", previous 'while' indication=", while_idx));
 }
 
@@ -135,7 +117,7 @@ Sequence::SizeType Sequence::syntax_checker_for_try(const short level,
                 case Step::type_catch:
                     if (counter + 1 >= idx)
                     {
-                        throw Error(cat(HEAD, "ill-formed try-clause: missing action or "
+                        throw Error(cat(head, "ill-formed try-clause: missing action or "
                         "control-flow token before 'catch'. indent=", level, ", index=",
                         idx, ", previous 'try' indication=", try_idx));
                     }
@@ -148,14 +130,14 @@ Sequence::SizeType Sequence::syntax_checker_for_try(const short level,
                     // fallthrough
 
                 default:
-                    throw Error(cat(HEAD, "ill-formed try-clause: missing action or "
+                    throw Error(cat(head, "ill-formed try-clause: missing action or "
                     "control-flow token before 'end'. indent=", level, ", index=", idx,
                     ", previous 'try' indication=", try_idx));
             }
         }
     }
 
-    throw Error(cat(HEAD, "ill-formed try-clause: missing 'end' token. indent=", level, 
+    throw Error(cat(head, "ill-formed try-clause: missing 'end' token. indent=", level, 
     ", previous 'try' indication=", try_idx));
 }
 
@@ -174,13 +156,13 @@ Sequence::SizeType Sequence::syntax_checker_for_if(const short level,
                 case Step::type_elseif:
                     if (counter + 1 >= idx)
                     {
-                        throw Error(cat(HEAD, "ill-formed if-clause: missing action or "
+                        throw Error(cat(head, "ill-formed if-clause: missing action or "
                         "control-flow token. indent=", level, ", index=", idx,
                         ", previous 'if' indication=", if_idx));
                     }
                     else if (find_else)
                     {
-                        throw Error(cat(HEAD, "ill-formed if-clause: 'else' before 'else "
+                        throw Error(cat(head, "ill-formed if-clause: 'else' before 'else "
                         "if' token. indent=", level, ", index=", idx, ", previous 'if' "
                         "indication=", if_idx));
                     }
@@ -190,7 +172,7 @@ Sequence::SizeType Sequence::syntax_checker_for_if(const short level,
                 case Step::type_else:
                     if (counter + 1 >= idx)
                     {
-                        throw Error(cat(HEAD, "ill-formed if-clause: missing action or " 
+                        throw Error(cat(head, "ill-formed if-clause: missing action or " 
                         "control-flow token. indent=", level, ", index=", idx,
                         ", previous 'if' indication=", if_idx));
                     }
@@ -204,14 +186,14 @@ Sequence::SizeType Sequence::syntax_checker_for_if(const short level,
                     // fallthrough
 
                 default:
-                    throw Error(cat(HEAD, "ill-formed if-clause: missing action or "
+                    throw Error(cat(head, "ill-formed if-clause: missing action or "
                     "control-flow token before 'end'. indent=", level, ", index=", idx, 
                     ", previous 'if' indication=", if_idx));
             }
         }
     }
 
-    throw Error(cat(HEAD, "ill-formed if-clause: missing 'end' token. indent=", level, 
+    throw Error(cat(head, "ill-formed if-clause: missing 'end' token. indent=", level, 
     ", previous 'if' indication=", if_idx));
 }
 

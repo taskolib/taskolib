@@ -92,7 +92,7 @@ public:
      * 
      * If one of those is ill-formed an \a Error exception is thrown.
      */
-    void syntax_checker() const;
+    void check_syntax() const;
 
     /**
      * Return an error string if the sequence is not consistently nested, or an empty
@@ -143,30 +143,28 @@ private:
     void check_label(gul14::string_view label);
 
     /**
-     * Extracts from Steps-index the corresponding indentation level. 
+     * Check the sequence for syntactic consistency and throw an exception if an error is
+     * detected. That means that one or all of the following conditions must be satisfied:
      * 
-     * Will throw an \a Error exception when the maximum indentation is exceeded or the 
-     * index is out of range of the stored \a Step.
-     * 
-     * @param idx step index
-     * @return const short indentation level
-     * @exception Error maximum indentation is exceeded  or the index is out of range
-     */
-    short extract_indentation_level(const Sequence::SizeType idx) const;
-
-    /**
-     * Internal syntax checker who did all of the job to validate the syntax tree
-     * including nested statements.
+     * -# each token \a Step::type_try must have the corresponding
+     *    \a Step::type_catch and \a Step::type_end
+     * -# each token \a Step::type_if must have n-times \a Step::type_elseif and/or
+     *  \a Step::type_else with a tailing \a Step::type_end, n >= 0.
+     * -# each token \a Step::while must have the corresponding \a Step::type_end
+     *
+     * As a body of each surrounding token it must have at least one \a Step::type_action 
+     * as Lua scriptless.
      * 
      * @param level nested indention level to check. Base level is 0.
      * @param idx index of step in sequence.
      * @exception throws an \a Error exception if an ill-formed token is found.
+     * @see #check_syntax()
      */
-    void syntax_checker(const short level, SizeType idx) const;
+    void check_syntax(const short level, SizeType idx) const;
 
     /**
      * Internal syntax check for while-clauses. Invoked by 
-     * \a syntax_checker(const int, SizeType).
+     * \a check_syntax(const int, SizeType).
      * 
      * @param level nested indention level to check.
      * @param idx index of step in sequence.
@@ -177,7 +175,7 @@ private:
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by 
-     * \a syntax_checker(const int, SizeType).
+     * \a check_syntax(const int, SizeType).
      * 
      * @param level nested indention level to check.
      * @param idx index of step in sequence.
@@ -188,7 +186,7 @@ private:
 
     /**
      * Internal syntax check for if-elseif-else-clauses. Invoked by 
-     * \a syntax_checker(const int, SizeType).
+     * \a check_syntax(const int, SizeType).
      * 
      * @param level nested indention level to check.
      * @param idx index of step in sequence.
