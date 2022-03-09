@@ -36,8 +36,8 @@ const std::string head = "[script] ";
 /// iterator.
 /// Since the syntax is already validated there is a garante that it finds the proper 
 /// step.
-Sequence::Steps::iterator find(Sequence& sequence, Sequence::Steps::iterator step,
-    std::function<bool(const Step& step)> fetcher)
+Iterator find(Sequence& sequence, Iterator step, std::function<bool(const Step& step)> 
+    fetcher)
 {
     return std::find_if(step, sequence.end(), [&](const Step& step) {
         return fetcher(step);
@@ -48,7 +48,8 @@ Sequence::Steps::iterator find(Sequence& sequence, Sequence::Steps::iterator ste
 /// iterator.
 /// Since the syntax is already validated there is a garante that it finds the proper 
 /// step.
-Sequence::Steps::iterator find_reverse(Sequence& sequence, Sequence::Steps::iterator step, std::function<bool(const Step& step)> fetcher)
+Iterator find_reverse(Sequence& sequence, Iterator step, std::function<bool(const Step&
+    step)> fetcher)
 {
     auto step_reverse = std::find_if(std::make_reverse_iterator(step),
         std::make_reverse_iterator(sequence.begin()), [&](const Step& step) {
@@ -67,12 +68,13 @@ Sequence::Steps::iterator find_reverse(Sequence& sequence, Sequence::Steps::iter
  *      the Lua code fails. When it is not set an \a Error exception is thrown. 
  * @exception throws \a Error when a fault on one of the statements is caught by Lua.
  */
-Sequence::Steps::iterator execute_sequence_impl(Sequence& sequence, Context& context, Sequence::Steps::iterator step, const short level, Sequence::Steps::iterator catch_block)
+Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator step, 
+    const short level, Iterator catch_block)
 {
     bool found_while = false;
     bool found_try = false;
     bool if_condition = false;
-    Sequence::Steps::iterator step_catch;
+    Iterator step_catch;
 
     while(step != sequence.end())
     {
