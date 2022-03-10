@@ -4,7 +4,7 @@
  * \date   Created on December 20, 2021
  * \brief  Declaration of the Context and VariableValue types.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,23 +25,32 @@
 #ifndef TASKOMAT_CONTEXT_H_
 #define TASKOMAT_CONTEXT_H_
 
+#include <functional>
 #include <unordered_map>
 #include <variant>
+#include "sol/state.hpp"
 #include "taskomat/VariableName.h"
 
 namespace task {
 
 /**
- * A VariableValue is a variant over several data types.
- * The Context type associates names with values.
+ * A VariableValue is a variant over several data types (long long, double, std::string).
+ *
+ * Names are associated with these values via a map in the Context type.
  */
 using VariableValue = std::variant<long long, double, std::string>;
 
 /**
- * A context stores variables (which can also be functions) for use in the execution of
- * sequences and steps.
+ * A context stores information that influences the execution of steps and sequences,
+ * namely:
+ * - An initialization function that is called on a LUA state before a step is executed.
+ * - A list of variables that can be im-/exported into steps.
  */
-using Context = std::unordered_map<VariableName, VariableValue>;
+struct Context
+{
+    std::function<void(sol::state&)> lua_init_function;
+    std::unordered_map<VariableName, VariableValue> variables;
+};
 
 } // namespace task
 
