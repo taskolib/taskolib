@@ -70,7 +70,7 @@ test-release-buster:
             --libdir=lib
             --includedir=lib/include
         - ninja -C build.release
-        - cd build.release; ./libtaskomat_test
+        - cd build.release; ./taskomat_test
         - echo "... done."
     artifacts:
         paths:
@@ -87,7 +87,7 @@ test-release-buster:
             --buildtype=debug
             -Db_sanitize=address,undefined
         - ninja -C build.debug_asan_ubsan
-        - cd build.debug_asan_ubsan; ./libtaskomat_test
+        - cd build.debug_asan_ubsan; ./taskomat_test
         - echo "... done."
     artifacts:
         paths:

@@ -95,12 +95,12 @@ void export_variables_to_context(const Step& step, Context& context, sol::state&
             case sol::type::number:
                 // For this check to work, SOL_SAFE_NUMERICS needs to be set to 1
                 if (var.is<long long>())
-                    context[varname] = VariableValue{ var.as<long long>() };
+                    context.variables[varname] = VariableValue{ var.as<long long>() };
                 else
-                    context[varname] = VariableValue{ var.as<double>() };
+                    context.variables[varname] = VariableValue{ var.as<double>() };
                 break;
             case sol::type::string:
-                context[varname] = VariableValue{ var.as<std::string>() };
+                context.variables[varname] = VariableValue{ var.as<std::string>() };
                 break;
             default:
                 break;
@@ -134,8 +134,8 @@ void import_variables_from_context(const Step& step, const Context& context,
 
     for (const VariableName& varname : import_varnames)
     {
-        auto it = context.find(varname);
-        if (it == context.end())
+        auto it = context.variables.find(varname);
+        if (it == context.variables.end())
             continue;
 
         std::visit(
@@ -194,6 +194,10 @@ bool execute_step(Step& step, Context& context)
     sol::state lua;
 
     open_safe_library_subset(lua);
+
+    if (context.lua_init_function)
+        context.lua_init_function(lua);
+
     install_timeout_hook(lua, now, step.get_timeout());
 
     import_variables_from_context(step, context, lua);

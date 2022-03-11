@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# File: 	check_control
+#
+# Author:	Gerhard Schleßelmann <gerhard.schlesselmann@desy.de>
+#	 	Copyright 1999-2021
+#
+#		This program is free software; you can redistribute it
+#		and/or  modify it under  the terms of  the GNU General
+#		Public  License as  published  by  the  Free  Software
+#		Foundation;  either  version 2 of the License, or  (at
+#		your option) any later version.
+#
+
+#
+# get LIBNO
+#
+LIBNO=`grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g' -e 's/\./-/g' `
+VERSION=`grep LIBNO LIBNO | sed -e 's/LIBNO.*=//' -e 's/[[:space:]]//g' `
+
+#
+# check version number in control file
+#
+LIBNAME=`grep "^Source:" debian/control | sed 's/Source: *//;s/-[0-9].*$//'`
+LIKELY=`grep "Source: ${LIBNAME}-${LIBNO}" debian/control`
+
+#
+# if LIBNO and version in debian/control differs
+# change debian/control file
+#
+if [ -z "$LIKELY" ] ; then
+    cat debian/control | \
+        sed -e "s/${LIBNAME}-[0-9].*/${LIBNAME}-$LIBNO/g" > \
+        debian/control.tmp
+    mv debian/control.tmp debian/control
+fi
+
+# Create package content specification
+rm -f debian/${LIBNAME}-[0-9]*.install
+cp debian/${LIBNAME}.install.in debian/${LIBNAME}-${LIBNO}.install

@@ -17,14 +17,14 @@
         },
         {
             "type": "meson",
-            "target": "libtaskomat_test",
+            "target": "taskomat_test",
             "mode": "run",
             "group":{
                 "kind": "test",
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"],
-            "label": "Meson: Run libtaskomat_test",
+            "label": "Meson: Run taskomat_test",
             "dependsOn": [ "Meson: Build all targets" ],
             "presentation":{
                 "clear": false

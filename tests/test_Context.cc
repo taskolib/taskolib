@@ -4,7 +4,7 @@
  * \date   Created on December 20, 2021
  * \brief  Test suite for the Context class.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -31,25 +31,33 @@ using namespace task;
 TEST_CASE("Context: Constructor", "[Context]")
 {
     static_assert(std::is_default_constructible<Context>::value,
-        "Context is_default_constructible");
+                  "Context is_default_constructible");
 
     Context c;
 }
 
 TEST_CASE("Context: Copy constructor", "[Context]")
 {
+    static_assert(std::is_copy_constructible<Context>::value,
+                  "Context is_copy_constructible");
+
     Context c;
     Context c2{ c };
 }
 
 TEST_CASE("Context: Move constructor", "[Context]")
 {
+    static_assert(std::is_nothrow_move_constructible<Context>::value,
+                  "Context is_nothrow_move_constructible");
+
     Context c;
     Context c2{ std::move(c) };
 }
 
 TEST_CASE("Context: Copy assignment", "[Context]")
 {
+    static_assert(std::is_copy_assignable<Context>::value, "Context is_copy_assignable");
+
     Context c;
     Context c2;
 
@@ -58,6 +66,9 @@ TEST_CASE("Context: Copy assignment", "[Context]")
 
 TEST_CASE("Context: Move assignment", "[Context]")
 {
+    static_assert(std::is_nothrow_move_assignable<Context>::value,
+                  "Context is_nothrow_move_assignable");
+
     Context c;
     Context c2;
 

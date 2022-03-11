@@ -4,7 +4,7 @@
  * \date   Created on December 20, 2021
  * \brief  Declaration of the execute_step() function.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -35,10 +35,11 @@ namespace task {
  *
  * This function performs the following steps:
  * 1. A fresh script runtime environment is prepared and safe library components are
- *    loaded into it
- * 2. Selected variables are imported from the context into the runtime environment
- * 3. The script from the step is loaded into the runtime environment and executed
- * 4. Selected variables are exported from the runtime environment back into the context
+ *    loaded into it.
+ * 2. The lua_init_function from the context is run if it is defined (non-null).
+ * 3. Selected variables are imported from the context into the runtime environment.
+ * 4. The script from the step is loaded into the runtime environment and executed.
+ * 5. Selected variables are exported from the runtime environment back into the context.
  *
  * \returns true if the script returns a value that evaluates as true in the scripting
  *          language, or false otherwise (even in the case that the script returns no

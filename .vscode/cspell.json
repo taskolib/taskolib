@@ -1,0 +1,37 @@
+// Code Spell Checker, extension from VS Code marketplace: 
+// https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker
+// See the above web page for detailed description (status: 24.02.2022).
+{
+    // Version of the setting file.  Always 0.2
+    "version": "0.2",
+    // language - current active spelling language
+    "language": "en",
+    // words - list of words to be always considered correct
+    "words": [
+        "DESY",
+        "Deutsches",
+        "Elektronen",
+        "Froehlich",
+        "TASKOMAT"
+    ],
+    // Specify file types to spell check.
+    //
+    // Note (Marcus): I can only guess where the association between 'language ids' and
+    // 'file types' is :/ Maybe 'cpp' includes extension 'cc', 'h', 'cxx', ...? Or due I
+    // misinterpret the description above?
+    "enabledLanguageIds": [
+        "cpp",
+        "python",
+        "plaintext",
+        "markdown",
+        "yml",
+        "lua"
+    ],
+    // Specify paths/files to ignore.
+    "ignorePaths": [
+        "builddir",
+        ".git",
+        ".gitignore",
+        ".gitlab-ci.yml"
+    ]
+}
