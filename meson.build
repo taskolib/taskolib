@@ -50,6 +50,9 @@ install_headers(files([
 install_subdir('include/taskomat/sol',
     install_dir: get_option('prefix') / get_option('includedir') / 'taskomat')
 
+install_subdir('include/taskomat/lua',
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat')
+
 # Sources
 sources = files([
     'src/execute_step.cc',
@@ -97,6 +100,7 @@ libno_full = '.'.join(libno_parts)
 
 # Generate the static LUA library
 # It can be used via lua_dep
+lua_inc = include_directories('include/taskomat/lua')
 subdir('src/lua')
 
 
@@ -130,7 +134,7 @@ pkg.generate(lib,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
-    subdirs : [ '', 'taskomat' / 'sol', ],
+    subdirs : [ '', 'taskomat' / 'sol', 'taskomat' / 'lua', ],
 )
 
 taskomat_dep = declare_dependency(

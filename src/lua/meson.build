@@ -42,9 +42,10 @@ lua_lib = static_library(
         'warning_level=2',
         'buildtype=release',
     ],
+    include_directories : lua_inc,
 )
 
 lua_dep = declare_dependency(
     link_with : lua_lib,
-    include_directories : include_directories('.'),
+    include_directories : lua_inc,
 )
