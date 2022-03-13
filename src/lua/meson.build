@@ -41,5 +41,10 @@ lua_lib = static_library(
     override_options : [
         'warning_level=2',
         'buildtype=release',
-      ],
-    )
+    ],
+)
+
+lua_dep = declare_dependency(
+    link_with : lua_lib,
+    include_directories : include_directories('.'),
+)

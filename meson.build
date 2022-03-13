@@ -93,11 +93,12 @@ libno_full = '.'.join(libno_parts)
 
 
 # Generate the static LUA library
+# It can be used via lua_dep
 subdir('src/lua')
 
 
 ## Build library
-inc = [ include_directories('include', 'src', 'src/lua') ]
+inc = [ include_directories('include', 'src') ]
 
 deps = [
     dependency('libgul14'),
@@ -105,8 +106,7 @@ deps = [
 
 lib = both_libraries(meson.project_name(),
     sources,
-    dependencies : deps,
-    link_with : lua_lib,
+    dependencies : deps + [ lua_dep ],
     soversion : libno_full,
     darwin_versions : libno,
     include_directories : inc,
@@ -141,7 +141,7 @@ taskomat_dep = declare_dependency(
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : taskomat_dep,
+        dependencies : [taskomat_dep, lua_dep],
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
