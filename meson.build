@@ -47,6 +47,9 @@ install_headers(files([
     ]),
     subdir: 'taskomat')
 
+install_subdir('include/taskomat/sol',
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat')
+
 # Sources
 sources = files([
     'src/execute_step.cc',
@@ -98,15 +101,16 @@ subdir('src/lua')
 
 
 ## Build library
-inc = [ include_directories('include', 'src') ]
+inc = [ include_directories('include', 'include/taskomat/sol', 'src') ]
 
 deps = [
     dependency('libgul14'),
+    lua_dep,
 ]
 
 lib = both_libraries(meson.project_name(),
     sources,
-    dependencies : deps + [ lua_dep ],
+    dependencies : deps,
     soversion : libno_full,
     darwin_versions : libno,
     include_directories : inc,
@@ -126,6 +130,7 @@ pkg.generate(lib,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
+    subdirs : [ '', 'taskomat' / 'sol', ],
 )
 
 taskomat_dep = declare_dependency(
@@ -141,7 +146,7 @@ taskomat_dep = declare_dependency(
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : [taskomat_dep, lua_dep],
+        dependencies : taskomat_dep,
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
