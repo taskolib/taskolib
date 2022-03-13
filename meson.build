@@ -50,8 +50,13 @@ install_headers(files([
 install_subdir('include/taskomat/sol',
     install_dir: get_option('prefix') / get_option('includedir') / 'taskomat')
 
-install_subdir('include/taskomat/lua',
-    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat')
+install_headers(files([
+    'include/taskomat/lua/lauxlib.h',
+    'include/taskomat/lua/lua.h',
+    'include/taskomat/lua/luaconf.h',
+    'include/taskomat/lua/lualib.h',
+    ]),
+    subdir: 'taskomat' / 'lua')
 
 # Sources
 sources = files([
