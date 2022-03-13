@@ -35,40 +35,41 @@ add_project_arguments(
 ## File lists
 
 # Headers to be installed under ${prefix}/include/
-install_headers(files([
-    'include/taskomat/Context.h',
-    'include/taskomat/Error.h',
-    'include/taskomat/execute_step.h',
-    'include/taskomat/execute_sequence.h',
-    'include/taskomat/Sequence.h',
-    'include/taskomat/Step.h',
-    'include/taskomat/taskomat.h',
-    'include/taskomat/VariableName.h',
-    ]),
-    subdir: 'taskomat')
+install_headers(files(
+        'include/taskomat/Context.h',
+        'include/taskomat/Error.h',
+        'include/taskomat/execute_step.h',
+        'include/taskomat/execute_sequence.h',
+        'include/taskomat/Sequence.h',
+        'include/taskomat/Step.h',
+        'include/taskomat/taskomat.h',
+        'include/taskomat/VariableName.h',
+    ),
+    subdir: 'taskomat',)
 
 install_subdir('include/taskomat/sol',
-    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat')
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat',
+)
 
-install_headers(files([
-    'include/taskomat/lua/lauxlib.h',
-    'include/taskomat/lua/lua.h',
-    'include/taskomat/lua/luaconf.h',
-    'include/taskomat/lua/lualib.h',
-    ]),
+install_headers(files(
+        'include/taskomat/lua/lauxlib.h',
+        'include/taskomat/lua/lua.h',
+        'include/taskomat/lua/luaconf.h',
+        'include/taskomat/lua/lualib.h',
+    ),
     subdir: 'taskomat' / 'lua')
 
 # Sources
-sources = files([
+sources = files(
     'src/execute_step.cc',
     'src/execute_sequence.cc',
     'src/Sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
-])
+)
 
 # Test sources
-test_src = files([
+test_src = files(
     'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_execute_step.cc',
@@ -77,7 +78,7 @@ test_src = files([
     'tests/test_Sequence.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
-])
+)
 
 
 ## Determine the version number
