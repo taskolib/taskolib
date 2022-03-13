@@ -128,21 +128,20 @@ pkg.generate(lib,
     requires : [ 'libgul14' ],
 )
 
-
-## Tests
-
-dep = declare_dependency(
+taskomat_dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
     dependencies : deps,
 )
+
+## Tests
 
 # The tests are executed in the build dir to avoid pollution of the git repository with
 # the test executable's output files
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : dep,
+        dependencies : taskomat_dep,
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
@@ -153,7 +152,7 @@ test('all',
 
 executable('execute_step',
     files(['examples/execute_step.cc']),
-    dependencies : dep
+    dependencies : taskomat_dep
 )
 
 ## Include experimental sources for lua/sol. All of the buiild executable will start with

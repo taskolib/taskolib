@@ -1,9 +1,9 @@
-## Build experimental sol3 test cases 
+## Build experimental sol3 test cases
 executable('experiment_sol_variables',
     files(['run_sol_variables.cc']),
-    dependencies : dep
+    dependencies : taskomat_dep,
 )
 executable('experiment_sol_with_function',
     files(['run_sol_with_function.cc']),
-    dependencies : dep
+    dependencies : taskomat_dep,
 )
