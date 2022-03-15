@@ -55,14 +55,6 @@ install_subdir('include/taskomat/sol/sol',
 
 )
 
-install_headers(files(
-        'include/taskomat/lua/lauxlib.h',
-        'include/taskomat/lua/lua.h',
-        'include/taskomat/lua/luaconf.h',
-        'include/taskomat/lua/lualib.h',
-    ),
-    subdir: 'taskomat' / 'lua')
-
 # Sources
 sources = files(
     'src/execute_step.cc',
@@ -113,6 +105,14 @@ libno_full = '.'.join(libno_parts)
 lua_inc = include_directories('include/taskomat/lua')
 subdir('src/lua')
 
+install_headers(files(
+        'include/taskomat/lua/lauxlib.h',
+        'include/taskomat/lua/lua.h',
+        'include/taskomat/lua/luaconf.h',
+        'include/taskomat/lua/lualib.h',
+    ),
+    subdir: 'taskomat' / 'lua' + lua_version)
+
 
 ## Build library
 inc = [ include_directories('include', 'include/taskomat/sol', 'src') ]
@@ -144,7 +144,7 @@ pkg.generate(lib,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
-    subdirs : [ '', 'taskomat' / 'sol' + sol_version, 'taskomat' / 'lua', ],
+    subdirs : [ '', 'taskomat' / 'sol' + sol_version, 'taskomat' / 'lua' + lua_version, ],
 )
 
 taskomat_dep = declare_dependency(
