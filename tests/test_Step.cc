@@ -24,8 +24,8 @@
 
 #include <type_traits>
 #include <gul14/catch.h>
-#include "../include/taskomat/Error.h"
-#include "../include/taskomat/Step.h"
+#include "taskomat/Error.h"
+#include "taskomat/Step.h"
 
 using namespace std::literals;
 using namespace task;

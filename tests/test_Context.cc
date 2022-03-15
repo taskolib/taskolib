@@ -23,7 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
-#include "../include/taskomat/Context.h"
+#include "taskomat/Context.h"
 
 using namespace std::literals;
 using namespace task;

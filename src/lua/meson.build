@@ -1,5 +1,5 @@
 # Source files for our LUA library compiled as C++
-lua_sources = files([
+lua_sources = files(
     'lapi.cc',
     'lauxlib.cc',
     'lbaselib.cc',
@@ -32,7 +32,7 @@ lua_sources = files([
     'lutf8lib.cc',
     'lvm.cc',
     'lzio.cc',
-])
+)
 
 # Build LUA library
 lua_lib = static_library(
@@ -41,5 +41,11 @@ lua_lib = static_library(
     override_options : [
         'warning_level=2',
         'buildtype=release',
-      ],
-    )
+    ],
+    include_directories : lua_inc,
+)
+
+lua_dep = declare_dependency(
+    link_with : lua_lib,
+    include_directories : lua_inc,
+)

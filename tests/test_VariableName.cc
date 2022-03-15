@@ -23,8 +23,8 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
-#include "../include/taskomat/Error.h"
-#include "../include/taskomat/VariableName.h"
+#include "taskomat/Error.h"
+#include "taskomat/VariableName.h"
 
 using namespace std::literals;
 using namespace task;

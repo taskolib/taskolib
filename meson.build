@@ -35,29 +35,41 @@ add_project_arguments(
 ## File lists
 
 # Headers to be installed under ${prefix}/include/
-install_headers(files([
-    'include/taskomat/Context.h',
-    'include/taskomat/Error.h',
-    'include/taskomat/execute_step.h',
-    'include/taskomat/execute_sequence.h',
-    'include/taskomat/Sequence.h',
-    'include/taskomat/Step.h',
-    'include/taskomat/taskomat.h',
-    'include/taskomat/VariableName.h',
-    ]),
-    subdir: 'taskomat')
+install_headers(files(
+        'include/taskomat/Context.h',
+        'include/taskomat/Error.h',
+        'include/taskomat/execute_step.h',
+        'include/taskomat/execute_sequence.h',
+        'include/taskomat/Sequence.h',
+        'include/taskomat/Step.h',
+        'include/taskomat/taskomat.h',
+        'include/taskomat/VariableName.h',
+    ),
+    subdir: 'taskomat',)
+
+install_subdir('include/taskomat/sol',
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat',
+)
+
+install_headers(files(
+        'include/taskomat/lua/lauxlib.h',
+        'include/taskomat/lua/lua.h',
+        'include/taskomat/lua/luaconf.h',
+        'include/taskomat/lua/lualib.h',
+    ),
+    subdir: 'taskomat' / 'lua')
 
 # Sources
-sources = files([
+sources = files(
     'src/execute_step.cc',
     'src/execute_sequence.cc',
     'src/Sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
-])
+)
 
 # Test sources
-test_src = files([
+test_src = files(
     'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_execute_step.cc',
@@ -66,7 +78,7 @@ test_src = files([
     'tests/test_Sequence.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
-])
+)
 
 
 ## Determine the version number
@@ -93,20 +105,22 @@ libno_full = '.'.join(libno_parts)
 
 
 # Generate the static LUA library
+# It can be used via lua_dep
+lua_inc = include_directories('include/taskomat/lua')
 subdir('src/lua')
 
 
 ## Build library
-inc = [ include_directories('include', 'src', 'src/lua') ]
+inc = [ include_directories('include', 'include/taskomat/sol', 'src') ]
 
 deps = [
     dependency('libgul14'),
+    lua_dep,
 ]
 
 lib = both_libraries(meson.project_name(),
     sources,
     dependencies : deps,
-    link_with : lua_lib,
     soversion : libno_full,
     darwin_versions : libno,
     include_directories : inc,
@@ -126,24 +140,23 @@ pkg.generate(lib,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
+    subdirs : [ '', 'taskomat' / 'sol', 'taskomat' / 'lua', ],
 )
 
-
-## Tests
-
-dep = declare_dependency(
+taskomat_dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
     dependencies : deps,
 )
+
+## Tests
 
 # The tests are executed in the build dir to avoid pollution of the git repository with
 # the test executable's output files
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : dep,
-        include_directories : inc,
+        dependencies : taskomat_dep,
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
@@ -154,7 +167,7 @@ test('all',
 
 executable('execute_step',
     files(['examples/execute_step.cc']),
-    dependencies : dep
+    dependencies : taskomat_dep
 )
 
 ## Include experimental sources for lua/sol. All of the buiild executable will start with
