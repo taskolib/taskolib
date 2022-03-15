@@ -24,8 +24,6 @@ pkg_config_name = 'libtaskomat'
 # with C++ and therefore properly handles exceptions.
 # SOL_SAFE_NUMERICS tells Sol3 to make several checks so that we can actually
 # differentiate integers from floating-point numbers.
-#
-# Marcus (27.01.2022): Change SOL_ALL_SAFETIES_ON from 0 (OFF) to 1 (ON). What is the meaning of it?
 add_project_arguments(
     '-DSOL_USING_CXX_LUA=1', '-DSOL_ALL_SAFETIES_ON=1', '-DSOL_PRINT_ERRORS=0',
     '-DSOL_SAFE_NUMERICS=1',
