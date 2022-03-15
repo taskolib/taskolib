@@ -31,6 +31,9 @@ add_project_arguments(
     '-DSOL_SAFE_NUMERICS=1',
     language : 'cpp')
 
+# Keep this version number up to date...
+sol_version = '3.2.2'
+
 
 ## File lists
 
@@ -47,8 +50,9 @@ install_headers(files(
     ),
     subdir: 'taskomat',)
 
-install_subdir('include/taskomat/sol',
-    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat',
+install_subdir('include/taskomat/sol/sol',
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat' / 'sol' + sol_version,
+
 )
 
 install_headers(files(
@@ -140,7 +144,7 @@ pkg.generate(lib,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
-    subdirs : [ '', 'taskomat' / 'sol', 'taskomat' / 'lua', ],
+    subdirs : [ '', 'taskomat' / 'sol' + sol_version, 'taskomat' / 'lua', ],
 )
 
 taskomat_dep = declare_dependency(
