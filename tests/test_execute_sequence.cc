@@ -810,7 +810,6 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
-<<<<<<< HEAD
 
 TEST_CASE("execute_sequence(): complex try sequence with nested fault condition", 
 "[execute_sequence]")
@@ -1599,5 +1598,3 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
     Context context;
     REQUIRE_THROWS_AS(execute_sequence(sequence, context), Error);
 }
-=======
->>>>>>> master
