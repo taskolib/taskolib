@@ -24,8 +24,8 @@
 
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
-#include "../include/taskomat/Error.h"
-#include "../include/taskomat/execute_step.h"
+#include "taskomat/Error.h"
+#include "taskomat/execute_step.h"
 
 using namespace std::literals;
 using namespace task;
