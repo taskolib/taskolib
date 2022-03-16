@@ -100,7 +100,7 @@ libno_full = '.'.join(libno_parts)
 
 # Generate the static LUA library
 # It can be used via lua_dep
-lua_inc = include_directories('include/taskomat/lua')
+lua_inc = include_directories('include/taskomat/lua') # used by src/lua
 subdir('src/lua')
 
 install_headers(files(
