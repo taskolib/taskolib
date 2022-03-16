@@ -120,14 +120,14 @@ public:
     /// Return Steps iterator to the first element of the container.
     const Steps::iterator begin() noexcept { return steps_.begin(); }
     /// Return constant Steps iterator to the first element of the container.
-    const Steps::const_iterator begin() const noexcept { return steps_.begin(); }
+    const Steps::const_iterator cbegin() const noexcept { return steps_.cbegin(); }
 
     /// Return Steps iterator to the element following the last element of the container.
     const Steps::iterator end() noexcept { return steps_.end(); }
     /// Return constant Steps iterator to the element following the last element of the
     /// container.
-    const Steps::const_iterator end() const noexcept { return steps_.end(); }
-
+    const Steps::const_iterator cend() const noexcept { return steps_.cend(); }
+    
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
