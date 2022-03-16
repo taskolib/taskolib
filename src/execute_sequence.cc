@@ -28,7 +28,7 @@
 
 namespace task {
 
-using Iterator = Sequence::Steps::iterator;
+using Iterator = Sequence::Steps::const_iterator;
 
 const std::string head = "[script] ";
 
@@ -39,7 +39,7 @@ const std::string head = "[script] ";
 Iterator find(Sequence& sequence, Iterator step, std::function<bool(const Step& step)> 
     fetcher)
 {
-    return std::find_if(step, sequence.end(), [&](const Step& step) {
+    return std::find_if(step, sequence.cend(), [&](const Step& step) {
         return fetcher(step);
     });
 }
@@ -52,7 +52,7 @@ Iterator find_reverse(Sequence& sequence, Iterator step, std::function<bool(cons
     step)> fetcher)
 {
     auto step_reverse = std::find_if(std::make_reverse_iterator(step),
-        std::make_reverse_iterator(sequence.begin()), [&](const Step& step) {
+        std::make_reverse_iterator(sequence.cbegin()), [&](const Step& step) {
             return fetcher(step);
         });
     return step_reverse.base();
@@ -92,7 +92,7 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
         {
             try
             {
-            const bool result = execute_step(*step, context);
+            const bool result = execute_step((Step&)*step, context);
 
             switch(step->get_type())
             {
