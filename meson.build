@@ -24,12 +24,13 @@ pkg_config_name = 'libtaskomat'
 # with C++ and therefore properly handles exceptions.
 # SOL_SAFE_NUMERICS tells Sol3 to make several checks so that we can actually
 # differentiate integers from floating-point numbers.
-#
-# Marcus (27.01.2022): Change SOL_ALL_SAFETIES_ON from 0 (OFF) to 1 (ON). What is the meaning of it?
 add_project_arguments(
     '-DSOL_USING_CXX_LUA=1', '-DSOL_ALL_SAFETIES_ON=1', '-DSOL_PRINT_ERRORS=0',
     '-DSOL_SAFE_NUMERICS=1',
     language : 'cpp')
+
+# Keep this version number up to date...
+sol_version = '3.2.2'
 
 
 ## File lists
@@ -47,17 +48,10 @@ install_headers(files(
     ),
     subdir: 'taskomat',)
 
-install_subdir('include/taskomat/sol',
-    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat',
-)
+install_subdir('include/taskomat/sol/sol',
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat' / 'sol' + sol_version,
 
-install_headers(files(
-        'include/taskomat/lua/lauxlib.h',
-        'include/taskomat/lua/lua.h',
-        'include/taskomat/lua/luaconf.h',
-        'include/taskomat/lua/lualib.h',
-    ),
-    subdir: 'taskomat' / 'lua')
+)
 
 # Sources
 sources = files(
@@ -106,8 +100,16 @@ libno_full = '.'.join(libno_parts)
 
 # Generate the static LUA library
 # It can be used via lua_dep
-lua_inc = include_directories('include/taskomat/lua')
+lua_inc = include_directories('include/taskomat/lua') # used by src/lua
 subdir('src/lua')
+
+install_headers(files(
+        'include/taskomat/lua/lauxlib.h',
+        'include/taskomat/lua/lua.h',
+        'include/taskomat/lua/luaconf.h',
+        'include/taskomat/lua/lualib.h',
+    ),
+    subdir: 'taskomat' / 'lua' + lua_version)
 
 
 ## Build library
@@ -140,7 +142,7 @@ pkg.generate(lib,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
-    subdirs : [ '', 'taskomat' / 'sol', 'taskomat' / 'lua', ],
+    subdirs : [ '', 'taskomat' / 'sol' + sol_version, 'taskomat' / 'lua' + lua_version, ],
 )
 
 taskomat_dep = declare_dependency(
