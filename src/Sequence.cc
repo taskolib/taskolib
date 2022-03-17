@@ -29,6 +29,8 @@ using gul14::cat;
 namespace task
 {
 
+const char Sequence::head[] = "[syntax check] ";
+
 Sequence::Sequence(gul14::string_view label)
 {
     check_label(label);
@@ -44,9 +46,7 @@ void Sequence::check_syntax() const
         check_syntax(0, 0);
 }
 
-static const std::string head = "[syntax check] ";
-
-void Sequence::check_syntax(const short level, Sequence::SizeType idx) const
+void Sequence::check_syntax(short level, Sequence::SizeType idx) const
 {
     do
     {
@@ -59,13 +59,13 @@ void Sequence::check_syntax(const short level, Sequence::SizeType idx) const
             switch(steps_[idx].get_type())
             {
                 case Step::type_while:
-                    idx = syntax_checker_for_while(step_indention_level, idx);
+                    idx = check_syntax_for_while(step_indention_level, idx);
                     break;
                 case Step::type_try:
-                    idx = syntax_checker_for_try(step_indention_level, idx);
+                    idx = check_syntax_for_try(step_indention_level, idx);
                     break;
                 case Step::type_if:
-                    idx = syntax_checker_for_if(step_indention_level, idx);
+                    idx = check_syntax_for_if(step_indention_level, idx);
                     break;
                 
                 default:
@@ -75,7 +75,7 @@ void Sequence::check_syntax(const short level, Sequence::SizeType idx) const
     } while(++idx < steps_.size());
 }
 
-Sequence::SizeType Sequence::syntax_checker_for_while(const short level,
+Sequence::SizeType Sequence::check_syntax_for_while(const short level,
     Sequence::SizeType idx) const
 {
     const Sequence::SizeType while_idx = idx;
@@ -103,7 +103,7 @@ Sequence::SizeType Sequence::syntax_checker_for_while(const short level,
     ", previous 'while' indication=", while_idx));
 }
 
-Sequence::SizeType Sequence::syntax_checker_for_try(const short level,
+Sequence::SizeType Sequence::check_syntax_for_try(const short level,
     Sequence::SizeType idx) const
 {
     const Sequence::SizeType try_idx = idx;
@@ -141,7 +141,7 @@ Sequence::SizeType Sequence::syntax_checker_for_try(const short level,
     ", previous 'try' indication=", try_idx));
 }
 
-Sequence::SizeType Sequence::syntax_checker_for_if(const short level,
+Sequence::SizeType Sequence::check_syntax_for_if(const short level,
     Sequence::SizeType idx) const
 {
     const SizeType if_idx = idx;

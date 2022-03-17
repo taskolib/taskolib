@@ -29,32 +29,32 @@
 namespace task {
 
 using Iterator = Sequence::Steps::const_iterator;
+using ReverseIterator = Sequence::Steps::const_reverse_iterator;
 
-const std::string head = "[script] ";
+namespace 
+{
 
-/// Find next token with condition on function fetcher. Returns the found step
-/// iterator.
+static const char head[] = "[script] ";
+
+/// Find next token with condition on predicate. Returns the found step iterator.
 /// Since the syntax is already validated there is a garante that it finds the proper 
 /// step.
-Iterator find(Sequence& sequence, Iterator step, std::function<bool(const Step& step)> 
-    fetcher)
+template<typename Predicate>
+Iterator find(Iterator step, Iterator end, Predicate pred)
 {
-    return std::find_if(step, sequence.cend(), [&](const Step& step) {
-        return fetcher(step);
-    });
+    return std::find_if(step, end, [&](const Step& step) { return pred(step); });
 }
 
-/// Find reverse token with condition on function fetcher. Returns the found step 
-/// iterator.
+/// Find reverse token with condition on predicate. Returns the found step iterator.
 /// Since the syntax is already validated there is a garante that it finds the proper 
 /// step.
-Iterator find_reverse(Sequence& sequence, Iterator step, std::function<bool(const Step&
-    step)> fetcher)
+template <typename Predicate>
+Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
 {
-    auto step_reverse = std::find_if(std::make_reverse_iterator(step),
-        std::make_reverse_iterator(sequence.cbegin()), [&](const Step& step) {
-            return fetcher(step);
-        });
+    auto step_reverse = std::find_if(
+        std::make_reverse_iterator(step),
+        end,
+        [&](const Step& step) { return pred(step); });
     return step_reverse.base();
 }
 
@@ -64,17 +64,18 @@ Iterator find_reverse(Sequence& sequence, Iterator step, std::function<bool(cons
  * @param sequence executed \a Sequence
  * @param context \a Context for executing a step
  * @param step step iterator to traverse the \a Sequence
+ * @param level indentation level
  * @param catch_block iterator on catch block if set. This iterator will be returned if
  *      the Lua code fails. When it is not set an \a Error exception is thrown. 
  * @exception throws \a Error when a fault on one of the statements is caught by Lua.
  */
 Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator step, 
-    const short level, Iterator catch_block)
+    short level, Iterator catch_block)
 {
     bool found_while = false;
     bool found_try = false;
     bool if_condition = false;
-    Iterator step_catch;
+    Iterator step_catch = sequence.end();
 
     while(step != sequence.end())
     {
@@ -101,17 +102,17 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                     if (result)
                         ++step;
                     else
-                        step = find(sequence, step, [&](const Step& step) { 
+                        step = find(step, sequence.cend(), [&](const Step& step) { 
                                 return level          == step.get_indentation_level()
                                     && Step::type_end == step.get_type(); });
                     break;
 
                 case Step::type_try:
                     found_try = true;
-                    // Use the successive index ('.. + 1') for the first token in
-                    // the catch block because its performing directly on the 'catch' 
-                    // token and resets the index ()...which we do not want!)
-                    step_catch = find(sequence, step, [&](const Step& step) {
+                    // Use the successor index ('.. + 1') for the first token in
+                    // the catch block because there is a need to jump to first
+                    // token in the catch block.
+                    step_catch = find(step, sequence.cend(), [&](const Step& step) {
                                 return level            == step.get_indentation_level()
                                     && Step::type_catch == step.get_type(); }) + 1;
                     ++step;
@@ -119,7 +120,7 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
 
                 case Step::type_catch:
                     step_catch = sequence.end();
-                    step = find(sequence, step, [&](const Step& step) {
+                    step = find(step, sequence.cend(), [&](const Step& step) {
                                 return level          == step.get_indentation_level()
                                      && Step::type_end == step.get_type(); });
                     break;
@@ -129,39 +130,39 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                     if (result)
                         ++step;
                     else
-                        step = find(sequence, step, [&](const Step& step) {
+                        step = find(step, sequence.cend(), [&](const Step& step) {
                                 return   level             == step.get_indentation_level()
                                    && (  Step::type_elseif == step.get_type()
                                        ||Step::type_else   == step.get_type()
                                        ||Step::type_end    == step.get_type() ); });
                     break;
 
-                    case Step::type_elseif:
-                        if (if_condition)
-                            step = find(sequence, step, [&](const Step& step) {
-                                    return level          == step.get_indentation_level()
-                                        && Step::type_end == step.get_type(); });
-                        else if (result)
-                        {
-                            if_condition = result;
-                            ++step;
-                        }
-                        else
-                            step = find(sequence, step + 1, [&](const Step& step) {
-                                    return level           == step.get_indentation_level()
-                                  && (   Step::type_elseif == step.get_type()
-                                      || Step::type_else   == step.get_type()
-                                      || Step::type_end    == step.get_type() ); });
-                        break;
+                case Step::type_elseif:
+                    if (if_condition)
+                        step = find(step, sequence.cend(), [&](const Step& step) {
+                                return level          == step.get_indentation_level()
+                                    && Step::type_end == step.get_type(); });
+                    else if (result)
+                    {
+                        if_condition = result;
+                        ++step;
+                    }
+                    else
+                        step = find(step + 1, sequence.cend(), [&](const Step& step) {
+                                return level           == step.get_indentation_level()
+                                && (   Step::type_elseif == step.get_type()
+                                    || Step::type_else   == step.get_type()
+                                    || Step::type_end    == step.get_type() ); });
+                    break;
 
-                    case Step::type_else:
-                        if(if_condition)
-                            step = find(sequence, step, [&](const Step& step) {
-                                    return level          == step.get_indentation_level()
-                                        && Step::type_end == step.get_type(); });
-                        else
-                            ++step;
-                        break;
+                case Step::type_else:
+                    if(if_condition)
+                        step = find(step, sequence.cend(), [&](const Step& step) {
+                                return level          == step.get_indentation_level()
+                                    && Step::type_end == step.get_type(); });
+                    else
+                        ++step;
+                    break;
 
                 case Step::type_end:
                     if (found_try)
@@ -171,7 +172,11 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                     }
                     else if (found_while)
                     {
-                        step = find_reverse(sequence, step, [&](const Step& step) { 
+                        // Use the predecessor index ('.. - 1') for the first token in
+                        // the while block because it is incremented in the loop. The
+                        // second iterator we start at beginning which is the inverted
+                        // of the reversed end sequence.
+                        step = find_reverse(step, sequence.crend(), [&](const Step& step) { 
                                 return level            == step.get_indentation_level()
                                     && Step::type_while == step.get_type(); }) - 1; 
                         found_while = false;                            
@@ -200,6 +205,8 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
     return step;
 }
 
+} // anonymous namespace
+
 void execute_sequence(Sequence& sequence, Context& context)
 {
     // syntax check
@@ -208,4 +215,4 @@ void execute_sequence(Sequence& sequence, Context& context)
     execute_sequence_impl(sequence, context, sequence.begin(), 0, sequence.end());
 }
 
-}
+} // namespace task

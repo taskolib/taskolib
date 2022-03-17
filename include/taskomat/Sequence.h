@@ -120,18 +120,32 @@ public:
     /// Return Steps iterator to the first element of the container.
     const Steps::iterator begin() noexcept { return steps_.begin(); }
     /// Return constant Steps iterator to the first element of the container.
-    const Steps::const_iterator cbegin() const noexcept { return steps_.cbegin(); }
+    const Steps::const_iterator cbegin() const noexcept { return steps_.begin(); }
+
+    /// Return reverse Steps iterator to the first element of the container.
+    const Steps::reverse_iterator rbegin() noexcept { return steps_.rbegin(); }
+    /// Return constant reverse Steps iterator to the first element of the container.
+    const Steps::const_reverse_iterator crbegin() const noexcept { return steps_.crbegin(); }
 
     /// Return Steps iterator to the element following the last element of the container.
     const Steps::iterator end() noexcept { return steps_.end(); }
     /// Return constant Steps iterator to the element following the last element of the
     /// container.
-    const Steps::const_iterator cend() const noexcept { return steps_.cend(); }
-    
+    const Steps::const_iterator cend() const noexcept { return steps_.end(); }
+
+    /// Return reverse Steps iterator to the element following the last element of the
+    /// container.
+    const Steps::reverse_iterator rend() noexcept { return steps_.rend(); }
+    /// Return constant reverse Steps iterator to the element following the last element
+    /// of the container.
+    const Steps::const_reverse_iterator crend() const noexcept { return steps_.crend(); }
+
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
 private:
+    // Header for exception on failed syntax check.
+    static const char head[];
 
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
@@ -160,7 +174,7 @@ private:
      * @exception throws an \a Error exception if an ill-formed token is found.
      * @see #check_syntax()
      */
-    void check_syntax(const short level, SizeType idx) const;
+    void check_syntax(short level, SizeType idx) const;
 
     /**
      * Internal syntax check for while-clauses. Invoked by 
@@ -171,7 +185,7 @@ private:
      * @return new evaluated index for next token.
      * @exception throws an \a Error exception if an ill-formed 'while' token is found.
      */
-    SizeType syntax_checker_for_while(const short level, SizeType idx) const;
+    SizeType check_syntax_for_while(const short level, SizeType idx) const;
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by 
@@ -182,7 +196,7 @@ private:
      * @return new evaluated index for next token.
      * @exception throws an \a Error exception if an ill-formed 'try' token is found.
      */
-    SizeType syntax_checker_for_try(const short level, SizeType idx) const;
+    SizeType check_syntax_for_try(const short level, SizeType idx) const;
 
     /**
      * Internal syntax check for if-elseif-else-clauses. Invoked by 
@@ -194,7 +208,7 @@ private:
      * @exception throws an \a Error exception if an ill-formed 'if-elseif-else' token
      * is found.
      */
-    SizeType syntax_checker_for_if(const short level, SizeType idx) const;
+    SizeType check_syntax_for_if(const short level, SizeType idx) const;
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.
