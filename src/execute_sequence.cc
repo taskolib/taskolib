@@ -71,7 +71,7 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
     bool if_condition = false;
 
     // store indentation level from first iteration step
-    const short level = step->get_indentation_level();
+    const short level = step != sequence.end() ? step->get_indentation_level() : 0;
 
     while(step != sequence.end())
     {
