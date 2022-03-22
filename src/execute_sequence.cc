@@ -21,177 +21,190 @@
  */
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
+#include <algorithm>
+#include <iterator>
 #include "taskomat/execute_sequence.h"
 #include "taskomat/execute_step.h"
 
 namespace task {
 
-size_t find_try_end(const Step& step, Sequence& sequence, size_t idx)
+using Iterator = Sequence::Steps::const_iterator;
+using ReverseIterator = Sequence::Steps::const_reverse_iterator;
+
+namespace 
 {
-    const short indent = step.get_indentation_level(); 
 
-    while(++idx < sequence.size())
-        if ( sequence[idx].get_indentation_level() == indent
-            && sequence[idx].get_type() == Step::type_end )
-            return idx;
-
-    throw std::runtime_error(gul14::cat("taskomat script, inconsistency: finding "
-        "end clause after try-catch fails [label: '", step.get_label(), "', level=",
-        indent, "]"));
+/// Find next token with condition on predicate. Returns the found step iterator.
+/// Since the syntax is already validated there is a garante to find the proper step.
+template<typename Predicate>
+Iterator find(Iterator step, Iterator end, Predicate pred)
+{
+    return std::find_if(step, end, [&](const Step& step) { return pred(step); });
 }
 
-size_t find_while(const Step& step, Sequence& sequence, size_t idx)
+/// Find reverse token with condition on predicate. Returns the found step iterator.
+/// Since the syntax is already validated there is a garante to find the proper step.
+template <typename Predicate>
+Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
 {
-    const short indent = step.get_indentation_level(); 
-
-    while(--idx < sequence.size())
-        if ( sequence[idx].get_indentation_level() == indent
-            && sequence[idx].get_type() == Step::type_while )
-            return idx;
-
-    throw std::runtime_error(gul14::cat("taskomat script, inconsistency: finding "
-        "while clause in loop fails [label: '", step.get_label(), "', level=",
-        indent, "]"));
+    auto step_reverse = std::find_if(
+        std::make_reverse_iterator(step),
+        end,
+        [&](const Step& step) { return pred(step); });
+    return step_reverse.base();
 }
 
-size_t find_while_end(const Step& step, Sequence& sequence, size_t idx)
+/// Checks if \a Step has an excutable Lua script:
+/// - \a Step::type_if 
+/// - \a Step::type_elseif 
+/// - \a Step::type_while
+/// - \a Step::type_action
+bool has_lua_script(Step::Type type)
 {
-    const short indent = step.get_indentation_level(); 
-
-    while(++idx < sequence.size())
-        if ( sequence[idx].get_indentation_level() == indent
-            && sequence[idx].get_type() == Step::type_end )
-            return idx;
-
-    throw std::runtime_error(gul14::cat("taskomat script, inconsistency: finding "
-        "end clause after while fails [label: '", step.get_label(), "', level=",
-        indent, "]"));
+    return type == Step::type_action || type == Step::type_if || type == Step::type_elseif
+        || type == Step::type_while;
 }
 
-size_t find_next_if_construct(const Step& step, Sequence& sequence, size_t idx)
+/**
+ * Internal traverse execution loop depending on indentation level.
+ * 
+ * @param sequence executed \a Sequence
+ * @param context \a Context for executing a step
+ * @param step step iterator to traverse the \a Sequence
+ * @exception throws \a Error when a fault on one of the statements is caught by Lua.
+ */
+Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator step)
 {
-    const short indent = step.get_indentation_level(); 
+    bool found_while = false;
+    bool found_try = false;
+    bool if_condition = false;
 
-    while(++idx < sequence.size())
-        if ( sequence[idx].get_indentation_level() == indent &&
-            ( sequence[idx].get_type() == Step::type_elseif ||
-              sequence[idx].get_type() == Step::type_else   ||
-              sequence[idx].get_type() == Step::type_end    ))
-            return idx;
+    // store indentation level from first iteration step
+    const short level = step != sequence.end() ? step->get_indentation_level() : 0;
 
-    throw std::runtime_error(gul14::cat("taskomat script, inconsistency: finding next "
-        "elseif/elseif clause for if fails [label: '", step.get_label(), "', level=",
-        indent, "]"));
+    while(step != sequence.end())
+    {
+        if (step->get_indentation_level() < level)
+            return step;
+
+        const bool result = has_lua_script(step->get_type()) 
+            ? execute_step((Step&)*step, context) 
+            : false;
+
+        switch(step->get_type())
+        {
+            case Step::type_while:
+                found_while = result;
+                if (result)
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                else
+                    step = find(step, sequence.cend(), [&](const Step& s) { 
+                        return step->get_indentation_level() == s.get_indentation_level()
+                               &&             Step::type_end == s.get_type(); });
+                break;
+
+            case Step::type_try:
+                found_try = true;
+                try
+                {
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                }
+                catch(const Error& e)
+                {
+                    // Use the successor index ('.. + 1') for the first token in the catch
+                    // block.
+                    step = find(step, sequence.cend(), [&](const Step& s) {
+                        return step->get_indentation_level() == s.get_indentation_level()
+                               &&           Step::type_catch == s.get_type(); }) + 1;
+                }
+                
+                break;
+
+            case Step::type_catch:
+                step = find(step, sequence.cend(), [&](const Step& s) {
+                    return step->get_indentation_level() == s.get_indentation_level()
+                           &&             Step::type_end == s.get_type(); });
+                break;
+
+            case Step::type_if:
+                if_condition = result;
+                if (result)
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                else
+                    step = find(step, sequence.cend(), [&](const Step& s) {
+                        return step->get_indentation_level() == s.get_indentation_level()
+                               && (        Step::type_elseif == s.get_type()
+                                   ||      Step::type_else   == s.get_type()
+                                   ||      Step::type_end    == s.get_type() ); });
+                break;
+
+            case Step::type_elseif:
+                if (if_condition)
+                    step = find(step, sequence.cend(), [&](const Step& s) {
+                        return step->get_indentation_level() == s.get_indentation_level()
+                            &&                Step::type_end == s.get_type(); });
+                else if (result)
+                {
+                    if_condition = result;
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                }
+                else
+                    step = find(step + 1, sequence.cend(), [&](const Step& s) {
+                        return step->get_indentation_level() == s.get_indentation_level()
+                               && (        Step::type_elseif == s.get_type()
+                                   ||      Step::type_else   == s.get_type()
+                                   ||      Step::type_end    == s.get_type() ); });
+                break;
+
+            case Step::type_else:
+                if(if_condition)
+                    step = find(step, sequence.cend(), [&](const Step& s) {
+                        return step->get_indentation_level() == s.get_indentation_level()
+                               &&             Step::type_end == s.get_type(); });
+                else
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                break;
+
+            case Step::type_end:
+                if (found_try)
+                {
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                    found_try = false;
+                }
+                else if (found_while)
+                {
+                    // Use the predecessor index ('.. - 1') for the first token in the
+                    // while block.
+                    step = find_reverse(step, sequence.crend(), [&](const Step& s) { 
+                        return step->get_indentation_level() == s.get_indentation_level()
+                               &&           Step::type_while == s.get_type(); }) - 1; 
+                    found_while = false;                            
+                }
+                else
+                    step = execute_sequence_impl(sequence, context, step + 1);
+                break;
+
+            case Step::type_action:
+                ++step;
+                break;
+
+            default:
+                throw Error{"wrong step type"};
+        }
+    }
+
+    return step;
 }
 
-size_t find_if_end(const Step& step, Sequence& sequence, size_t idx)
-{
-    const short indent = step.get_indentation_level(); 
-
-    while(++idx < sequence.size())
-        if ( sequence[idx].get_indentation_level() == indent &&
-            sequence[idx].get_type() == Step::type_end )
-            return idx;
-
-    throw std::runtime_error(gul14::cat("taskomat script, inconsistency: finding "
-        "end clause for if fails [label: '", step.get_label(), "', level=",
-        indent, "]"));
-}
-
-size_t find_try_catch(const Step& step, Sequence& sequence, size_t idx)
-{
-    const short indent = step.get_indentation_level(); 
-
-    while(++idx < sequence.size())
-        if ( sequence[idx].get_indentation_level() == indent
-            && sequence[idx].get_type() == Step::type_catch )
-            return idx;
-
-    throw std::runtime_error(gul14::cat("taskomat script, inconsistency: finding "
-        "catch clause for try fails [label: '", step.get_label(), "', level=",
-        indent, "]"));
-}
+} // anonymous namespace
 
 void execute_sequence(Sequence& sequence, Context& context)
 {
     // syntax check
-    sequence.check_correctness_of_steps();
+    sequence.check_syntax();
 
-    size_t idx{0};
-    const Step* ptr_try_step = nullptr;
-    bool while_condition = false;
-    bool if_condition = false;
-    bool try_condition = false;
-    while(true)
-    {
-        try
-        {
-            const Step& step = sequence[idx];
-
-            // TODO: explicit cast by dropping 'const'. Needs a fix in future release!
-            const bool result = execute_step((Step&)(step), context);
-
-            switch( step.get_type() )
-            {                
-                case Step::type_try: // continue, set try_step for catch-clause
-                    try_condition = true;
-                    ptr_try_step = &step;
-                    ++idx;
-                    break;
-
-                case Step::type_while: // result: false -> find end statement
-                    while_condition = result;
-                    idx = result ? idx + 1 : find_while_end(step, sequence, idx);
-                    break;
-
-                case Step::type_if: // result: false -> find end statement
-                    if_condition = result;
-                    idx = result ? idx + 1 : find_next_if_construct(step, sequence, idx);
-                    break;
-
-                case Step::type_elseif: // result: false -> find end statement
-                    if ( if_condition )
-                    {
-                        idx = find_if_end(step, sequence, idx);
-                        break;
-                    }
-                    if_condition = result;
-                    idx = result ? idx + 1 : find_next_if_construct(step, sequence, idx);
-                    break;
-
-                case Step::type_else: // continue
-                    idx = !if_condition ? idx + 1 : find_if_end(step, sequence, idx);
-                    break;
-
-                case Step::type_catch: // forward to end
-                    idx = !try_condition ? idx + 1 : find_try_end(step, sequence, idx);
-                    break;
-
-                case Step::type_action: // continue
-                    ++idx;
-                    break;
-
-                case Step::type_end:
-                    idx = !while_condition ? idx + 1:  find_while(step, sequence, idx);
-                    if (nullptr != ptr_try_step)
-                        ptr_try_step = nullptr;
-                    break;
-            }
-        }
-        catch(const Error& e)
-        {
-            if (nullptr != ptr_try_step)
-            {
-                idx = find_try_catch(*ptr_try_step, sequence, idx);
-                try_condition = false;
-            }
-            else
-                throw Error{gul14::cat("Runtime Error [line ", idx, "]: ", e.what())};
-        }
-
-        if ( idx >= sequence.size() )
-            break;
-    }
+    if (not sequence.empty())
+        execute_sequence_impl(sequence, context, sequence.begin());
 }
 
-}
+} // namespace task
