@@ -34,8 +34,6 @@ using ReverseIterator = Sequence::Steps::const_reverse_iterator;
 namespace 
 {
 
-static const char head[] = "[script] ";
-
 /// Find next token with condition on predicate. Returns the found step iterator.
 /// Since the syntax is already validated there is a garante to find the proper step.
 template<typename Predicate>
@@ -54,6 +52,17 @@ Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
         end,
         [&](const Step& step) { return pred(step); });
     return step_reverse.base();
+}
+
+/// Checks if \a Step has an excutable Lua script:
+/// - \a Step::type_if 
+/// - \a Step::type_elseif 
+/// - \a Step::type_while
+/// - \a Step::type_action
+bool has_lua_script(Step::Type type)
+{
+    return type == Step::type_action || type == Step::type_if || type == Step::type_elseif
+        || type == Step::type_while;
 }
 
 /**
@@ -78,7 +87,9 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
         if (step->get_indentation_level() < level)
             return step;
 
-        const bool result = execute_step((Step&)*step, context);
+        const bool result = has_lua_script(step->get_type()) 
+            ? execute_step((Step&)*step, context) 
+            : false;
 
         switch(step->get_type())
         {
