@@ -22,11 +22,9 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/gul.h>
 #include <gul14/catch.h>
-#include <gul14/time_util.h>
-#include "taskomat/Error.h"
 #include "taskomat/execute_sequence.h"
-#include "taskomat/execute_step.h"
 
 using namespace task;
 
@@ -1227,7 +1225,7 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
     step_09.set_exported_variable_names(VariableNames{"e"});
 
     step_10.set_label("if [elseif] e == 2");
-    step_10.set_script("return e == 3");
+    step_10.set_script("return e == 2");
     step_10.set_imported_variable_names(VariableNames{"e"});
     step_10.set_exported_variable_names(VariableNames{"e"});
 
@@ -1439,9 +1437,9 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
         REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(std::get<long long>(context.variables["c"] ) == 1LL );
         REQUIRE(std::get<long long>(context.variables["d"] ) == 3LL );
-        REQUIRE(std::get<long long>(context.variables["e"] ) == 4LL );
-        REQUIRE(std::get<long long>(context.variables["f"] ) == 2LL ); // not touched
-        REQUIRE(std::get<long long>(context.variables["g"] ) == 2LL ); // not touched
+        REQUIRE(std::get<long long>(context.variables["e"] ) == 3LL );
+        REQUIRE(std::get<long long>(context.variables["f"] ) == 3LL ); // not touched
+        REQUIRE(std::get<long long>(context.variables["g"] ) == 4LL ); // not touched
     }
 }
 
