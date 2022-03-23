@@ -166,12 +166,7 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                 break;
 
             case Step::type_end:
-                if (found_try)
-                {
-                    step = execute_sequence_impl(sequence, context, step + 1);
-                    found_try = false;
-                }
-                else if (found_while)
+                if (found_while)
                 {
                     // Use the predecessor index ('.. - 1') for the first token in the
                     // while block.
@@ -181,7 +176,11 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                     found_while = false;                            
                 }
                 else
-                    step = execute_sequence_impl(sequence, context, step + 1);
+                {
+                    if (found_try)
+                        found_try = false;
+                    ++step;
+                }
                 break;
 
             case Step::type_action:
