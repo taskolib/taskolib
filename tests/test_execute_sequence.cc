@@ -37,7 +37,7 @@ TEST_CASE("execute_sequence(): empty sequence", "[execute_sequence]")
 }
 
 TEST_CASE("execute_sequence(): simple sequence", "[execute_sequence]")
-{   
+{
     Context context;
     Step step;
 
@@ -53,8 +53,7 @@ TEST_CASE("execute_sequence(): Simple sequence with unchanged context", "[execut
     context.variables["a"] = VariableValue{ 0LL };
 
     Step step;
-    step.set_imported_variable_names(VariableNames{"a"});
-    step.set_exported_variable_names(VariableNames{"a"});
+    step.set_used_context_variable_names(VariableNames{"a"});
 
     Sequence sequence("Simple sequence");
     sequence.add_step(step);
@@ -113,8 +112,7 @@ TEST_CASE("execute_sequence(): complex sequence with context change",
     step_action1.set_label("Action1");
     step_action1.set_type(Step::type_action);
     step_action1.set_script("a=a+1");
-    step_action1.set_imported_variable_names(VariableNames{"a"});
-    step_action1.set_exported_variable_names(VariableNames{"a"});
+    step_action1.set_used_context_variable_names(VariableNames{"a"});
 
     Sequence sequence("Complex sequence");
     sequence.add_step(step_action1);
@@ -147,19 +145,17 @@ TEST_CASE("execute_sequence(): if-else sequence", "[execute_sequence]")
     Step step_if_end     {Step::type_end};
 
     step_if.set_label("if a == 1");
-    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_used_context_variable_names(VariableNames{"a"});
     step_if.set_script("return a == 1");
 
     step_action_if.set_label("if: set a to 2");
-    step_action_if.set_imported_variable_names(VariableNames{"a"});
-    step_action_if.set_exported_variable_names(VariableNames{"a"});
+    step_action_if.set_used_context_variable_names(VariableNames{"a"});
     step_action_if.set_script("a = 2");
 
     step_else.set_label("else");
 
     step_action_else.set_label("else: set a to 3");
-    step_action_else.set_imported_variable_names(VariableNames{"a"});
-    step_action_else.set_exported_variable_names(VariableNames{"a"});
+    step_action_else.set_used_context_variable_names(VariableNames{"a"});
     step_action_else.set_script("a = 3");
 
     step_if_end.set_label("if: end");
@@ -214,21 +210,19 @@ TEST_CASE("execute_sequence(): if-elseif sequence", "[execute_sequence]")
     Step step_if_end         {Step::type_end};
 
     step_if.set_label("if a == 1");
-    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_used_context_variable_names(VariableNames{"a"});
     step_if.set_script("return a == 1");
 
     step_if_action.set_label("if: set a to 2");
-    step_if_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_action.set_script("a = 2");
 
     step_elseif.set_label("elseif");
-    step_elseif.set_imported_variable_names(VariableNames{"a"});
+    step_elseif.set_used_context_variable_names(VariableNames{"a"});
     step_elseif.set_script("return a == 2");
 
     step_elseif_action.set_label("elseif: set a to 3");
-    step_elseif_action.set_imported_variable_names(VariableNames{"a"});
-    step_elseif_action.set_exported_variable_names(VariableNames{"a"});
+    step_elseif_action.set_used_context_variable_names(VariableNames{"a"});
     step_elseif_action.set_script("a = 3");
 
     step_if_end.set_label("if: end");
@@ -296,30 +290,27 @@ TEST_CASE("execute_sequence(): if-elseif-else sequence", "[execute_sequence]")
     Step step_if_end         {Step::type_end};
 
     step_if.set_label("if a == 1");
-    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_used_context_variable_names(VariableNames{"a"});
     step_if.set_script("return a == 1");
 
     step_if_action.set_label("if: set a to 2");
-    step_if_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_action.set_script("a = 2");
 
     step_elseif.set_label("elseif");
-    step_elseif.set_imported_variable_names(VariableNames{"a"});
+    step_elseif.set_used_context_variable_names(VariableNames{"a"});
     step_elseif.set_script("return a == 2");
 
     step_elseif_action.set_label("elseif: set a to 3");
-    step_elseif_action.set_imported_variable_names(VariableNames{"a"});
-    step_elseif_action.set_exported_variable_names(VariableNames{"a"});
+    step_elseif_action.set_used_context_variable_names(VariableNames{"a"});
     step_elseif_action.set_script("a = 3");
 
     step_else.set_label("else");
-    step_else.set_imported_variable_names(VariableNames{"a"});
+    step_else.set_used_context_variable_names(VariableNames{"a"});
     step_else.set_script("return a == 3");
 
     step_else_action.set_label("else: set a to 4");
-    step_else_action.set_imported_variable_names(VariableNames{"a"});
-    step_else_action.set_exported_variable_names(VariableNames{"a"});
+    step_else_action.set_used_context_variable_names(VariableNames{"a"});
     step_else_action.set_script("a = 4");
 
     step_if_end.set_label("if: end");
@@ -389,30 +380,27 @@ TEST_CASE("execute_sequence(): if-elseif-elseif sequence", "[execute_sequence]")
     Step step_if_end         {Step::type_end};
 
     step_if.set_label("if a == 1");
-    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_used_context_variable_names(VariableNames{"a"});
     step_if.set_script("return a == 1");
 
     step_if_action.set_label("if: set a to 2");
-    step_if_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_action.set_script("a = 2");
 
     step_elseif1.set_label("elseif");
-    step_elseif1.set_imported_variable_names(VariableNames{"a"});
+    step_elseif1.set_used_context_variable_names(VariableNames{"a"});
     step_elseif1.set_script("return a == 2");
 
     step_elseif1_action.set_label("elseif: set a to 3");
-    step_elseif1_action.set_imported_variable_names(VariableNames{"a"});
-    step_elseif1_action.set_exported_variable_names(VariableNames{"a"});
+    step_elseif1_action.set_used_context_variable_names(VariableNames{"a"});
     step_elseif1_action.set_script("a = 3");
 
     step_elseif2.set_label("elseif");
-    step_elseif2.set_imported_variable_names(VariableNames{"a"});
+    step_elseif2.set_used_context_variable_names(VariableNames{"a"});
     step_elseif2.set_script("return a == 3");
 
     step_elseif2_action.set_label("elseif [action] a=4");
-    step_elseif2_action.set_imported_variable_names(VariableNames{"a"});
-    step_elseif2_action.set_exported_variable_names(VariableNames{"a"});
+    step_elseif2_action.set_used_context_variable_names(VariableNames{"a"});
     step_elseif2_action.set_script("a = 4");
 
     step_if_end.set_label("if: end");
@@ -495,38 +483,34 @@ TEST_CASE("execute_sequence(): if-elseif-elseif-else sequence", "[execute_sequen
     Step step_if_end         {Step::type_end};
 
     step_if.set_label("if a == 1");
-    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_used_context_variable_names(VariableNames{"a"});
     step_if.set_script("return a == 1");
 
     step_if_action.set_label("if: set a to 2");
-    step_if_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_action.set_script("a = 2");
 
     step_elseif1.set_label("elseif1");
-    step_elseif1.set_imported_variable_names(VariableNames{"a"});
+    step_elseif1.set_used_context_variable_names(VariableNames{"a"});
     step_elseif1.set_script("return a == 2");
 
     step_elseif1_action.set_label("elseif: set a to 3");
-    step_elseif1_action.set_imported_variable_names(VariableNames{"a"});
-    step_elseif1_action.set_exported_variable_names(VariableNames{"a"});
+    step_elseif1_action.set_used_context_variable_names(VariableNames{"a"});
     step_elseif1_action.set_script("a = 3");
 
     step_elseif2.set_label("elseif2");
-    step_elseif2.set_imported_variable_names(VariableNames{"a"});
+    step_elseif2.set_used_context_variable_names(VariableNames{"a"});
     step_elseif2.set_script("return a == 3");
 
     step_elseif2_action.set_label("else: set a to 4");
-    step_elseif2_action.set_imported_variable_names(VariableNames{"a"});
-    step_elseif2_action.set_exported_variable_names(VariableNames{"a"});
+    step_elseif2_action.set_used_context_variable_names(VariableNames{"a"});
     step_elseif2_action.set_script("a = 4");
 
     step_else.set_label("else");
-    step_else.set_imported_variable_names(VariableNames{"a"});
+    step_else.set_used_context_variable_names(VariableNames{"a"});
 
     step_else_action.set_label("else: set a to 5");
-    step_else_action.set_imported_variable_names(VariableNames{"a"});
-    step_else_action.set_exported_variable_names(VariableNames{"a"});
+    step_else_action.set_used_context_variable_names(VariableNames{"a"});
     step_else_action.set_script("a = 5");
 
     step_if_end.set_label("if: end");
@@ -607,29 +591,26 @@ TEST_CASE("execute_sequence(): faulty if-else-elseif sequence", "[execute_sequen
     Step step_if_end           {Step::type_end};
 
     step_if.set_label("if a == 1 then");
-    step_if.set_imported_variable_names(VariableNames{"a"});
+    step_if.set_used_context_variable_names(VariableNames{"a"});
     step_if.set_script("return a == 1");
 
     step_if_action.set_label("if: set a to 2");
-    step_if_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_action.set_script("a = 2");
 
     step_if_else.set_label("else");
-    step_if_else.set_imported_variable_names(VariableNames{"a"});
+    step_if_else.set_used_context_variable_names(VariableNames{"a"});
 
     step_if_else_action.set_label("elseif: set a to 3");
-    step_if_else_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_else_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_else_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_else_action.set_script("a = 3");
 
     step_if_elseif.set_label("elseif");
-    step_if_elseif.set_imported_variable_names(VariableNames{"a"});
+    step_if_elseif.set_used_context_variable_names(VariableNames{"a"});
     step_if_elseif.set_script("return a == 3");
 
     step_if_elseif_action.set_label("else: set a to 4");
-    step_if_elseif_action.set_imported_variable_names(VariableNames{"a"});
-    step_if_elseif_action.set_exported_variable_names(VariableNames{"a"});
+    step_if_elseif_action.set_used_context_variable_names(VariableNames{"a"});
     step_if_elseif_action.set_script("a = 4");
 
     step_if_end.set_label("if: end");
@@ -669,13 +650,11 @@ TEST_CASE("execute_sequence(): while sequence", "[execute_sequence]")
     Step step_while_end      {Step::type_end};
 
     step_while.set_label("while a < 10");
-    step_while.set_imported_variable_names(VariableNames{"a"});
-    step_while.set_exported_variable_names(VariableNames{"a"});
+    step_while.set_used_context_variable_names(VariableNames{"a"});
     step_while.set_script("return a < 10");
 
     step_while_action.set_label("while: a = a + 1");
-    step_while_action.set_imported_variable_names(VariableNames{"a"});
-    step_while_action.set_exported_variable_names(VariableNames{"a"});
+    step_while_action.set_used_context_variable_names(VariableNames{"a"});
     step_while_action.set_script("a = a + 1");
 
     step_while_end.set_label("while: end");
@@ -721,15 +700,13 @@ TEST_CASE("execute_sequence(): try sequence with success", "[execute_sequence]")
     step_try.set_label("try");
 
     step_try_action.set_label("try: a = 1");
-    step_try_action.set_imported_variable_names(VariableNames{"a"});
-    step_try_action.set_exported_variable_names(VariableNames{"a"});
+    step_try_action.set_used_context_variable_names(VariableNames{"a"});
     step_try_action.set_script("a = 1");
 
     step_try_catch.set_label("try: catch");
 
     step_try_catch_action.set_label("try-catch: a = 2");
-    step_try_catch_action.set_imported_variable_names(VariableNames{"a"});
-    step_try_catch_action.set_exported_variable_names(VariableNames{"a"});
+    step_try_catch_action.set_used_context_variable_names(VariableNames{"a"});
     step_try_catch_action.set_script("a = 2");
 
     step_try_end.set_label("try: end");
@@ -776,20 +753,17 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
     step_try.set_label("try");
 
     step_try_action1.set_label("try[action1]: a = 1");
-    step_try_action1.set_imported_variable_names(VariableNames{"a"});
-    step_try_action1.set_exported_variable_names(VariableNames{"a"});
+    step_try_action1.set_used_context_variable_names(VariableNames{"a"});
     step_try_action1.set_script("a = 1");
 
     step_try_action2.set_label("try[action2]: this line crash lua");
-    step_try_action2.set_imported_variable_names(VariableNames{"a"});
-    step_try_action2.set_exported_variable_names(VariableNames{"a"});
+    step_try_action2.set_used_context_variable_names(VariableNames{"a"});
     step_try_action2.set_script("this line crashes lua");
 
     step_try_catch.set_label("try: catch");
 
     step_try_catch_action.set_label("try-catch: a = 2");
-    step_try_catch_action.set_imported_variable_names(VariableNames{"a"});
-    step_try_catch_action.set_exported_variable_names(VariableNames{"a"});
+    step_try_catch_action.set_used_context_variable_names(VariableNames{"a"});
     step_try_catch_action.set_script("a = 2");
 
     step_try_end.set_label("try: end");
@@ -809,7 +783,7 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
-TEST_CASE("execute_sequence(): complex try sequence with nested fault condition", 
+TEST_CASE("execute_sequence(): complex try sequence with nested fault condition",
 "[execute_sequence]")
 {
     /*
@@ -821,14 +795,14 @@ TEST_CASE("execute_sequence(): complex try sequence with nested fault condition"
     01:     a = 1
     02:     this line crashes lua
     03: catch
-    
+
     04:     try
     05:         a = 2
     06:         and again crashes lua
     07:     catch
     08:         a = 3
     09:     end
-    
+
     10: end
 
     post-condition:
@@ -846,20 +820,18 @@ TEST_CASE("execute_sequence(): complex try sequence with nested fault condition"
     Step step_07  {Step::type_catch};
     Step step_08  {Step::type_action};
     Step step_09  {Step::type_end};
-    
+
     Step step_10  {Step::type_end};
 
     step_00.set_label("try");
 
     step_01.set_script("a = 1");
     step_01.set_label("try [action]: a = 1");
-    step_01.set_imported_variable_names(VariableNames{"a"});
-    step_01.set_exported_variable_names(VariableNames{"a"});
+    step_01.set_used_context_variable_names(VariableNames{"a"});
 
     step_02.set_script("this line crashes lua");
     step_02.set_label("try [action]: this line crash lua");
-    step_02.set_imported_variable_names(VariableNames{"a"});
-    step_02.set_exported_variable_names(VariableNames{"a"});
+    step_02.set_used_context_variable_names(VariableNames{"a"});
 
     step_03.set_label("try [catch]");
 
@@ -867,20 +839,17 @@ TEST_CASE("execute_sequence(): complex try sequence with nested fault condition"
 
     step_05.set_script("a = 2");
     step_05.set_label("try [action] a = 2");
-    step_05.set_imported_variable_names(VariableNames{"a"});
-    step_05.set_exported_variable_names(VariableNames{"a"});
+    step_05.set_used_context_variable_names(VariableNames{"a"});
 
     step_06.set_script("and again crashes lua");
     step_06.set_label("try [action] and again crashes lua");
-    step_06.set_imported_variable_names(VariableNames{"a"});
-    step_06.set_exported_variable_names(VariableNames{"a"});
+    step_06.set_used_context_variable_names(VariableNames{"a"});
 
     step_07.set_label("try [catch]");
 
     step_08.set_script("a = 3");
     step_08.set_label("catch[action] a = 3");
-    step_08.set_imported_variable_names(VariableNames{"a"});
-    step_08.set_exported_variable_names(VariableNames{"a"});
+    step_08.set_used_context_variable_names(VariableNames{"a"});
 
     step_09.set_label("try [end]");
 
@@ -938,25 +907,21 @@ TEST_CASE("execute_sequence(): simple try sequence with fault", "[execute_sequen
 
     step_01.set_script("a = 1");
     step_01.set_label("try [action]: a = 1");
-    step_01.set_imported_variable_names(VariableNames{"a"});
-    step_01.set_exported_variable_names(VariableNames{"a"});
+    step_01.set_used_context_variable_names(VariableNames{"a"});
 
     step_02.set_script("this line crashes lua");
     step_02.set_label("try [action]: this line crash lua");
-    step_02.set_imported_variable_names(VariableNames{"a"});
-    step_02.set_exported_variable_names(VariableNames{"a"});
+    step_02.set_used_context_variable_names(VariableNames{"a"});
 
     step_03.set_label("try [catch]");
 
     step_04.set_script("a = 2");
     step_04.set_label("try [action] a = 2");
-    step_04.set_imported_variable_names(VariableNames{"a"});
-    step_04.set_exported_variable_names(VariableNames{"a"});
+    step_04.set_used_context_variable_names(VariableNames{"a"});
 
     step_05.set_script("and again crashes lua");
     step_05.set_label("try [action] and again crashes lua");
-    step_05.set_imported_variable_names(VariableNames{"a"});
-    step_05.set_exported_variable_names(VariableNames{"a"});
+    step_05.set_used_context_variable_names(VariableNames{"a"});
 
     step_06.set_label("try [end]");
 
@@ -987,7 +952,7 @@ TEST_CASE("execute_sequence(): complex try sequence with fault", "[execute_seque
     01:     a = 1
     02:     this line crashes lua
     03: catch
-    
+
     04:     try
     05:         a = 2
     06:         and again crashes lua
@@ -1021,13 +986,11 @@ TEST_CASE("execute_sequence(): complex try sequence with fault", "[execute_seque
 
     step_01.set_script("a = 1");
     step_01.set_label("try [action]: a = 1");
-    step_01.set_imported_variable_names(VariableNames{"a"});
-    step_01.set_exported_variable_names(VariableNames{"a"});
+    step_01.set_used_context_variable_names(VariableNames{"a"});
 
     step_02.set_script("this line crashes lua");
     step_02.set_label("try [action]: this line crash lua");
-    step_02.set_imported_variable_names(VariableNames{"a"});
-    step_02.set_exported_variable_names(VariableNames{"a"});
+    step_02.set_used_context_variable_names(VariableNames{"a"});
 
     step_03.set_label("try [catch]");
 
@@ -1035,26 +998,22 @@ TEST_CASE("execute_sequence(): complex try sequence with fault", "[execute_seque
 
     step_05.set_script("a = 2");
     step_05.set_label("try [action] a = 2");
-    step_05.set_imported_variable_names(VariableNames{"a"});
-    step_05.set_exported_variable_names(VariableNames{"a"});
+    step_05.set_used_context_variable_names(VariableNames{"a"});
 
     step_06.set_script("this line crashes lua");
     step_06.set_label("try [action]: this line crash lua");
-    step_06.set_imported_variable_names(VariableNames{"a"});
-    step_06.set_exported_variable_names(VariableNames{"a"});
+    step_06.set_used_context_variable_names(VariableNames{"a"});
 
     step_07.set_label("try [catch]");
-    
+
     step_08.set_script("this line crashes lua");
     step_08.set_label("try [action]: this line crash lua");
-    step_08.set_imported_variable_names(VariableNames{"a"});
-    step_08.set_exported_variable_names(VariableNames{"a"});
-    
+    step_08.set_used_context_variable_names(VariableNames{"a"});
+
     step_09.set_script("a = 3");
     step_09.set_label("try [action]: a = 3");
-    step_09.set_imported_variable_names(VariableNames{"a"});
-    step_09.set_exported_variable_names(VariableNames{"a"});
-    
+    step_09.set_used_context_variable_names(VariableNames{"a"});
+
     step_10.set_label("try [end]");
 
     step_11.set_label("try [end]");
@@ -1094,9 +1053,9 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
      3:     catch
      4:         b = 2
      5:     end
-    
+
      6:     c = 1
-    
+
      7:     if d == 1 then
 
      8:         if e == 1 then
@@ -1129,7 +1088,7 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
     29:     end
 
     30:     a = a + 1
-    
+
     31: end
 
     post-condition:
@@ -1139,17 +1098,17 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
 
     // 32 steps
     Step step_00{Step::type_while};
-    
+
     Step step_01{Step::type_try};
     Step step_02{Step::type_action};
     Step step_03{Step::type_catch};
     Step step_04{Step::type_action};
     Step step_05{Step::type_end};
-    
+
     Step step_06{Step::type_action};
-    
+
     Step step_07{Step::type_if};
-    
+
     Step step_08{Step::type_if};
     Step step_09{Step::type_action};
     Step step_10{Step::type_elseif};
@@ -1185,54 +1144,45 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
 
     step_00.set_label("while a < 10");
     step_00.set_script("return a < 10");
-    step_00.set_imported_variable_names(VariableNames{"a"});
-    step_00.set_exported_variable_names(VariableNames{"a"});
+    step_00.set_used_context_variable_names(VariableNames{"a"});
 
     step_01.set_label("try");
 
     step_02.set_label("try [action] b = 1");
     step_02.set_script("b = 1");
-    step_02.set_imported_variable_names(VariableNames{"b"});
-    step_02.set_exported_variable_names(VariableNames{"b"});
+    step_02.set_used_context_variable_names(VariableNames{"b"});
 
     step_03.set_label("try [catch]");
 
     step_04.set_label("try [action] b = 2");
     step_04.set_script("b = 2");
-    step_04.set_imported_variable_names(VariableNames{"b"});
-    step_04.set_exported_variable_names(VariableNames{"b"});
+    step_04.set_used_context_variable_names(VariableNames{"b"});
 
     step_05.set_label("try [end]");
 
     step_06.set_label("[action] c = 1");
     step_06.set_script("c = 1");
-    step_06.set_imported_variable_names(VariableNames{"c"});
-    step_06.set_exported_variable_names(VariableNames{"c"});
+    step_06.set_used_context_variable_names(VariableNames{"c"});
 
     step_07.set_label("if d == 1");
     step_07.set_script("return d == 1");
-    step_07.set_imported_variable_names(VariableNames{"d"});
-    step_07.set_exported_variable_names(VariableNames{"d"});
+    step_07.set_used_context_variable_names(VariableNames{"d"});
 
     step_08.set_label("if e == 1");
     step_08.set_script("return e == 1");
-    step_08.set_imported_variable_names(VariableNames{"e"});
-    step_08.set_exported_variable_names(VariableNames{"e"});
+    step_08.set_used_context_variable_names(VariableNames{"e"});
 
     step_09.set_label("if [action] e = 2");
     step_09.set_script("e = 2");
-    step_09.set_imported_variable_names(VariableNames{"e"});
-    step_09.set_exported_variable_names(VariableNames{"e"});
+    step_09.set_used_context_variable_names(VariableNames{"e"});
 
     step_10.set_label("if [elseif] e == 2");
     step_10.set_script("return e == 2");
-    step_10.set_imported_variable_names(VariableNames{"e"});
-    step_10.set_exported_variable_names(VariableNames{"e"});
+    step_10.set_used_context_variable_names(VariableNames{"e"});
 
     step_11.set_label("if [action] e = 3");
     step_11.set_script("e = 3");
-    step_11.set_imported_variable_names(VariableNames{"e"});
-    step_11.set_exported_variable_names(VariableNames{"e"});
+    step_11.set_used_context_variable_names(VariableNames{"e"});
 
     step_12.set_label("if [else]");
 
@@ -1240,8 +1190,7 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
 
     step_14.set_label("try [action] f = 1");
     step_14.set_script("f = 1");
-    step_14.set_imported_variable_names(VariableNames{"f"});
-    step_14.set_exported_variable_names(VariableNames{"f"});
+    step_14.set_used_context_variable_names(VariableNames{"f"});
 
     step_15.set_label("try [action] this line crashes lua");
     step_15.set_script("this line crashes lua");
@@ -1250,81 +1199,72 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
 
     step_17.set_label("try [action] f=2");
     step_17.set_script("f=2");
-    step_17.set_imported_variable_names(VariableNames{"f"});
-    step_17.set_exported_variable_names(VariableNames{"f"});
+    step_17.set_used_context_variable_names(VariableNames{"f"});
 
     step_18.set_label("try [end]");
- 
+
     step_19.set_label("if g == 2");
     step_19.set_script("return g == 2");
-    step_19.set_imported_variable_names(VariableNames{"g"});
-    step_19.set_exported_variable_names(VariableNames{"g"});
+    step_19.set_used_context_variable_names(VariableNames{"g"});
 
     step_20.set_label("if [action] g = 1");
     step_20.set_script("g = 1");
-    step_20.set_imported_variable_names(VariableNames{"g"});
-    step_20.set_exported_variable_names(VariableNames{"g"});
+    step_20.set_used_context_variable_names(VariableNames{"g"});
 
     step_21.set_label("if [else]");
 
     step_22.set_label("if [action] g = 2");
     step_22.set_script("g = 2");
-    step_22.set_imported_variable_names(VariableNames{"g"});
-    step_22.set_exported_variable_names(VariableNames{"g"});
+    step_22.set_used_context_variable_names(VariableNames{"g"});
 
     step_23.set_label("if [end]");
 
     step_24.set_label("[action] e = 4");
     step_24.set_script("e = 4");
-    step_24.set_imported_variable_names(VariableNames{"e"});
-    step_24.set_exported_variable_names(VariableNames{"e"});
+    step_24.set_used_context_variable_names(VariableNames{"e"});
 
     step_25.set_label("if [end]");
 
     step_26.set_label("[action] d = 2");
     step_26.set_script("d = 2");
-    step_26.set_imported_variable_names(VariableNames{"d"});
-    step_26.set_exported_variable_names(VariableNames{"d"});
+    step_26.set_used_context_variable_names(VariableNames{"d"});
 
     step_27.set_label("if [elseif] d == 2");
     step_27.set_script("return d == 2");
-    step_27.set_imported_variable_names(VariableNames{"d"});
-    step_27.set_exported_variable_names(VariableNames{"d"});
+    step_27.set_used_context_variable_names(VariableNames{"d"});
 
     step_28.set_label("if [action] d = 3");
     step_28.set_script("d = 3");
-    step_28.set_imported_variable_names(VariableNames{"d"});
-    step_28.set_exported_variable_names(VariableNames{"d"});
+    step_28.set_used_context_variable_names(VariableNames{"d"});
 
     step_29.set_label("if [end]");
 
     step_30.set_label("a=a+1");
     step_30.set_script("a=a+1");
-    step_30.set_imported_variable_names(VariableNames{"a"});
-    step_30.set_exported_variable_names(VariableNames{"a"});
+    step_30.set_used_context_variable_names(VariableNames{"a"});
 
     step_31.set_label("while [end]");
- 
+
     Sequence sequence;
     // 32 steps
     sequence.add_step(step_00);
-    
-    sequence.add_step(step_01);   
+
+    sequence.add_step(step_01);
     sequence.add_step(step_02);
     sequence.add_step(step_03);
     sequence.add_step(step_04);
     sequence.add_step(step_05);
 
     sequence.add_step(step_06);
-    
+
     sequence.add_step(step_07);
-    
+
     sequence.add_step(step_08);
     sequence.add_step(step_09);
     sequence.add_step(step_10);
     sequence.add_step(step_11);
     sequence.add_step(step_12);
-    
+
     sequence.add_step(step_13);
     sequence.add_step(step_14);
     sequence.add_step(step_15);
@@ -1337,11 +1277,11 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
     sequence.add_step(step_21);
     sequence.add_step(step_22);
     sequence.add_step(step_23);
-    
+
     sequence.add_step(step_24);
 
     sequence.add_step(step_25);
-    
+
     sequence.add_step(step_26);
 
     sequence.add_step(step_27);
@@ -1349,9 +1289,9 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
     sequence.add_step(step_29);
 
     sequence.add_step(step_30);
-    
+
     sequence.add_step(step_31);
-    
+
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 0->0, e: 1->1, f: 1->1, "
             "g: 1->1")
     {
@@ -1375,7 +1315,7 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
         REQUIRE(std::get<long long>(context.variables["f"] ) == 1LL ); // not touched
         REQUIRE(std::get<long long>(context.variables["g"] ) == 1LL ); // not touched
     }
-    
+
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 1->3, e: 1->2, f: 1->1, "
             "g: 1->1")
     {
@@ -1397,7 +1337,7 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
         REQUIRE(std::get<long long>(context.variables["f"] ) == 1LL ); // not touched
         REQUIRE(std::get<long long>(context.variables["g"] ) == 1LL ); // not touched
     }
-    
+
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 2->3, e: 5->5, f: 2->2, "
             "g: 3->3")
     {
@@ -1419,7 +1359,7 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
         REQUIRE(std::get<long long>(context.variables["f"] ) == 3LL ); // not touched
         REQUIRE(std::get<long long>(context.variables["g"] ) == 2LL ); // not touched
     }
-    
+
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 1->3, e: 2->4, f: 3->2, "
             "g: 4->2")
     {
@@ -1457,9 +1397,9 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
      3:     catch
      4:         b = 2
      5:     end
-    
+
      6:     c = 1
-    
+
      7:     if d == 1 then
 
      8:         if e == 1 then
@@ -1492,7 +1432,7 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
     29:     end
 
     30:     a = a + 1
-    
+
     31: end
 
     post-condition:
@@ -1502,17 +1442,17 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
 
     // 32 steps
     Step step_00{Step::type_while};
-    
+
     Step step_01{Step::type_try};
     Step step_02{Step::type_action};
     Step step_03{Step::type_catch};
     Step step_04{Step::type_action};
     Step step_05{Step::type_end};
-    
+
     Step step_06{Step::type_action};
-    
+
     Step step_07{Step::type_if};
-    
+
     Step step_08{Step::type_if};
     Step step_09{Step::type_action};
     Step step_10{Step::type_else};
@@ -1549,23 +1489,23 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
     Sequence sequence;
     // 32 steps
     sequence.add_step(step_00);
-    
-    sequence.add_step(step_01);   
+
+    sequence.add_step(step_01);
     sequence.add_step(step_02);
     sequence.add_step(step_03);
     sequence.add_step(step_04);
     sequence.add_step(step_05);
 
     sequence.add_step(step_06);
-    
+
     sequence.add_step(step_07);
-    
+
     sequence.add_step(step_08);
     sequence.add_step(step_09);
     sequence.add_step(step_10);
     sequence.add_step(step_11);
     sequence.add_step(step_12);
-    
+
     sequence.add_step(step_13);
     sequence.add_step(step_14);
     sequence.add_step(step_15);
@@ -1578,11 +1518,11 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
     sequence.add_step(step_21);
     sequence.add_step(step_22);
     sequence.add_step(step_23);
-    
+
     sequence.add_step(step_24);
 
     sequence.add_step(step_25);
-    
+
     sequence.add_step(step_26);
 
     sequence.add_step(step_27);
@@ -1590,7 +1530,7 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
     sequence.add_step(step_29);
 
     sequence.add_step(step_30);
-    
+
     sequence.add_step(step_31);
 
     Context context;

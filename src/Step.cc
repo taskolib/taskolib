@@ -32,24 +32,14 @@ using gul14::cat;
 namespace task {
 
 
-void Step::set_exported_variable_names(const VariableNames& exported_variable_names)
+void Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
 {
-    exported_variable_names_ = exported_variable_names;
+    used_context_variable_names_ = used_context_variable_names;
 }
 
-void Step::set_exported_variable_names(VariableNames&& exported_variable_names)
+void Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
 {
-    exported_variable_names_ = std::move(exported_variable_names);
-}
-
-void Step::set_imported_variable_names(const VariableNames& imported_variable_names)
-{
-    imported_variable_names_ = imported_variable_names;
-}
-
-void Step::set_imported_variable_names(VariableNames&& imported_variable_names)
-{
-    imported_variable_names_ = std::move(imported_variable_names);
+    used_context_variable_names_ = std::move(used_context_variable_names);
 }
 
 void Step::set_indentation_level(short level)

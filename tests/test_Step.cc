@@ -38,24 +38,6 @@ TEST_CASE("Step: Default constructor", "[Step]")
     Step s;
 }
 
-TEST_CASE("Step: get_exported_variable_names()", "[Step]")
-{
-    Step step;
-    REQUIRE(step.get_exported_variable_names().empty() == true);
-
-    step.set_exported_variable_names(VariableNames{ "b52", "a" });
-    REQUIRE(step.get_exported_variable_names() == VariableNames{ "a", "b52" });
-}
-
-TEST_CASE("Step: get_imported_variable_names()", "[Step]")
-{
-    Step step;
-    REQUIRE(step.get_imported_variable_names().empty() == true);
-
-    step.set_imported_variable_names(VariableNames{ "b52", "a" });
-    REQUIRE(step.get_imported_variable_names() == VariableNames{ "a", "b52" });
-}
-
 TEST_CASE("Step: get_indentation_level()", "[Step]")
 {
     Step step;
@@ -120,20 +102,13 @@ TEST_CASE("Step: get_type()", "[Step]")
     REQUIRE(step.get_type() == Step::type_if);
 }
 
-TEST_CASE("Step: set_exported_variable_names()", "[Step]")
+TEST_CASE("Step: get_used_context_variable_names()", "[Step]")
 {
     Step step;
+    REQUIRE(step.get_used_context_variable_names().empty() == true);
 
-    step.set_exported_variable_names(VariableNames{ "b52", "a" });
-    REQUIRE(step.get_exported_variable_names() == VariableNames{ "a", "b52" });
-}
-
-TEST_CASE("Step: set_imported_variable_names()", "[Step]")
-{
-    Step step;
-
-    step.set_imported_variable_names(VariableNames{ "c42", "d" });
-    REQUIRE(step.get_imported_variable_names() == VariableNames{ "d", "c42" });
+    step.set_used_context_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_used_context_variable_names() == VariableNames{ "a", "b52" });
 }
 
 TEST_CASE("Step: set_indentation_level()", "[Step]")
@@ -239,4 +214,12 @@ TEST_CASE("Step: set_script()", "[Step]")
     REQUIRE(step.get_script() == "test 2");
     REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
     REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+}
+
+TEST_CASE("Step: set_used_context_variable_names()", "[Step]")
+{
+    Step step;
+
+    step.set_used_context_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(step.get_used_context_variable_names() == VariableNames{ "a", "b52" });
 }

@@ -24,6 +24,7 @@
 
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
+#include "taskomat/sol/sol/state.hpp"
 #include "taskomat/Error.h"
 #include "taskomat/execute_step.h"
 
@@ -170,7 +171,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
 
     SECTION("Importing variables from an empty context")
     {
-        step.set_imported_variable_names(VariableNames{ "a", "b" });
+        step.set_used_context_variable_names(VariableNames{ "a", "b" });
         step.set_script("return a == 42");
         REQUIRE(execute_step(step, context) == false);
     }
@@ -178,7 +179,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
     SECTION("Importing an integer")
     {
         context.variables["a"] = VariableValue{ 42LL };
-        step.set_imported_variable_names(VariableNames{ "b", "a" });
+        step.set_used_context_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 42");
         REQUIRE(execute_step(step, context) == true);
     }
@@ -186,7 +187,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
     SECTION("Importing a double")
     {
         context.variables["a"] = VariableValue{ 1.5 };
-        step.set_imported_variable_names(VariableNames{ "b", "a" });
+        step.set_used_context_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 1.5");
         REQUIRE(execute_step(step, context) == true);
     }
@@ -194,7 +195,7 @@ TEST_CASE("execute_step(): Importing variables from a context", "[execute_step]"
     SECTION("Importing a string")
     {
         context.variables["a"] = VariableValue{ "Hello\0world"s };
-        step.set_imported_variable_names(VariableNames{ "b", "a" });
+        step.set_used_context_variable_names(VariableNames{ "b", "a" });
         step.set_script("return a == 'Hello\\0world'");
         REQUIRE(execute_step(step, context) == true);
     }
@@ -217,7 +218,7 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
 
     SECTION("Exporting an integer")
     {
-        step.set_exported_variable_names(VariableNames{ "a" });
+        step.set_used_context_variable_names(VariableNames{ "a" });
         execute_step(step, context);
         REQUIRE(context.variables.size() == 1);
         REQUIRE(std::get<long long>(context.variables["a"]) == 42);
@@ -229,7 +230,7 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
 
     SECTION("Exporting a double")
     {
-        step.set_exported_variable_names(VariableNames{ "b" });
+        step.set_used_context_variable_names(VariableNames{ "b" });
         execute_step(step, context);
         REQUIRE(context.variables.size() == 1);
 
@@ -240,7 +241,7 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
 
     SECTION("Exporting a string")
     {
-        step.set_exported_variable_names(VariableNames{ "c" });
+        step.set_used_context_variable_names(VariableNames{ "c" });
         execute_step(step, context);
         REQUIRE(context.variables.size() == 1);
         REQUIRE_THROWS_AS(std::get<long long>(context.variables["c"]), std::bad_variant_access);
@@ -250,7 +251,7 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
 
     SECTION("Exporting multiple variables")
     {
-        step.set_exported_variable_names(VariableNames{ "c", "a", "b" });
+        step.set_used_context_variable_names(VariableNames{ "c", "a", "b" });
         execute_step(step, context);
         REQUIRE(context.variables.size() == 3);
         REQUIRE(std::get<long long>(context.variables["a"]) == 42);
@@ -260,14 +261,14 @@ TEST_CASE("execute_step(): Exporting variables into a context", "[execute_step]"
 
     SECTION("Exporting unknown types")
     {
-        step.set_exported_variable_names(VariableNames{ "d" });
+        step.set_used_context_variable_names(VariableNames{ "d" });
         execute_step(step, context);
         REQUIRE(context.variables.size() == 0); // d is of type function and does not get exported
     }
 
     SECTION("Exporting undefined variables")
     {
-        step.set_exported_variable_names(VariableNames{ "n" });
+        step.set_used_context_variable_names(VariableNames{ "n" });
         execute_step(step, context);
         REQUIRE(context.variables.size() == 0); // n is undefined and does not get exported
     }
@@ -279,7 +280,8 @@ TEST_CASE("execute_step(): Running a step with multiple import and exports",
     Context context;
     Step step;
 
-    step.set_imported_variable_names(VariableNames{ "str", "num_repetitions", "separator" });
+    step.set_used_context_variable_names(
+        VariableNames{ "str", "num_repetitions", "separator", "result" });
     step.set_script(R"(
         if num_repetitions < 0 then
             return false
@@ -289,7 +291,6 @@ TEST_CASE("execute_step(): Running a step with multiple import and exports",
 
         return true
         )");
-    step.set_exported_variable_names(VariableNames{ "result" });
 
     SECTION("Empty context")
     {
@@ -350,8 +351,7 @@ TEST_CASE("execute_step(): LUA initialization function", "[execute_step]")
     context.variables["a"] = 41LL;
 
     Step step;
-    step.set_imported_variable_names(VariableNames{ "a" });
-    step.set_exported_variable_names(VariableNames{ "a", "b" });
+    step.set_used_context_variable_names(VariableNames{ "a", "b" });
     step.set_script("a = a + 1");
 
     SECTION("Missing init function does not throw")

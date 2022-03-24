@@ -68,11 +68,17 @@ public:
         : type_{ type }
     {}
 
-    /// Retrieve the names of the variables that should be exported from the script.
-    VariableNames get_exported_variable_names() const { return exported_variable_names_; }
-
-    /// Retrieve the names of the variables that should be imported into the script.
-    VariableNames get_imported_variable_names() const { return imported_variable_names_; }
+    /**
+     * Retrieve the names of the variables that should be im-/exported to and from the
+     * context.
+     *
+     * The variables with the listed names are imported from the context into the script
+     * environment before running the script and are afterwards exported back into it.
+     */
+    VariableNames get_used_context_variable_names() const
+    {
+        return used_context_variable_names_;
+    }
 
     /**
      * Return the indentation level of this step.
@@ -129,13 +135,9 @@ public:
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
 
-    /// Set the names of the variables that should be exported from the script.
-    void set_exported_variable_names(const VariableNames& exported_variable_names);
-    void set_exported_variable_names(VariableNames&& exported_variable_names);
-
-    /// Set the names of the variables that should be imported into the script.
-    void set_imported_variable_names(const VariableNames& imported_variable_names);
-    void set_imported_variable_names(VariableNames&& imported_variable_names);
+    /// Set the names of the variables that should be im-/exported from/to the script.
+    void set_used_context_variable_names(const VariableNames& used_context_variable_names);
+    void set_used_context_variable_names(VariableNames&& used_context_variable_names);
 
     /**
      * Set the indentation level of this step.
@@ -189,7 +191,7 @@ public:
 private:
     std::string label_;
     std::string script_;
-    VariableNames exported_variable_names_, imported_variable_names_;
+    VariableNames used_context_variable_names_;
     Timestamp time_of_last_modification_, time_of_last_execution_;
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };

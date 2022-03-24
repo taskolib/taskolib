@@ -7,9 +7,8 @@ int main()
 
     // Set up a step that imports variables "a" and "b" and returns their sum in "sum"
     Step step;
-    step.set_imported_variable_names(VariableNames{ "a", "b" });
+    step.set_used_context_variable_names(VariableNames{ "a", "b", "sum" });
     step.set_script("sum = a + b");
-    step.set_exported_variable_names(VariableNames{ "sum" });
 
     // Create a context and store values for "a" and "b" in it
     Context context;
