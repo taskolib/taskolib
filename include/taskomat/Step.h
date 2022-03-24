@@ -74,8 +74,12 @@ public:
      *
      * The variables with the listed names are imported from the context into the script
      * environment before running the script and are afterwards exported back into it.
+     *
+     * \note
+     * This function returns a reference to an internal member variable, so be aware of
+     * lifetime implications.
      */
-    VariableNames get_used_context_variable_names() const
+    const VariableNames& get_used_context_variable_names() const
     {
         return used_context_variable_names_;
     }
