@@ -85,7 +85,7 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
 // Export the variables listed in the step from the LUA state into the context.
 void export_variables_to_context(const Step& step, Context& context, sol::state& lua)
 {
-    const VariableNames export_varnames = step.get_exported_variable_names();
+    const VariableNames export_varnames = step.get_used_context_variable_names();
 
     for (const VariableName& varname : export_varnames)
     {
@@ -130,7 +130,7 @@ long long get_ms_since_epoch(Timestamp t0, std::chrono::milliseconds dt)
 void import_variables_from_context(const Step& step, const Context& context,
     sol::state& lua)
 {
-    VariableNames import_varnames = step.get_imported_variable_names();
+    VariableNames import_varnames = step.get_used_context_variable_names();
 
     for (const VariableName& varname : import_varnames)
     {
