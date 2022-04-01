@@ -28,7 +28,7 @@
 namespace task {
 
 /**
- * Base class for messages to be used with the MessageQueue.
+ * Base class for messages to be used with the LockedQueue.
  */
 class Message
 {
@@ -36,8 +36,8 @@ public:
     /// Virtual destructor.
     virtual ~Message() {};
 
-private:
-    /// Private default constructor (the Message class cannot be instantiated directly).
+protected:
+    /// Protected default constructor (the Message class cannot be instantiated directly).
     Message() = default;
 };
 

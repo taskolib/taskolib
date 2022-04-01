@@ -42,6 +42,7 @@ install_headers(files(
         'include/taskomat/execute_step.h',
         'include/taskomat/execute_sequence.h',
         'include/taskomat/Message.h',
+        'include/taskomat/LockedQueue.h',
         'include/taskomat/Sequence.h',
         'include/taskomat/Step.h',
         'include/taskomat/taskomat.h',
@@ -71,6 +72,7 @@ test_src = files(
     'tests/test_execute_sequence.cc',
     'tests/test_main.cc',
     'tests/test_Message.cc',
+    'tests/test_LockedQueue.cc',
     'tests/test_Sequence.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
@@ -118,6 +120,7 @@ install_headers(files(
 inc = [ include_directories('include', 'include/taskomat/sol', 'src') ]
 
 deps = [
+    dependency('threads'),
     dependency('libgul14'),
     lua_dep,
 ]
