@@ -28,6 +28,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <gul14/SlidingBuffer.h>
+#include <gul14/optional.h>
 
 namespace task {
 
@@ -123,6 +124,51 @@ public:
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return queue_.size();
+    }
+
+    /**
+     * Remove a message from the front of the queue and return it.
+     *
+     * This call blocks until a message is available.
+     *
+     * \see try_pop()
+     */
+    gul14::optional<MessageType> try_pop()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        if (queue_.empty())
+            return gul14::nullopt;
+
+        auto msg_ptr = std::move(queue_.front());
+        queue_.pop_front();
+        lock.unlock();
+        cv_slot_available_.notify_one();
+        return msg_ptr;
+    }
+
+    /**
+     * Try to insert a message at the end of the queue.
+     *
+     * This call returns true if the message was successfully enqueued or false if the
+     * queue temporarily had no space to store the message.
+     *
+     * Messages given as an rvalue are only moved from if they can actually be inserted
+     * into the queue.
+     */
+    template <typename MsgT,
+              std::enable_if_t<std::is_convertible_v<MsgT, MessageType>, bool> = true>
+    bool try_push(MsgT&& msg)
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        if (queue_.filled())
+            return false;
+
+        queue_.push_back(std::forward<MsgT>(msg));
+        lock.unlock();
+        cv_message_available_.notify_one();
+        return true;
     }
 
 private:

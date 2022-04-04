@@ -162,3 +162,83 @@ TEST_CASE("LockedQueue: size()", "[Error]")
     queue.pop();
     REQUIRE(queue.size() == 0);
 }
+
+TEST_CASE("LockedQueue: try_pop() single-threaded", "[Error]")
+{
+    LockedQueue<int> queue(2);
+    REQUIRE(queue.size() == 0);
+
+    REQUIRE(queue.try_pop() == gul14::nullopt);
+
+    queue.push(1);
+    queue.push(2);
+    REQUIRE(queue.size() == 2u);
+
+    auto opt = queue.try_pop();
+    REQUIRE(opt.has_value());
+    REQUIRE(*opt == 1);
+
+    opt = queue.try_pop();
+    REQUIRE(opt.has_value());
+    REQUIRE(*opt == 2);
+
+    REQUIRE(queue.try_pop() == gul14::nullopt);
+}
+
+TEST_CASE("LockedQueue: try_push() single-threaded", "[Error]")
+{
+    LockedQueue<int> queue(2);
+    REQUIRE(queue.size() == 0);
+
+    REQUIRE(queue.try_push(1) == true);
+    REQUIRE(queue.size() == 1u);
+
+    REQUIRE(queue.try_push(2) == true);
+    REQUIRE(queue.size() == 2u);
+
+    REQUIRE(queue.try_push(3) == false); // queue full
+    REQUIRE(queue.size() == 2u);
+
+    int msg = queue.pop();
+    REQUIRE(queue.size() == 1u);
+    REQUIRE(msg == 1);
+
+    REQUIRE(queue.try_push(3) == true);
+    REQUIRE(queue.size() == 2u);
+
+    msg = queue.pop();
+    REQUIRE(queue.size() == 1u);
+    REQUIRE(msg == 2);
+
+    msg = queue.pop();
+    REQUIRE(queue.empty() == true);
+    REQUIRE(msg == 3);
+}
+
+TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[Error]")
+{
+    LockedQueue<std::unique_ptr<Message>> queue(4);
+
+    std::thread sender([&queue]()
+        {
+            for (int i = 1; i <= 100; ++i)
+            {
+                while (queue.try_push(std::make_unique<MyMessage>(i)) == false);
+            }
+        });
+
+    for (int i = 1; i <= 100; ++i)
+    {
+        gul14::optional<std::unique_ptr<Message>> opt_msg_ptr;
+        do
+        {
+            opt_msg_ptr = queue.try_pop();
+        }
+        while (not opt_msg_ptr.has_value());
+        auto mymsg_ptr = dynamic_cast<MyMessage*>(opt_msg_ptr->get());
+        REQUIRE(mymsg_ptr != nullptr);
+        REQUIRE(mymsg_ptr->value_ == i);
+    }
+
+    sender.join();
+}
