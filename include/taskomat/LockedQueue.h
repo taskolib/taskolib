@@ -27,8 +27,8 @@
 
 #include <condition_variable>
 #include <mutex>
-#include <gul14/SlidingBuffer.h>
 #include <gul14/optional.h>
+#include <gul14/SlidingBuffer.h>
 
 namespace task {
 
@@ -47,12 +47,12 @@ public:
     using SizeType = std::uint32_t;
     using size_type = SizeType;
 
-    /// Construct a message queue that is able to hold a maximum of max_messages messages.
-    LockedQueue(SizeType max_messages = 32u)
-        : queue_(max_messages)
+    /// Construct a queue that is able to hold a given maximum number of entries.
+    LockedQueue(SizeType capacity)
+        : queue_(capacity)
     { }
 
-    /// Return the maximal number of messages in the queue.
+    /// Return the maximal number of entries in the queue.
     SizeType capacity() const
     {
         std::lock_guard<std::mutex> lock(mutex_);
