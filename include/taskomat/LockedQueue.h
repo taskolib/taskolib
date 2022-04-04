@@ -36,7 +36,30 @@ namespace task {
  * A thread-safe locking message queue.
  *
  * Messages are added to the end of the queue with push() and taken from the start of the
- * queue with pop().
+ * queue with pop(). These calls block if the queue is full or if no messages are
+ * available, respectively. try_push() and try_pop() are non-blocking alternatives.
+ *
+ * \code
+ * // Set up queue with capacity for 10 integers
+ * LockedQueue<int> queue{ 10 };
+ *
+ * // Start sender thread, pushing 100 integers into the queue
+ * std::thread sender([&queue]()
+ *     {
+ *         for (int i = 1; i <= 100; ++i)
+ *             queue.push(i);
+ *     });
+ *
+ * // Pull all 100 integers out of the queue in the main thread
+ * for (int i = 1; i <= 100; ++i)
+ * {
+ *     int val = queue.pop();
+ *     assert(val == i);
+ * }
+ *
+ * // Join the sender thread
+ * sender.join();
+ * \endcode
  */
 template <typename MessageT>
 class LockedQueue
