@@ -52,22 +52,23 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 using Iterator = Sequence::Iterator;
 
 Iterator
-execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context);
+execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
+                      MessageQueue* queue);
 
 Iterator
-execute_while_block(Iterator begin, Iterator end, Context& context)
+execute_while_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     while (execute_step(*begin, context))
-        execute_sequence_impl(begin + 1, block_end, context);
+        execute_sequence_impl(begin + 1, block_end, context, queue);
 
     return block_end + 1;
 }
 
 Iterator
-execute_try_block(Iterator begin, Iterator end, Context& context)
+execute_try_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue)
 {
     const auto it_catch = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
@@ -80,25 +81,26 @@ execute_try_block(Iterator begin, Iterator end, Context& context)
 
     try
     {
-        execute_sequence_impl(begin + 1, it_catch, context);
+        execute_sequence_impl(begin + 1, it_catch, context, queue);
     }
     catch (const Error&)
     {
-        execute_sequence_impl(it_catch + 1, it_catch_block_end, context);
+        execute_sequence_impl(it_catch + 1, it_catch_block_end, context, queue);
     }
 
     return it_catch_block_end;
 }
 
 Iterator
-execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
+execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
+                           MessageQueue* queue)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     if (execute_step(*begin, context))
     {
-        execute_sequence_impl(begin + 1, block_end, context);
+        execute_sequence_impl(begin + 1, block_end, context, queue);
 
         // Skip forward past the END
         auto end_it = std::find_if(block_end, end,
@@ -116,12 +118,12 @@ execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
 }
 
 Iterator
-execute_else_block(Iterator begin, Iterator end, Context& context)
+execute_else_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    execute_sequence_impl(begin + 1, block_end, context);
+    execute_sequence_impl(begin + 1, block_end, context, queue);
 
     return block_end;
 }
@@ -135,7 +137,8 @@ execute_else_block(Iterator begin, Iterator end, Context& context)
  * @exception Error is thrown if a fault on one of the statements is caught by Lua.
  */
 Iterator
-execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context)
+execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
+                      MessageQueue* queue)
 {
     Iterator step = step_begin;
 
@@ -144,20 +147,20 @@ execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context)
         switch (step->get_type())
         {
             case Step::type_while:
-                step = execute_while_block(step, step_end, context);
+                step = execute_while_block(step, step_end, context, queue);
                 break;
 
             case Step::type_try:
-                step = execute_try_block(step, step_end, context);
+                step = execute_try_block(step, step_end, context, queue);
                 break;
 
             case Step::type_if:
             case Step::type_elseif:
-                step = execute_if_or_elseif_block(step, step_end, context);
+                step = execute_if_or_elseif_block(step, step_end, context, queue);
                 break;
 
             case Step::type_else:
-                step = execute_else_block(step, step_end, context);
+                step = execute_else_block(step, step_end, context, queue);
                 break;
 
             case Step::type_end:
@@ -165,7 +168,7 @@ execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context)
                 break;
 
             case Step::type_action:
-                execute_step(*step, context);
+                execute_step(*step, context, queue);
                 ++step;
                 break;
 
@@ -401,10 +404,26 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
     }
 }
 
-void Sequence::execute(Context& context)
+void Sequence::execute(Context& context, MessageQueue* queue)
 {
     check_syntax();
-    execute_sequence_impl(steps_.begin(), steps_.end(), context);
+
+    send_message(queue, Message::Type::sequence_started, "Sequence started",
+                 Clock::now());
+
+    try
+    {
+        execute_sequence_impl(steps_.begin(), steps_.end(), context, queue);
+    }
+    catch (const std::exception& e)
+    {
+        send_message(queue, Message::Type::sequence_stopped_with_error, e.what(),
+                     Clock::now());
+        throw;
+    }
+
+    send_message(queue, Message::Type::sequence_stopped, "Sequence finished",
+                 Clock::now());
 }
 
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,

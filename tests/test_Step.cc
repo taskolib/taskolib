@@ -66,7 +66,7 @@ TEST_CASE("Step: get_script()", "[Step]")
 TEST_CASE("Step: get_time_of_last_execution()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_execution() == Timestamp{});
+    REQUIRE(step.get_time_of_last_execution() == TimePoint{});
 
     auto ts = Clock::now();
     step.set_time_of_last_execution(ts);
@@ -76,7 +76,7 @@ TEST_CASE("Step: get_time_of_last_execution()", "[Step]")
 TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
 
     auto ts = Clock::now();
     step.set_time_of_last_modification(ts);
@@ -133,7 +133,7 @@ TEST_CASE("Step: set_indentation_level()", "[Step]")
 TEST_CASE("Step: set_label()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
 
     step.set_label("Do nothing");
     REQUIRE(step.get_label() == "Do nothing");
@@ -187,7 +187,7 @@ TEST_CASE("Step: set_timeout()", "[Step]")
 TEST_CASE("Step: set_type()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
 
     step.set_type(Step::type_while);
     REQUIRE(step.get_type() == Step::type_while);
@@ -203,7 +203,7 @@ TEST_CASE("Step: set_type()", "[Step]")
 TEST_CASE("Step: set_script()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == Timestamp{});
+    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
 
     step.set_script("test");
     REQUIRE(step.get_script() == "test");

@@ -29,11 +29,10 @@
 #include <set>
 #include <string>
 #include "taskomat/Context.h"
+#include "taskomat/time_types.h"
 
 namespace task {
 
-using Clock = std::chrono::system_clock;
-using Timestamp = std::chrono::time_point<Clock>;
 using VariableNames = std::set<VariableName>;
 
 /**
@@ -121,17 +120,17 @@ public:
 
     /**
      * Return the timestamp of the last execution of this step's script.
-     * A default-constructed `Timestamp{}` is returned to indicate that the object was
+     * A default-constructed `TimePoint{}` is returned to indicate that the object was
      * never executed since its creation.
      */
-    Timestamp get_time_of_last_execution() const { return time_of_last_execution_; }
+    TimePoint get_time_of_last_execution() const { return time_of_last_execution_; }
 
     /**
      * Return the timestamp of the last modification of this step's script or label.
-     * A default-constructed `Timestamp{}` is returned to indicate that the object was
+     * A default-constructed `TimePoint{}` is returned to indicate that the object was
      * never modified since its creation.
      */
-    Timestamp get_time_of_last_modification() const { return time_of_last_modification_; }
+    TimePoint get_time_of_last_modification() const { return time_of_last_modification_; }
 
     /// Return the timeout duration for executing the script.
     std::chrono::milliseconds get_timeout() const { return timeout_; }
@@ -171,14 +170,14 @@ public:
      * This function should be called when an external execution engine starts the
      * embedded script or when the Step has been restored from serialized form.
      */
-    void set_time_of_last_execution(Timestamp t) { time_of_last_execution_ = t; }
+    void set_time_of_last_execution(TimePoint t) { time_of_last_execution_ = t; }
 
     /**
      * Set the timestamp of the last modification of this step's script or label.
      * This function is only useful to restore a step from some serialized form, e.g. from
      * a file.
      */
-    void set_time_of_last_modification(Timestamp t) { time_of_last_modification_ = t; }
+    void set_time_of_last_modification(TimePoint t) { time_of_last_modification_ = t; }
 
     /**
      * Set the timeout duration for executing the script.
@@ -196,7 +195,7 @@ private:
     std::string label_;
     std::string script_;
     VariableNames used_context_variable_names_;
-    Timestamp time_of_last_modification_, time_of_last_execution_;
+    TimePoint time_of_last_modification_, time_of_last_execution_;
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
     short indentation_level_{ 0 };

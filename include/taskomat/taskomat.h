@@ -28,9 +28,12 @@
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
 #include "taskomat/execute_step.h"
-#include "taskomat/execute_sequence.h"
+#include "taskomat/LockedQueue.h"
+#include "taskomat/Message.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
+#include "taskomat/time_types.h"
+#include "taskomat/VariableName.h"
 
 /// Namespace task contains all functions and classes of the Taskomat library.
 namespace task { }

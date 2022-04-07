@@ -26,6 +26,7 @@
 #include "taskomat/Sequence.h"
 
 using namespace task;
+using namespace std::literals;
 
 TEST_CASE("Sequence: Construct empty sequence", "[Sequence]")
 {
@@ -890,7 +891,7 @@ TEST_CASE("execute(): empty sequence", "[Sequence]")
     Context context;
     Sequence sequence("Empty sequence");
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
 }
 
 TEST_CASE("execute(): simple sequence", "[Sequence]")
@@ -901,7 +902,7 @@ TEST_CASE("execute(): simple sequence", "[Sequence]")
     Sequence sequence("Simple sequence");
     sequence.push_back(step);
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
 }
 
 TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
@@ -915,7 +916,7 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
     Sequence sequence("Simple sequence");
     sequence.push_back(step);
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(context.variables["a"] == VariableValue{ 0LL } );
 }
 
@@ -932,7 +933,7 @@ TEST_CASE("execute(): complex sequence with disallowed 'function'",
     Sequence sequence("Complex sequence");
     sequence.push_back(step);
 
-    REQUIRE_THROWS(sequence.execute(context));
+    REQUIRE_THROWS(sequence.execute(context, nullptr));
 }
 
 TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
@@ -955,7 +956,7 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
     sequence.push_back(step_action1);
     sequence.push_back(step_action2);
 
-    REQUIRE_THROWS(sequence.execute(context));
+    REQUIRE_THROWS(sequence.execute(context, nullptr));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
 }
 
@@ -973,7 +974,7 @@ TEST_CASE("execute(): complex sequence with context change", "[Sequence]")
     Sequence sequence("Complex sequence");
     sequence.push_back(step_action1);
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
@@ -1030,7 +1031,7 @@ TEST_CASE("execute(): if-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 1LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
     }
 
@@ -1039,7 +1040,7 @@ TEST_CASE("execute(): if-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 2LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 3LL );
     }
 }
@@ -1097,7 +1098,7 @@ TEST_CASE("execute(): if-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 0LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 0LL );
     }
 
@@ -1106,7 +1107,7 @@ TEST_CASE("execute(): if-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 1LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
     }
 
@@ -1115,7 +1116,7 @@ TEST_CASE("execute(): if-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 2LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 3LL );
     }
 }
@@ -1187,7 +1188,7 @@ TEST_CASE("execute(): if-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 1LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
     }
 
@@ -1196,7 +1197,7 @@ TEST_CASE("execute(): if-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 2LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 3LL );
     }
 
@@ -1205,7 +1206,7 @@ TEST_CASE("execute(): if-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 3LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 4LL );
     }
 }
@@ -1277,7 +1278,7 @@ TEST_CASE("execute(): if-elseif-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 0LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 0LL );
     }
 
@@ -1286,7 +1287,7 @@ TEST_CASE("execute(): if-elseif-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 1LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
     }
 
@@ -1295,7 +1296,7 @@ TEST_CASE("execute(): if-elseif-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 2LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 3LL );
     }
 
@@ -1304,7 +1305,7 @@ TEST_CASE("execute(): if-elseif-elseif sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 3LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 4LL );
     }
 }
@@ -1389,7 +1390,7 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 0LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 5LL );
     }
 
@@ -1398,7 +1399,7 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 1LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
     }
 
@@ -1407,7 +1408,7 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 2LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 3LL );
     }
 
@@ -1416,7 +1417,7 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 3LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 4LL );
     }
 }
@@ -1473,28 +1474,28 @@ TEST_CASE("execute(): if-elseif-else-end sequence with empty blocks",
     {
         Context context;
         context.variables["a"] = VariableValue{ 1LL };
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 
     SECTION("First ELSEIF condition true")
     {
         Context context;
         context.variables["a"] = VariableValue{ 2LL };
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 
     SECTION("Second ELSEIF condition true")
     {
         Context context;
         context.variables["a"] = VariableValue{ 3LL };
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 
     SECTION("All conditions false, use ELSE branch")
     {
         Context context;
         context.variables["a"] = VariableValue{ 4LL };
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 }
 
@@ -1562,7 +1563,7 @@ TEST_CASE("execute(): faulty if-else-elseif sequence", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
-    REQUIRE_THROWS_AS(sequence.execute(context), Error);
+    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
 }
 
 TEST_CASE("execute(): while sequence", "[Sequence]")
@@ -1604,7 +1605,7 @@ TEST_CASE("execute(): while sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 0LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
     }
 }
@@ -1641,7 +1642,7 @@ TEST_CASE("execute(): empty while sequence", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 0LL };
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
     }
 }
@@ -1693,7 +1694,7 @@ TEST_CASE("execute(): try sequence with success", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
 }
 
@@ -1751,7 +1752,7 @@ TEST_CASE("execute(): try sequence with fault", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
@@ -1843,7 +1844,7 @@ TEST_CASE("execute(): complex try sequence with nested fault condition",
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
-    REQUIRE_NOTHROW(sequence.execute(context));
+    REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 3LL );
 }
 
@@ -1909,7 +1910,7 @@ TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
-    REQUIRE_THROWS_AS(sequence.execute(context), Error);
+    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
@@ -2007,7 +2008,7 @@ TEST_CASE("execute(): complex try sequence with fault", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
-    REQUIRE_THROWS_AS(sequence.execute(context), Error);
+    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
@@ -2276,7 +2277,7 @@ TEST_CASE("execute(): complex sequence", "[Sequence]")
         context.variables["e"] = VariableValue{1LL};
         context.variables["f"] = VariableValue{1LL};
         context.variables["g"] = VariableValue{1LL};
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
 
         // a=10, b=1, c=1, d=0/2/3, e=1/3/4, f=2, g=1/2
         REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
@@ -2300,7 +2301,7 @@ TEST_CASE("execute(): complex sequence", "[Sequence]")
         context.variables["f"] = VariableValue{1LL};
         context.variables["g"] = VariableValue{1LL};
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
         REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(std::get<long long>(context.variables["c"] ) == 1LL );
@@ -2322,7 +2323,7 @@ TEST_CASE("execute(): complex sequence", "[Sequence]")
         context.variables["f"] = VariableValue{3LL};
         context.variables["g"] = VariableValue{2LL};
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
         REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(std::get<long long>(context.variables["c"] ) == 1LL );
@@ -2344,7 +2345,7 @@ TEST_CASE("execute(): complex sequence", "[Sequence]")
         context.variables["f"] = VariableValue{3LL};
         context.variables["g"] = VariableValue{4LL};
 
-        REQUIRE_NOTHROW(sequence.execute(context));
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
         REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
         REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(std::get<long long>(context.variables["c"] ) == 1LL );
@@ -2506,5 +2507,67 @@ TEST_CASE("execute(): complex sequence with misplaced if", "[Sequence]")
     sequence.push_back(step_31);
 
     Context context;
-    REQUIRE_THROWS_AS(sequence.execute(context), Error);
+    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
+}
+
+TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
+{
+    const auto t0 = Clock::now();
+    MessageQueue queue(10);
+
+    Context context;
+    context.variables["a"] = 0LL;
+
+    Step step1{ Step::type_action };
+    step1.set_used_context_variable_names(VariableNames{ "a" });
+    step1.set_script("a = a + 1");
+
+    Step step2{ Step::type_action };
+    step2.set_used_context_variable_names(VariableNames{ "a" });
+    step2.set_script("a = a + 2");
+
+    Sequence sequence;
+    sequence.push_back(std::move(step1));
+    sequence.push_back(std::move(step2));
+
+    sequence.execute(context, &queue);
+
+    // 2 sequence messages plus 4 step start/stop messages
+    REQUIRE(queue.size() == 6);
+
+    // First, a "sequence started" message
+    auto msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::sequence_started);
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
+
+    // StepStartedMessage
+    msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::step_started);
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
+
+    // StepStoppedMessage
+    msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::step_stopped);
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
+
+    // StepStartedMessage
+    msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::step_started);
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
+
+    // StepStoppedMessage
+    msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::step_stopped);
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
+
+    // SequenceStoppedMessage
+    msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::sequence_stopped);
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
 }
