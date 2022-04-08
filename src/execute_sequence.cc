@@ -31,7 +31,7 @@ namespace task {
 using Iterator = Sequence::Steps::const_iterator;
 using ReverseIterator = Sequence::Steps::const_reverse_iterator;
 
-namespace 
+namespace
 {
 
 /// Find next token with condition on predicate. Returns the found step iterator.
@@ -55,8 +55,8 @@ Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
 }
 
 /// Checks if \a Step has an excutable Lua script:
-/// - \a Step::type_if 
-/// - \a Step::type_elseif 
+/// - \a Step::type_if
+/// - \a Step::type_elseif
 /// - \a Step::type_while
 /// - \a Step::type_action
 bool has_lua_script(Step::Type type)
@@ -67,7 +67,7 @@ bool has_lua_script(Step::Type type)
 
 /**
  * Internal traverse execution loop depending on indentation level.
- * 
+ *
  * @param sequence executed \a Sequence
  * @param context \a Context for executing a step
  * @param step step iterator to traverse the \a Sequence
@@ -87,8 +87,8 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
         if (step->get_indentation_level() < level)
             return step;
 
-        const bool result = has_lua_script(step->get_type()) 
-            ? execute_step((Step&)*step, context) 
+        const bool result = has_lua_script(step->get_type())
+            ? execute_step((Step&)*step, context)
             : false;
 
         switch(step->get_type())
@@ -98,7 +98,7 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                 if (result)
                     step = execute_sequence_impl(sequence, context, step + 1);
                 else
-                    step = find(step, sequence.cend(), [&](const Step& s) { 
+                    step = find(step, sequence.cend(), [&](const Step& s) {
                         return step->get_indentation_level() == s.get_indentation_level()
                                &&             Step::type_end == s.get_type(); });
                 break;
@@ -117,7 +117,7 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                         return step->get_indentation_level() == s.get_indentation_level()
                                &&           Step::type_catch == s.get_type(); }) + 1;
                 }
-                
+
                 break;
 
             case Step::type_catch:
@@ -170,10 +170,10 @@ Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator st
                 {
                     // Use the predecessor index ('.. - 1') for the first token in the
                     // while block.
-                    step = find_reverse(step, sequence.crend(), [&](const Step& s) { 
+                    step = find_reverse(step, sequence.crend(), [&](const Step& s) {
                         return step->get_indentation_level() == s.get_indentation_level()
-                               &&           Step::type_while == s.get_type(); }) - 1; 
-                    found_while = false;                            
+                               &&           Step::type_while == s.get_type(); }) - 1;
+                    found_while = false;
                 }
                 else
                 {
