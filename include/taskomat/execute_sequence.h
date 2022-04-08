@@ -36,7 +36,7 @@ namespace task {
  * This function performs the following steps:
  * - verifies the correct nesting of block statements
  * - executes each step
- *  
+ *
  * The variables in Context are moved from step to step and extracted when the sequence
  * exits.
  *
