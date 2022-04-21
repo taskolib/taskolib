@@ -126,14 +126,17 @@ TEST_CASE("LockedQueue: push() single-threaded", "[Error]")
 
 TEST_CASE("LockedQueue: push() & pop() across threads", "[Error]")
 {
+    // Create a queue with only 4 slots
     LockedQueue<std::unique_ptr<Message>> queue{ 4 };
 
+    // Start a thread that will push 100 messages into the queue
     std::thread sender([&queue]()
         {
             for (int i = 1; i <= 100; ++i)
                 queue.push(std::make_unique<MyMessage>(i));
         });
 
+    // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
         auto msg_ptr = queue.pop();
@@ -217,8 +220,10 @@ TEST_CASE("LockedQueue: try_push() single-threaded", "[Error]")
 
 TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[Error]")
 {
+    // Create a queue with only 4 slots
     LockedQueue<std::unique_ptr<Message>> queue{ 4 };
 
+    // Start a thread that will push 100 messages into the queue
     std::thread sender([&queue]()
         {
             for (int i = 1; i <= 100; ++i)
@@ -227,6 +232,7 @@ TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[Error]")
             }
         });
 
+    // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
         gul14::optional<std::unique_ptr<Message>> opt_msg_ptr;
