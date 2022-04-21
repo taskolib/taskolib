@@ -98,22 +98,16 @@ public:
      */
     MessageType pop()
     {
-        while (true)
-        {
-            std::unique_lock<std::mutex> lock(mutex_);
+        std::unique_lock<std::mutex> lock(mutex_);
 
-            if (queue_.empty())
-                cv_message_available_.wait(lock, [this] { return not queue_.empty(); });
+        if (queue_.empty())
+            cv_message_available_.wait(lock, [this] { return not queue_.empty(); });
 
-            if (not queue_.empty())
-            {
-                auto msg_ptr = std::move(queue_.front());
-                queue_.pop_front();
-                lock.unlock();
-                cv_slot_available_.notify_one();
-                return msg_ptr;
-            }
-        }
+        auto msg_ptr = std::move(queue_.front());
+        queue_.pop_front();
+        lock.unlock();
+        cv_slot_available_.notify_one();
+        return msg_ptr;
     }
 
     /**
@@ -125,21 +119,14 @@ public:
               std::enable_if_t<std::is_convertible_v<MsgT, MessageType>, bool> = true>
     void push(MsgT&& msg)
     {
-        while (true)
-        {
-            std::unique_lock<std::mutex> lock(mutex_);
+        std::unique_lock<std::mutex> lock(mutex_);
 
-            if (queue_.filled())
-                cv_slot_available_.wait(lock, [this] { return not queue_.filled(); });
+        if (queue_.filled())
+            cv_slot_available_.wait(lock, [this] { return not queue_.filled(); });
 
-            if (not queue_.filled())
-            {
-                queue_.push_back(std::forward<MsgT>(msg));
-                lock.unlock();
-                cv_message_available_.notify_one();
-                return;
-            }
-        }
+        queue_.push_back(std::forward<MsgT>(msg));
+        lock.unlock();
+        cv_message_available_.notify_one();
     }
 
     /// Return the number of messages in the queue.
