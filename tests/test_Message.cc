@@ -28,7 +28,7 @@
 
 using namespace task;
 
-TEST_CASE("Message: Constructor", "[Error]")
+TEST_CASE("Message: Constructor", "[Message]")
 {
     static_assert(not std::is_default_constructible<Message>::value,
         "Message is default-constructible although it should not be");

@@ -44,7 +44,7 @@ public:
 
 } // anonymous namespace
 
-TEMPLATE_TEST_CASE("LockedQueue: Constructor", "[Error]",
+TEMPLATE_TEST_CASE("LockedQueue: Constructor", "[LockedQueue]",
     int, std::string, MyMessage, std::unique_ptr<Message>)
 {
     static_assert(std::is_constructible<LockedQueue<TestType>, uint32_t>::value,
@@ -53,7 +53,7 @@ TEMPLATE_TEST_CASE("LockedQueue: Constructor", "[Error]",
     LockedQueue<TestType> queue{ 4 };
 }
 
-TEST_CASE("LockedQueue: capacity()", "[Error]")
+TEST_CASE("LockedQueue: capacity()", "[LockedQueue]")
 {
     SECTION("Default-constructed queue")
     {
@@ -68,7 +68,7 @@ TEST_CASE("LockedQueue: capacity()", "[Error]")
     }
 }
 
-TEMPLATE_TEST_CASE("LockedQueue: empty()", "[Error]",
+TEMPLATE_TEST_CASE("LockedQueue: empty()", "[LockedQueue]",
     int, std::string, MyMessage, std::unique_ptr<Message>)
 {
     LockedQueue<TestType> queue{ 10 };
@@ -81,7 +81,7 @@ TEMPLATE_TEST_CASE("LockedQueue: empty()", "[Error]",
     REQUIRE(queue.empty() == true);
 }
 
-TEMPLATE_TEST_CASE("LockedQueue: pop() single-threaded", "[Error]",
+TEMPLATE_TEST_CASE("LockedQueue: pop() single-threaded", "[LockedQueue]",
     int, std::string, MyMessage, std::unique_ptr<Message>)
 {
     LockedQueue<TestType> queue{ 10 };
@@ -98,7 +98,7 @@ TEMPLATE_TEST_CASE("LockedQueue: pop() single-threaded", "[Error]",
     REQUIRE(queue.size() == 0);
 }
 
-TEST_CASE("LockedQueue: push() single-threaded", "[Error]")
+TEST_CASE("LockedQueue: push() single-threaded", "[LockedQueue]")
 {
     LockedQueue<std::unique_ptr<Message>> queue{ 10 };
     REQUIRE(queue.size() == 0);
@@ -124,7 +124,7 @@ TEST_CASE("LockedQueue: push() single-threaded", "[Error]")
     REQUIRE(mymsg_ptr->value_ == 43);
 }
 
-TEST_CASE("LockedQueue: push() & pop() across threads", "[Error]")
+TEST_CASE("LockedQueue: push() & pop() across threads", "[LockedQueue]")
 {
     // Create a queue with only 4 slots
     LockedQueue<std::unique_ptr<Message>> queue{ 4 };
@@ -148,7 +148,7 @@ TEST_CASE("LockedQueue: push() & pop() across threads", "[Error]")
     sender.join();
 }
 
-TEST_CASE("LockedQueue: size()", "[Error]")
+TEST_CASE("LockedQueue: size()", "[LockedQueue]")
 {
     LockedQueue<std::unique_ptr<Message>> queue{ 10 };
     REQUIRE(queue.size() == 0);
@@ -166,7 +166,7 @@ TEST_CASE("LockedQueue: size()", "[Error]")
     REQUIRE(queue.size() == 0);
 }
 
-TEST_CASE("LockedQueue: try_pop() single-threaded", "[Error]")
+TEST_CASE("LockedQueue: try_pop() single-threaded", "[LockedQueue]")
 {
     LockedQueue<int> queue{ 2 };
     REQUIRE(queue.size() == 0);
@@ -188,7 +188,7 @@ TEST_CASE("LockedQueue: try_pop() single-threaded", "[Error]")
     REQUIRE(queue.try_pop() == gul14::nullopt);
 }
 
-TEST_CASE("LockedQueue: try_push() single-threaded", "[Error]")
+TEST_CASE("LockedQueue: try_push() single-threaded", "[LockedQueue]")
 {
     LockedQueue<int> queue{ 2 };
     REQUIRE(queue.size() == 0);
@@ -218,7 +218,7 @@ TEST_CASE("LockedQueue: try_push() single-threaded", "[Error]")
     REQUIRE(msg == 3);
 }
 
-TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[Error]")
+TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[LockedQueue]")
 {
     // Create a queue with only 4 slots
     LockedQueue<std::unique_ptr<Message>> queue{ 4 };
