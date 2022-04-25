@@ -81,6 +81,320 @@ TEST_CASE("Sequence: append Step to the end of Sequence", "[Sequence]")
     }
 }
 
+TEST_CASE("Sequence: remove last Steps from Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{});
+    seq.push_back(Step{});
+    REQUIRE(seq.empty() == false);
+    REQUIRE(seq.size() == 2);
+
+    seq.pop_back();
+    REQUIRE(seq.size() == 1);
+    
+    seq.pop_back();
+    REQUIRE(seq.size() == 0);
+    REQUIRE(seq.empty());
+
+    seq.pop_back(); // remove from an already empty sequence again the last step
+    REQUIRE(seq.size() == 0);
+    REQUIRE(seq.empty());
+}
+
+TEST_CASE("Sequence: insert Step to Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action});
+
+    SECTION("insert lvalue reference (position)")
+    {
+        Step insertStep = Step{Step::type_if};
+        seq.insert(1, insertStep);
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert lvalue reference (position), position is out of range")
+    {
+        Step insertStep = Step{Step::type_if};
+        seq.insert(3, insertStep);
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_action, Step::type_if};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert const lvalue reference (position)")
+    {
+        const Step insertStep = Step{Step::type_if};
+        seq.insert(1, insertStep);
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert const lvalue reference (position), position is out of range")
+    {
+        const Step insertStep = Step{Step::type_if};
+        seq.insert(3, insertStep);
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_action, Step::type_if};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert rvalue reference (position)")
+    {
+        seq.insert(1, Step{Step::type_if});
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert rvalue reference (position), position is out of range")
+    {
+        seq.insert(3, Step{Step::type_if});
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_action, Step::type_if};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert rvalue reference (position, std::forward)")
+    {
+        seq.insert(1, std::forward<Step>(Step{Step::type_if}));
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert rvalue reference (position, std::forward), position is out of range")
+    {
+        seq.insert(3, std::forward<Step>(Step{Step::type_if}));
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+
+        Step::Type expected[] = {Step::type_action, Step::type_action, Step::type_if};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+    
+    SECTION("insert lvalue reference (iterator)")
+    {
+        Step insertStep = Step{Step::type_if};
+        auto iter = seq.insert(seq.begin()+1, insertStep);
+        // TODO: what happens here: auto iter = seq.insert(seq.end()+1, Step{Step::type_if});
+        
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+    
+    SECTION("insert const lvalue reference (iterator)")
+    {
+        const Step insertStep = Step{Step::type_if};
+        auto iter = seq.insert(seq.begin()+1, insertStep);
+        // TODO: what happens here: auto iter = seq.insert(seq.end()+1, Step{Step::type_if});
+        
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+    
+    SECTION("insert rvalue reference (iterator)")
+    {
+        auto iter = seq.insert(seq.begin()+1, Step{Step::type_if});
+        // TODO: what happens here: auto iter = seq.insert(seq.end()+1, Step{Step::type_if});
+        
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+    
+    SECTION("insert rvalue reference (iterator, std::forward)")
+    {
+        auto iter = seq.insert(seq.begin()+1, std::forward<Step>(Step{Step::type_if}));
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+}
+
+TEST_CASE("Sequence: erase Step(s) from Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_while});
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_end});
+    seq.push_back(Step{Step::type_action});
+
+    SECTION("erase step (position)")
+    {
+        auto erase = seq.erase(1);
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase step (position), error")
+    {
+        REQUIRE_THROWS_AS(seq.erase(6), Error);
+        REQUIRE(not seq.empty());
+        REQUIRE(5 == seq.size());
+    }
+
+    SECTION("erase step 1-3 (position)")
+    {
+        auto erase = seq.erase(1, 4);
+        REQUIRE(not seq.empty());
+        REQUIRE(2 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase step 3-1 (position), error")
+    {
+        REQUIRE_THROWS_AS(seq.erase(3, 1), Error);
+        REQUIRE(not seq.empty());
+        REQUIRE(5 == seq.size());
+    }
+
+    SECTION("erase step 5-6 (position), error")
+    {
+        REQUIRE_THROWS_AS(seq.erase(5, 6), Error);
+        REQUIRE(not seq.empty());
+        REQUIRE(5 == seq.size());
+    }
+
+    SECTION("erase step 6-5 (position), error")
+    {
+        REQUIRE_THROWS_AS(seq.erase(6, 5), Error);
+        REQUIRE(not seq.empty());
+        REQUIRE(5 == seq.size());
+    }
+
+    SECTION("erase first (iterator)")
+    {
+        auto erase = seq.erase(seq.begin());
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_while == (*erase).get_type());
+    }
+
+    SECTION("erase middle (iterator)")
+    {
+        auto erase = seq.erase(seq.begin()+2);
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_end == (*erase).get_type());
+    }
+
+    SECTION("erase last (iterator)")
+    {
+        auto erase = seq.erase(seq.end()-1);
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase end (iterator)")
+    {
+        auto erase = seq.erase(seq.end());
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase range from beginning (iterator)")
+    {
+        auto erase = seq.erase(seq.begin(), seq.begin()+2);
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase range from middle (iterator)")
+    {
+        auto erase = seq.erase(seq.begin()+1, seq.begin()+3);
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_end == (*erase).get_type());
+    }
+
+    SECTION("erase range from end (iterator)")
+    {
+        auto erase = seq.erase(seq.end()-3, seq.end()-1);
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase range from end (iterator)")
+    {
+        auto erase = seq.erase(seq.end()-2, seq.end());
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_end == (*erase).get_type());
+    }
+}
+
 TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
 {
     /*

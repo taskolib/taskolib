@@ -40,6 +40,21 @@ namespace task {
  * On executing a validation is performed due to check if the steps are consistent. When
  * a fault is detected an \a Error is thrown including a precise error message about what
  * fails.
+ * 
+ * To modify the sequence the following member functions are implemented:
+ * 
+ * - push_back(): add new \a Step at the end
+ * - pop_back(): remove last \a Step from the end
+ * - insert(): insert \a Step or range of \a Step 's either with position or iterator.
+ * - erase(): remove \a Step or range of \a Step 's either with position or iterator.
+ * 
+ * After modifing the sequence all before retrieved iterators are invalidated and further
+ * usage will result with an undefined behavior.
+ * 
+ * Since the reverse iterator are only used to iterate through the sequence one will
+ * not find any member function for manipulation or modification.
+ * 
+ * 
  */
 class Sequence
 {
@@ -159,6 +174,185 @@ public:
      * @param step [MOVE] \a Step
      */ 
     void push_back(Step&& step) { steps_.push_back(step); indent(); }
+
+    /**
+     * Remove the last element from the sequence.
+     * 
+     * Removeing on an empty Sequence returns silently. Iterators and references to the 
+     * last element as well as the end(), cend(), rend(), and crend() iterators are marked
+     * invalid after finishing the function call.
+     */
+    void pop_back() { if (not steps_.empty()) steps_.pop_back(); indent(); }
+
+    /**
+     * Insert the given \a Step before position into Sequence.
+     * 
+     * When position is below the Sequence size it is attached to the end.
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *  
+     * @param position position index starting from 0
+     * @param step the added \a Step
+     */
+    void insert(SizeType position, const Step& step);
+
+    /**
+     * Insert the given \a Step rvalue reference before position into Sequence.
+     * 
+     * When position is below the Sequence size it is attached to the end.
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *  
+     * @param position position index starting from 0
+     * @param step the added \a Step
+     */
+    void insert(SizeType position, Step&& step);
+
+    /**
+     * Insert the given \a Step before of the constant iterator into Sequence.
+     * 
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *  
+     * @param iter constant \a Step iterator in the Sequence
+     * @param step the added \a Step
+     * @return inserted \a Step
+     */
+    Steps::const_iterator insert(Steps::const_iterator iter, const Step& step);
+
+    /**
+     * Insert the given \a Step rvalue reference before of the constant iterator into
+     * Sequence.
+     * 
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *  
+     * @param iter constant \a Step iterator in the Sequence
+     * @param step the added \a Step
+     * @return inserted \a Step
+     */
+    Steps::const_iterator insert(Steps::const_iterator iter, Step&& step);
+
+    /**
+     * Remove \a Step at index position.
+     * 
+     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * 
+     * @param position \a Step index to be removed, starting from index 0
+     * @return Steps::iterator after the removed step
+     * @throw Error when position is out of range.
+     */
+    Steps::const_iterator erase(SizeType position)
+    {
+        if (position >= size())
+            throw Error("position is out of range");
+        auto return_iter = steps_.erase(cbegin() + position);
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Remove bunch of \a Step 's starting from index \a first exclusive \a last:
+     * [first, last):
+     * 
+     * It returns the iterator \a last .
+     * 
+     * \code
+     * 0: ACTION
+     * 1:    WHILE
+     * 2:        ACTION
+     * 3:    END
+     * 4: ACTION
+     * \endcode
+     * 
+     * After removing iterator 1 to exclusive 4 ( \a while-loop ):
+     * 
+     * \code
+     * 0: ACTION
+     * 1: ACTION
+     * \endcode
+     * 
+     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * 
+     * @param first first \a Step index to be removed, starting from index 0
+     * @param last last exclusive \a Step index to be removed
+     * @return Steps::iterator \a last iterator
+     * @throw Error detects an inconsistency in range [ \a first, \a last )
+     */
+    Steps::const_iterator erase(SizeType first, SizeType last)
+    {
+        if (first > size() || last > size() || last < first)
+            throw Error("inconsistent in range");
+        auto return_iter = steps_.erase(cbegin() + first, cbegin() + last);
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Remove \a Step iterator from sequence.
+     * 
+     * It returns the iterator after the removed one.
+     * 
+     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * 
+     * @param iter \a Step iterator to be removed
+     * @return Steps::iterator iterator after the removed \a Step
+     */
+    Steps::const_iterator erase(Steps::const_iterator iter)
+    {
+        auto return_iter = steps_.erase(iter);
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Remove a bunch of \a Step 's iterator from sequence from \a first to \a last . The
+     * removed iterators is exclusive the \a last one: [first, last)
+     * 
+     * \code
+     * 0: ACTION
+     * 1:    WHILE
+     * 2:        ACTION
+     * 3:    END
+     * 4: ACTION
+     * \endcode
+     * 
+     * After removing iterator 1 to exclusive 4 ( \a while-loop ):
+     * 
+     * \code
+     * 0: ACTION
+     * 1: ACTION
+     * \endcode
+     * 
+     * When you try to remove the \a last one as \a end() the first remove \a Step is
+     * returned. Example: remove iterator 1 to 5 (here \a end() ):
+     * 
+     * \code
+     * 0: ACTION
+     * 1:    WHILE
+     * 2:        ACTION
+     * 3:    END
+     * 4: ACTION
+     * \endcode
+     * 
+     * Result: return iterator with step \a while (element 1)
+     * 
+     * \code
+     * 0: ACTION
+     * \endcode
+     * 
+     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * 
+     * @param first first \a Step iterator to be removed
+     * @param last last \a Step iterator to be removed (exclusive) 
+     * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
+     */
+    Steps::const_iterator erase(Steps::const_iterator first, Steps::const_iterator last)
+    {
+        auto return_iter = steps_.erase(first, last);
+        indent();
+        return return_iter;
+    }
 
 private:
     // Header for exception on failed syntax check.

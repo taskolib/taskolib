@@ -37,6 +37,38 @@ Sequence::Sequence(gul14::string_view label)
     label_ = std::string{ label };
 }
 
+void Sequence::insert(SizeType position, const Step& step)
+{
+    if (position > size())
+        steps_.push_back(step);
+    else
+        steps_.insert(begin() + position, step);
+    indent();
+}
+
+void Sequence::insert(SizeType position, Step&& step)
+{
+    if ( position > size())
+        steps_.push_back(std::move(step));
+    else
+        steps_.insert(begin() + position, std::move(step));
+    indent();
+}
+
+Sequence::Steps::const_iterator Sequence::insert(Steps::const_iterator iter, const Step& step)
+{
+    auto return_iter = steps_.insert(iter, step);
+    indent();
+    return return_iter;
+}
+
+Sequence::Steps::const_iterator Sequence::insert(Steps::const_iterator iter, Step&& step)
+{
+    auto return_iter = steps_.insert(iter, std::move(step));
+    indent();
+    return return_iter;
+}
+
 void Sequence::check_syntax() const
 {
     if (not indentation_error_.empty())
