@@ -42,7 +42,7 @@ TEST_CASE("execute_sequence(): simple sequence", "[execute_sequence]")
     Step step;
 
     Sequence sequence("Simple sequence");
-    sequence.add_step(step);
+    sequence.push_back(step);
 
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
 }
@@ -56,7 +56,7 @@ TEST_CASE("execute_sequence(): Simple sequence with unchanged context", "[execut
     step.set_used_context_variable_names(VariableNames{"a"});
 
     Sequence sequence("Simple sequence");
-    sequence.add_step(step);
+    sequence.push_back(step);
 
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
     REQUIRE(context.variables["a"] == VariableValue{ 0LL } );
@@ -73,7 +73,7 @@ TEST_CASE("execute_sequence(): complex sequence with disallowed 'function'",
     step.set_script("print('Hello world!')"); // provokes Error exception
 
     Sequence sequence("Complex sequence");
-    sequence.add_step(step);
+    sequence.push_back(step);
 
     REQUIRE_THROWS(execute_sequence(sequence, context));
 }
@@ -95,8 +95,8 @@ TEST_CASE("execute_sequence(): complex sequence with disallowed 'function' and c
     step_action2.set_script("a=a+1");
 
     Sequence sequence("Complex sequence");
-    sequence.add_step(step_action1);
-    sequence.add_step(step_action2);
+    sequence.push_back(step_action1);
+    sequence.push_back(step_action2);
 
     REQUIRE_THROWS(execute_sequence(sequence, context));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
@@ -115,7 +115,7 @@ TEST_CASE("execute_sequence(): complex sequence with context change",
     step_action1.set_used_context_variable_names(VariableNames{"a"});
 
     Sequence sequence("Complex sequence");
-    sequence.add_step(step_action1);
+    sequence.push_back(step_action1);
 
     REQUIRE_NOTHROW(execute_sequence(sequence, context));
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
@@ -161,11 +161,11 @@ TEST_CASE("execute_sequence(): if-else sequence", "[execute_sequence]")
     step_if_end.set_label("if: end");
 
     Sequence sequence;
-    sequence.add_step(step_if);
-    sequence.add_step(step_action_if);
-    sequence.add_step(step_else);
-    sequence.add_step(step_action_else);
-    sequence.add_step(step_if_end);
+    sequence.push_back(step_if);
+    sequence.push_back(step_action_if);
+    sequence.push_back(step_else);
+    sequence.push_back(step_action_else);
+    sequence.push_back(step_if_end);
 
     SECTION("if-else sequence with if=true")
     {
@@ -228,11 +228,11 @@ TEST_CASE("execute_sequence(): if-elseif sequence", "[execute_sequence]")
     step_if_end.set_label("if: end");
 
     Sequence sequence;
-    sequence.add_step(step_if);
-    sequence.add_step(step_if_action);
-    sequence.add_step(step_elseif);
-    sequence.add_step(step_elseif_action);
-    sequence.add_step(step_if_end);
+    sequence.push_back(step_if);
+    sequence.push_back(step_if_action);
+    sequence.push_back(step_elseif);
+    sequence.push_back(step_elseif_action);
+    sequence.push_back(step_if_end);
 
     SECTION("if-elseif sequence with if=elseif=false")
     {
@@ -316,13 +316,13 @@ TEST_CASE("execute_sequence(): if-elseif-else sequence", "[execute_sequence]")
     step_if_end.set_label("if: end");
 
     Sequence sequence;
-    sequence.add_step(step_if);
-    sequence.add_step(step_if_action);
-    sequence.add_step(step_elseif);
-    sequence.add_step(step_elseif_action);
-    sequence.add_step(step_else);
-    sequence.add_step(step_else_action);
-    sequence.add_step(step_if_end);
+    sequence.push_back(step_if);
+    sequence.push_back(step_if_action);
+    sequence.push_back(step_elseif);
+    sequence.push_back(step_elseif_action);
+    sequence.push_back(step_else);
+    sequence.push_back(step_else_action);
+    sequence.push_back(step_if_end);
 
     SECTION("if-elseif-else sequence with if=true")
     {
@@ -406,13 +406,13 @@ TEST_CASE("execute_sequence(): if-elseif-elseif sequence", "[execute_sequence]")
     step_if_end.set_label("if: end");
 
     Sequence sequence;
-    sequence.add_step(step_if);
-    sequence.add_step(step_if_action);
-    sequence.add_step(step_elseif1);
-    sequence.add_step(step_elseif1_action);
-    sequence.add_step(step_elseif2);
-    sequence.add_step(step_elseif2_action);
-    sequence.add_step(step_if_end);
+    sequence.push_back(step_if);
+    sequence.push_back(step_if_action);
+    sequence.push_back(step_elseif1);
+    sequence.push_back(step_elseif1_action);
+    sequence.push_back(step_elseif2);
+    sequence.push_back(step_elseif2_action);
+    sequence.push_back(step_if_end);
 
     SECTION("if-elseif-elseif sequence with if=elseif=elseif=false")
     {
@@ -516,15 +516,15 @@ TEST_CASE("execute_sequence(): if-elseif-elseif-else sequence", "[execute_sequen
     step_if_end.set_label("if: end");
 
     Sequence sequence;
-    sequence.add_step(step_if);
-    sequence.add_step(step_if_action);
-    sequence.add_step(step_elseif1);
-    sequence.add_step(step_elseif1_action);
-    sequence.add_step(step_elseif2);
-    sequence.add_step(step_elseif2_action);
-    sequence.add_step(step_else);
-    sequence.add_step(step_else_action);
-    sequence.add_step(step_if_end);
+    sequence.push_back(step_if);
+    sequence.push_back(step_if_action);
+    sequence.push_back(step_elseif1);
+    sequence.push_back(step_elseif1_action);
+    sequence.push_back(step_elseif2);
+    sequence.push_back(step_elseif2_action);
+    sequence.push_back(step_else);
+    sequence.push_back(step_else_action);
+    sequence.push_back(step_if_end);
 
     SECTION("if-elseif-elseif sequence with if=elseif=elseif=false")
     {
@@ -616,13 +616,13 @@ TEST_CASE("execute_sequence(): faulty if-else-elseif sequence", "[execute_sequen
     step_if_end.set_label("if: end");
 
     Sequence sequence;
-    sequence.add_step(step_if);
-    sequence.add_step(step_if_action);
-    sequence.add_step(step_if_else);
-    sequence.add_step(step_if_else_action);
-    sequence.add_step(step_if_elseif);
-    sequence.add_step(step_if_elseif_action);
-    sequence.add_step(step_if_end);
+    sequence.push_back(step_if);
+    sequence.push_back(step_if_action);
+    sequence.push_back(step_if_else);
+    sequence.push_back(step_if_else_action);
+    sequence.push_back(step_if_elseif);
+    sequence.push_back(step_if_elseif_action);
+    sequence.push_back(step_if_end);
 
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
@@ -660,9 +660,9 @@ TEST_CASE("execute_sequence(): while sequence", "[execute_sequence]")
     step_while_end.set_label("while: end");
 
     Sequence sequence;
-    sequence.add_step(step_while);
-    sequence.add_step(step_while_action);
-    sequence.add_step(step_while_end);
+    sequence.push_back(step_while);
+    sequence.push_back(step_while_action);
+    sequence.push_back(step_while_end);
 
     SECTION("while sequence with while: a<10")
     {
@@ -712,11 +712,11 @@ TEST_CASE("execute_sequence(): try sequence with success", "[execute_sequence]")
     step_try_end.set_label("try: end");
 
     Sequence sequence;
-    sequence.add_step(step_try);
-    sequence.add_step(step_try_action);
-    sequence.add_step(step_try_catch);
-    sequence.add_step(step_try_catch_action);
-    sequence.add_step(step_try_end);
+    sequence.push_back(step_try);
+    sequence.push_back(step_try_action);
+    sequence.push_back(step_try_catch);
+    sequence.push_back(step_try_catch_action);
+    sequence.push_back(step_try_end);
 
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
@@ -769,12 +769,12 @@ TEST_CASE("execute_sequence(): try sequence with fault", "[execute_sequence]")
     step_try_end.set_label("try: end");
 
     Sequence sequence;
-    sequence.add_step(step_try);
-    sequence.add_step(step_try_action1);
-    sequence.add_step(step_try_action2);
-    sequence.add_step(step_try_catch);
-    sequence.add_step(step_try_catch_action);
-    sequence.add_step(step_try_end);
+    sequence.push_back(step_try);
+    sequence.push_back(step_try_action1);
+    sequence.push_back(step_try_action2);
+    sequence.push_back(step_try_catch);
+    sequence.push_back(step_try_catch_action);
+    sequence.push_back(step_try_end);
 
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
@@ -856,17 +856,17 @@ TEST_CASE("execute_sequence(): complex try sequence with nested fault condition"
     step_10.set_label("try [end]");
 
     Sequence sequence;
-    sequence.add_step(step_00);
-    sequence.add_step(step_01);
-    sequence.add_step(step_02);
-    sequence.add_step(step_03);
-    sequence.add_step(step_04);
-    sequence.add_step(step_05);
-    sequence.add_step(step_06);
-    sequence.add_step(step_07);
-    sequence.add_step(step_08);
-    sequence.add_step(step_09);
-    sequence.add_step(step_10);
+    sequence.push_back(step_00);
+    sequence.push_back(step_01);
+    sequence.push_back(step_02);
+    sequence.push_back(step_03);
+    sequence.push_back(step_04);
+    sequence.push_back(step_05);
+    sequence.push_back(step_06);
+    sequence.push_back(step_07);
+    sequence.push_back(step_08);
+    sequence.push_back(step_09);
+    sequence.push_back(step_10);
 
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
@@ -926,13 +926,13 @@ TEST_CASE("execute_sequence(): simple try sequence with fault", "[execute_sequen
     step_06.set_label("try [end]");
 
     Sequence sequence;
-    sequence.add_step(step_00);
-    sequence.add_step(step_01);
-    sequence.add_step(step_02);
-    sequence.add_step(step_03);
-    sequence.add_step(step_04);
-    sequence.add_step(step_05);
-    sequence.add_step(step_06);
+    sequence.push_back(step_00);
+    sequence.push_back(step_01);
+    sequence.push_back(step_02);
+    sequence.push_back(step_03);
+    sequence.push_back(step_04);
+    sequence.push_back(step_05);
+    sequence.push_back(step_06);
 
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
@@ -1019,18 +1019,18 @@ TEST_CASE("execute_sequence(): complex try sequence with fault", "[execute_seque
     step_11.set_label("try [end]");
 
     Sequence sequence;
-    sequence.add_step(step_00);
-    sequence.add_step(step_01);
-    sequence.add_step(step_02);
-    sequence.add_step(step_03);
-    sequence.add_step(step_04);
-    sequence.add_step(step_05);
-    sequence.add_step(step_06);
-    sequence.add_step(step_07);
-    sequence.add_step(step_08);
-    sequence.add_step(step_09);
-    sequence.add_step(step_10);
-    sequence.add_step(step_11);
+    sequence.push_back(step_00);
+    sequence.push_back(step_01);
+    sequence.push_back(step_02);
+    sequence.push_back(step_03);
+    sequence.push_back(step_04);
+    sequence.push_back(step_05);
+    sequence.push_back(step_06);
+    sequence.push_back(step_07);
+    sequence.push_back(step_08);
+    sequence.push_back(step_09);
+    sequence.push_back(step_10);
+    sequence.push_back(step_11);
 
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
@@ -1247,50 +1247,50 @@ TEST_CASE("execute_sequence(): complex sequence", "[execute_sequence]")
 
     Sequence sequence;
     // 32 steps
-    sequence.add_step(step_00);
+    sequence.push_back(step_00);
 
-    sequence.add_step(step_01);
-    sequence.add_step(step_02);
-    sequence.add_step(step_03);
-    sequence.add_step(step_04);
-    sequence.add_step(step_05);
+    sequence.push_back(step_01);
+    sequence.push_back(step_02);
+    sequence.push_back(step_03);
+    sequence.push_back(step_04);
+    sequence.push_back(step_05);
 
-    sequence.add_step(step_06);
+    sequence.push_back(step_06);
 
-    sequence.add_step(step_07);
+    sequence.push_back(step_07);
 
-    sequence.add_step(step_08);
-    sequence.add_step(step_09);
-    sequence.add_step(step_10);
-    sequence.add_step(step_11);
-    sequence.add_step(step_12);
+    sequence.push_back(step_08);
+    sequence.push_back(step_09);
+    sequence.push_back(step_10);
+    sequence.push_back(step_11);
+    sequence.push_back(step_12);
 
-    sequence.add_step(step_13);
-    sequence.add_step(step_14);
-    sequence.add_step(step_15);
-    sequence.add_step(step_16);
-    sequence.add_step(step_17);
-    sequence.add_step(step_18);
+    sequence.push_back(step_13);
+    sequence.push_back(step_14);
+    sequence.push_back(step_15);
+    sequence.push_back(step_16);
+    sequence.push_back(step_17);
+    sequence.push_back(step_18);
 
-    sequence.add_step(step_19);
-    sequence.add_step(step_20);
-    sequence.add_step(step_21);
-    sequence.add_step(step_22);
-    sequence.add_step(step_23);
+    sequence.push_back(step_19);
+    sequence.push_back(step_20);
+    sequence.push_back(step_21);
+    sequence.push_back(step_22);
+    sequence.push_back(step_23);
 
-    sequence.add_step(step_24);
+    sequence.push_back(step_24);
 
-    sequence.add_step(step_25);
+    sequence.push_back(step_25);
 
-    sequence.add_step(step_26);
+    sequence.push_back(step_26);
 
-    sequence.add_step(step_27);
-    sequence.add_step(step_28);
-    sequence.add_step(step_29);
+    sequence.push_back(step_27);
+    sequence.push_back(step_28);
+    sequence.push_back(step_29);
 
-    sequence.add_step(step_30);
+    sequence.push_back(step_30);
 
-    sequence.add_step(step_31);
+    sequence.push_back(step_31);
 
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 0->0, e: 1->1, f: 1->1, "
             "g: 1->1")
@@ -1488,50 +1488,50 @@ TEST_CASE("execute_sequence(): complex sequence with misplaced if", "[execute_se
 
     Sequence sequence;
     // 32 steps
-    sequence.add_step(step_00);
+    sequence.push_back(step_00);
 
-    sequence.add_step(step_01);
-    sequence.add_step(step_02);
-    sequence.add_step(step_03);
-    sequence.add_step(step_04);
-    sequence.add_step(step_05);
+    sequence.push_back(step_01);
+    sequence.push_back(step_02);
+    sequence.push_back(step_03);
+    sequence.push_back(step_04);
+    sequence.push_back(step_05);
 
-    sequence.add_step(step_06);
+    sequence.push_back(step_06);
 
-    sequence.add_step(step_07);
+    sequence.push_back(step_07);
 
-    sequence.add_step(step_08);
-    sequence.add_step(step_09);
-    sequence.add_step(step_10);
-    sequence.add_step(step_11);
-    sequence.add_step(step_12);
+    sequence.push_back(step_08);
+    sequence.push_back(step_09);
+    sequence.push_back(step_10);
+    sequence.push_back(step_11);
+    sequence.push_back(step_12);
 
-    sequence.add_step(step_13);
-    sequence.add_step(step_14);
-    sequence.add_step(step_15);
-    sequence.add_step(step_16);
-    sequence.add_step(step_17);
-    sequence.add_step(step_18);
+    sequence.push_back(step_13);
+    sequence.push_back(step_14);
+    sequence.push_back(step_15);
+    sequence.push_back(step_16);
+    sequence.push_back(step_17);
+    sequence.push_back(step_18);
 
-    sequence.add_step(step_19);
-    sequence.add_step(step_20);
-    sequence.add_step(step_21);
-    sequence.add_step(step_22);
-    sequence.add_step(step_23);
+    sequence.push_back(step_19);
+    sequence.push_back(step_20);
+    sequence.push_back(step_21);
+    sequence.push_back(step_22);
+    sequence.push_back(step_23);
 
-    sequence.add_step(step_24);
+    sequence.push_back(step_24);
 
-    sequence.add_step(step_25);
+    sequence.push_back(step_25);
 
-    sequence.add_step(step_26);
+    sequence.push_back(step_26);
 
-    sequence.add_step(step_27);
-    sequence.add_step(step_28);
-    sequence.add_step(step_29);
+    sequence.push_back(step_27);
+    sequence.push_back(step_28);
+    sequence.push_back(step_29);
 
-    sequence.add_step(step_30);
+    sequence.push_back(step_30);
 
-    sequence.add_step(step_31);
+    sequence.push_back(step_31);
 
     Context context;
     REQUIRE_THROWS_AS(execute_sequence(sequence, context), Error);

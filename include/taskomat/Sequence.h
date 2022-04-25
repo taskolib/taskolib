@@ -63,19 +63,6 @@ public:
     explicit Sequence(gul14::string_view label = "[anonymous]");
 
     /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [IN] Step
-     */
-    void add_step( const Step& step ) { steps_.push_back(step); indent(); }
-    /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [MOVE] Step
-     */
-    void add_step( Step&& step ) { steps_.push_back(std::move(step)); indent(); }
-
-    /**
      * Validates if the \a Step 's token are correctly enclosed in a proper way.
      *
      * It is done by validating the step types where each must fit to one of the
@@ -143,6 +130,36 @@ public:
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
+    /**
+     * Add \a Step to the sequence.
+     *
+     * @param step [IN] \a Step
+     * @deprecated Replace by push_back(const Step&). Can be removed in future releases.
+     */
+    void add_step(const Step& step) { push_back(step); }
+
+    /**
+     * Add \a Step to the sequence.
+     *
+     * @param step [MOVE] \a Step
+     * @deprecated Replace by push_back(Step&&). Can be removed in future releases.
+     */
+    void add_step(Step&& step) { push_back(std::move(step)); }
+
+    /**
+     * Attach \a Step reference to the end of the sequence.
+     * 
+     * @param step [IN] \a Step
+     */
+    void push_back(const Step& step) { steps_.push_back(step); indent(); }
+
+    /**
+     * Attach \a Step rvalue reference to the end of the sequence.
+     * 
+     * @param step [MOVE] \a Step
+     */ 
+    void push_back(Step&& step) { steps_.push_back(step); indent(); }
+
 private:
     // Header for exception on failed syntax check.
     static const char head[];
@@ -153,7 +170,7 @@ private:
     std::string label_;
     Steps steps_;
 
-    /// Check that the given description is valid. If not then throw a task::Error.
+    /// Check that the given description is valid. If not then throws a task::Error.
     void check_label(gul14::string_view label);
 
     /**
