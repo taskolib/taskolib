@@ -359,7 +359,6 @@ TEST_CASE("Sequence: erase Step(s) from Sequence", "[Sequence]")
         auto erase = seq.erase(seq.end());
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
-        REQUIRE(Step::type_action == (*erase).get_type());
     }
 
     SECTION("erase range from beginning (iterator)")
