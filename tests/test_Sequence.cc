@@ -356,7 +356,7 @@ TEST_CASE("Sequence: erase Step(s) from Sequence", "[Sequence]")
 
     SECTION("erase end (iterator)")
     {
-        auto erase = seq.erase(seq.end());
+        seq.erase(seq.end());
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
     }
