@@ -1,3 +1,9 @@
+libtaskomat-0-0-2 (0.0.3) unstable; urgency=low
+
+  * new version 
+
+ -- Lars Froehlich <lars.froehlich@desy.de>  Fri, 29 Apr 2022 11:10:36 +0200
+
 libtaskomat-0-0-2 (0.0.2) unstable; urgency=low
 
   * automatically added debian changelog entry
