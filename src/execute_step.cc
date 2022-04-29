@@ -204,10 +204,18 @@ bool execute_step(Step& step, Context& context)
 
     try
     {
-        sol::optional<bool> result = lua.safe_script(
+        auto protected_result = lua.safe_script(
             step.get_script(), sol::script_default_on_error);
 
+        if (!protected_result.valid())
+        {
+            sol::error err = protected_result;
+            throw Error(cat("Error while executing script: ", err.what()));
+        }
+
         export_variables_to_context(step, context, lua);
+
+        sol::optional<bool> result = protected_result;
 
         if (result)
             return *result;
