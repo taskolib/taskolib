@@ -1,5 +1,6 @@
 #include "sol/sol.hpp"
 
+#include <cassert>
 #include <iostream>
 
 inline int my_add(int x, int y) {
@@ -45,7 +46,7 @@ int main() {
 
 	// calling a stateful lambda modifies the value
 	lua.script("inc()");
-	sol_c_assert(x == 10);
+	assert(x == 10);
 	if (x == 10) {
 		// Do something based on this information
 		std::cout << "Yahoo! x is " << x << std::endl;
@@ -57,7 +58,7 @@ inc()
 inc()
 inc()
 )");
-	sol_c_assert(x == 40);
+	assert(x == 40);
 	if (x == 40) {
 		// Do something based on this information
 		std::cout << "Yahoo! x is " << x << std::endl;
@@ -69,8 +70,8 @@ inc()
 	int value = add(10, 11);
 	// second way to call the function
 	int value2 = add.call<int>(10, 11);
-	sol_c_assert(value == 21);
-	sol_c_assert(value2 == 21);
+	assert(value == 21);
+	assert(value2 == 21);
 	if (value == 21 && value2 == 21) {
 		std::cout << "Woo, value is 21!" << std::endl;
 	}
