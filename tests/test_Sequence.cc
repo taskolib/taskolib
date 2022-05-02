@@ -52,8 +52,209 @@ TEST_CASE("Sequence: empty()", "[Sequence]")
 {
     Sequence seq;
     REQUIRE(seq.empty());
-    seq.add_step(Step{});
+    seq.push_back(Step{});
     REQUIRE(seq.empty() == false);
+}
+
+TEST_CASE("Sequence: append Step to the end of Sequence", "[Sequence]")
+{
+    Sequence seq;
+
+    SECTION("append lvalue Step")
+    {
+        Step s1{};
+        seq.push_back(s1);
+        REQUIRE(seq.empty() == false);
+        REQUIRE(seq.size() == 1);
+
+        Step s2{};
+        seq.push_back(s2);
+        REQUIRE(seq.size() == 2);
+    }
+
+    SECTION("append rvalue Step")
+    {
+        seq.push_back(Step{});
+        REQUIRE(seq.empty() == false);
+        REQUIRE(seq.size() == 1);
+
+        seq.push_back(Step{});
+        REQUIRE(seq.empty() == false);
+        REQUIRE(seq.size() == 2);
+    }
+}
+
+TEST_CASE("Sequence: remove last Steps from Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{});
+    seq.push_back(Step{});
+    REQUIRE(seq.empty() == false);
+    REQUIRE(seq.size() == 2);
+
+    seq.pop_back();
+    REQUIRE(seq.size() == 1);
+    
+    seq.pop_back();
+    REQUIRE(seq.size() == 0);
+    REQUIRE(seq.empty());
+
+    seq.pop_back(); // remove from an already empty sequence again the last step
+    REQUIRE(seq.size() == 0);
+    REQUIRE(seq.empty());
+}
+
+TEST_CASE("Sequence: insert Step to Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action});
+   
+    SECTION("insert lvalue reference (iterator)")
+    {
+        Step insertStep{Step::type_if};
+        auto iter = seq.insert(seq.begin()+1, insertStep);
+        
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+    
+    SECTION("insert const lvalue reference (iterator)")
+    {
+        const Step insertStep{Step::type_if};
+        auto iter = seq.insert(seq.begin()+1, insertStep);
+        
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+    
+    SECTION("insert rvalue reference (iterator)")
+    {
+        auto iter = seq.insert(seq.begin()+1, Step{Step::type_if});
+        
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+}
+
+TEST_CASE("Sequence: erase Step(s) from Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_while});
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_end});
+    seq.push_back(Step{Step::type_action});
+
+    SECTION("erase first (iterator)")
+    {
+        auto erase = seq.erase(seq.begin());
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_while == (*erase).get_type());
+    }
+
+    SECTION("erase middle (iterator)")
+    {
+        auto erase = seq.erase(seq.begin()+2);
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_end == (*erase).get_type());
+    }
+
+    SECTION("erase last (iterator)")
+    {
+        auto erase = seq.erase(seq.end()-1);
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase end (iterator)")
+    {
+        seq.erase(seq.end());
+        REQUIRE(not seq.empty());
+        REQUIRE(4 == seq.size());
+    }
+
+    SECTION("erase range from beginning (iterator)")
+    {
+        auto erase = seq.erase(seq.begin(), seq.begin()+2);
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase range from middle (iterator)")
+    {
+        auto erase = seq.erase(seq.begin()+1, seq.begin()+3);
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_end == (*erase).get_type());
+    }
+
+    SECTION("erase range from end (iterator)")
+    {
+        auto erase = seq.erase(seq.end()-3, seq.end()-1);
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_action == (*erase).get_type());
+    }
+
+    SECTION("erase range from end (iterator)")
+    {
+        auto erase = seq.erase(seq.end()-2, seq.end());
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_end == (*erase).get_type());
+    }
+}
+
+TEST_CASE("Sequence: assign Step to Sequence", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action});
+
+    SECTION("assign step as lvalue (iterator)")
+    {
+        Step step{Step::type_if};
+        seq.assign(seq.begin()+1, step);
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("assign step as rvalue (iterator)")
+    {
+        seq.assign(seq.begin()+1, Step{Step::type_if});
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
 }
 
 TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
@@ -67,10 +268,10 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
 
     Sequence sequence("validating try-catch-end 1 correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 4u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -94,11 +295,11 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
 
     Sequence sequence("validating try-catch-end correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 5u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -126,15 +327,15 @@ TEST_CASE("Sequence: check correctness of try-try-catch-end-catch-end", "[Sequen
     */
     Sequence sequence("validating try-try-catch-end-catch-end correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     Context context;
 
@@ -148,7 +349,7 @@ TEST_CASE("Sequence: check fault for try", "[Sequence]")
     */
     Sequence sequence("validating try-catch correctness");
 
-    sequence.add_step(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_try});
 
     REQUIRE(sequence.size() == 1u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -165,8 +366,8 @@ TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
     */
     Sequence sequence("validating try-catch correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_try});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -185,9 +386,9 @@ TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
     */
     Sequence sequence("validating try-catch correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
 
     REQUIRE(sequence.size() == 3u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -206,8 +407,8 @@ TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
     */
     Sequence sequence("validating try-end correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -228,11 +429,11 @@ TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
     */
     Sequence sequence("validating try-catch-catch-end correctness");
 
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 5u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -254,9 +455,9 @@ TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
     */
     Sequence sequence("validating if-end correctness");
 
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 3u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -278,11 +479,11 @@ TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
     */
     Sequence sequence("validating if-else-end correctness");
 
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_else});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_else});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 5u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -308,13 +509,13 @@ TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
     */
     Sequence sequence("validating if-else-end correctness");
 
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_else});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_else});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 7u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -344,15 +545,15 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
     */
     Sequence sequence("validating if-else-end correctness");
 
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_else});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_else});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 9u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -385,16 +586,16 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     */
     Sequence sequence("validating if-elseif-try-catch-end-else-end correctness");
 
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_else});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_else});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 10u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -430,17 +631,17 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end",
     */
     Sequence sequence("validating if-elseif-try-catch-end-else-end correctness");
 
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_try});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_catch});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_else});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_else});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 11u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -472,14 +673,14 @@ TEST_CASE("Sequence: check fault of if-elseif-while-end-else-end", "[Sequence]")
         07: END
     */
     Sequence sequence("validating if-elseif-while-end-else-end correctness");
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_while});
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_while});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 8u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -510,15 +711,15 @@ TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end", "[Seque
         08: END
     */
     Sequence sequence("validating if-elseif-while-end-else-end correctness");
-    sequence.add_step(Step{Step::type_if});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_while});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_elseif});
-    sequence.add_step(Step{Step::type_action});
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_while});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 9u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -541,7 +742,7 @@ TEST_CASE("Sequence: check fault for end", "[Sequence]")
     */
     Sequence sequence("validating end correctness");
 
-    sequence.add_step(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_end});
 
     REQUIRE(sequence.size() == 1u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -558,8 +759,8 @@ TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
     */
     Sequence sequence("validating end-action correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_action});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_action});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -577,8 +778,8 @@ TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
     */
     Sequence sequence("validating end-try correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_try});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_try});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -596,8 +797,8 @@ TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
     */
     Sequence sequence("validating end-catch correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_catch});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_catch});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -615,8 +816,8 @@ TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
     */
     Sequence sequence("validating end-if correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_if});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_if});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -634,8 +835,8 @@ TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
     */
     Sequence sequence("validating end-elseif correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_elseif});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_elseif});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -653,8 +854,8 @@ TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
     */
     Sequence sequence("validating end-else correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_else});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_else});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);
@@ -672,8 +873,8 @@ TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
     */
     Sequence sequence("validating end-while correctness");
 
-    sequence.add_step(Step{Step::type_end});
-    sequence.add_step(Step{Step::type_while});
+    sequence.push_back(Step{Step::type_end});
+    sequence.push_back(Step{Step::type_while});
 
     REQUIRE(sequence.size() == 2u);
     REQUIRE(sequence[0].get_indentation_level() == 0);

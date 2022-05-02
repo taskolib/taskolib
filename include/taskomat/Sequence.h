@@ -35,11 +35,41 @@
 namespace task {
 
 /**
+ * \section Main Sequencer class
+ * 
  * A sequence of \a Step 's to be executed under a given \a Context .
  *
  * On executing a validation is performed due to check if the steps are consistent. When
  * a fault is detected an \a Error is thrown including a precise error message about what
  * fails.
+ * 
+ * To modify the sequence the following member functions are implemented:
+ * 
+ * -# push_back(): add new \a Step at the end
+ * -# pop_back(): remove last \a Step from the end
+ * -# insert(): insert \a Step or range of \a Step 's either with position or iterator.
+ * -# assign(): assign a new \a Step to an existing element. 
+ * -# erase(): remove \a Step or range of \a Step 's either with position or iterator.
+ * 
+ * After modifing the sequence all before retrieved iterators are invalidated and further
+ * usage will result with an undefined behavior.
+ * 
+ * Since the reverse iterator are only used to iterate through the sequence one will
+ * not find any member function for manipulation or modification.
+ * 
+ * \note To use one of the member functions for modification with index one can use the
+ * following workaround:
+ * 
+ * \code {.cpp}
+ * Sequence seq;
+ * seq.push_back(Step{Step::type_try});
+ * seq.push_back(Step{Step::type_action});
+ * seq.push_back(Step{Step::type_catch});
+ * seq.push_back(Step{Step::type_action});
+ * seq.push_back(Step{Step::type_end});
+ * // insert at index 1 an action step
+ * seq.insert(seq.begin()+1, Step{Step::type_action});
+ * \endcode
  */
 class Sequence
 {
@@ -48,6 +78,10 @@ public:
     using Steps = std::vector<Step>;
     using SizeType = std::uint16_t;
     using size_type = SizeType;
+    using Iterator = Steps::iterator;
+    using ReverseIterator = Steps::reverse_iterator;
+    using ConstIterator = Steps::const_iterator;
+    using ConstReverseIterator = Steps::const_reverse_iterator;
 
     static constexpr std::size_t max_label_length = 128;
 
@@ -61,19 +95,6 @@ public:
      *            max_label_length characters.
      */
     explicit Sequence(gul14::string_view label = "[anonymous]");
-
-    /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [IN] Step
-     */
-    void add_step( const Step& step ) { steps_.push_back(step); indent(); }
-    /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [MOVE] Step
-     */
-    void add_step( Step&& step ) { steps_.push_back(std::move(step)); indent(); }
 
     /**
      * Validates if the \a Step 's token are correctly enclosed in a proper way.
@@ -118,30 +139,197 @@ public:
     const Step& operator[](SizeType idx) const { return steps_[idx]; }
 
     /// Return Steps iterator to the first element of the container.
-    const Steps::iterator begin() noexcept { return steps_.begin(); }
+    const Iterator begin() noexcept { return steps_.begin(); }
     /// Return constant Steps iterator to the first element of the container.
-    const Steps::const_iterator cbegin() const noexcept { return steps_.begin(); }
+    const ConstIterator cbegin() const noexcept { return steps_.cbegin(); }
 
     /// Return reverse Steps iterator to the first element of the container.
-    const Steps::reverse_iterator rbegin() noexcept { return steps_.rbegin(); }
+    const ReverseIterator rbegin() noexcept { return steps_.rbegin(); }
     /// Return constant reverse Steps iterator to the first element of the container.
-    const Steps::const_reverse_iterator crbegin() const noexcept { return steps_.crbegin(); }
+    const ConstReverseIterator crbegin() const noexcept { return steps_.crbegin(); }
 
     /// Return Steps iterator to the element following the last element of the container.
-    const Steps::iterator end() noexcept { return steps_.end(); }
+    const Iterator end() noexcept { return steps_.end(); }
     /// Return constant Steps iterator to the element following the last element of the
     /// container.
-    const Steps::const_iterator cend() const noexcept { return steps_.end(); }
+    const ConstIterator cend() const noexcept { return steps_.cend(); }
 
     /// Return reverse Steps iterator to the element following the last element of the
     /// container.
-    const Steps::reverse_iterator rend() noexcept { return steps_.rend(); }
+    const ReverseIterator rend() noexcept { return steps_.rend(); }
     /// Return constant reverse Steps iterator to the element following the last element
     /// of the container.
-    const Steps::const_reverse_iterator crend() const noexcept { return steps_.crend(); }
+    const ConstReverseIterator crend() const noexcept { return steps_.crend(); }
 
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
+
+    /**
+     * Add \a Step to the sequence.
+     *
+     * @param step [IN] \a Step
+     * @deprecated Replace by push_back(const Step&). Can be removed in future releases.
+     */
+    [[deprecated("No longer supported")]]
+    void add_step(const Step& step) { push_back(step); }
+
+    /**
+     * Add \a Step to the sequence.
+     *
+     * @param step [MOVE] \a Step
+     * @deprecated Replace by push_back(Step&&). Can be removed in future releases.
+     */
+    [[deprecated("No longer supported")]]
+    void add_step(Step&& step) { push_back(std::move(step)); }
+
+    /**
+     * Attach \a Step reference to the end of the sequence.
+     * 
+     * @param step [IN] \a Step
+     */
+    void push_back(const Step& step) { steps_.push_back(step); indent(); }
+
+    /**
+     * Attach \a Step rvalue reference to the end of the sequence.
+     * 
+     * @param step [MOVE] \a Step
+     */ 
+    void push_back(Step&& step) { steps_.push_back(step); indent(); }
+
+    /**
+     * Remove the last element from the sequence.
+     * 
+     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the 
+     * last element as well as the end() iterator are invalidated.
+     */
+    void pop_back() { if (not steps_.empty()) steps_.pop_back(); indent(); }
+
+    /**
+     * Insert the given \a Step before of the constant iterator into Sequence.
+     * 
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *  
+     * @param iter constant \a Step iterator in the Sequence
+     * @param step the added \a Step
+     * @return inserted \a Step
+     */
+    ConstIterator insert(ConstIterator iter, const Step& step)
+    {
+        auto return_iter = steps_.insert(iter, step);
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Insert the given \a Step rvalue reference before of the constant iterator into
+     * Sequence.
+     * 
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *  
+     * @param iter constant \a Step iterator in the Sequence
+     * @param step the added \a Step
+     * @return inserted \a Step
+     */
+    ConstIterator insert(ConstIterator iter, Step&& step)
+    {
+        auto return_iter = steps_.insert(iter, std::move(step));
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Remove \a Step iterator from sequence.
+     * 
+     * It returns the iterator after the removed one.
+     * 
+     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * 
+     * @param iter \a Step iterator to be removed
+     * @return Steps::iterator iterator after the removed \a Step
+     */
+    ConstIterator erase(ConstIterator iter)
+    {
+        auto return_iter = steps_.erase(iter);
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Remove a bunch of \a Step 's iterator from sequence from \a first to \a last . The
+     * removed iterators is exclusive the \a last one: [first, last)
+     * 
+     * \code
+     * 0: ACTION
+     * 1:    WHILE
+     * 2:        ACTION
+     * 3:    END
+     * 4: ACTION
+     * \endcode
+     * 
+     * After removing iterator 1 to exclusive 4 ( \a while-loop ):
+     * 
+     * \code
+     * 0: ACTION
+     * 1: ACTION
+     * \endcode
+     * 
+     * When you try to remove the \a last one as \a end() the first remove \a Step is
+     * returned. Example: remove iterator 1 to 5 (here \a end() ):
+     * 
+     * \code
+     * 0: ACTION
+     * 1:    WHILE
+     * 2:        ACTION
+     * 3:    END
+     * 4: ACTION
+     * \endcode
+     * 
+     * Result: return iterator with step \a while (element 1)
+     * 
+     * \code
+     * 0: ACTION
+     * \endcode
+     * 
+     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * 
+     * @param first first \a Step iterator to be removed
+     * @param last last \a Step iterator to be removed (exclusive) 
+     * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
+     */
+    ConstIterator erase(ConstIterator first, ConstIterator last)
+    {
+        auto return_iter = steps_.erase(first, last);
+        indent();
+        return return_iter;
+    }
+
+    /**
+     * Modify the \a Step at the given position.
+     * 
+     * @param iter position to assign the \a Step
+     * @param step \a Step
+     */
+    void assign(ConstIterator iter, const Step& step)
+    {
+        auto it = steps_.begin() + (iter - steps_.cbegin());
+        *it = step;
+        indent();
+    }
+
+    /**
+     * Modify the \a Step at the given position.
+     * 
+     * @param iter position to assign the \a Step
+     * @param step refernce value \a Step
+     */
+    void assign(ConstIterator iter, Step&& step)
+    {
+        auto it = steps_.begin() + (iter - steps_.cbegin());
+        *it = std::move(step);
+        indent();
+    }
 
 private:
     // Header for exception on failed syntax check.
@@ -153,7 +341,7 @@ private:
     std::string label_;
     Steps steps_;
 
-    /// Check that the given description is valid. If not then throw a task::Error.
+    /// Check that the given description is valid. If not then throws a task::Error.
     void check_label(gul14::string_view label);
 
     /**
