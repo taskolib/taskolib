@@ -141,7 +141,7 @@ public:
     /// Return Steps iterator to the first element of the container.
     const Iterator begin() noexcept { return steps_.begin(); }
     /// Return constant Steps iterator to the first element of the container.
-    const ConstIterator cbegin() const noexcept { return steps_.begin(); }
+    const ConstIterator cbegin() const noexcept { return steps_.cbegin(); }
 
     /// Return reverse Steps iterator to the first element of the container.
     const ReverseIterator rbegin() noexcept { return steps_.rbegin(); }
@@ -152,7 +152,7 @@ public:
     const Iterator end() noexcept { return steps_.end(); }
     /// Return constant Steps iterator to the element following the last element of the
     /// container.
-    const ConstIterator cend() const noexcept { return steps_.end(); }
+    const ConstIterator cend() const noexcept { return steps_.cend(); }
 
     /// Return reverse Steps iterator to the element following the last element of the
     /// container.
