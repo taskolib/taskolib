@@ -199,9 +199,14 @@ public:
     /**
      * Remove the last element from the sequence.
      * 
+<<<<<<< HEAD
      * Removeing on an empty Sequence returns silently. Iterators and references to the 
      * last element as well as the end(), and cend() iterators are marked
      * invalid after finishing the function call.
+=======
+     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the 
+     * last element as well as the end() iterator are invalidated.
+>>>>>>> c86d1a753c6b8133e72555d4ffa35b9a605ca21d
      */
     void pop_back() { if (not steps_.empty()) steps_.pop_back(); indent(); }
 
