@@ -30,7 +30,7 @@ add_project_arguments(
     language : 'cpp')
 
 # Keep this version number up to date...
-sol_version = '3.2.2'
+sol_version = '3.2.3'
 
 
 ## File lists
@@ -48,11 +48,11 @@ install_headers(files(
         'include/taskomat/taskomat.h',
         'include/taskomat/VariableName.h',
     ),
-    subdir: 'taskomat',)
+    subdir: 'taskomat',
+)
 
 install_subdir('include/taskomat/sol/sol',
     install_dir: get_option('prefix') / get_option('includedir') / 'taskomat' / 'sol' + sol_version,
-
 )
 
 # Sources
