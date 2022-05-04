@@ -28,7 +28,7 @@
 #include <functional>
 #include <unordered_map>
 #include <variant>
-#include "sol/state.hpp"
+#include "sol/sol.hpp"
 #include "taskomat/VariableName.h"
 
 namespace task {

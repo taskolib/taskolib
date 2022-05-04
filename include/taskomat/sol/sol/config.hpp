@@ -1,8 +1,6 @@
-// sol2
-
 // The MIT License (MIT)
 
-// Copyright (c) 2013-2021 Rapptz, ThePhD and contributors
+// Copyright (c) 2013-2020 Rapptz, ThePhD and contributors
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -21,30 +19,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef SOL_CONFIG_HPP
-#define SOL_CONFIG_HPP
+#ifndef SOL_SINGLE_CONFIG_HPP
+#define SOL_SINGLE_CONFIG_HPP
 
-/* Base, empty configuration file!
+// beginning of sol/config.hpp
 
-     To override, place a file in your include paths of the form:
-
-
-. (your include path here)
-| sol (directory, or equivalent)
-  | config.hpp (your config.hpp file)
-
-
-     So that when sol2 includes the file
-
-
-#include <sol/config.hpp>
-
-
-     it gives you the configuration values you desire. Configuration values can be
-seen in the safety.rst of the doc/src, or at
+/*
+Configuration values can be seen in the safety.rst of the Sol3 doc/src, or at
 https://sol2.readthedocs.io/en/latest/safety.html ! You can also pass them through
 the build system, or the command line options of your compiler.
-
 */
 
-#endif // SOL_CONFIG_HPP
+// Tell Sol3 that we are using a custom LUA build that was compiled with C++ and therefore
+// properly handles exceptions.
+#define SOL_USING_CXX_LUA 1
+
+// Tell Sol3 to make several checks so that we can actually differentiate integers from
+// floating-point numbers.
+#define SOL_SAFE_NUMERICS 1
+
+// Do not produce console output on certain errors
+#define SOL_PRINT_ERRORS 0
+
+// Enable maximum amount of safety checks
+// #define SOL_ALL_SAFETIES_ON 1
+
+// end of sol/config.hpp
+
+#endif // SOL_SINGLE_CONFIG_HPP

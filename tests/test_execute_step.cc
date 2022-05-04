@@ -24,7 +24,7 @@
 
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
-#include "taskomat/sol/sol/state.hpp"
+#include "taskomat/sol/sol/sol.hpp"
 #include "taskomat/Error.h"
 #include "taskomat/execute_step.h"
 
