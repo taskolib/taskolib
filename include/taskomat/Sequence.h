@@ -348,55 +348,54 @@ private:
      * Check the sequence for syntactic consistency and throw an exception if an error is
      * detected. That means that one or all of the following conditions must be satisfied:
      *
-     * -# each token \a Step::type_try must have the corresponding
-     *    \a Step::type_catch and \a Step::type_end
-     * -# each token \a Step::type_if must have n-times \a Step::type_elseif and/or
-     *  \a Step::type_else with a tailing \a Step::type_end, n >= 0.
-     * -# each token \a Step::while must have the corresponding \a Step::type_end
+     * -# each TRY step must have a corresponding CATCH and END step
+     * -# each IF step must have m ELSEIF steps followed by n ELSE steps and one END step
+     *    with m >= 0 and (n == 0 or n == 1).
+     * -# each WHILE must have a matching END
      *
-     * As a body of each surrounding token it must have at least one \a Step::type_action
-     * as Lua scriptless.
-     *
-     * @param level nested indention level to check. Base level is 0.
-     * @param idx index of step in sequence.
+     * @param begin Iterator pointing to the first step to be checked
+     * @param end   Iterator pointing past the last step to be checked
      * @exception throws an \a Error exception if an ill-formed token is found.
-     * @see #check_syntax()
+     * @see check_syntax()
      */
-    void check_syntax(short level, SizeType idx) const;
+    void check_syntax(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for while-clauses. Invoked by
      * \a check_syntax(const int, SizeType).
      *
-     * @param level nested indention level to check.
-     * @param idx index of step in sequence.
-     * @return new evaluated index for next token.
+     * @param begin Iterator pointing to the WHILE step; must be dereferenceable.
+     * @param end   Iterator pointing past the last step to be checked
+     * @returns an iterator pointing to the first step after the WHILE..END construct.
      * @exception throws an \a Error exception if an ill-formed 'while' token is found.
      */
-    SizeType check_syntax_for_while(const short level, SizeType idx) const;
+    Sequence::ConstIterator check_syntax_for_while(Sequence::ConstIterator begin,
+        Sequence::ConstIterator end) const;
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by
      * \a check_syntax(const int, SizeType).
      *
-     * @param level nested indention level to check.
-     * @param idx index of step in sequence.
-     * @return new evaluated index for next token.
+     * @param begin Iterator pointing to the TRY step; must be dereferenceable.
+     * @param end   Iterator pointing past the last step to be checked
+     * @returns an iterator pointing to the first step after the TRY..CATCH..END construct.
      * @exception throws an \a Error exception if an ill-formed 'try' token is found.
      */
-    SizeType check_syntax_for_try(const short level, SizeType idx) const;
+    Sequence::ConstIterator check_syntax_for_try(Sequence::ConstIterator begin,
+        Sequence::ConstIterator end) const;
 
     /**
      * Internal syntax check for if-elseif-else-clauses. Invoked by
      * \a check_syntax(const int, SizeType).
      *
-     * @param level nested indention level to check.
-     * @param idx index of step in sequence.
-     * @return new evaluated index for next token.
-     * @exception throws an \a Error exception if an ill-formed 'if-elseif-else' token
-     * is found.
+     * @param begin Iterator pointing to the IF step; must be dereferenceable.
+     * @param end   Iterator pointing past the last step to be checked
+     * @returns an iterator pointing to the first step after the IF..(ELSEIF)..(ELSE)..END
+     *          construct.
+     * @exception Error is thrown if an ill-formed 'if-elseif-else' token is found.
      */
-    SizeType check_syntax_for_if(const short level, SizeType idx) const;
+    Sequence::ConstIterator check_syntax_for_if(Sequence::ConstIterator begin,
+        Sequence::ConstIterator end) const;
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.
@@ -406,7 +405,22 @@ private:
      * nesting is correct and complete, indentation_error_ is set to an empty string.
      */
     void indent() noexcept;
+
+    /**
+     * Throw a syntax error for the specified step.
+     * The error message reports the step number.
+     */
+    void throw_syntax_error_for_step(ConstIterator it, gul14::string_view msg) const;
 };
+
+
+namespace detail {
+
+Sequence::ConstIterator find_end_of_indented_block(Sequence::ConstIterator begin,
+    Sequence::ConstIterator end, short min_indentation_level);
+
+} // namespace task::detail
+
 
 } // namespace task
 

@@ -280,7 +280,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
     REQUIRE(sequence[3].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
@@ -570,7 +570,8 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
     REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
-TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Sequence]")
+TEST_CASE("Sequence: check if-elseif-try-catch-end-elseif-end w/ empty catch block",
+          "[Sequence]")
 {
     /*
         IF THEN
@@ -610,11 +611,11 @@ TEST_CASE("Sequence: check fault of if-elseif-try-catch-end-elseif-end", "[Seque
     REQUIRE(sequence[9].get_indentation_level() == 0);
 
     REQUIRE(sequence.get_indentation_error() == "");
-    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end",
-"[Sequence]")
+          "[Sequence]")
 {
     /*
         IF THEN
@@ -660,7 +661,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end",
     REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
-TEST_CASE("Sequence: check fault of if-elseif-while-end-else-end", "[Sequence]")
+TEST_CASE("Sequence: if-elseif-while-end-else-end with empty while loop", "[Sequence]")
 {
     /*
         00: IF THEN
@@ -694,7 +695,7 @@ TEST_CASE("Sequence: check fault of if-elseif-while-end-else-end", "[Sequence]")
 
     Context context;
 
-    REQUIRE_THROWS_AS(sequence.check_syntax(), Error);
+    REQUIRE_NOTHROW(sequence.check_syntax());
 }
 
 TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end", "[Sequence]")

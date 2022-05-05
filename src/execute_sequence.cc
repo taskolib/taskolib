@@ -54,21 +54,6 @@ Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
     return step_reverse.base();
 }
 
-Iterator find_end_of_indented_block(Iterator begin, Iterator end,
-                                    short min_indentation_level)
-{
-    auto it = std::find_if(begin, end,
-        [=](const Step& step)
-        {
-            return step.get_indentation_level() < min_indentation_level;
-        });
-
-    if (it == end)
-        return begin;
-    else
-        return it;
-}
-
 /**
  * Internal traverse execution loop depending on indentation level.
  *
@@ -87,8 +72,8 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
         {
             case Step::type_while:
             {
-                const auto block_end = find_end_of_indented_block(step + 1, step_end,
-                    step->get_indentation_level() + 1);
+                const auto block_end = detail::find_end_of_indented_block(
+                    step + 1, step_end, step->get_indentation_level() + 1);
 
                 while (execute_step((Step&)*step, context))
                     execute_sequence_impl(step + 1, block_end, context);
@@ -99,13 +84,13 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
 
             case Step::type_try:
             {
-                const auto it_catch = find_end_of_indented_block(
+                const auto it_catch = detail::find_end_of_indented_block(
                     step + 1, step_end, step->get_indentation_level() + 1);
 
                 if (it_catch == step_end || it_catch->get_type() != Step::type_catch)
                     throw Error("Missing catch block");
 
-                const auto it_catch_block_end = find_end_of_indented_block(
+                const auto it_catch_block_end = detail::find_end_of_indented_block(
                     it_catch + 1, step_end, step->get_indentation_level() + 1);
 
                 try
@@ -127,7 +112,7 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
             case Step::type_if:
             case Step::type_elseif:
             {
-                const auto block_end = find_end_of_indented_block(
+                const auto block_end = detail::find_end_of_indented_block(
                     step + 1, step_end, step->get_indentation_level() + 1);
 
                 if (execute_step((Step&)*step, context))
@@ -152,7 +137,7 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
 
             case Step::type_else:
             {
-                const auto block_end = find_end_of_indented_block(
+                const auto block_end = detail::find_end_of_indented_block(
                     step + 1, step_end, step->get_indentation_level() + 1);
 
                 execute_sequence_impl(step + 1, block_end, context);

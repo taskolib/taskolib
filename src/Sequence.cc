@@ -29,6 +29,26 @@ using gul14::cat;
 namespace task
 {
 
+namespace detail {
+
+Sequence::ConstIterator find_end_of_indented_block(Sequence::ConstIterator begin,
+    Sequence::ConstIterator end, short min_indentation_level)
+{
+    auto it = std::find_if(begin, end,
+        [=](const Step& step)
+        {
+            return step.get_indentation_level() < min_indentation_level;
+        });
+
+    if (it == end)
+        return begin;
+    else
+        return it;
+}
+
+} // namespace task::detail
+
+
 const char Sequence::head[] = "[syntax check] ";
 
 Sequence::Sequence(gul14::string_view label)
@@ -42,8 +62,7 @@ void Sequence::check_syntax() const
     if (not indentation_error_.empty())
         throw Error(indentation_error_);
 
-    if (not steps_.empty())
-        check_syntax(0, 0);
+    check_syntax(steps_.begin(), steps_.end());
 }
 
 void Sequence::check_label(gul14::string_view label)
@@ -130,155 +149,133 @@ void Sequence::indent() noexcept
     }
 }
 
-void Sequence::check_syntax(short level, Sequence::SizeType idx) const
+void Sequence::check_syntax(Sequence::ConstIterator begin, Sequence::ConstIterator end)
+    const
 {
-    do
+    ConstIterator step = begin;
+
+    while (step < end)
     {
-        const short step_indention_level = steps_[idx].get_indentation_level();
-
-        if (step_indention_level > level)
-            check_syntax(step_indention_level, idx);
-        else if (step_indention_level == level)
+        switch (step->get_type())
         {
-            switch(steps_[idx].get_type())
-            {
-                case Step::type_while:
-                    idx = check_syntax_for_while(step_indention_level, idx);
-                    break;
-                case Step::type_try:
-                    idx = check_syntax_for_try(step_indention_level, idx);
-                    break;
-                case Step::type_if:
-                    idx = check_syntax_for_if(step_indention_level, idx);
-                    break;
+            case Step::type_while:
+                step = check_syntax_for_while(step, end);
+                break;
 
-                default:
-                    break;
-            }
-        }
-    } while(++idx < steps_.size());
-}
+            case Step::type_try:
+                step = check_syntax_for_try(step, end);
+                break;
 
-Sequence::SizeType Sequence::check_syntax_for_while(const short level,
-    Sequence::SizeType idx) const
-{
-    const Sequence::SizeType while_idx = idx;
+            case Step::type_if:
+                step = check_syntax_for_if(step, end);
+                break;
 
-    while(++idx < steps_.size())
-    {
-        if (steps_[idx].get_indentation_level() == level)
-        {
-            switch(steps_[idx].get_type())
-            {
-                case Step::type_end:
-                    if (while_idx + 1 < idx)
-                        return level == 0 ? while_idx : idx;
-                    // fallthrough
+            case Step::type_action:
+                ++step;
+                break;
 
-                default:
-                    throw Error(cat(head, "ill-formed while-clause: missing action or "
-                    "control-flow token before 'end'. indent=", level, ", index=", idx,
-                    ", previous 'while' indication=", while_idx));
-            }
+            case Step::type_catch:
+                throw_syntax_error_for_step(step, "CATCH without matching TRY");
+                break;
+
+            case Step::type_elseif:
+                throw_syntax_error_for_step(step, "ELSE IF without matching IF");
+                break;
+
+            case Step::type_else:
+                throw_syntax_error_for_step(step, "ELSE without matching IF");
+                break;
+
+            case Step::type_end:
+                throw_syntax_error_for_step(step, "END without matching IF/WHILE/TRY");
+                break;
+
+            default:
+                throw_syntax_error_for_step(step, "Unexpected step type");
         }
     }
-
-    throw Error(cat(head, "ill-formed while-clause: missing 'end' token. indent=", level,
-    ", previous 'while' indication=", while_idx));
 }
 
-Sequence::SizeType Sequence::check_syntax_for_try(const short level,
-    Sequence::SizeType idx) const
+Sequence::ConstIterator Sequence::check_syntax_for_while(Sequence::ConstIterator begin,
+    Sequence::ConstIterator end) const
 {
-    const Sequence::SizeType try_idx = idx;
-    Sequence::SizeType counter = idx;
-    while(++idx < steps_.size())
-    {
-        if (steps_[idx].get_indentation_level() == level)
-        {
-            switch(steps_[idx].get_type())
-            {
-                case Step::type_catch:
-                    if (counter + 1 >= idx)
-                    {
-                        throw Error(cat(head, "ill-formed try-clause: missing action or "
-                        "control-flow token before 'catch'. indent=", level, ", index=",
-                        idx, ", previous 'try' indication=", try_idx));
-                    }
-                    counter = idx;
-                    break;
+    const auto block_end = detail::find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
 
-                case Step::type_end:
-                    if (counter + 1 < idx)
-                        return level == 0 ? try_idx : idx;
-                    // fallthrough
+    if (block_end == end || block_end->get_type() != Step::type_end)
+        throw_syntax_error_for_step(begin, "WHILE without matching END");
 
-                default:
-                    throw Error(cat(head, "ill-formed try-clause: missing action or "
-                    "control-flow token before 'end'. indent=", level, ", index=", idx,
-                    ", previous 'try' indication=", try_idx));
-            }
-        }
-    }
+    check_syntax(begin + 1, block_end);
 
-    throw Error(cat(head, "ill-formed try-clause: missing 'end' token. indent=", level,
-    ", previous 'try' indication=", try_idx));
+    return block_end + 1;
 }
 
-Sequence::SizeType Sequence::check_syntax_for_if(const short level,
-    Sequence::SizeType idx) const
+Sequence::ConstIterator Sequence::check_syntax_for_try(Sequence::ConstIterator begin,
+    Sequence::ConstIterator end) const
 {
-    const SizeType if_idx = idx;
-    SizeType counter = idx;
-    bool find_else = false;
-    while(++idx < steps_.size())
+    const auto it_catch = detail::find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
+
+    if (it_catch == end || it_catch->get_type() != Step::type_catch)
+        throw_syntax_error_for_step(begin, "TRY without matching CATCH");
+
+    check_syntax(begin + 1, it_catch); // block between TRY and CATCH
+
+    const auto it_catch_block_end = detail::find_end_of_indented_block(
+        it_catch + 1, end, begin->get_indentation_level() + 1);
+
+    if (it_catch_block_end == end || it_catch_block_end->get_type() != Step::type_end)
+        throw_syntax_error_for_step(begin, "TRY...CATCH without matching END");
+
+    check_syntax(it_catch + 1, it_catch_block_end); // block between CATCH and END
+
+    return it_catch_block_end + 1;
+}
+
+Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator begin,
+    Sequence::ConstIterator end) const
+{
+    bool else_found = false;
+    auto it_block_statement = begin;
+
+    while (true)
     {
-        if (steps_[idx].get_indentation_level() == level)
+        const auto it = detail::find_end_of_indented_block(
+            it_block_statement + 1, end, begin->get_indentation_level() + 1);
+
+        if (it == end)
+            throw_syntax_error_for_step(begin, "IF without matching END");
+
+        check_syntax(it_block_statement + 1, it);
+
+        switch (it->get_type())
         {
-            switch(steps_[idx].get_type())
-            {
-                case Step::type_elseif:
-                    if (counter + 1 >= idx)
-                    {
-                        throw Error(cat(head, "ill-formed if-clause: missing action or "
-                        "control-flow token. indent=", level, ", index=", idx,
-                        ", previous 'if' indication=", if_idx));
-                    }
-                    else if (find_else)
-                    {
-                        throw Error(cat(head, "ill-formed if-clause: 'else' before 'else "
-                        "if' token. indent=", level, ", index=", idx, ", previous 'if' "
-                        "indication=", if_idx));
-                    }
-                    counter = idx;
-                    break;
+            case Step::type_elseif:
+                if (else_found)
+                    throw_syntax_error_for_step(it, "ELSE IF after ELSE clause");
+                break;
 
-                case Step::type_else:
-                    if (counter + 1 >= idx)
-                    {
-                        throw Error(cat(head, "ill-formed if-clause: missing action or "
-                        "control-flow token. indent=", level, ", index=", idx,
-                        ", previous 'if' indication=", if_idx));
-                    }
-                    counter = idx;
-                    find_else = true;
-                    break;
+            case Step::type_else:
+                if (else_found)
+                    throw_syntax_error_for_step(it, "Duplicate ELSE clause");
+                else_found = true;
+                break;
 
-                case Step::type_end:
-                    if (counter + 1 < idx)
-                        return level == 0 ? if_idx : idx;
-                    // fallthrough
+            case Step::type_end:
+                return it + 1;
 
-                default:
-                    throw Error(cat(head, "ill-formed if-clause: missing action or "
-                    "control-flow token before 'end'. indent=", level, ", index=", idx,
-                    ", previous 'if' indication=", if_idx));
-            }
+            default:
+                throw_syntax_error_for_step(it, "Unfinished IF construct");
         }
-    }
 
-    throw Error(cat(head, "ill-formed if-clause: missing 'end' token. indent=", level,
-    ", previous 'if' indication=", if_idx));
+        it_block_statement = it;
+    }
+}
+
+void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
+    gul14::string_view msg) const
+{
+    throw Error(cat(head, "Step ", it - steps_.begin() + 1, ": ", msg));
 }
 
 } // namespace task

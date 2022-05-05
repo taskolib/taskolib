@@ -1,6 +1,6 @@
 /**
  * \file   test_execute_sequence.cc
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Froehlich
  * \date   Created on February 16, 2022
  * \brief  Test suite for the free function execute_sequence().
  *
@@ -166,6 +166,8 @@ TEST_CASE("execute_sequence(): if-else sequence", "[execute_sequence]")
     sequence.push_back(step_else);
     sequence.push_back(step_action_else);
     sequence.push_back(step_if_end);
+
+    sequence.check_syntax();
 
     SECTION("if-else sequence with if=true")
     {
@@ -563,6 +565,83 @@ TEST_CASE("execute_sequence(): if-elseif-elseif-else sequence", "[execute_sequen
     }
 }
 
+TEST_CASE("execute_sequence(): if-elseif-else-end sequence with empty blocks",
+          "[execute_sequence]")
+{
+    /*
+    pre-condition:
+    a = 0/1/2/3
+
+    script:
+    0: if a == 1 then
+    1: elseif a == 2 then
+    2: elseif a == 3 then
+    3: else
+    4: end
+
+    post-condition:
+    a = 5/2/3/4
+
+    */
+    Step step_if        {Step::type_if};
+    Step step_elseif1   {Step::type_elseif};
+    Step step_elseif2   {Step::type_elseif};
+    Step step_else      {Step::type_else};
+    Step step_end       {Step::type_end};
+
+    step_if.set_label("if a == 1");
+    step_if.set_used_context_variable_names(VariableNames{"a"});
+    step_if.set_script("return a == 1");
+
+    step_elseif1.set_label("elseif1");
+    step_elseif1.set_used_context_variable_names(VariableNames{"a"});
+    step_elseif1.set_script("return a == 2");
+
+    step_elseif2.set_label("elseif2");
+    step_elseif2.set_used_context_variable_names(VariableNames{"a"});
+    step_elseif2.set_script("return a == 3");
+
+    step_else.set_label("else");
+    step_else.set_used_context_variable_names(VariableNames{"a"});
+
+    step_end.set_label("if: end");
+
+    Sequence sequence;
+    sequence.push_back(step_if);
+    sequence.push_back(step_elseif1);
+    sequence.push_back(step_elseif2);
+    sequence.push_back(step_else);
+    sequence.push_back(step_end);
+
+    SECTION("IF condition true")
+    {
+        Context context;
+        context.variables["a"] = VariableValue{ 1LL };
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+    }
+
+    SECTION("First ELSEIF condition true")
+    {
+        Context context;
+        context.variables["a"] = VariableValue{ 2LL };
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+    }
+
+    SECTION("Second ELSEIF condition true")
+    {
+        Context context;
+        context.variables["a"] = VariableValue{ 3LL };
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+    }
+
+    SECTION("All conditions false, use ELSE branch")
+    {
+        Context context;
+        context.variables["a"] = VariableValue{ 4LL };
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+    }
+}
+
 TEST_CASE("execute_sequence(): faulty if-else-elseif sequence", "[execute_sequence]")
 {
     /*
@@ -663,6 +742,43 @@ TEST_CASE("execute_sequence(): while sequence", "[execute_sequence]")
     sequence.push_back(step_while);
     sequence.push_back(step_while_action);
     sequence.push_back(step_while_end);
+
+    SECTION("while sequence with while: a<10")
+    {
+        Context context;
+        context.variables["a"] = VariableValue{ 0LL };
+
+        REQUIRE_NOTHROW(execute_sequence(sequence, context));
+        REQUIRE(std::get<long long>(context.variables["a"] ) == 10LL );
+    }
+}
+
+TEST_CASE("execute_sequence(): empty while sequence", "[execute_sequence]")
+{
+    /*
+    pre-condition:
+    a = 0
+
+    script:
+    1: while ( a = a + 1; a < 10 )
+    3: end
+
+    post-condition:
+    a = 10
+
+    */
+    Step step_while {Step::type_while};
+    Step step_end   {Step::type_end};
+
+    step_while.set_label("while (a = a + 1; a < 10)");
+    step_while.set_used_context_variable_names(VariableNames{"a"});
+    step_while.set_script("a = a + 1; return a < 10");
+
+    step_end.set_label("while: end");
+
+    Sequence sequence;
+    sequence.push_back(step_while);
+    sequence.push_back(step_end);
 
     SECTION("while sequence with while: a<10")
     {
