@@ -1,6 +1,6 @@
 /**
  * \file   execute_sequence.cc
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Froehlich
  * \date   Created on February 16, 2022
  * \brief  Implementation of the execute_sequence() free function.
  *
@@ -54,136 +54,119 @@ Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
     return step_reverse.base();
 }
 
-/// Checks if \a Step has an excutable Lua script:
-/// - \a Step::type_if
-/// - \a Step::type_elseif
-/// - \a Step::type_while
-/// - \a Step::type_action
-bool has_lua_script(Step::Type type)
+Iterator find_end_of_indented_block(Iterator begin, Iterator end,
+                                    short min_indentation_level)
 {
-    return type == Step::type_action || type == Step::type_if || type == Step::type_elseif
-        || type == Step::type_while;
+    auto it = std::find_if(begin, end,
+        [=](const Step& step)
+        {
+            return step.get_indentation_level() < min_indentation_level;
+        });
+
+    if (it == end)
+        return begin;
+    else
+        return it;
 }
 
 /**
  * Internal traverse execution loop depending on indentation level.
  *
- * @param sequence executed \a Sequence
- * @param context \a Context for executing a step
- * @param step step iterator to traverse the \a Sequence
- * @exception throws \a Error when a fault on one of the statements is caught by Lua.
+ * @param step_begin Iterator to the first step that should be executed
+ * @param step_end   Iterator past the last step that should be executed
+ * @param context    Context for executing the steps
+ * @exception Error is thrown if a fault on one of the statements is caught by Lua.
  */
-Iterator execute_sequence_impl(Sequence& sequence, Context& context, Iterator step)
+Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context)
 {
-    bool found_while = false;
-    bool found_try = false;
-    bool if_condition = false;
+    Iterator step = step_begin;
 
-    // store indentation level from first iteration step
-    const short level = step != sequence.end() ? step->get_indentation_level() : 0;
-
-    while(step != sequence.end())
+    while (step < step_end)
     {
-        if (step->get_indentation_level() < level)
-            return step;
-
-        const bool result = has_lua_script(step->get_type())
-            ? execute_step((Step&)*step, context)
-            : false;
-
-        switch(step->get_type())
+        switch (step->get_type())
         {
             case Step::type_while:
-                found_while = result;
-                if (result)
-                    step = execute_sequence_impl(sequence, context, step + 1);
-                else
-                    step = find(step, sequence.cend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                               &&             Step::type_end == s.get_type(); });
-                break;
+            {
+                const auto block_end = find_end_of_indented_block(step + 1, step_end,
+                    step->get_indentation_level() + 1);
+
+                while (execute_step((Step&)*step, context))
+                    execute_sequence_impl(step + 1, block_end, context);
+
+                step = block_end;
+            }
+            break;
 
             case Step::type_try:
-                found_try = true;
+            {
+                const auto it_catch = find_end_of_indented_block(
+                    step + 1, step_end, step->get_indentation_level() + 1);
+
+                if (it_catch == step_end || it_catch->get_type() != Step::type_catch)
+                    throw Error("Missing catch block");
+
+                const auto it_catch_block_end = find_end_of_indented_block(
+                    it_catch + 1, step_end, step->get_indentation_level() + 1);
+
                 try
                 {
-                    step = execute_sequence_impl(sequence, context, step + 1);
+                    execute_sequence_impl(step + 1, it_catch, context);
                 }
-                catch(const Error& e)
+                catch (const Error&)
                 {
-                    // Use the successor index ('.. + 1') for the first token in the catch
-                    // block.
-                    step = find(step, sequence.cend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                               &&           Step::type_catch == s.get_type(); }) + 1;
+                    execute_sequence_impl(it_catch + 1, it_catch_block_end, context);
                 }
 
-                break;
+                step = it_catch_block_end;
+            }
+            break;
 
             case Step::type_catch:
-                step = find(step, sequence.cend(), [&](const Step& s) {
-                    return step->get_indentation_level() == s.get_indentation_level()
-                           &&             Step::type_end == s.get_type(); });
-                break;
+                throw Error("Catch block without associated try");
 
             case Step::type_if:
-                if_condition = result;
-                if (result)
-                    step = execute_sequence_impl(sequence, context, step + 1);
-                else
-                    step = find(step, sequence.cend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                               && (        Step::type_elseif == s.get_type()
-                                   ||      Step::type_else   == s.get_type()
-                                   ||      Step::type_end    == s.get_type() ); });
-                break;
-
             case Step::type_elseif:
-                if (if_condition)
-                    step = find(step, sequence.cend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                            &&                Step::type_end == s.get_type(); });
-                else if (result)
-                {
-                    if_condition = result;
-                    step = execute_sequence_impl(sequence, context, step + 1);
-                }
-                else
-                    step = find(step + 1, sequence.cend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                               && (        Step::type_elseif == s.get_type()
-                                   ||      Step::type_else   == s.get_type()
-                                   ||      Step::type_end    == s.get_type() ); });
-                break;
+            {
+                const auto block_end = find_end_of_indented_block(
+                    step + 1, step_end, step->get_indentation_level() + 1);
 
-            case Step::type_else:
-                if(if_condition)
-                    step = find(step, sequence.cend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                               &&             Step::type_end == s.get_type(); });
-                else
-                    step = execute_sequence_impl(sequence, context, step + 1);
-                break;
-
-            case Step::type_end:
-                if (found_while)
+                if (execute_step((Step&)*step, context))
                 {
-                    // Use the predecessor index ('.. - 1') for the first token in the
-                    // while block.
-                    step = find_reverse(step, sequence.crend(), [&](const Step& s) {
-                        return step->get_indentation_level() == s.get_indentation_level()
-                               &&           Step::type_while == s.get_type(); }) - 1;
-                    found_while = false;
-                }
-                else
-                {
-                    if (found_try)
-                        found_try = false;
+                    execute_sequence_impl(step + 1, block_end, context);
+                    step = std::find_if(block_end, step_end,
+                        [lvl = step->get_indentation_level()](const Step& s)
+                        {
+                            return s.get_indentation_level() == lvl &&
+                                    s.get_type() == Step::type_end;
+                        });
+                    if (step == step_end)
+                        throw Error("IF without matching END");
                     ++step;
                 }
+                else
+                {
+                    step = block_end;
+                }
+            }
+            break;
+
+            case Step::type_else:
+            {
+                const auto block_end = find_end_of_indented_block(
+                    step + 1, step_end, step->get_indentation_level() + 1);
+
+                execute_sequence_impl(step + 1, block_end, context);
+
+                step = block_end;
+            }
+            break;
+
+            case Step::type_end:
+                ++step;
                 break;
 
             case Step::type_action:
+                execute_step((Step&)*step, context);
                 ++step;
                 break;
 
@@ -203,7 +186,7 @@ void execute_sequence(Sequence& sequence, Context& context)
     sequence.check_syntax();
 
     if (not sequence.empty())
-        execute_sequence_impl(sequence, context, sequence.begin());
+        execute_sequence_impl(sequence.begin(), sequence.end(), context);
 }
 
 } // namespace task
