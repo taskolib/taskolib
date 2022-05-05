@@ -94,7 +94,7 @@ TEST_CASE("Sequence: remove last Steps from Sequence", "[Sequence]")
 
     seq.pop_back();
     REQUIRE(seq.size() == 1);
-    
+
     seq.pop_back();
     REQUIRE(seq.size() == 0);
     REQUIRE(seq.empty());
@@ -109,12 +109,12 @@ TEST_CASE("Sequence: insert Step to Sequence", "[Sequence]")
     Sequence seq;
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_action});
-   
+
     SECTION("insert lvalue reference (iterator)")
     {
         Step insertStep{Step::type_if};
         auto iter = seq.insert(seq.begin()+1, insertStep);
-        
+
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_if == (*iter).get_type());
@@ -124,12 +124,12 @@ TEST_CASE("Sequence: insert Step to Sequence", "[Sequence]")
         for(auto step : seq)
             REQUIRE(step.get_type() == expected[idx++]);
     }
-    
+
     SECTION("insert const lvalue reference (iterator)")
     {
         const Step insertStep{Step::type_if};
         auto iter = seq.insert(seq.begin()+1, insertStep);
-        
+
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_if == (*iter).get_type());
@@ -139,11 +139,11 @@ TEST_CASE("Sequence: insert Step to Sequence", "[Sequence]")
         for(auto step : seq)
             REQUIRE(step.get_type() == expected[idx++]);
     }
-    
+
     SECTION("insert rvalue reference (iterator)")
     {
         auto iter = seq.insert(seq.begin()+1, Step{Step::type_if});
-        
+
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_if == (*iter).get_type());
@@ -691,7 +691,7 @@ TEST_CASE("Sequence: check fault of if-elseif-while-end-else-end", "[Sequence]")
     REQUIRE(sequence[5].get_indentation_level() == 0);
     REQUIRE(sequence[6].get_indentation_level() == 1);
     REQUIRE(sequence[7].get_indentation_level() == 0);
-    
+
     Context context;
 
     REQUIRE_THROWS_AS(sequence.check_syntax(), Error);

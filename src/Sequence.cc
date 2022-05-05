@@ -151,9 +151,9 @@ void Sequence::check_syntax(short level, Sequence::SizeType idx) const
                 case Step::type_if:
                     idx = check_syntax_for_if(step_indention_level, idx);
                     break;
-                
+
                 default:
-                    break;   
+                    break;
             }
         }
     } while(++idx < steps_.size());
@@ -163,7 +163,7 @@ Sequence::SizeType Sequence::check_syntax_for_while(const short level,
     Sequence::SizeType idx) const
 {
     const Sequence::SizeType while_idx = idx;
-    
+
     while(++idx < steps_.size())
     {
         if (steps_[idx].get_indentation_level() == level)
@@ -183,7 +183,7 @@ Sequence::SizeType Sequence::check_syntax_for_while(const short level,
         }
     }
 
-    throw Error(cat(head, "ill-formed while-clause: missing 'end' token. indent=", level, 
+    throw Error(cat(head, "ill-formed while-clause: missing 'end' token. indent=", level,
     ", previous 'while' indication=", while_idx));
 }
 
@@ -221,7 +221,7 @@ Sequence::SizeType Sequence::check_syntax_for_try(const short level,
         }
     }
 
-    throw Error(cat(head, "ill-formed try-clause: missing 'end' token. indent=", level, 
+    throw Error(cat(head, "ill-formed try-clause: missing 'end' token. indent=", level,
     ", previous 'try' indication=", try_idx));
 }
 
@@ -256,7 +256,7 @@ Sequence::SizeType Sequence::check_syntax_for_if(const short level,
                 case Step::type_else:
                     if (counter + 1 >= idx)
                     {
-                        throw Error(cat(head, "ill-formed if-clause: missing action or " 
+                        throw Error(cat(head, "ill-formed if-clause: missing action or "
                         "control-flow token. indent=", level, ", index=", idx,
                         ", previous 'if' indication=", if_idx));
                     }
@@ -271,13 +271,13 @@ Sequence::SizeType Sequence::check_syntax_for_if(const short level,
 
                 default:
                     throw Error(cat(head, "ill-formed if-clause: missing action or "
-                    "control-flow token before 'end'. indent=", level, ", index=", idx, 
+                    "control-flow token before 'end'. indent=", level, ", index=", idx,
                     ", previous 'if' indication=", if_idx));
             }
         }
     }
 
-    throw Error(cat(head, "ill-formed if-clause: missing 'end' token. indent=", level, 
+    throw Error(cat(head, "ill-formed if-clause: missing 'end' token. indent=", level,
     ", previous 'if' indication=", if_idx));
 }
 

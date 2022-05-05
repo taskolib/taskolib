@@ -36,30 +36,30 @@ namespace task {
 
 /**
  * \section Main Sequencer class
- * 
+ *
  * A sequence of \a Step 's to be executed under a given \a Context .
  *
  * On executing a validation is performed due to check if the steps are consistent. When
  * a fault is detected an \a Error is thrown including a precise error message about what
  * fails.
- * 
+ *
  * To modify the sequence the following member functions are implemented:
- * 
+ *
  * -# push_back(): add new \a Step at the end
  * -# pop_back(): remove last \a Step from the end
  * -# insert(): insert \a Step or range of \a Step 's either with position or iterator.
- * -# assign(): assign a new \a Step to an existing element. 
+ * -# assign(): assign a new \a Step to an existing element.
  * -# erase(): remove \a Step or range of \a Step 's either with position or iterator.
- * 
+ *
  * After modifing the sequence all before retrieved iterators are invalidated and further
  * usage will result with an undefined behavior.
- * 
+ *
  * Since the reverse iterator are only used to iterate through the sequence one will
  * not find any member function for manipulation or modification.
- * 
+ *
  * \note To use one of the member functions for modification with index one can use the
  * following workaround:
- * 
+ *
  * \code {.cpp}
  * Sequence seq;
  * seq.push_back(Step{Step::type_try});
@@ -108,9 +108,9 @@ public:
      *  \a Step::type_else with a tailing \a Step::type_end, n >= 0.
      * -# each type \a Step::while must have the corresponding \a Step::type_end
      *
-     * As a body of each surrounding token must have at least one \a Step::type_action 
+     * As a body of each surrounding token must have at least one \a Step::type_action
      * token.
-     * 
+     *
      * If one of those is ill-formed an \a Error exception is thrown.
      */
     void check_syntax() const;
@@ -184,32 +184,32 @@ public:
 
     /**
      * Attach \a Step reference to the end of the sequence.
-     * 
+     *
      * @param step [IN] \a Step
      */
     void push_back(const Step& step) { steps_.push_back(step); indent(); }
 
     /**
      * Attach \a Step rvalue reference to the end of the sequence.
-     * 
+     *
      * @param step [MOVE] \a Step
-     */ 
+     */
     void push_back(Step&& step) { steps_.push_back(step); indent(); }
 
     /**
      * Remove the last element from the sequence.
-     * 
-     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the 
+     *
+     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the
      * last element as well as the end() iterator are invalidated.
      */
     void pop_back() { if (not steps_.empty()) steps_.pop_back(); indent(); }
 
     /**
      * Insert the given \a Step before of the constant iterator into Sequence.
-     * 
+     *
      * When the size increase the capacity a reallocation is performed that invalidates
      * all iterators. One can check with has_valid_iterators().
-     *  
+     *
      * @param iter constant \a Step iterator in the Sequence
      * @param step the added \a Step
      * @return inserted \a Step
@@ -224,10 +224,10 @@ public:
     /**
      * Insert the given \a Step rvalue reference before of the constant iterator into
      * Sequence.
-     * 
+     *
      * When the size increase the capacity a reallocation is performed that invalidates
      * all iterators. One can check with has_valid_iterators().
-     *  
+     *
      * @param iter constant \a Step iterator in the Sequence
      * @param step the added \a Step
      * @return inserted \a Step
@@ -241,11 +241,11 @@ public:
 
     /**
      * Remove \a Step iterator from sequence.
-     * 
+     *
      * It returns the iterator after the removed one.
-     * 
+     *
      * All iterators, inclusive the \a end() iterator are invalid after this operation.
-     * 
+     *
      * @param iter \a Step iterator to be removed
      * @return Steps::iterator iterator after the removed \a Step
      */
@@ -259,7 +259,7 @@ public:
     /**
      * Remove a bunch of \a Step 's iterator from sequence from \a first to \a last . The
      * removed iterators is exclusive the \a last one: [first, last)
-     * 
+     *
      * \code
      * 0: ACTION
      * 1:    WHILE
@@ -267,17 +267,17 @@ public:
      * 3:    END
      * 4: ACTION
      * \endcode
-     * 
+     *
      * After removing iterator 1 to exclusive 4 ( \a while-loop ):
-     * 
+     *
      * \code
      * 0: ACTION
      * 1: ACTION
      * \endcode
-     * 
+     *
      * When you try to remove the \a last one as \a end() the first remove \a Step is
      * returned. Example: remove iterator 1 to 5 (here \a end() ):
-     * 
+     *
      * \code
      * 0: ACTION
      * 1:    WHILE
@@ -285,17 +285,17 @@ public:
      * 3:    END
      * 4: ACTION
      * \endcode
-     * 
+     *
      * Result: return iterator with step \a while (element 1)
-     * 
+     *
      * \code
      * 0: ACTION
      * \endcode
-     * 
+     *
      * All iterators, inclusive the \a end() iterator are invalid after this operation.
-     * 
+     *
      * @param first first \a Step iterator to be removed
-     * @param last last \a Step iterator to be removed (exclusive) 
+     * @param last last \a Step iterator to be removed (exclusive)
      * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
      */
     ConstIterator erase(ConstIterator first, ConstIterator last)
@@ -307,7 +307,7 @@ public:
 
     /**
      * Modify the \a Step at the given position.
-     * 
+     *
      * @param iter position to assign the \a Step
      * @param step \a Step
      */
@@ -320,7 +320,7 @@ public:
 
     /**
      * Modify the \a Step at the given position.
-     * 
+     *
      * @param iter position to assign the \a Step
      * @param step refernce value \a Step
      */
@@ -347,16 +347,16 @@ private:
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is
      * detected. That means that one or all of the following conditions must be satisfied:
-     * 
+     *
      * -# each token \a Step::type_try must have the corresponding
      *    \a Step::type_catch and \a Step::type_end
      * -# each token \a Step::type_if must have n-times \a Step::type_elseif and/or
      *  \a Step::type_else with a tailing \a Step::type_end, n >= 0.
      * -# each token \a Step::while must have the corresponding \a Step::type_end
      *
-     * As a body of each surrounding token it must have at least one \a Step::type_action 
+     * As a body of each surrounding token it must have at least one \a Step::type_action
      * as Lua scriptless.
-     * 
+     *
      * @param level nested indention level to check. Base level is 0.
      * @param idx index of step in sequence.
      * @exception throws an \a Error exception if an ill-formed token is found.
@@ -365,9 +365,9 @@ private:
     void check_syntax(short level, SizeType idx) const;
 
     /**
-     * Internal syntax check for while-clauses. Invoked by 
+     * Internal syntax check for while-clauses. Invoked by
      * \a check_syntax(const int, SizeType).
-     * 
+     *
      * @param level nested indention level to check.
      * @param idx index of step in sequence.
      * @return new evaluated index for next token.
@@ -376,9 +376,9 @@ private:
     SizeType check_syntax_for_while(const short level, SizeType idx) const;
 
     /**
-     * Internal syntax check for try-catch-clauses. Invoked by 
+     * Internal syntax check for try-catch-clauses. Invoked by
      * \a check_syntax(const int, SizeType).
-     * 
+     *
      * @param level nested indention level to check.
      * @param idx index of step in sequence.
      * @return new evaluated index for next token.
@@ -387,9 +387,9 @@ private:
     SizeType check_syntax_for_try(const short level, SizeType idx) const;
 
     /**
-     * Internal syntax check for if-elseif-else-clauses. Invoked by 
+     * Internal syntax check for if-elseif-else-clauses. Invoked by
      * \a check_syntax(const int, SizeType).
-     * 
+     *
      * @param level nested indention level to check.
      * @param idx index of step in sequence.
      * @return new evaluated index for next token.
