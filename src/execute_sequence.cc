@@ -28,26 +28,27 @@
 
 namespace task {
 
-using Iterator = Sequence::Steps::const_iterator;
+namespace {
 
-namespace
-{
+using Iterator = Sequence::Iterator;
 
 Iterator
 execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context);
 
-Iterator execute_while_block(Iterator begin, Iterator end, Context& context)
+Iterator
+execute_while_block(Iterator begin, Iterator end, Context& context)
 {
     const auto block_end = detail::find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (execute_step((Step&)*begin, context))
+    while (execute_step(*begin, context))
         execute_sequence_impl(begin + 1, block_end, context);
 
     return block_end + 1;
 }
 
-Iterator execute_try_block(Iterator begin, Iterator end, Context& context)
+Iterator
+execute_try_block(Iterator begin, Iterator end, Context& context)
 {
     const auto it_catch = detail::find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
@@ -70,12 +71,13 @@ Iterator execute_try_block(Iterator begin, Iterator end, Context& context)
     return it_catch_block_end;
 }
 
-Iterator execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
+Iterator
+execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
 {
     const auto block_end = detail::find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (execute_step((Step&)*begin, context))
+    if (execute_step(*begin, context))
     {
         execute_sequence_impl(begin + 1, block_end, context);
 
@@ -94,7 +96,8 @@ Iterator execute_if_or_elseif_block(Iterator begin, Iterator end, Context& conte
     return block_end;
 }
 
-Iterator execute_else_block(Iterator begin, Iterator end, Context& context)
+Iterator
+execute_else_block(Iterator begin, Iterator end, Context& context)
 {
     const auto block_end = detail::find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
@@ -112,7 +115,8 @@ Iterator execute_else_block(Iterator begin, Iterator end, Context& context)
  * @param context    Context for executing the steps
  * @exception Error is thrown if a fault on one of the statements is caught by Lua.
  */
-Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context)
+Iterator
+execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context)
 {
     Iterator step = step_begin;
 
@@ -142,7 +146,7 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
                 break;
 
             case Step::type_action:
-                execute_step((Step&)*step, context);
+                execute_step(*step, context);
                 ++step;
                 break;
 

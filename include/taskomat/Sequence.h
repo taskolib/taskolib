@@ -25,6 +25,7 @@
 #ifndef TASKOMAT_SEQUENCE_H_
 #define TASKOMAT_SEQUENCE_H_
 
+#include <algorithm>
 #include <string>
 #include <vector>
 #include <gul14/string_view.h>
@@ -413,11 +414,23 @@ private:
 
 namespace detail {
 
-Sequence::ConstIterator find_end_of_indented_block(Sequence::ConstIterator begin,
-    Sequence::ConstIterator end, short min_indentation_level);
+template <typename IteratorT>
+IteratorT
+find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation_level)
+{
+    auto it = std::find_if(begin, end,
+        [=](const Step& step)
+        {
+            return step.get_indentation_level() < min_indentation_level;
+        });
+
+    if (it == end)
+        return begin;
+    else
+        return it;
+}
 
 } // namespace task::detail
-
 
 } // namespace task
 

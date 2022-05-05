@@ -21,6 +21,7 @@
  */
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
+
 #include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
 
@@ -28,26 +29,6 @@ using gul14::cat;
 
 namespace task
 {
-
-namespace detail {
-
-Sequence::ConstIterator find_end_of_indented_block(Sequence::ConstIterator begin,
-    Sequence::ConstIterator end, short min_indentation_level)
-{
-    auto it = std::find_if(begin, end,
-        [=](const Step& step)
-        {
-            return step.get_indentation_level() < min_indentation_level;
-        });
-
-    if (it == end)
-        return begin;
-    else
-        return it;
-}
-
-} // namespace task::detail
-
 
 Sequence::Sequence(gul14::string_view label)
 {
