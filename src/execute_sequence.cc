@@ -54,6 +54,76 @@ Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
     return step_reverse.base();
 }
 
+Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context);
+
+Iterator execute_while_block(Iterator begin, Iterator end, Context& context)
+{
+    const auto block_end = detail::find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
+
+    while (execute_step((Step&)*begin, context))
+        execute_sequence_impl(begin + 1, block_end, context);
+
+    return block_end + 1;
+}
+
+Iterator execute_try_block(Iterator begin, Iterator end, Context& context)
+{
+    const auto it_catch = detail::find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
+
+    if (it_catch == end || it_catch->get_type() != Step::type_catch)
+        throw Error("Missing catch block");
+
+    const auto it_catch_block_end = detail::find_end_of_indented_block(
+        it_catch + 1, end, begin->get_indentation_level() + 1);
+
+    try
+    {
+        execute_sequence_impl(begin + 1, it_catch, context);
+    }
+    catch (const Error&)
+    {
+        execute_sequence_impl(it_catch + 1, it_catch_block_end, context);
+    }
+
+    return it_catch_block_end;
+}
+
+Iterator execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
+{
+    const auto block_end = detail::find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
+
+    if (execute_step((Step&)*begin, context))
+    {
+        execute_sequence_impl(begin + 1, block_end, context);
+
+        // Skip forward past the END
+        auto end_it = std::find_if(block_end, end,
+            [lvl = begin->get_indentation_level()](const Step& s)
+            {
+                return s.get_indentation_level() == lvl &&
+                        s.get_type() == Step::type_end;
+            });
+        if (end_it == end)
+            throw Error("IF without matching END");
+        return end_it + 1;
+    }
+
+    return block_end;
+}
+
+Iterator execute_else_block(Iterator begin, Iterator end, Context& context)
+{
+    const auto block_end = detail::find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
+
+    execute_sequence_impl(begin + 1, block_end, context);
+
+    return block_end;
+}
+
 /**
  * Internal traverse execution loop depending on indentation level.
  *
@@ -71,80 +141,21 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
         switch (step->get_type())
         {
             case Step::type_while:
-            {
-                const auto block_end = detail::find_end_of_indented_block(
-                    step + 1, step_end, step->get_indentation_level() + 1);
-
-                while (execute_step((Step&)*step, context))
-                    execute_sequence_impl(step + 1, block_end, context);
-
-                step = block_end;
-            }
-            break;
+                step = execute_while_block(step, step_end, context);
+                break;
 
             case Step::type_try:
-            {
-                const auto it_catch = detail::find_end_of_indented_block(
-                    step + 1, step_end, step->get_indentation_level() + 1);
-
-                if (it_catch == step_end || it_catch->get_type() != Step::type_catch)
-                    throw Error("Missing catch block");
-
-                const auto it_catch_block_end = detail::find_end_of_indented_block(
-                    it_catch + 1, step_end, step->get_indentation_level() + 1);
-
-                try
-                {
-                    execute_sequence_impl(step + 1, it_catch, context);
-                }
-                catch (const Error&)
-                {
-                    execute_sequence_impl(it_catch + 1, it_catch_block_end, context);
-                }
-
-                step = it_catch_block_end;
-            }
-            break;
-
-            case Step::type_catch:
-                throw Error("Catch block without associated try");
+                step = execute_try_block(step, step_end, context);
+                break;
 
             case Step::type_if:
             case Step::type_elseif:
-            {
-                const auto block_end = detail::find_end_of_indented_block(
-                    step + 1, step_end, step->get_indentation_level() + 1);
-
-                if (execute_step((Step&)*step, context))
-                {
-                    execute_sequence_impl(step + 1, block_end, context);
-                    step = std::find_if(block_end, step_end,
-                        [lvl = step->get_indentation_level()](const Step& s)
-                        {
-                            return s.get_indentation_level() == lvl &&
-                                    s.get_type() == Step::type_end;
-                        });
-                    if (step == step_end)
-                        throw Error("IF without matching END");
-                    ++step;
-                }
-                else
-                {
-                    step = block_end;
-                }
-            }
-            break;
+                step = execute_if_or_elseif_block(step, step_end, context);
+                break;
 
             case Step::type_else:
-            {
-                const auto block_end = detail::find_end_of_indented_block(
-                    step + 1, step_end, step->get_indentation_level() + 1);
-
-                execute_sequence_impl(step + 1, block_end, context);
-
-                step = block_end;
-            }
-            break;
+                step = execute_else_block(step, step_end, context);
+                break;
 
             case Step::type_end:
                 ++step;
@@ -156,7 +167,7 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
                 break;
 
             default:
-                throw Error{"wrong step type"};
+                throw Error{"Unexpected step type"};
         }
     }
 
@@ -167,11 +178,8 @@ Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& 
 
 void execute_sequence(Sequence& sequence, Context& context)
 {
-    // syntax check
     sequence.check_syntax();
-
-    if (not sequence.empty())
-        execute_sequence_impl(sequence.begin(), sequence.end(), context);
+    execute_sequence_impl(sequence.begin(), sequence.end(), context);
 }
 
 } // namespace task
