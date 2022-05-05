@@ -49,8 +49,6 @@ Sequence::ConstIterator find_end_of_indented_block(Sequence::ConstIterator begin
 } // namespace task::detail
 
 
-const char Sequence::head[] = "[syntax check] ";
-
 Sequence::Sequence(gul14::string_view label)
 {
     check_label(label);
@@ -275,7 +273,7 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
     gul14::string_view msg) const
 {
-    throw Error(cat(head, "Step ", it - steps_.begin() + 1, ": ", msg));
+    throw Error(cat("[syntax check] Step ", it - steps_.begin() + 1, ": ", msg));
 }
 
 } // namespace task

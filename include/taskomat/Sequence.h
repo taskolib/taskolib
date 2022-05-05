@@ -332,9 +332,6 @@ public:
     }
 
 private:
-    // Header for exception on failed syntax check.
-    static const char head[];
-
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
