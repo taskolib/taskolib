@@ -29,32 +29,12 @@
 namespace task {
 
 using Iterator = Sequence::Steps::const_iterator;
-using ReverseIterator = Sequence::Steps::const_reverse_iterator;
 
 namespace
 {
 
-/// Find next token with condition on predicate. Returns the found step iterator.
-/// Since the syntax is already validated there is a garante to find the proper step.
-template<typename Predicate>
-Iterator find(Iterator step, Iterator end, Predicate pred)
-{
-    return std::find_if(step, end, [&](const Step& step) { return pred(step); });
-}
-
-/// Find reverse token with condition on predicate. Returns the found step iterator.
-/// Since the syntax is already validated there is a garante to find the proper step.
-template <typename Predicate>
-Iterator find_reverse(Iterator step, ReverseIterator end, Predicate pred)
-{
-    auto step_reverse = std::find_if(
-        std::make_reverse_iterator(step),
-        end,
-        [&](const Step& step) { return pred(step); });
-    return step_reverse.base();
-}
-
-Iterator execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context);
+Iterator
+execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context);
 
 Iterator execute_while_block(Iterator begin, Iterator end, Context& context)
 {
