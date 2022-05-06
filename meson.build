@@ -32,6 +32,7 @@ install_headers(files(
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
+        'include/taskomat/serialize_sequence.h',
         'include/taskomat/Step.h',
         'include/taskomat/taskomat.h',
         'include/taskomat/time_types.h',
@@ -46,7 +47,9 @@ install_subdir('include/taskomat/sol/sol',
 
 # Sources
 sources = files(
+    'src/Context.cc',
     'src/Sequence.cc',
+    'src/serialize_sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
 )
@@ -59,6 +62,7 @@ test_src = files(
     'tests/test_Message.cc',
     'tests/test_LockedQueue.cc',
     'tests/test_Sequence.cc',
+    'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
 )

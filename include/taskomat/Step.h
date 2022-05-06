@@ -28,6 +28,7 @@
 #include <chrono>
 #include <set>
 #include <string>
+#include <iostream>
 #include "taskomat/Context.h"
 #include "taskomat/Message.h"
 #include "taskomat/time_types.h"
@@ -222,6 +223,23 @@ public:
      */
     void set_type(Type type);
 
+    /**
+     * Serialize parameters of \a Step to the output stream. 
+     * 
+     * @param stream output stream
+     * @param step \a Step to serialize. 
+     * @return std::ostream& output stream
+     */
+    friend std::ostream& operator<<(std::ostream& stream, const Step& step)
+    {
+        stream << "Step {\n"; 
+        stream << "label: \"" << step.get_label() << "\",\n";
+        stream << "type: \"" << step.type_to_string() << "\",\n";
+        stream << "script[lua]: \"" << step.get_script() << "\"\n";
+        stream << "}"; // trailing line feed is performed by the caller
+        return stream;
+    }
+
 private:
     std::string label_;
     std::string script_;
@@ -242,6 +260,23 @@ private:
      * given Context.
      */
     void copy_used_variables_from_lua_to_context(const sol::state& lua, Context& context);
+    
+    /// Convert step \a Type to string equivalent.
+    char const* type_to_string() const
+    {
+        switch(type_)
+        {
+            case type_action: return "action";
+            case type_while: return "while";
+            case type_if: return "if";
+            case type_elseif: return "elseif";
+            case type_else: return "else";
+            case type_try: return "try";
+            case type_catch: return "catch";
+            case type_end: return "end";
+            default: return "unknown"; // TODO: maybe include unknown enum Type?
+        }
+    }
 };
 
 
