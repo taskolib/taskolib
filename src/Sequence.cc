@@ -33,6 +33,22 @@ namespace task {
 // Anonymous namespace with implementation details
 namespace {
 
+template <typename IteratorT>
+IteratorT
+find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation_level)
+{
+    auto it = std::find_if(begin, end,
+        [=](const Step& step)
+        {
+            return step.get_indentation_level() < min_indentation_level;
+        });
+
+    if (it == end)
+        return begin;
+    else
+        return it;
+}
+
 using Iterator = Sequence::Iterator;
 
 Iterator
@@ -41,7 +57,7 @@ execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context);
 Iterator
 execute_while_block(Iterator begin, Iterator end, Context& context)
 {
-    const auto block_end = detail::find_end_of_indented_block(
+    const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     while (execute_step(*begin, context))
@@ -53,13 +69,13 @@ execute_while_block(Iterator begin, Iterator end, Context& context)
 Iterator
 execute_try_block(Iterator begin, Iterator end, Context& context)
 {
-    const auto it_catch = detail::find_end_of_indented_block(
+    const auto it_catch = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     if (it_catch == end || it_catch->get_type() != Step::type_catch)
         throw Error("Missing catch block");
 
-    const auto it_catch_block_end = detail::find_end_of_indented_block(
+    const auto it_catch_block_end = find_end_of_indented_block(
         it_catch + 1, end, begin->get_indentation_level() + 1);
 
     try
@@ -77,7 +93,7 @@ execute_try_block(Iterator begin, Iterator end, Context& context)
 Iterator
 execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
 {
-    const auto block_end = detail::find_end_of_indented_block(
+    const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     if (execute_step(*begin, context))
@@ -102,7 +118,7 @@ execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context)
 Iterator
 execute_else_block(Iterator begin, Iterator end, Context& context)
 {
-    const auto block_end = detail::find_end_of_indented_block(
+    const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     execute_sequence_impl(begin + 1, block_end, context);
@@ -312,7 +328,7 @@ void Sequence::check_syntax(Sequence::ConstIterator begin, Sequence::ConstIterat
 Sequence::ConstIterator Sequence::check_syntax_for_while(Sequence::ConstIterator begin,
     Sequence::ConstIterator end) const
 {
-    const auto block_end = detail::find_end_of_indented_block(
+    const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     if (block_end == end || block_end->get_type() != Step::type_end)
@@ -326,7 +342,7 @@ Sequence::ConstIterator Sequence::check_syntax_for_while(Sequence::ConstIterator
 Sequence::ConstIterator Sequence::check_syntax_for_try(Sequence::ConstIterator begin,
     Sequence::ConstIterator end) const
 {
-    const auto it_catch = detail::find_end_of_indented_block(
+    const auto it_catch = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
     if (it_catch == end || it_catch->get_type() != Step::type_catch)
@@ -334,7 +350,7 @@ Sequence::ConstIterator Sequence::check_syntax_for_try(Sequence::ConstIterator b
 
     check_syntax(begin + 1, it_catch); // block between TRY and CATCH
 
-    const auto it_catch_block_end = detail::find_end_of_indented_block(
+    const auto it_catch_block_end = find_end_of_indented_block(
         it_catch + 1, end, begin->get_indentation_level() + 1);
 
     if (it_catch_block_end == end || it_catch_block_end->get_type() != Step::type_end)
@@ -353,7 +369,7 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
 
     while (true)
     {
-        const auto it = detail::find_end_of_indented_block(
+        const auto it = find_end_of_indented_block(
             it_block_statement + 1, end, begin->get_indentation_level() + 1);
 
         if (it == end)

@@ -440,27 +440,6 @@ private:
     void throw_syntax_error_for_step(ConstIterator it, gul14::string_view msg) const;
 };
 
-
-namespace detail {
-
-template <typename IteratorT>
-IteratorT
-find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation_level)
-{
-    auto it = std::find_if(begin, end,
-        [=](const Step& step)
-        {
-            return step.get_indentation_level() < min_indentation_level;
-        });
-
-    if (it == end)
-        return begin;
-    else
-        return it;
-}
-
-} // namespace task::detail
-
 } // namespace task
 
 #endif
