@@ -348,6 +348,22 @@ public:
         indent();
     }
 
+    /**
+     * Execute the sequence within a given context.
+     *
+     * This function first performs a syntax check and throws an Error exception if it
+     * fails. Then, it executes the sequence step by step, following the control flow
+     * given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is
+     * finished or has stopped with an error.
+     *
+     * \param context A context for storing variables that can be exchanged between
+     *                different steps. The context may also contain a LUA init function
+     *                that is run before each step.
+     * \exception Error is thrown if the script cannot be executed due to a syntax error
+     *            or if it raises an error during execution.
+     */
+    void execute(Context& context);
+
 private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;

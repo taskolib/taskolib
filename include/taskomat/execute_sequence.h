@@ -30,22 +30,6 @@
 
 namespace task {
 
-/**
- * Execute a sequence within a given context.
- *
- * This function performs the following steps:
- * - verifies the correct nesting of block statements
- * - executes each step
- *
- * The variables in Context are moved from step to step and extracted when the sequence
- * exits.
- *
- * \par sequence [IN/OUT] sequence to execute
- * \par context [IN/OUT] context with given variable declaration
- * \exception Error is thrown if the script cannot be execute due to syntax error
- * or if it raises an error during execution.
- */
-void execute_sequence(Sequence& sequence, Context& context);
 
 } // namespace task
 
