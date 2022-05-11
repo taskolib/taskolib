@@ -135,32 +135,48 @@ public:
     /**
      * Access the step at a given index.
      *
-     * The index operator can only be used for read access to the sequence steps.
+     * The index operator can only be used for read access to the sequence steps. This is
+     * because Sequence has to maintain invariants such as the correct indentation
+     * whenever steps are modified.
      */
-    const Step& operator[](SizeType idx) const { return steps_[idx]; }
+    const Step& operator[](SizeType idx) const noexcept { return steps_[idx]; }
 
-    /// Return Steps iterator to the first element of the container.
-    const Iterator begin() noexcept { return steps_.begin(); }
-    /// Return constant Steps iterator to the first element of the container.
-    const ConstIterator cbegin() const noexcept { return steps_.cbegin(); }
+    /**
+     * Return a constant iterator to the first Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstIterator begin() const noexcept { return steps_.cbegin(); }
+    ConstIterator cbegin() const noexcept { return steps_.cbegin(); }
 
-    /// Return reverse Steps iterator to the first element of the container.
-    const ReverseIterator rbegin() noexcept { return steps_.rbegin(); }
-    /// Return constant reverse Steps iterator to the first element of the container.
-    const ConstReverseIterator crbegin() const noexcept { return steps_.crbegin(); }
+    /**
+     * Return a constant reverse iterator to the last Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstReverseIterator rbegin() const noexcept { return steps_.crbegin(); }
+    ConstReverseIterator crbegin() const noexcept { return steps_.crbegin(); }
 
-    /// Return Steps iterator to the element following the last element of the container.
-    const Iterator end() noexcept { return steps_.end(); }
-    /// Return constant Steps iterator to the element following the last element of the
-    /// container.
-    const ConstIterator cend() const noexcept { return steps_.cend(); }
+    /**
+     * Return a constant iterator pointing past the last Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstIterator end() const noexcept { return steps_.cend(); }
+    ConstIterator cend() const noexcept { return steps_.cend(); }
 
-    /// Return reverse Steps iterator to the element following the last element of the
-    /// container.
-    const ReverseIterator rend() noexcept { return steps_.rend(); }
-    /// Return constant reverse Steps iterator to the element following the last element
-    /// of the container.
-    const ConstReverseIterator crend() const noexcept { return steps_.crend(); }
+    /**
+     * Return a constant reverse iterator pointing before the first Step in the container.
+     * element of the
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstReverseIterator rend() const noexcept { return steps_.crend(); }
+    ConstReverseIterator crend() const noexcept { return steps_.crend(); }
 
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
@@ -367,8 +383,7 @@ private:
      * @returns an iterator pointing to the first step after the WHILE..END construct.
      * @exception throws an \a Error exception if an ill-formed 'while' token is found.
      */
-    Sequence::ConstIterator check_syntax_for_while(Sequence::ConstIterator begin,
-        Sequence::ConstIterator end) const;
+    ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by
@@ -379,8 +394,7 @@ private:
      * @returns an iterator pointing to the first step after the TRY..CATCH..END construct.
      * @exception throws an \a Error exception if an ill-formed 'try' token is found.
      */
-    Sequence::ConstIterator check_syntax_for_try(Sequence::ConstIterator begin,
-        Sequence::ConstIterator end) const;
+    ConstIterator check_syntax_for_try(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for if-elseif-else-clauses. Invoked by
@@ -392,8 +406,7 @@ private:
      *          construct.
      * @exception Error is thrown if an ill-formed 'if-elseif-else' token is found.
      */
-    Sequence::ConstIterator check_syntax_for_if(Sequence::ConstIterator begin,
-        Sequence::ConstIterator end) const;
+    ConstIterator check_syntax_for_if(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.
