@@ -29,6 +29,7 @@
 #include <set>
 #include <string>
 #include "taskomat/Context.h"
+#include "taskomat/Message.h"
 #include "taskomat/time_types.h"
 
 namespace task {
@@ -66,6 +67,36 @@ public:
     explicit Step(Type type = type_action)
         : type_{ type }
     {}
+
+    /**
+     * Execute the step script within the given context.
+     *
+     * This function performs the following steps:
+     * 1. A fresh script runtime environment is prepared and safe library components are
+     *    loaded into it.
+     * 2. The lua_init_function from the context is run if it is defined (non-null).
+     * 3. Selected variables are imported from the context into the runtime environment.
+     * 4. The script from the step is loaded into the runtime environment and executed.
+     * 5. Selected variables are exported from the runtime environment back into the
+     *    context.
+     *
+     * \param context        The context to be used for executing the step
+     * \param message_queue  Pointer to a message queue. If this is not a null pointer,
+     *                       the queue receives the following messages:
+     *                       - A message of type step_started when the step is started
+     *                       - A message of type step_stopped when the step has finished
+     *                         successfully
+     *                       - A message of type step_stopped_with_error when the step has
+     *                         been stopped due to an error condition
+     *
+     * \returns true if the script returns a value that evaluates as true in the scripting
+     *          language, or false otherwise (even in the case that the script returns no
+     *          value at all).
+     *
+     * \exception Error is thrown if the script cannot be started or if it raises an error
+     *            during execution.
+     */
+    bool execute(Context& context, MessageQueue* message_queue = nullptr);
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -199,6 +230,18 @@ private:
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
     short indentation_level_{ 0 };
+
+    /**
+     * Copy the variables listed in used_context_variable_names_ from the given Context
+     * into a LUA state.
+     */
+    void copy_used_variables_from_context_to_lua(const Context& context, sol::state& lua);
+
+    /**
+     * Copy the variables listed in used_context_variable_names_ from a LUA state into the
+     * given Context.
+     */
+    void copy_used_variables_from_lua_to_context(const sol::state& lua, Context& context);
 };
 
 

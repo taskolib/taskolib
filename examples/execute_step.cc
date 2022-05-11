@@ -16,7 +16,7 @@ int main()
     context.variables["b"] = -41.5;
 
     // Execute the step with the context
-    execute_step(step, context);
+    step.execute(context);
 
     // Retrieve variables from the context with std::get()
     std::cout << "According to LUA, the sum of "
