@@ -30,7 +30,6 @@ install_headers(files(
         'include/taskomat/Context.h',
         'include/taskomat/Error.h',
         'include/taskomat/execute_step.h',
-        'include/taskomat/execute_sequence.h',
         'include/taskomat/Message.h',
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Sequence.h',
@@ -48,7 +47,6 @@ install_subdir('include/taskomat/sol/sol',
 # Sources
 sources = files(
     'src/execute_step.cc',
-    'src/execute_sequence.cc',
     'src/Sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
@@ -59,7 +57,6 @@ test_src = files(
     'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_execute_step.cc',
-    'tests/test_execute_sequence.cc',
     'tests/test_main.cc',
     'tests/test_Message.cc',
     'tests/test_LockedQueue.cc',
