@@ -232,11 +232,11 @@ public:
      */
     friend std::ostream& operator<<(std::ostream& stream, const Step& step)
     {
-        stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
-            << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
+        // TODO: need to fetch taskomat, lua, and sol2 version
+        //stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
+        //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
         stream << "-- label: \"" << step.get_label() << "\"\n";
         stream << "-- type: \"" << step.type_to_string() << "\"\n";
-        stream << "-- last executed: \"" << step.get_time_of_last_execution() << "\"\n";
         stream << '\n' << step.get_script() << '\n';
         return stream;
     }

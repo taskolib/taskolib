@@ -27,17 +27,11 @@
 
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
-#include "taskomat/LockedQueue.h"
-#include "taskomat/Message.h"
+#include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 #include "taskomat/time_types.h"
 #include "taskomat/VariableName.h"
-
-#define TASKOMAT_VERSION_MAJOR 0
-#define TASKOMAT_VERSION_MINOR 0
-#define TASKOMAT_VERSION_RELEASE 3
-#define TASKOMAT_VERSION_STRING "0.0.3"
 
 /// Namespace task contains all functions and classes of the Taskomat library.
 namespace task { }
