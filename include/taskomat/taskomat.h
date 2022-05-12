@@ -34,6 +34,11 @@
 #include "taskomat/time_types.h"
 #include "taskomat/VariableName.h"
 
+#define TASKOMAT_VERSION_MAJOR 0
+#define TASKOMAT_VERSION_MINOR 0
+#define TASKOMAT_VERSION_RELEASE 3
+#define TASKOMAT_VERSION_STRING "0.0.3"
+
 /// Namespace task contains all functions and classes of the Taskomat library.
 namespace task { }
 
