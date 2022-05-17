@@ -111,7 +111,7 @@ void export_variables_to_context(const Step& step, Context& context, sol::state&
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
 // plus a duration dt. In case of overflow, the maximum representable time point is
 // returned.
-long long get_ms_since_epoch(Timestamp t0, std::chrono::milliseconds dt)
+long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
 {
     using std::chrono::milliseconds;
     using std::chrono::round;
@@ -157,7 +157,7 @@ void import_variables_from_context(const Step& step, const Context& context,
     }
 }
 
-void install_timeout_hook(sol::state& lua, Timestamp now,
+void install_timeout_hook(sol::state& lua, TimePoint now,
                           std::chrono::milliseconds timeout)
 {
     auto registry = lua.registry();
@@ -186,10 +186,12 @@ void open_safe_library_subset(sol::state& lua)
 } // anonymous namespace
 
 
-bool execute_step(Step& step, Context& context)
+bool execute_step(Step& step, Context& context, MessageQueue* queue)
 {
     const auto now = Clock::now();
     step.set_time_of_last_execution(now);
+
+    send_message(queue, Message::Type::step_started, "Step started", now);
 
     sol::state lua;
 
@@ -201,6 +203,8 @@ bool execute_step(Step& step, Context& context)
     install_timeout_hook(lua, now, step.get_timeout());
 
     import_variables_from_context(step, context, lua);
+
+    bool result = false;
 
     try
     {
@@ -222,10 +226,19 @@ bool execute_step(Step& step, Context& context)
     }
     catch (const sol::error& e)
     {
-        throw Error(cat("Error while executing script: ", e.what()));
+        std::string msg = cat("Error while executing script: ", e.what());
+
+        send_message(queue, Message::Type::step_stopped_with_error, msg,
+            Clock::now());
+
+        throw Error(msg);
     }
 
-    return false;
+    send_message(queue, Message::Type::step_stopped,
+        cat("Step finished (logical result: ", result ? "true" : "false", ')'),
+        Clock::now());
+
+    return result;
 }
 
 

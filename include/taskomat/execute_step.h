@@ -26,6 +26,7 @@
 #define TASKOMAT_EXECUTE_STEP_H_
 
 #include "taskomat/Context.h"
+#include "taskomat/Message.h"
 #include "taskomat/Step.h"
 
 namespace task {
@@ -41,6 +42,14 @@ namespace task {
  * 4. The script from the step is loaded into the runtime environment and executed.
  * 5. Selected variables are exported from the runtime environment back into the context.
  *
+ * \param step           The step to be executed
+ * \param context        The context to be used for executing the step
+ * \param message_queue  Pointer to a message queue. If this is not a null pointer, the
+ *                       queue receives messages of the following types:
+ *                       - StepStartedMessage when the step is started
+ *                       - StepStoppedMessage when the step is stopped (finished,
+ *                         aborted by user, aborted due to error, timeout)
+ *
  * \returns true if the script returns a value that evaluates as true in the scripting
  *          language, or false otherwise (even in the case that the script returns no
  *          value at all).
@@ -48,7 +57,7 @@ namespace task {
  * \exception Error is thrown if the script cannot be started or if it raises an error
  *            during execution.
  */
-bool execute_step(Step& step, Context& context);
+bool execute_step(Step& step, Context& context, MessageQueue* message_queue = nullptr);
 
 } // namespace task
 

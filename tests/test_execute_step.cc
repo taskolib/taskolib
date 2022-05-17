@@ -150,7 +150,7 @@ TEST_CASE("execute_step(): Setting 'last executed' timestamp", "[execute_step]")
     Context context;
     Step step;
 
-    REQUIRE(step.get_time_of_last_execution() == Timestamp{});
+    REQUIRE(step.get_time_of_last_execution() == TimePoint{});
 
     execute_step(step, context);
     REQUIRE(Clock::now() - step.get_time_of_last_execution() >= 0s);
@@ -381,4 +381,37 @@ TEST_CASE("execute_step(): LUA initialization function", "[execute_step]")
         REQUIRE(std::get<long long>(context.variables["a"]) == 42LL);
         REQUIRE(std::get<long long>(context.variables["b"]) == 13LL);
     }
+}
+
+TEST_CASE("execute_step(): Messages", "[execute_step]")
+{
+    const auto t0 = Clock::now();
+    MessageQueue queue(10);
+
+    Context context;
+    context.variables["a"] = 0LL;
+
+    Step step;
+    step.set_used_context_variable_names(VariableNames{ "a" });
+    step.set_script("a = a + 42");
+
+    execute_step(step, context, &queue);
+
+    REQUIRE(queue.size() == 2);
+
+    // First, a "step started" message
+    auto msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::step_started);
+    REQUIRE(msg.get_text() != "");
+    REQUIRE(msg.get_timestamp() >= t0);
+    REQUIRE(msg.get_timestamp() - t0 < 1s);
+
+    const auto t1 = msg.get_timestamp();
+
+    // Then, a "step stopped" message
+    msg = queue.pop();
+    REQUIRE(msg.get_type() == Message::Type::step_stopped);
+    REQUIRE(msg.get_text() != "");
+    REQUIRE(msg.get_timestamp() >= t1);
+    REQUIRE(msg.get_timestamp() - t1 < 1s);
 }

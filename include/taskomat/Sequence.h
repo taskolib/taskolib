@@ -31,6 +31,7 @@
 #include <gul14/string_view.h>
 #include <gul14/cat.h>
 #include "taskomat/Error.h"
+#include "taskomat/Message.h"
 #include "taskomat/Step.h"
 
 namespace task {
@@ -359,10 +360,13 @@ public:
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function
      *                that is run before each step.
+     * \param queue   Pointer to a message queue. If this is a null pointer, no messages
+     *                are sent. Otherwise, messages for starting/stopping steps and the
+     *                sequence itself are sent.
      * \exception Error is thrown if the script cannot be executed due to a syntax error
      *            or if it raises an error during execution.
      */
-    void execute(Context& context);
+    void execute(Context& context, MessageQueue* queue);
 
 private:
     /// Empty if indentation is correct and complete, error message otherwise

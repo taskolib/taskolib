@@ -100,49 +100,41 @@ TEMPLATE_TEST_CASE("LockedQueue: pop() single-threaded", "[LockedQueue]",
 
 TEST_CASE("LockedQueue: push() single-threaded", "[LockedQueue]")
 {
-    LockedQueue<std::unique_ptr<Message>> queue{ 10 };
+    LockedQueue<MyMessage> queue{ 10 };
     REQUIRE(queue.size() == 0);
 
-    queue.push(std::make_unique<MyMessage>(42));
+    queue.push(MyMessage(42));
     REQUIRE(queue.size() == 1u);
 
-    queue.push(std::make_unique<MyMessage>(43));
+    queue.push(MyMessage(43));
     REQUIRE(queue.size() == 2u);
 
-    auto msg_ptr = queue.pop();
+    auto msg = queue.pop();
     REQUIRE(queue.size() == 1u);
-    REQUIRE(msg_ptr != nullptr);
-    auto mymsg_ptr = dynamic_cast<MyMessage*>(msg_ptr.get());
-    REQUIRE(mymsg_ptr != nullptr);
-    REQUIRE(mymsg_ptr->value_ == 42);
+    REQUIRE(msg.value_ == 42);
 
-    msg_ptr = queue.pop();
+    msg = queue.pop();
     REQUIRE(queue.size() == 0);
-    REQUIRE(msg_ptr != nullptr);
-    mymsg_ptr = dynamic_cast<MyMessage*>(msg_ptr.get());
-    REQUIRE(mymsg_ptr != nullptr);
-    REQUIRE(mymsg_ptr->value_ == 43);
+    REQUIRE(msg.value_ == 43);
 }
 
 TEST_CASE("LockedQueue: push() & pop() across threads", "[LockedQueue]")
 {
     // Create a queue with only 4 slots
-    LockedQueue<std::unique_ptr<Message>> queue{ 4 };
+    LockedQueue<MyMessage> queue{ 4 };
 
     // Start a thread that will push 100 messages into the queue
     std::thread sender([&queue]()
         {
             for (int i = 1; i <= 100; ++i)
-                queue.push(std::make_unique<MyMessage>(i));
+                queue.push(MyMessage(i));
         });
 
     // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
-        auto msg_ptr = queue.pop();
-        auto mymsg_ptr = dynamic_cast<MyMessage*>(msg_ptr.get());
-        REQUIRE(mymsg_ptr != nullptr);
-        REQUIRE(mymsg_ptr->value_ == i);
+        auto msg = queue.pop();
+        REQUIRE(msg.value_ == i);
     }
 
     sender.join();
@@ -221,29 +213,29 @@ TEST_CASE("LockedQueue: try_push() single-threaded", "[LockedQueue]")
 TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[LockedQueue]")
 {
     // Create a queue with only 4 slots
-    LockedQueue<std::unique_ptr<Message>> queue{ 4 };
+    LockedQueue<MyMessage> queue{ 4 };
 
     // Start a thread that will push 100 messages into the queue
     std::thread sender([&queue]()
         {
             for (int i = 1; i <= 100; ++i)
             {
-                while (queue.try_push(std::make_unique<MyMessage>(i)) == false);
+                while (queue.try_push(MyMessage(i)) == false);
             }
         });
 
     // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
-        gul14::optional<std::unique_ptr<Message>> opt_msg_ptr;
+        gul14::optional<MyMessage> opt_msg;
         do
         {
-            opt_msg_ptr = queue.try_pop();
+            opt_msg = queue.try_pop();
         }
-        while (not opt_msg_ptr.has_value());
-        auto mymsg_ptr = dynamic_cast<MyMessage*>(opt_msg_ptr->get());
-        REQUIRE(mymsg_ptr != nullptr);
-        REQUIRE(mymsg_ptr->value_ == i);
+        while (not opt_msg.has_value());
+
+        auto msg = *opt_msg;
+        REQUIRE(msg.value_ == i);
     }
 
     sender.join();
