@@ -30,8 +30,11 @@
 #include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
+<<<<<<< HEAD
 #include "taskomat/time_types.h"
 #include "taskomat/VariableName.h"
+=======
+>>>>>>> Remove taskomat version macros since this be solved with meson.
 
 /// Namespace task contains all functions and classes of the Taskomat library.
 namespace task { }
