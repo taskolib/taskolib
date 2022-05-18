@@ -24,6 +24,7 @@
 
 #include <gul14/gul.h>
 #include <gul14/catch.h>
+#include <filesystem>
 #include "taskomat/serialize_sequence.h"
 
 using namespace task;
@@ -33,9 +34,14 @@ TEST_CASE("serialize_sequence(): sequence with one step", "[serialize_sequence]"
     Context ctx{};
 
     Sequence seq{"Test"};
-    seq.push_back(Step{Step::type_action});
+    Step step01{Step::type_action};
+    step01.set_script("a = a + 1");
+    seq.push_back(step01);
 
-    REQUIRE_NOTHROW(serialize_sequence("test.seq", seq, ctx));
+    REQUIRE_NOTHROW(serialize_sequence("test_fs_sequence", seq));
+
     // TODO: extracted from the file the stored context, sequence, and step(s)  
+
+    REQUIRE(std::filesystem::remove_all("test_fs_sequence"));
 }
 

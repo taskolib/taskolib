@@ -27,21 +27,9 @@
 
 namespace task {
 
-void serialize_sequence(const std::string& path, const Sequence& sequence,
-    const Context& context)
+void serialize_sequence(const std::filesystem::path& path, Sequence& sequence)
 {
-    try
-    {
-        // TODO: needs more improvement
-        std::ofstream stream(path);
-        stream << context << '\n' << sequence << '\n';
-        stream.close();
-    }
-    catch(const std::exception& e)
-    {
-        // TODO: provide more information about failure
-        throw Error(e.what());
-    }
+    sequence.serialize(path);
 }
 
 } // namespace task

@@ -22,6 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <fstream>
+#include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 
@@ -430,6 +432,40 @@ void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
     gul14::string_view msg) const
 {
     throw Error(cat("[syntax check] Step ", it - steps_.begin() + 1, ": ", msg));
+}
+
+void Sequence::serialize(const std::filesystem::path& path)
+{
+    unsigned int idx = 0;
+    auto seq_path = path / ( "sequence_" + gul14::replace(get_label(), " ", "_") );
+    try
+    {
+        if (not std::filesystem::exists(seq_path))
+            std::filesystem::create_directories(seq_path);
+    }
+    catch(const std::exception& e)
+    {
+        throw Error(e.what());
+    }
+    for(const Step& step: steps_)
+        serialize_step(step, seq_path / ( "step_" + std::to_string(idx++) + ".lua" ));
+}
+
+void Sequence::serialize_step(const Step& step, const std::filesystem::path& path)
+{
+    try
+    {
+        if (std::filesystem::exists(path))
+            std::filesystem::remove(path); // remove previous stored step
+        std::ofstream stream(path);
+        stream << step;
+        stream.close();
+    }
+    catch(const std::exception& e)
+    {
+        // TODO: provide more information about failure
+        throw Error(e.what());
+    }
 }
 
 } // namespace task

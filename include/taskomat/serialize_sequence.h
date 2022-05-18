@@ -1,8 +1,8 @@
 /**
- * \file   Serialize.h
+ * \file   serialize_sequence.h
  * \author Marcus Walla
  * \date   Created on May 6, 2022
- * \brief  Serialize Sequence and Steps on media storage hardware.
+ * \brief  Serialize Sequence and Steps on storage hardware.
  *
  * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -26,6 +26,7 @@
 #define TASKOMAT_SERIALIZE_H_
 
 #include <string>
+#include <filesystem>
 #include "taskomat.h"
 
 namespace task {
@@ -35,10 +36,8 @@ namespace task {
  *
  * @param path Path to store the \a Sequence and \a Context
  * @param sequence \a Sequence to be serialized
- * @param conext \a Context to be serialzed
  */
-void serialize_sequence(const std::string& path, const Sequence& sequence
-    , const Context& context);
+void serialize_sequence(const std::filesystem::path& path, Sequence& sequence);
 
 } // namespace task
 

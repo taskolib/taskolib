@@ -32,6 +32,7 @@
 #include "taskomat/Context.h"
 #include "taskomat/Message.h"
 #include "taskomat/time_types.h"
+#include "taskomat/VariableName.h"
 
 namespace task {
 
@@ -230,16 +231,7 @@ public:
      * @param step \a Step to serialize. 
      * @return std::ostream& output stream
      */
-    friend std::ostream& operator<<(std::ostream& stream, const Step& step)
-    {
-        // TODO: need to fetch taskomat, lua, and sol2 version
-        //stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
-        //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
-        stream << "-- label: \"" << step.get_label() << "\"\n";
-        stream << "-- type: \"" << step.type_to_string() << "\"\n";
-        stream << '\n' << step.get_script() << '\n';
-        return stream;
-    }
+    friend std::ostream& operator<<(std::ostream& stream, const Step& step);
 
 private:
     std::string label_;

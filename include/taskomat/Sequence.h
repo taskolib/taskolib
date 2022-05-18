@@ -28,9 +28,9 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <gul14/string_view.h>
-#include <gul14/cat.h>
+#include <filesystem>
+#include <gul14/gul.h>
+#include "taskomat/Context.h"
 #include "taskomat/Error.h"
 #include "taskomat/Message.h"
 #include "taskomat/Step.h"
@@ -97,7 +97,7 @@ public:
      * \exception Error is thrown if the label is empty or if its length exceeds
      *            max_label_length characters.
      */
-    explicit Sequence(gul14::string_view label = "[anonymous]");
+    explicit Sequence(gul14::string_view label = "anonymous");
 
     /**
      * Validates if the \a Step 's token are correctly enclosed in a proper way.
@@ -369,22 +369,7 @@ public:
      */
     void execute(Context& context, MessageQueue* queue);
 
-    /**
-     * Serialize \A Sequence parameters and \a Step 's to the output stream. 
-     * 
-     * @param stream output stream
-     * @param sequence \a Sequence to serialize. 
-     * @return std::ostream& forwarded output stream
-     */
-    friend std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
-    {
-        stream << "Sequence {\n";
-        stream << "label: \"" << sequence.get_label() << "\"\n";
-        for(auto it = sequence.cbegin(); it != sequence.cend(); ++it)
-            stream << (*it) << ( (it == (sequence.cend() - 1) ) ? "\n" : ",\n" );
-        stream << "}"; // trailing line feed is performed by the caller
-        return stream;
-    }
+    void serialize(const std::filesystem::path& path);
 
 private:
     /// Empty if indentation is correct and complete, error message otherwise
@@ -460,6 +445,14 @@ private:
      * The error message reports the step number.
      */
     void throw_syntax_error_for_step(ConstIterator it, gul14::string_view msg) const;
+
+    /**
+     * Serialize \a Step to the file system.
+     * 
+     * @param step step to serialize
+     * @param path for the \a Step
+     */
+    void serialize_step(const Step& step, const std::filesystem::path& path);
 };
 
 } // namespace task
