@@ -57,29 +57,6 @@ struct Context
     std::unordered_map<VariableName, VariableValue> variables;
 };
 
-/**
- * Convert variant type to string.
- * 
- * @note 
- *      See Stack Overflow: "How to convert value of std::variant to std::string using std::visit"
- *      (https://stackoverflow.com/questions/65287801/how-to-convert-value-of-stdvariant-to-stdstring-using-stdvisit):
- */
-struct ToString 
-{
-    std::string operator()(const long long value) { return cat("[long long] ", value); }
-    std::string operator()(const double value) { return cat("[double] ", value); }
-    std::string operator()(const std::string value) { return cat("[string] ", value); }
-};
-
-/**
- * Serialize \A Context parameters to the output stream. 
- * 
- * @param stream output stream
- * @param context \a Context to serialize. 
- * @return std::ostream& forwarded output stream
- */
-std::ostream& operator<<(std::ostream& stream, const Context& context);
-
 } // namespace task
 
 #endif
