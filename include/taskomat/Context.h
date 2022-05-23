@@ -34,8 +34,6 @@
 #include "sol/sol.hpp"
 #include "taskomat/VariableName.h"
 
-using gul14::cat;
-
 namespace task {
 
 /**
