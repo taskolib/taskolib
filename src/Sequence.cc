@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include "taskomat/execute_step.h"
 #include "taskomat/Sequence.h"
+#include "taskomat/Step.h"
 
 using gul14::cat;
 
@@ -61,7 +61,7 @@ execute_while_block(Iterator begin, Iterator end, Context& context, MessageQueue
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (execute_step(*begin, context))
+    while (begin->execute(context, queue))
         execute_sequence_impl(begin + 1, block_end, context, queue);
 
     return block_end + 1;
@@ -98,7 +98,7 @@ execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (execute_step(*begin, context))
+    if (begin->execute(context, queue))
     {
         execute_sequence_impl(begin + 1, block_end, context, queue);
 
@@ -107,7 +107,7 @@ execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
             [lvl = begin->get_indentation_level()](const Step& s)
             {
                 return s.get_indentation_level() == lvl &&
-                        s.get_type() == Step::type_end;
+                       s.get_type() == Step::type_end;
             });
         if (end_it == end)
             throw Error("IF without matching END");
@@ -168,7 +168,7 @@ execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
                 break;
 
             case Step::type_action:
-                execute_step(*step, context, queue);
+                step->execute(context, queue);
                 ++step;
                 break;
 
