@@ -295,7 +295,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     //stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
     //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
 
-    stream << "-- type: " << type_to_string(step.get_type()) << '\n';
+    stream << "-- type: " << step.type_to_string() << '\n';
     stream << "-- label: \"" << step.get_label() << "\"\n";
     stream << "-- use context variable names: [";
     for(auto variable: step.get_used_context_variable_names())
