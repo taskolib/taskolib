@@ -1,3 +1,10 @@
+libtaskomat-0-0-6 (0.0.6) unstable; urgency=low
+
+  * automatically added debian changelog entry
+    by the DOOCS script check_changelog
+
+ -- Lars Froehlich <lars.froehlich@desy.de>  Tue, 24 May 2022 09:34:01 +0200
+
 libtaskomat-0-0-5 (0.0.6) unstable; urgency=low
 
   * new version 
