@@ -77,7 +77,7 @@ namespace task {
 class Sequence
 {
 public:
-    /// Abbraviation for steps.
+    /// Abbreviation for steps.
     using Steps = std::vector<Step>;
     using SizeType = std::uint16_t;
     using size_type = SizeType;
