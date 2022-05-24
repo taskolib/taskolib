@@ -13,6 +13,7 @@ project(
         'buildtype=release',
         'prefix=/usr',
         'libdir=lib',
+        'b_lundef=false', # use but do not link GUL
     ],
     meson_version : '>=0.49'
 )
@@ -107,9 +108,11 @@ install_headers(files(
 ## Build library
 inc = [ include_directories('include', 'include/taskomat/sol', 'src') ]
 
+gul_dep = dependency('libgul14')
+
 deps = [
     dependency('threads'),
-    dependency('libgul14'),
+    gul_dep.partial_dependency(compile_args : true, includes : true),
     lua_dep,
 ]
 
@@ -141,7 +144,7 @@ pkg.generate(lib,
 taskomat_dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
-    dependencies : deps,
+    dependencies : [ deps, gul_dep, ],
 )
 
 ## Tests
