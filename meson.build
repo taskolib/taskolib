@@ -33,6 +33,7 @@ install_headers(files(
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
         'include/taskomat/serialize_sequence.h',
+        'include/taskomat/deserialize_sequence.h',
         'include/taskomat/Step.h',
         'include/taskomat/taskomat.h',
         'include/taskomat/time_types.h',
@@ -50,6 +51,7 @@ sources = files(
     'src/Context.cc',
     'src/Sequence.cc',
     'src/serialize_sequence.cc',
+    'src/deserialize_sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
 )
