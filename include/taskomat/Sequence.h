@@ -369,8 +369,6 @@ public:
      */
     void execute(Context& context, MessageQueue* queue);
 
-    void serialize(const std::filesystem::path& path);
-
 private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
@@ -446,12 +444,6 @@ private:
      */
     void throw_syntax_error_for_step(ConstIterator it, gul14::string_view msg) const;
 
-    /**
-     * Serialize \a Step to the file system.
-     * 
-     * @param step step to serialize
-     * @param path for the \a Step
-     */
     void serialize_step(const Step& step, const std::filesystem::path& path);
 };
 

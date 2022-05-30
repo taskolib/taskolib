@@ -289,41 +289,4 @@ void Step::set_type(Type type)
     set_time_of_last_modification(Clock::now());
 }
 
-std::ostream& operator<<(std::ostream& stream, const Step& step)
-{
-    // TODO: need to fetch taskomat, lua, and sol2 version
-    //stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
-    //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
-
-    stream << "-- type: " << step.type_to_string() << '\n';
-    stream << "-- label: \"" << step.get_label() << "\"\n";
-    stream << "-- use context variable names: [";
-    for(auto variable: step.get_used_context_variable_names())
-    {
-        // TODO: need to fix separator for last entity        
-        stream << "\"" << variable.string() << "\", ";
-    }
-    stream << "]\n";
-
-    const std::time_t last_modification = 
-        std::chrono::system_clock::to_time_t(step.get_time_of_last_modification());
-    stream << "-- time of last modification: \"" << std::put_time(std::localtime(
-        &last_modification), "%F %T") << "\"\n";
-    
-    const std::time_t last_execution =
-        std::chrono::system_clock::to_time_t(step.get_time_of_last_execution());
-    stream << "-- time of last execution: \"" << std::put_time(
-        std::localtime(&last_execution), "%F %T") << "\"\n";
-    
-    stream << "-- timeout: ";
-    if ( step.get_timeout() == Step::infinite_timeout )
-        stream << "infinite\n";
-    else
-        stream << std::to_string(step.get_timeout().count()) << "ms\n";
-
-    stream << '\n' << step.get_script() << '\n';
-
-    return stream;
-}
-
 } // namespace task

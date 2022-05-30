@@ -25,19 +25,43 @@
 #ifndef TASKOMAT_SERIALIZE_H_
 #define TASKOMAT_SERIALIZE_H_
 
-#include <string>
 #include <filesystem>
+#include <iostream>
 #include "taskomat.h"
 
 namespace task {
 
 /**
- * Serialize \a Sequence and \a Context to a file.
+ * Serialize parameters of \a Step to the output stream. 
+ * 
+ * @param stream output stream
+ * @param step \a Step to serialize. 
+ * @return std::ostream& output stream
+ */
+std::ostream& operator<<(std::ostream& stream, const Step& step);
+
+/**
+ * Serialize \a Sequence with all of its \a Step 's as files.
+ * 
+ * After serializing you will find the following structure:
+ * 
+ * - a folder, starting with \code sequence that carries all \a Step 's serialized as
+ *  files. To differ between sequences the label is attached to the sequence, replacing
+ *  space (' ') with underline ('_'). More then one spaces is reduced to one underline
+ *  character.
+ * - underneath the sequence folder you will find the \a Step serialized in file. To
+ *  differ the \a Step from the sequence they are enumerated. Each filename starts with 
+ *  \code step followed by a consecutive step enumeration number followed
+ *  by type. Since you can directly evaluate the step as a Lua script it has the
+ *  extension \code '.lua'. Here is one example for the first step that has type 
+ *  \code action: \code step_1_action.lua
+ * - important \a Step parameters are exported to the beginning of the file as Lua
+ *  comments.
  *
- * @param path Path to store the \a Sequence and \a Context
+ * @param path Path to store \a Sequence
  * @param sequence \a Sequence to be serialized
  */
-void serialize_sequence(const std::filesystem::path& path, Sequence& sequence);
+void serialize_sequence(const std::filesystem::path& path, const Sequence& sequence);
 
 } // namespace task
 
