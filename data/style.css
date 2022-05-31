@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * Copyright 2019-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,6 +22,13 @@
 
 div.image img[src="desy.png"]{
     width:220px;
+    float:right;
+    margin-left:40px;
+    margin-bottom:40px;
+}
+
+div.image img[src="sequence_and_steps.png"]{
+    width:320px;
     float:right;
     margin-left:40px;
     margin-bottom:40px;
