@@ -92,3 +92,9 @@ TEST_CASE("Executor: Run a sequence asynchonously", "[Executor]")
     REQUIRE(executor.update(sequence) == false);
     REQUIRE(executor.is_busy() == false);
 }
+
+TEST_CASE("Executor: is_busy() on newly constructed Executor", "[Executor]")
+{
+    Executor ex;
+    REQUIRE(ex.is_busy() == false);
+}
