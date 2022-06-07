@@ -443,8 +443,6 @@ private:
      * The error message reports the step number.
      */
     void throw_syntax_error_for_step(ConstIterator it, gul14::string_view msg) const;
-
-    void serialize_step(const Step& step, const std::filesystem::path& path);
 };
 
 } // namespace task
