@@ -72,12 +72,13 @@ void Executor::run_asynchronously(Sequence sequence, Context context)
                          std::move(context), queue_);
 }
 
-bool Executor::update(Sequence& /*sequence*/)
+bool Executor::update(Sequence& sequence)
 {
     // Read all messages that are currently in the queue
     while (const auto opt_msg = queue_->try_pop())
     {
         const Message& msg = *opt_msg;
+        const auto idx = msg.get_index();
 
         switch (msg.get_type())
         {
@@ -90,11 +91,26 @@ bool Executor::update(Sequence& /*sequence*/)
         case Message::Type::sequence_stopped_with_error:
             break;
         case Message::Type::step_started:
+        {
+            Step step = sequence[idx];
+            step.set_running(true);
+            sequence.assign(sequence.begin() + idx, std::move(step));
             break;
+        }
         case Message::Type::step_stopped:
+        {
+            Step step = sequence[idx];
+            step.set_running(false);
+            sequence.assign(sequence.begin() + idx, std::move(step));
             break;
+        }
         case Message::Type::step_stopped_with_error:
+        {
+            Step step = sequence[idx];
+            step.set_running(false);
+            sequence.assign(sequence.begin() + idx, std::move(step));
             break;
+        }
         default:
             throw Error(cat("Unknown message type ", static_cast<int>(msg.get_type())));
         }

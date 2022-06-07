@@ -73,6 +73,9 @@ TEST_CASE("Executor: Run a sequence asynchonously", "[Executor]")
 
     Executor executor;
 
+    for (const auto& step : sequence)
+        REQUIRE(step.is_running() == false);
+
     // Start the sequence in a separate thread
     executor.run_asynchronously(sequence, context);
 
@@ -83,14 +86,30 @@ TEST_CASE("Executor: Run a sequence asynchonously", "[Executor]")
     REQUIRE(executor.is_busy() == true);
     REQUIRE(executor.update(sequence) == true);
 
+    bool have_seen_running_step =
+        std::any_of(sequence.begin(), sequence.end(),
+                    [](const Step& s) { return s.is_running(); });
+
     // Process messages as long as the thread is running
     while (executor.update(sequence))
+    {
+        have_seen_running_step |=
+            std::any_of(sequence.begin(), sequence.end(),
+                        [](const Step& s) { return s.is_running(); });
+
         gul14::sleep(5ms);
+    }
+
+    // We must have seen a step marked as "is_running" at least once during execution.
+    REQUIRE(have_seen_running_step == true);
 
     // Thread has now finished. As long as we do not start another one, update() and
     // is_busy() keep returning false
     REQUIRE(executor.update(sequence) == false);
     REQUIRE(executor.is_busy() == false);
+
+    for (const auto& step : sequence)
+        REQUIRE(step.is_running() == false);
 }
 
 TEST_CASE("Executor: is_busy() on newly constructed Executor", "[Executor]")
