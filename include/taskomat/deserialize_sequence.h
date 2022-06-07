@@ -27,7 +27,6 @@
 
 #include <string>
 #include <filesystem>
-#include <memory>
 #include <iostream>
 #include "taskomat.h"
 
@@ -48,7 +47,7 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * @param path Path to load \a Sequence and all included \a Step 's
  * @return deserialized \a Sequence
  */
-std::unique_ptr<Sequence> deserialize_sequence(const std::filesystem::path& path);
+Sequence deserialize_sequence(const std::filesystem::path& path);
 
 } // namespace task
 

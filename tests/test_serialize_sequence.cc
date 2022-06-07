@@ -45,12 +45,12 @@ TEST_CASE("serialize_sequence(): sequence with one step", "[serialize_sequence]"
     //         "test_fs_sequence/sequence_Test"));
     auto deserialize_seq = deserialize_sequence("test_fs_sequence/"
         "sequence_Test_a_sequence");
-    REQUIRE(deserialize_seq->get_label() == "Test a sequence");
+    REQUIRE(deserialize_seq.get_label() == "Test a sequence");
 
-    REQUIRE(not deserialize_seq->empty());
-    REQUIRE(1 == deserialize_seq->size());
-    REQUIRE((*deserialize_seq)[0].get_type() == Step::type_action);
-    REQUIRE((*deserialize_seq)[0].get_label() == "This is a label");
+    REQUIRE(not deserialize_seq.empty());
+    REQUIRE(1 == deserialize_seq.size());
+    REQUIRE(deserialize_seq[0].get_type() == Step::type_action);
+    REQUIRE(deserialize_seq[0].get_label() == "This is a label");
 
     // TODO: extracted from the file the stored context, sequence, and step(s)  
 

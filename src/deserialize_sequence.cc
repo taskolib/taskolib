@@ -190,7 +190,7 @@ void load_step(const std::filesystem::path& step_filename, Step& step)
 
 } // namespace anonymous
 
-std::unique_ptr<Sequence> deserialize_sequence(const std::filesystem::path& path)
+Sequence deserialize_sequence(const std::filesystem::path& path)
 {
     if (path.empty())
         throw Error("Must specify a valid path. Currently it is empty.");
@@ -215,7 +215,7 @@ std::unique_ptr<Sequence> deserialize_sequence(const std::filesystem::path& path
         seq.push_back(step);
     }
 
-    return std::make_unique<Sequence>(seq);
+    return seq;
 }
 
 } // namespace task
