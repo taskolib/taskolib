@@ -609,7 +609,7 @@ TEST_CASE("execute(): Messages", "[Step]")
     step.set_used_context_variable_names(VariableNames{ "a" });
     step.set_script("a = a + 42");
 
-    step.execute(context, &queue);
+    step.execute(context, &queue, 42);
 
     REQUIRE(queue.size() == 2);
 
@@ -619,6 +619,7 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t0);
     REQUIRE(msg.get_timestamp() - t0 < 1s);
+    REQUIRE(msg.get_index() == 42);
 
     const auto t1 = msg.get_timestamp();
 
@@ -628,4 +629,5 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t1);
     REQUIRE(msg.get_timestamp() - t1 < 1s);
+    REQUIRE(msg.get_index() == 42);
 }

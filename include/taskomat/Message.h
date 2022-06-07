@@ -56,11 +56,12 @@ public:
     /// Construct an empty message.
     Message() = default;
 
-    /// Construct a message with a given timestamp.
-    Message(Type type, std::string text, TimePoint timestamp)
+    /// Construct an initialized message from the given parameters.
+    Message(Type type, std::string text, TimePoint timestamp, IndexType index)
         : text_{ std::move(text) }
         , timestamp_{ timestamp }
         , type_{ type }
+        , index_{ index }
     {}
 
     /// Return the associated index.
@@ -111,22 +112,23 @@ using MessageQueue = LockedQueue<Message>;
  * \param type       Message type (see Message::Type)
  * \param text       Message text
  * \param timestamp  Timestamp of the message
+ * \param index      Index (of a Step in its parent Sequence)
  *
  * \code
- * send_message<StepStartedMessage>(queue, timestamp);
+ * send_message(queue, type, text, timestamp, index);
  * // ... is equivalent to:
  * if (queue)
- *     queue->push(std::make_unique<StepStartedMessage>(timestamp));
+ *     queue->push(Message(type, text, timestamp, index));
  * \endcode
  */
 inline
 void send_message(MessageQueue* queue, Message::Type type, std::string text,
-                  TimePoint timestamp)
+                  TimePoint timestamp, Message::IndexType index)
 {
     if (queue == nullptr)
         return;
 
-    queue->push(Message(type, std::move(text), timestamp));
+    queue->push(Message(type, std::move(text), timestamp, index));
 }
 
 

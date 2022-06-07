@@ -429,6 +429,83 @@ private:
     ConstIterator check_syntax_for_if(ConstIterator begin, ConstIterator end) const;
 
     /**
+     * Execute an ELSE block.
+     *
+     * \param begin    Iterator to an ELSE step
+     * \param end      Iterator past the last step to be scanned for matching indentation
+     *                 (may simply be end())
+     * \param context  Execution context
+     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
+     *                 disabled.
+     *
+     * \returns an iterator to the first step after the matching END step.
+     */
+    Iterator
+    execute_else_block(Iterator begin, Iterator end, Context& context,
+                       MessageQueue* queue);
+
+    /**
+     * Execute an IF or ELSEIF block.
+     *
+     * \param begin    Iterator to an IF or ELSEIF step
+     * \param end      Iterator past the last step to be scanned for matching indentation
+     *                 (may simply be end())
+     * \param context  Execution context
+     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
+     *                 disabled.
+     *
+     * \returns an iterator to the step to be executed next: If the IF/ELSEIF evaluated as
+     *          true, this is the first step after the matching END. Otherwise, it is the
+     *          next step after skipping the current IF/ELSEIF block.
+     */
+    Iterator
+    execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
+                               MessageQueue* queue);
+
+    /**
+     * Execute a range of steps.
+     *
+     * \param step_begin Iterator to the first step that should be executed
+     * \param step_end   Iterator past the last step that should be executed
+     * \param context    Context for executing the steps
+     * \exception Error is thrown if the execution fails at some point.
+     */
+    Iterator
+    execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
+                          MessageQueue* queue);
+
+    /**
+     * Execute a TRY block.
+     *
+     * \param begin    Iterator to the TRY step
+     * \param end      Iterator past the last step to be scanned for matching indentation
+     *                 (may simply be end())
+     * \param context  Execution context
+     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
+     *                 disabled.
+     *
+     * \returns an iterator to the first step after the matching END step.
+     */
+    Iterator
+    execute_try_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue);
+
+    /**
+     * Execute a WHILE block.
+     *
+     * \param begin    Iterator to the WHILE step
+     * \param end      Iterator past the last step to be scanned for matching indentation
+     *                 (may simply be end())
+     * \param context  Execution context
+     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
+     *                 disabled.
+     *
+     * \returns an iterator to the first step after the matching END step.
+     */
+    Iterator
+    execute_while_block(Iterator begin, Iterator end, Context& context,
+                        MessageQueue* queue);
+
+    /**
      * Assign indentation levels to all steps according to their logical nesting.
      *
      * If errors in the logical nesting are found, an approximate indentation is assigned
