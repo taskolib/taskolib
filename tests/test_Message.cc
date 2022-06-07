@@ -47,7 +47,16 @@ TEST_CASE("Message: Constructors", "[Message]")
     REQUIRE(b.get_timestamp() == t0);
 }
 
-TEST_CASE("StoppedMessage: get_text()", "[Message]")
+TEST_CASE("Message: get_index()", "[Message]")
+{
+    Message msg;
+    REQUIRE(msg.get_index() == 0);
+
+    msg.set_index(42);
+    REQUIRE(msg.get_index() == 42);
+}
+
+TEST_CASE("Message: get_text()", "[Message]")
 {
     Message msg;
     REQUIRE(msg.get_text() == "");
@@ -67,7 +76,7 @@ TEST_CASE("Message: get_timestamp()", "[Message]")
     REQUIRE(msg.get_timestamp() == t0);
 }
 
-TEST_CASE("StoppedMessage: get_type()", "[Message]")
+TEST_CASE("Message: get_type()", "[Message]")
 {
     Message msg;
     REQUIRE(msg.get_type() == Message::Type::log);
@@ -76,7 +85,18 @@ TEST_CASE("StoppedMessage: get_type()", "[Message]")
     REQUIRE(msg.get_type() == Message::Type::step_started);
 }
 
-TEST_CASE("StoppedMessage: set_text()", "[Message]")
+TEST_CASE("Message: set_index()", "[Message]")
+{
+    Message msg;
+
+    msg.set_index(42);
+    REQUIRE(msg.get_index() == 42);
+
+    msg.set_index(0);
+    REQUIRE(msg.get_index() == 0);
+}
+
+TEST_CASE("Message: set_text()", "[Message]")
 {
     Message msg;
 
@@ -99,7 +119,7 @@ TEST_CASE("Message: set_timestamp()", "[Message]")
     REQUIRE(msg.get_timestamp() == TimePoint{});
 }
 
-TEST_CASE("StoppedMessage: set_type()", "[Message]")
+TEST_CASE("Message: set_type()", "[Message]")
 {
     Message msg;
 

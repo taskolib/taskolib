@@ -38,6 +38,9 @@ namespace task {
 class Message
 {
 public:
+    /// Type for the associated index (for convenience, same as Sequence::SizeType)
+    using IndexType = std::uint16_t;
+
     /// The type of this message.
     enum class Type
     {
@@ -60,6 +63,9 @@ public:
         , type_{ type }
     {}
 
+    /// Return the associated index.
+    IndexType get_index() const noexcept { return index_; }
+
     /**
      * Return the message text.
      *
@@ -74,6 +80,9 @@ public:
     /// Return the timestamp.
     TimePoint get_timestamp() const { return timestamp_; };
 
+    /// Set the associated index.
+    void set_index(IndexType index) { index_ = index; }
+
     /// Set the message text.
     void set_text(const std::string& text) { text_ = text; }
 
@@ -87,6 +96,7 @@ private:
     std::string text_;
     TimePoint timestamp_{};
     Type type_{ Type::log };
+    IndexType index_{ 0 };
 };
 
 /// A thread-safe queue holding Message objects.
