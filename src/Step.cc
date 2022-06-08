@@ -25,6 +25,8 @@
 #include <ctime>
 #include <iomanip> // for std::put_time
 #include <gul14/cat.h>
+#include <gul14/num_util.h>
+#include <gul14/time_util.h>
 #include "taskomat/Error.h"
 #include "taskomat/Step.h"
 
@@ -130,6 +132,24 @@ long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
         return std::numeric_limits<long long>::max();
 }
 
+// Pause execution for the specified time, observing timeouts and termination requests.
+void sleep_fct(double seconds, sol::this_state sol)
+{
+    auto t0 = gul14::tic();
+    while (gul14::toc(t0) < seconds)
+    {
+        check_script_timeout(sol, nullptr);
+        double sec = gul14::clamp(seconds - gul14::toc(t0), 0.0, 0.01);
+        gul14::sleep(sec);
+    }
+}
+
+void install_custom_commands(sol::state& lua)
+{
+    auto globals = lua.globals();
+    globals["sleep"] = sleep_fct;
+}
+
 void install_timeout_hook(sol::state& lua, TimePoint now,
                           std::chrono::milliseconds timeout, CommChannel* comm_channel)
 {
@@ -224,6 +244,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     sol::state lua;
 
     open_safe_library_subset(lua);
+    install_custom_commands(lua);
 
     if (context.lua_init_function)
         context.lua_init_function(lua);

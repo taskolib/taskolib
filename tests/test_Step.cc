@@ -328,6 +328,21 @@ TEST_CASE("execute(): Sandboxing", "[Step]")
     }
 }
 
+TEST_CASE("execute(): Custom commands", "[Step]")
+{
+    Context context;
+    Step step;
+
+    SECTION("sleep()")
+    {
+        step.set_script("sleep(0.001)");
+
+        auto t0 = gul14::tic();
+        step.execute(context);
+        REQUIRE(gul14::toc(t0) >= 0.001);
+    }
+}
+
 TEST_CASE("execute(): Timeout", "[Step]")
 {
     Context context;
@@ -340,6 +355,16 @@ TEST_CASE("execute(): Timeout", "[Step]")
         step.set_timeout(20ms);
         REQUIRE_THROWS_AS(step.execute(context), Error);
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
+        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
+    }
+
+    SECTION("sleep() is terminated")
+    {
+        auto t0 = gul14::tic();
+        step.set_script("sleep(10)");
+        step.set_timeout(5ms);
+        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 5);
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
 
