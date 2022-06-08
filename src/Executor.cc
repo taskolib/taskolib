@@ -35,6 +35,16 @@ Executor::Executor()
 {
 }
 
+void Executor::cancel()
+{
+    if (not future_.valid())
+        return;
+
+    comm_channel_->immediate_termination_requested_ = true;
+    future_.get(); // Wait for thread to join
+    comm_channel_->immediate_termination_requested_ = false;
+}
+
 void Executor::execute_sequence(Sequence sequence, Context context,
                                 std::shared_ptr<CommChannel> comm) noexcept
 {

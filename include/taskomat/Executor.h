@@ -69,6 +69,15 @@ public:
     Executor();
 
     /**
+     * Terminate a running sequence.
+     *
+     * If a sequence is running in a separate thread, this call sends a termination
+     * request and waits for the thread to shut down. If no sequence is currently running,
+     * the call has no effect.
+     */
+    void cancel();
+
+    /**
      * Determine if the executor is currently running a sequence in a separate thread.
      *
      * \returns true if a sequence is being executed or false otherwise.

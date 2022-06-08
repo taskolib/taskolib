@@ -56,17 +56,12 @@ TEST_CASE("Executor: Move assignment", "[Executor]")
     ex2 = std::move(ex);
 }
 
-TEST_CASE("Executor: Run a sequence asynchonously", "[Executor]")
+TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 {
     Context context;
-    context.lua_init_function =
-        [](sol::state& sol)
-        {
-            sol["sleep_20ms"] = []{ gul14::sleep(20ms); };
-        };
 
     Step step(Step::type_action);
-    step.set_script("sleep_20ms()");
+    step.set_script("sleep(0.02)");
 
     Sequence sequence;
     sequence.push_back(std::move(step));
@@ -75,6 +70,8 @@ TEST_CASE("Executor: Run a sequence asynchonously", "[Executor]")
 
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
+
+    const auto t0 = gul14::tic();
 
     // Start the sequence in a separate thread
     executor.run_asynchronously(sequence, context);
@@ -102,6 +99,39 @@ TEST_CASE("Executor: Run a sequence asynchonously", "[Executor]")
 
     // We must have seen a step marked as "is_running" at least once during execution.
     REQUIRE(have_seen_running_step == true);
+
+    REQUIRE(gul14::toc(t0) >= 0.02);
+
+    // Thread has now finished. As long as we do not start another one, update() and
+    // is_busy() keep returning false
+    REQUIRE(executor.update(sequence) == false);
+    REQUIRE(executor.is_busy() == false);
+
+    for (const auto& step : sequence)
+        REQUIRE(step.is_running() == false);
+}
+
+TEST_CASE("Executor: cancel()", "[Executor]")
+{
+    Context context;
+
+    Step step(Step::type_action);
+    step.set_script("sleep(2)");
+
+    Sequence sequence;
+    sequence.push_back(std::move(step));
+
+    Executor executor;
+
+    const auto t0 = gul14::tic();
+
+    executor.run_asynchronously(sequence, context);
+
+    gul14::sleep(5ms);
+    executor.cancel();
+
+    REQUIRE(gul14::toc(t0) >= 0.005);
+    REQUIRE(gul14::toc(t0) < 0.2);
 
     // Thread has now finished. As long as we do not start another one, update() and
     // is_busy() keep returning false
