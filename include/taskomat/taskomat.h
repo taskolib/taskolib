@@ -27,6 +27,7 @@
 
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
+#include "taskomat/Executor.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 #include "taskomat/time_types.h"
