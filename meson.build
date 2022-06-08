@@ -28,6 +28,7 @@ sol_version = '3.2.3'
 
 # Headers to be installed under ${prefix}/include/
 install_headers(files(
+        'include/taskomat/CommChannel.h',
         'include/taskomat/Context.h',
         'include/taskomat/Error.h',
         'include/taskomat/Executor.h',
@@ -61,6 +62,8 @@ sources = files(
 
 # Test sources
 test_src = files(
+    'tests/test_CommChannel.cc',
+    'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_Executor.cc',
     'tests/test_main.cc',
