@@ -112,6 +112,15 @@ TEST_CASE("Step: get_used_context_variable_names()", "[Step]")
     REQUIRE(step.get_used_context_variable_names() == VariableNames{ "a", "b52" });
 }
 
+TEST_CASE("Step: is_running()", "[Step]")
+{
+    Step step;
+    REQUIRE(step.is_running() == false);
+
+    step.set_running(true);
+    REQUIRE(step.is_running() == true);
+}
+
 TEST_CASE("Step: set_indentation_level()", "[Step]")
 {
     Step step;
@@ -145,6 +154,17 @@ TEST_CASE("Step: set_label()", "[Step]")
     REQUIRE(step.get_label() == "Do something");
     REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
     REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+}
+
+TEST_CASE("Step: set_running()", "[Step]")
+{
+    Step step;
+
+    step.set_running(true);
+    REQUIRE(step.is_running() == true);
+
+    step.set_running(false);
+    REQUIRE(step.is_running() == false);
 }
 
 TEST_CASE("Step: set_time_of_last_execution()", "[Step]")
@@ -589,7 +609,7 @@ TEST_CASE("execute(): Messages", "[Step]")
     step.set_used_context_variable_names(VariableNames{ "a" });
     step.set_script("a = a + 42");
 
-    step.execute(context, &queue);
+    step.execute(context, &queue, 42);
 
     REQUIRE(queue.size() == 2);
 
@@ -599,6 +619,7 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t0);
     REQUIRE(msg.get_timestamp() - t0 < 1s);
+    REQUIRE(msg.get_index() == 42);
 
     const auto t1 = msg.get_timestamp();
 
@@ -608,4 +629,5 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t1);
     REQUIRE(msg.get_timestamp() - t1 < 1s);
+    REQUIRE(msg.get_index() == 42);
 }

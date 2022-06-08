@@ -69,7 +69,8 @@ public:
     {}
 
     /**
-     * Execute the step script within the given context.
+     * Execute the step script within the given context, sending status information to a
+     * message queue.
      *
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
@@ -81,13 +82,15 @@ public:
      *    context.
      *
      * \param context        The context to be used for executing the step
-     * \param message_queue  Pointer to a message queue. If this is not a null pointer,
-     *                       the queue receives the following messages:
+     * \param message_queue  Pointer to a message queue; If this is null, messaging is
+     *                       disabled. Otherwise, the queue receives the following
+     *                       messages:
      *                       - A message of type step_started when the step is started
      *                       - A message of type step_stopped when the step has finished
      *                         successfully
      *                       - A message of type step_stopped_with_error when the step has
      *                         been stopped due to an error condition
+     * \param index          Index of the step in its parent Sequence.
      *
      * \returns true if the script returns a value that evaluates as true in the scripting
      *          language, or false otherwise (even in the case that the script returns no
@@ -96,7 +99,33 @@ public:
      * \exception Error is thrown if the script cannot be started or if it raises an error
      *            during execution.
      */
-    bool execute(Context& context, MessageQueue* message_queue = nullptr);
+    bool execute(Context& context, MessageQueue* message_queue, Message::IndexType index);
+
+    /**
+     * Execute the step script within the given context (without messaging).
+     *
+     * This function performs the following steps:
+     * 1. A fresh script runtime environment is prepared and safe library components are
+     *    loaded into it.
+     * 2. The lua_init_function from the context is run if it is defined (non-null).
+     * 3. Selected variables are imported from the context into the runtime environment.
+     * 4. The script from the step is loaded into the runtime environment and executed.
+     * 5. Selected variables are exported from the runtime environment back into the
+     *    context.
+     *
+     * \param context  The context to be used for executing the step
+     *
+     * \returns true if the script returns a value that evaluates as true in the scripting
+     *          language, or false otherwise (even in the case that the script returns no
+     *          value at all).
+     *
+     * \exception Error is thrown if the script cannot be started or if it raises an error
+     *            during execution.
+     */
+    bool execute(Context& context)
+    {
+        return execute(context, nullptr, 0);
+    }
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -169,6 +198,13 @@ public:
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
 
+    /**
+     * Return whether this step is currently being executed.
+     *
+     * This flag is normally set by an Executor.
+     */
+    bool is_running() const noexcept { return is_running_; }
+
     /// Set the names of the variables that should be im-/exported from/to the script.
     void set_used_context_variable_names(const VariableNames& used_context_variable_names);
     void set_used_context_variable_names(VariableNames&& used_context_variable_names);
@@ -189,6 +225,13 @@ public:
      * This call also updates the time of last modification to the current system time.
      */
     void set_label(const std::string& label);
+
+    /**
+     * Set whether the step should be marked as "currently running".
+     *
+     * This is normally done by an Executor.
+     */
+    void set_running(bool is_running) { is_running_ = is_running; }
 
     /**
      * Set the script that should be executed when this step is run.
@@ -230,6 +273,7 @@ private:
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
     short indentation_level_{ 0 };
+    bool is_running_{ false };
 
     /**
      * Copy the variables listed in used_context_variable_names_ from the given Context

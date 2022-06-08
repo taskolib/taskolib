@@ -182,12 +182,12 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
     }
 }
 
-bool Step::execute(Context& context, MessageQueue* queue)
+bool Step::execute(Context& context, MessageQueue* queue, Message::IndexType index)
 {
     const auto now = Clock::now();
     set_time_of_last_execution(now);
 
-    send_message(queue, Message::Type::step_started, "Step started", now);
+    send_message(queue, Message::Type::step_started, "Step started", now, index);
 
     sol::state lua;
 
@@ -210,7 +210,8 @@ bool Step::execute(Context& context, MessageQueue* queue)
         if (!protected_result.valid())
         {
             sol::error err = protected_result;
-            throw Error(cat("Error while executing script: ", err.what()));
+            throw Error(cat("Error while executing script of step ", index, ": ",
+                            err.what()));
         }
 
         copy_used_variables_from_lua_to_context(lua, context);
@@ -222,17 +223,19 @@ bool Step::execute(Context& context, MessageQueue* queue)
     }
     catch (const sol::error& e)
     {
-        std::string msg = cat("Error while executing script: ", e.what());
+        std::string msg = cat("Error while executing script of step ", index + 1, ": ",
+                              e.what());
 
         send_message(queue, Message::Type::step_stopped_with_error, msg,
-            Clock::now());
+            Clock::now(), index);
 
         throw Error(msg);
     }
 
     send_message(queue, Message::Type::step_stopped,
-        cat("Step finished (logical result: ", result ? "true" : "false", ')'),
-        Clock::now());
+        cat("Step ", index + 1, " finished (logical result: ", result ? "true" : "false",
+            ')'),
+        Clock::now(), index);
 
     return result;
 }
