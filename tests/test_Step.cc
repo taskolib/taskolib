@@ -607,7 +607,7 @@ TEST_CASE("execute(): LUA initialization function", "[Step]")
 TEST_CASE("execute(): Messages", "[Step]")
 {
     const auto t0 = Clock::now();
-    MessageQueue queue(10);
+    CommChannel comm;
 
     Context context;
     context.variables["a"] = 0LL;
@@ -616,12 +616,12 @@ TEST_CASE("execute(): Messages", "[Step]")
     step.set_used_context_variable_names(VariableNames{ "a" });
     step.set_script("a = a + 42");
 
-    step.execute(context, &queue, 42);
+    step.execute(context, &comm, 42);
 
-    REQUIRE(queue.size() == 2);
+    REQUIRE(comm.queue_.size() == 2);
 
     // First, a "step started" message
-    auto msg = queue.pop();
+    auto msg = comm.queue_.pop();
     REQUIRE(msg.get_type() == Message::Type::step_started);
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t0);
@@ -631,7 +631,7 @@ TEST_CASE("execute(): Messages", "[Step]")
     const auto t1 = msg.get_timestamp();
 
     // Then, a "step stopped" message
-    msg = queue.pop();
+    msg = comm.queue_.pop();
     REQUIRE(msg.get_type() == Message::Type::step_stopped);
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t1);

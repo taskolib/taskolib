@@ -1,6 +1,6 @@
 /**
  * \file   Sequence.cc
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Froehlich
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.
  *
@@ -80,26 +80,26 @@ void Sequence::check_label(gul14::string_view label)
 
 Sequence::Iterator
 Sequence::execute_else_block(Iterator begin, Iterator end, Context& context,
-                             MessageQueue* queue)
+                             CommChannel* comm)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    execute_sequence_impl(begin + 1, block_end, context, queue);
+    execute_sequence_impl(begin + 1, block_end, context, comm);
 
     return block_end;
 }
 
 Sequence::Iterator
 Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
-                                     MessageQueue* queue)
+                                     CommChannel* comm)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (begin->execute(context, queue, begin - steps_.begin()))
+    if (begin->execute(context, comm, begin - steps_.begin()))
     {
-        execute_sequence_impl(begin + 1, block_end, context, queue);
+        execute_sequence_impl(begin + 1, block_end, context, comm);
 
         // Skip forward past the END
         auto end_it = std::find_if(block_end, end,
@@ -118,7 +118,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
 
 Sequence::Iterator
 Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
-                                MessageQueue* queue)
+                                CommChannel* comm)
 {
     Iterator step = step_begin;
 
@@ -127,20 +127,20 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
         switch (step->get_type())
         {
             case Step::type_while:
-                step = execute_while_block(step, step_end, context, queue);
+                step = execute_while_block(step, step_end, context, comm);
                 break;
 
             case Step::type_try:
-                step = execute_try_block(step, step_end, context, queue);
+                step = execute_try_block(step, step_end, context, comm);
                 break;
 
             case Step::type_if:
             case Step::type_elseif:
-                step = execute_if_or_elseif_block(step, step_end, context, queue);
+                step = execute_if_or_elseif_block(step, step_end, context, comm);
                 break;
 
             case Step::type_else:
-                step = execute_else_block(step, step_end, context, queue);
+                step = execute_else_block(step, step_end, context, comm);
                 break;
 
             case Step::type_end:
@@ -148,7 +148,7 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
                 break;
 
             case Step::type_action:
-                step->execute(context, queue, step - steps_.begin());
+                step->execute(context, comm, step - steps_.begin());
                 ++step;
                 break;
 
@@ -162,7 +162,7 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
 
 Sequence::Iterator
 Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
-                            MessageQueue* queue)
+                            CommChannel* comm)
 {
     const auto it_catch = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
@@ -175,11 +175,11 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
 
     try
     {
-        execute_sequence_impl(begin + 1, it_catch, context, queue);
+        execute_sequence_impl(begin + 1, it_catch, context, comm);
     }
     catch (const Error&)
     {
-        execute_sequence_impl(it_catch + 1, it_catch_block_end, context, queue);
+        execute_sequence_impl(it_catch + 1, it_catch_block_end, context, comm);
     }
 
     return it_catch_block_end;
@@ -187,13 +187,13 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
 
 Sequence::Iterator
 Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
-                              MessageQueue* queue)
+                              CommChannel* comm)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (begin->execute(context, queue, begin - steps_.begin()))
-        execute_sequence_impl(begin + 1, block_end, context, queue);
+    while (begin->execute(context, comm, begin - steps_.begin()))
+        execute_sequence_impl(begin + 1, block_end, context, comm);
 
     return block_end + 1;
 }
@@ -393,25 +393,25 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
     }
 }
 
-void Sequence::execute(Context& context, MessageQueue* queue)
+void Sequence::execute(Context& context, CommChannel* comm)
 {
     check_syntax();
 
-    send_message(queue, Message::Type::sequence_started, "Sequence started",
+    send_message(comm, Message::Type::sequence_started, "Sequence started",
                  Clock::now(), 0);
 
     try
     {
-        execute_sequence_impl(steps_.begin(), steps_.end(), context, queue);
+        execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
     }
     catch (const std::exception& e)
     {
-        send_message(queue, Message::Type::sequence_stopped_with_error, e.what(),
+        send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
                      Clock::now(), 0);
         throw;
     }
 
-    send_message(queue, Message::Type::sequence_stopped, "Sequence finished",
+    send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
                  Clock::now(), 0);
 }
 

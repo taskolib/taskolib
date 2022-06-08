@@ -184,12 +184,12 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
     }
 }
 
-bool Step::execute(Context& context, MessageQueue* queue, Message::IndexType index)
+bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index)
 {
     const auto now = Clock::now();
     set_time_of_last_execution(now);
 
-    send_message(queue, Message::Type::step_started, "Step started", now, index);
+    send_message(comm, Message::Type::step_started, "Step started", now, index);
 
     sol::state lua;
 
@@ -228,13 +228,13 @@ bool Step::execute(Context& context, MessageQueue* queue, Message::IndexType ind
         std::string msg = cat("Error while executing script of step ", index + 1, ": ",
                               e.what());
 
-        send_message(queue, Message::Type::step_stopped_with_error, msg,
+        send_message(comm, Message::Type::step_stopped_with_error, msg,
             Clock::now(), index);
 
         throw Error(msg);
     }
 
-    send_message(queue, Message::Type::step_stopped,
+    send_message(comm, Message::Type::step_stopped,
         cat("Step ", index + 1, " finished (logical result: ", result ? "true" : "false",
             ')'),
         Clock::now(), index);

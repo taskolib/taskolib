@@ -1,6 +1,6 @@
 /**
  * \file   Sequence.h
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Froehlich
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.
  *
@@ -26,13 +26,15 @@
 #define TASKOMAT_SEQUENCE_H_
 
 #include <algorithm>
+#include <filesystem>
 #include <string>
 #include <vector>
-#include <filesystem>
-#include <gul14/gul.h>
+#include <gul14/finalizer.h>
+#include <gul14/string_view.h>
+#include <gul14/cat.h>
+#include "taskomat/CommChannel.h"
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
-#include "taskomat/Message.h"
 #include "taskomat/Step.h"
 
 namespace task {
@@ -351,13 +353,15 @@ public:
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function
      *                that is run before each step.
-     * \param queue   Pointer to a message queue. If this is a null pointer, no messages
-     *                are sent. Otherwise, messages for starting/stopping steps and the
-     *                sequence itself are sent.
+     * \param comm_channel  Pointer to a communication channel. If this is a null pointer,
+     *                no messages are sent and no external interaction with the running
+     *                sequence is possible. Otherwise, messages for starting/stopping
+     *                steps and the sequence itself are sent and termination requests are
+     *                honored.
      * \exception Error is thrown if the script cannot be executed due to a syntax error
      *            or if it raises an error during execution.
      */
-    void execute(Context& context, MessageQueue* queue);
+    void execute(Context& context, CommChannel* comm_channel);
 
     /**
      * Modify a step inside the sequence.
@@ -477,14 +481,13 @@ private:
      * \param end      Iterator past the last step to be scanned for matching indentation
      *                 (may simply be end())
      * \param context  Execution context
-     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
-     *                 disabled.
+     * \param comm     Pointer to a communication channel; if null, messaging and
+     *                 cross-thread interaction are disabled.
      *
      * \returns an iterator to the first step after the matching END step.
      */
     Iterator
-    execute_else_block(Iterator begin, Iterator end, Context& context,
-                       MessageQueue* queue);
+    execute_else_block(Iterator begin, Iterator end, Context& context, CommChannel* comm);
 
     /**
      * Execute an IF or ELSEIF block.
@@ -493,8 +496,8 @@ private:
      * \param end      Iterator past the last step to be scanned for matching indentation
      *                 (may simply be end())
      * \param context  Execution context
-     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
-     *                 disabled.
+     * \param comm     Pointer to a communication channel; if null, messaging and
+     *                 cross-thread interaction are disabled.
      *
      * \returns an iterator to the step to be executed next: If the IF/ELSEIF evaluated as
      *          true, this is the first step after the matching END. Otherwise, it is the
@@ -502,7 +505,7 @@ private:
      */
     Iterator
     execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
-                               MessageQueue* queue);
+                               CommChannel* comm);
 
     /**
      * Execute a range of steps.
@@ -510,11 +513,13 @@ private:
      * \param step_begin Iterator to the first step that should be executed
      * \param step_end   Iterator past the last step that should be executed
      * \param context    Context for executing the steps
+     * \param comm     Pointer to a communication channel; if null, messaging and
+     *                 cross-thread interaction are disabled.
      * \exception Error is thrown if the execution fails at some point.
      */
     Iterator
     execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
-                          MessageQueue* queue);
+                          CommChannel* comm);
 
     /**
      * Execute a TRY block.
@@ -523,13 +528,13 @@ private:
      * \param end      Iterator past the last step to be scanned for matching indentation
      *                 (may simply be end())
      * \param context  Execution context
-     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
-     *                 disabled.
+     * \param comm     Pointer to a communication channel; if null, messaging and
+     *                 cross-thread interaction are disabled.
      *
      * \returns an iterator to the first step after the matching END step.
      */
     Iterator
-    execute_try_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue);
+    execute_try_block(Iterator begin, Iterator end, Context& context, CommChannel* comm);
 
     /**
      * Execute a WHILE block.
@@ -538,14 +543,13 @@ private:
      * \param end      Iterator past the last step to be scanned for matching indentation
      *                 (may simply be end())
      * \param context  Execution context
-     * \param queue    Pointer to a thread-safe message queue; if null, messaging is
-     *                 disabled.
+     * \param comm     Pointer to a communication channel; if null, messaging and
+     *                 cross-thread interaction are disabled.
      *
      * \returns an iterator to the first step after the matching END step.
      */
     Iterator
-    execute_while_block(Iterator begin, Iterator end, Context& context,
-                        MessageQueue* queue);
+    execute_while_block(Iterator begin, Iterator end, Context& context, CommChannel* comm);
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.

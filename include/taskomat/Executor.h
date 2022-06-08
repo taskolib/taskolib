@@ -27,8 +27,8 @@
 
 #include <future>
 #include <memory>
+#include "taskomat/CommChannel.h"
 #include "taskomat/Context.h"
-#include "taskomat/Message.h"
 #include "taskomat/Sequence.h"
 
 namespace task {
@@ -100,11 +100,13 @@ public:
 
 private:
     /**
-     * Shared message queue for the main thread (reader) and the execution thread
-     * (writer). The queue must stay at a fixed address so both threads can access it even
-     * if the Executor object is moved.
+     * Communications channel between the main thread and the executing thread.
+     *
+     * It must stay at a fixed address so both threads can access it even if the Executor
+     * object is moved. Both the main thread and the worker thread have one shared_ptr
+     * to the channel.
      */
-    std::shared_ptr<MessageQueue> queue_;
+    std::shared_ptr<CommChannel> comm_channel_;
 
     /**
      * A future holding the results of the execution thread.
@@ -116,7 +118,7 @@ private:
 
     /// The function that is run in the execution thread.
     static void execute_sequence(Sequence sequence, Context context,
-                                 std::shared_ptr<MessageQueue> queue) noexcept;
+                                 std::shared_ptr<CommChannel> comm_channel) noexcept;
 };
 
 } // namespace task
