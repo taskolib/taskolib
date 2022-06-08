@@ -41,9 +41,13 @@ static const char step_timeout_ms_since_epoch_key[] =
     "TASKOMAT_STEP_TIMEOUT_MS_SINCE_EPOCH";
 static const char step_timeout_s_key[] =
     "TASKOMAT_STEP_TIMEOUT_S";
+static const char comm_channel_key[] =
+    "TASKOMAT_COMM_CHANNEL";
 
 template <typename>
 inline constexpr bool always_false_v = false;
+
+void exit_script_with_error(lua_State* lua_state, const std::string& msg);
 
 // Check if the timeout from the LUA state has been reached and raise a LUA error if so.
 // As we use a C++ compiled LUA, the error is thrown as an exception that is caught by a
@@ -53,6 +57,23 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
     sol::state_view lua(lua_state);
 
     const auto registry = lua.registry();
+
+    sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
+    if (not opt_comm_channel_ptr.has_value())
+    {
+        exit_script_with_error(lua_state,
+            cat(comm_channel_key, " not found in LUA registry"));
+    }
+    else
+    {
+        CommChannel* comm = *opt_comm_channel_ptr;
+        if (comm)
+        {
+            if (comm->immediate_termination_requested_)
+                exit_script_with_error(lua_state, "Step aborted on user request");
+        }
+    }
+
     sol::optional<long long> timeout_ms = registry[step_timeout_ms_since_epoch_key];
 
     if (not timeout_ms.has_value())
@@ -83,6 +104,14 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
     }
 }
 
+// Throw an error and repeat that when returning to LUA execution (helps break out
+// of pcalls)
+void exit_script_with_error(lua_State* lua_state, const std::string& msg)
+{
+    lua_sethook(lua_state, check_script_timeout, LUA_MASKLINE, 0);
+    luaL_error(lua_state, msg.c_str());
+}
+
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
 // plus a duration dt. In case of overflow, the maximum representable time point is
 // returned.
@@ -102,11 +131,12 @@ long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
 }
 
 void install_timeout_hook(sol::state& lua, TimePoint now,
-                          std::chrono::milliseconds timeout)
+                          std::chrono::milliseconds timeout, CommChannel* comm_channel)
 {
     auto registry = lua.registry();
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
     registry[step_timeout_ms_since_epoch_key] = get_ms_since_epoch(now, timeout);
+    registry[comm_channel_key] = comm_channel;
 
     // Install a hook that is called after every 100 LUA instructions
     lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 100);
@@ -198,7 +228,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     if (context.lua_init_function)
         context.lua_init_function(lua);
 
-    install_timeout_hook(lua, now, get_timeout());
+    install_timeout_hook(lua, now, get_timeout(), comm);
 
     copy_used_variables_from_context_to_lua(context, lua);
 

@@ -365,6 +365,35 @@ TEST_CASE("execute(): Timeout", "[Step]")
     }
 }
 
+TEST_CASE("execute(): Immediate termination", "[Step]")
+{
+    Context context;
+    context.variables["a"] = 0LL;
+
+    Step step;
+    CommChannel comm;
+
+    context.lua_init_function =
+        [&comm](sol::state& sol)
+        {
+            sol["request_termination"] =
+                [&comm]
+                {
+                    comm.immediate_termination_requested_ = true;
+                };
+        };
+
+    step.set_used_context_variable_names(VariableNames{ "a" });
+
+    // The script needs a certain number of steps to make sure the termination
+    // condition is even tested
+    step.set_script("a = -1; request_termination(); for a = 1, 1000 do end; return true");
+
+    REQUIRE_THROWS_AS(step.execute(context, &comm, 0), Error);
+    REQUIRE(comm.immediate_termination_requested_ == true);
+    REQUIRE(std::get<long long>(context.variables["a"]) == 0LL);
+}
+
 TEST_CASE("execute(): Setting 'last executed' timestamp", "[Step]")
 {
     Context context;
@@ -495,8 +524,7 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
     }
 }
 
-TEST_CASE("execute(): Running a step with multiple import and exports",
-    "[Step]")
+TEST_CASE("execute(): Running a step with multiple import and exports", "[Step]")
 {
     Context context;
     Step step;

@@ -98,8 +98,9 @@ public:
      *          language, or false otherwise (even in the case that the script returns no
      *          value at all).
      *
-     * \exception Error is thrown if the script cannot be started or if it raises an error
-     *            during execution.
+     * \exception Error is thrown if the script cannot be started, if there is a LUA error
+     *            during execution, if a timeout is encountered, or if termination has
+     *            been requested via the communication channel.
      */
     bool execute(Context& context, CommChannel* comm_channel, Message::IndexType index);
 
