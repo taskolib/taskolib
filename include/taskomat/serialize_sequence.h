@@ -4,7 +4,7 @@
  * \date   Created on May 6, 2022
  * \brief  Serialize Sequence and Steps on storage hardware.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -27,7 +27,8 @@
 
 #include <filesystem>
 #include <iostream>
-#include "taskomat.h"
+#include "taskomat/Step.h"
+#include "taskomat/Sequence.h"
 
 namespace task {
 
@@ -36,7 +37,7 @@ namespace task {
  * 
  * @param stream output stream
  * @param step \a Step to serialize. 
- * @return std::ostream& output stream
+ * @return passed output stream
  */
 std::ostream& operator<<(std::ostream& stream, const Step& step);
 
@@ -45,10 +46,10 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  * 
  * After serializing you will find the following structure:
  * 
- * - a folder, starting with \code sequence that carries all \a Step 's serialized as
- *  files. To differ between sequences the label is attached to the sequence, replacing
- *  space (' ') with underline ('_'). More then one spaces is reduced to one underline
- *  character.
+ * - the sequence label is extracted to a folder name, where underneath all steps are
+ *  serialized. If the label has one of the following characters they are escaped to
+ *  hexadecimal format: /\:?*"'<>|$&. Moreover all control characters (<= 32) are 
+ *  converted to space character (' ').
  * - underneath the sequence folder you will find the \a Step serialized in file. To
  *  differ the \a Step from the sequence they are enumerated. Each filename starts with 
  *  \code step followed by a consecutive step enumeration number followed

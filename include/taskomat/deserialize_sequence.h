@@ -4,7 +4,7 @@
  * \date   Created on May 24, 2022
  * \brief  Deserialize Sequence and Steps from storage hardware.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,10 +25,10 @@
 #ifndef TASKOMAT_DESERIALIZE_H_
 #define TASKOMAT_DESERIALIZE_H_
 
-#include <string>
 #include <filesystem>
 #include <iostream>
-#include "taskomat.h"
+#include "taskomat/Step.h"
+#include "taskomat/Sequence.h"
 
 namespace task {
 
@@ -37,7 +37,7 @@ namespace task {
  * 
  * @param stream input stream
  * @param step \a Step to be deserialized. 
- * @return std::istream& input stream
+ * @return passed input stream
  */
 std::istream& operator>>(std::istream& stream, Step& step);
 
