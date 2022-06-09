@@ -37,10 +37,11 @@ using namespace std::chrono_literals;
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
     std::stringstream ss;
+    Step step{};
 
     SECTION("deserialize type")
     {
-        Step step{Step::type_while};
+        step.set_type(Step::type_while);
         ss << step;
 
         Step deserialize{};
@@ -51,7 +52,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     
     SECTION("deserialize label")
     {
-        Step step{};
         step.set_label("This is a funny label");
         ss << step;
 
@@ -63,7 +63,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     
     SECTION("deserialize infinite timeout")
     {
-        Step step{};
         step.set_timeout(Step::infinite_timeout);
         ss << step;
 
@@ -75,7 +74,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     
     SECTION("deserialize 1s timeout")
     {
-        Step step{};
         step.set_timeout(1s);
         ss << step;
 
@@ -92,7 +90,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         auto now = TimePoint::clock::to_time_t(Clock::now());
         auto ts = TimePoint::clock::from_time_t(now);
         
-        Step step{};
         step.set_time_of_last_modification(ts);
         ss << step;
 
@@ -109,7 +106,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         auto now = TimePoint::clock::to_time_t(Clock::now());
         auto ts = TimePoint::clock::from_time_t(now);
         
-        Step step{};
         step.set_time_of_last_execution(ts);
         ss << step;
 
@@ -121,7 +117,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     
     SECTION("deserialize one variable name")
     {
-        Step step{};
         step.set_used_context_variable_names({"a"});
         ss << step;
 
@@ -135,7 +130,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     
     SECTION("deserialize more variable name")
     {
-        Step step{};
         step.set_used_context_variable_names({"a", "b"});
         ss << step;
 
@@ -149,7 +143,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     
     SECTION("deserialize script")
     {
-        Step step{};
         step.set_script("-- some nasty comment\n\na = a + 1\n");
         ss << step;
 
@@ -161,7 +154,6 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
     SECTION("deserialize step")
     {
-        Step step{};
         ss << step;
 
         Step deserialize{};
