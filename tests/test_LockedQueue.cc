@@ -57,7 +57,7 @@ TEST_CASE("LockedQueue: capacity()", "[LockedQueue]")
 {
     SECTION("Default-constructed queue")
     {
-        LockedQueue<std::unique_ptr<Message>> queue{ 10 };
+        LockedQueue<Message> queue{ 10 };
         REQUIRE(queue.capacity() > 0);
     }
 
@@ -142,13 +142,13 @@ TEST_CASE("LockedQueue: push() & pop() across threads", "[LockedQueue]")
 
 TEST_CASE("LockedQueue: size()", "[LockedQueue]")
 {
-    LockedQueue<std::unique_ptr<Message>> queue{ 10 };
+    LockedQueue<Message> queue{ 10 };
     REQUIRE(queue.size() == 0);
 
-    queue.push(std::make_unique<MyMessage>());
+    queue.push(MyMessage{});
     REQUIRE(queue.size() == 1u);
 
-    queue.push(std::make_unique<MyMessage>());
+    queue.push(MyMessage{});
     REQUIRE(queue.size() == 2u);
 
     queue.pop();

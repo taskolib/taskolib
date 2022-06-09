@@ -96,33 +96,6 @@ test-release-buster:
             - build.debug_asan_ubsan
         expire_in: 1 week
 
-.setup_bionic:
-    image: ubuntu:18.04
-    tags:
-        - ubuntu18
-    before_script:
-        # Install build dependencies
-        - echo "Install the basics (wget and gnupg) for setting up the docker bionic image ..."
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            apt update && apt install -y wget gnupg)
-        # Add DOOCS repo with key
-        - echo "Installing MCS DOOCS package repository with key ..."
-        - wget -O - http://doocs.desy.de/pub/doocs/DOOCS-key.gpg.asc | apt-key add -
-        - echo "deb http://doocspkgs.desy.de/pub/doocs bionic main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
-        - echo "deb-src http://doocspkgs.desy.de/pub/doocs bionic main" >> /etc/apt/sources.list.d/doocs-desy-intern.list
-        # Update APT cache
-        - echo "Updating APT cache and installing basic libraries and header files for compiling DOOCS core libraries"
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/"; apt update)
-        # Install part of the packages required to compile and link DOOCS core libraries on a bionic system
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends git libldap2-dev libtirpc-dev build-essential
-            binutils autotools-dev clang gcc-doc fakeroot debhelper cmake ninja-build meson pkg-config)
-        # FIXME Just to make it work for now, use existing libs.
-        - (export http_proxy="http://xfelproxy:3128/"; export https_proxy="http://xfelproxy:3128/";
-            DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends dev-doocs-libgul14)
-        - export DOOCSARCH=Ubuntu-18.04-x86_64
-        - export CXX=clang++
-
 .setup_focal:
     image: ubuntu:20.04
     tags:
