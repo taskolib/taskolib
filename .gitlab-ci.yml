@@ -30,11 +30,13 @@ test-release-focal:
 #        - .setup_bionic
 #        - .meson_test_sanitizers
 
-test-release-bionic:
-    stage: test-release
-    extends:
-        - .setup_bionic
-        - .meson_test_release
+# Commented out bionic test release due to missing std::filesystem on C++17 (should be included
+# but is unfortunately not).
+#test-release-bionic:
+#    stage: test-release
+#    extends:
+#        - .setup_bionic
+#        - .meson_test_release
 #    needs:
 #        - job: test-sanitizers-bionic
 #          artifacts: false
