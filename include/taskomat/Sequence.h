@@ -368,6 +368,47 @@ public:
      */
     void execute(Context& context, MessageQueue* queue);
 
+    /**
+     * Modify a step inside the sequence.
+     *
+     * This function modifies one of the sequence steps in place. The modification is done
+     * by a user-supplied function that receives a mutable reference to the Step indicated
+     * via an iterator:
+     * \code
+     * Sequence seq = get_sequence_from_somewhere();
+     * auto it = seq.begin(); // get an iterator to the Step that should be modified
+     *
+     * seq.modify(it, [](Step& step) { step.set_label("Modified step"); });
+     * \endcode
+     *
+     * Background: A Sequence does not allow its steps to be modified directly from the
+     * outside via references or iterators because it has to uphold certain class
+     * invariants (like "all steps are always correctly indented"). A call to modify(),
+     * however, reestablishes these invariants after the modification if necessary.
+     *
+     * \param it  An iterator to the Step that should be modified. The step must be part
+     *            of this sequence.
+     * \param modification_fct  A function or function object with the signature
+     *            `void fct(Step&)` that applies the desired modifications on a Step.
+     *            The step reference becomes invalid after the call.
+     */
+    template <typename Closure>
+    void modify(ConstIterator it, Closure modification_fct)
+    {
+        const auto old_indentation_level = it->get_indentation_level();
+        const auto old_type = it->get_type();
+
+        auto mutable_it = steps_.begin() + (it - steps_.cbegin());
+
+        modification_fct(*mutable_it);
+
+        if (it->get_indentation_level() != old_indentation_level ||
+            it->get_type() != old_type)
+        {
+            indent();
+        }
+    }
+
 private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;

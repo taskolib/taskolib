@@ -2571,3 +2571,52 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     REQUIRE(msg.get_timestamp() >= t0);
     REQUIRE(msg.get_timestamp() - t0 < 1s);
 }
+
+TEST_CASE("modify()", "[Sequence]")
+{
+    Step ori_step{ Step::type_action };
+    ori_step.set_label("Label");
+    ori_step.set_script("a = 1");
+    ori_step.set_time_of_last_execution(Clock::now());
+
+    Sequence seq;
+    seq.push_back(Step{ Step::type_if });
+    seq.push_back(ori_step);
+    seq.push_back(Step{ Step::type_end });
+
+    auto it = seq.begin() + 1;
+    REQUIRE(it->get_label() == "Label");
+    REQUIRE(it->get_indentation_level() == 1);
+
+    SECTION("Modify label")
+    {
+        seq.modify(it, [](Step& step) { step.set_label("Test"); });
+
+        // Check sequence
+        REQUIRE(seq.get_indentation_error() == "");
+        REQUIRE(seq.size() == 3);
+        REQUIRE(seq[0].get_indentation_level() == 0);
+        REQUIRE(seq[1].get_indentation_level() == 1);
+        REQUIRE(seq[2].get_indentation_level() == 0);
+
+        // Check modified step
+        REQUIRE(it->get_label() == "Test");
+        REQUIRE(it->get_script() == ori_step.get_script());
+        REQUIRE(it->get_time_of_last_execution() == ori_step.get_time_of_last_execution());
+    }
+
+    SECTION("Modify step type")
+    {
+        seq.modify(it, [](Step& step) { step.set_type(Step::type_try); });
+        REQUIRE(seq.get_indentation_error() != "");
+    }
+
+    SECTION("Modify indentation")
+    {
+        seq.modify(it, [](Step& step) { step.set_indentation_level(12); });
+        REQUIRE(seq.get_indentation_error() == ""); // indentation is automatically corrected
+        REQUIRE(seq[0].get_indentation_level() == 0);
+        REQUIRE(seq[1].get_indentation_level() == 1);
+        REQUIRE(seq[2].get_indentation_level() == 0);
+    }
+}
