@@ -182,10 +182,9 @@ TEST_CASE("serialize_sequence: indentation level & type of sequence",
     sequence.push_back(step02);
     sequence.push_back(step03);
 
-    REQUIRE_NOTHROW(serialize_sequence("/tmp/taskomat/test_fs_sequence", sequence));
+    REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
 
-    Sequence deserialize_seq = deserialize_sequence(
-        "/tmp/taskomat/test_fs_sequence/This is a sequence");
+    Sequence deserialize_seq = deserialize_sequence("unit_test/This is a sequence");
 
     REQUIRE(not deserialize_seq.empty());
     REQUIRE(deserialize_seq.size() == 3);
@@ -198,7 +197,7 @@ TEST_CASE("serialize_sequence: indentation level & type of sequence",
 
     // remove the temp folder
     std::error_code e;
-    std::filesystem::remove_all("/tmp/taskomat/test_fs_sequence", e);
+    std::filesystem::remove_all("unit_test", e);
     if (e)
-        WARN("removing test folder fails: test_fs_sequence");
+        WARN("removing test folder fails: unit_test");
 }
