@@ -48,7 +48,6 @@ install_subdir('include/taskomat/sol/sol',
 
 # Sources
 sources = files(
-    'src/Context.cc',
     'src/Sequence.cc',
     'src/serialize_sequence.cc',
     'src/deserialize_sequence.cc',
@@ -58,7 +57,6 @@ sources = files(
 
 # Test sources
 test_src = files(
-    'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_main.cc',
     'tests/test_Message.cc',
