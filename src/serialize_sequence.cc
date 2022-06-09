@@ -163,8 +163,8 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seque
         throw Error(e.what());
     }
     for(const auto step: sequence)
-        serialize_step(seq_path / ( "step_" + std::to_string(++idx) + '_' +
-            type_to_string(step) + ".lua" ), step);
+        serialize_step(seq_path / gul14::cat("step_", ++idx, '_', type_to_string(step), 
+            ".lua" ), step);
 }
 
 } // namespace task
