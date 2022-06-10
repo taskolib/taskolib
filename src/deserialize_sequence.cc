@@ -93,14 +93,14 @@ std::string unescape_filename_characters(gul14::string_view str)
 const std::string extract_keyword(const std::string& extract)
 {
     auto found_value = extract.find(":");
-    if (extract.rfind("-- ", 0) == 0 && found_value != std::string::npos)
+    if (gul14::starts_with(extract, "-- ") && found_value != std::string::npos)
         return extract.substr(3, found_value - 3);
     return "";
 }
 
 void extract_type(const std::string& extract, Step& step)
 {
-    auto pos = extract.rfind(": ");
+    auto pos = extract.find(": ");
     if (pos == std::string::npos)
         throw Error("type: cannot find leading ': '");
 
@@ -167,7 +167,7 @@ TimePoint extract_time(const std::string& issue, const std::string& extract)
 {
     std::tm t;
 
-    auto start = extract.rfind(": ");
+    auto start = extract.find(": ");
     if (start == std::string::npos)
         throw Error(gul14::cat(issue, ": cannot find leading ': '"));
 
@@ -186,7 +186,7 @@ void extract_time_of_last_execution(const std::string& extract, Step& step)
 
 void extract_timeout(const std::string& extract, Step& step)
 {
-    const auto start = extract.rfind(": ");
+    const auto start = extract.find(": ");
     if (start == std::string::npos)
         throw Error("timeout: cannot find leading ': '");
 
