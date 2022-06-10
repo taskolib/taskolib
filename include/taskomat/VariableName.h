@@ -128,6 +128,9 @@ public:
         return lhs + rhs.string();
     }
 
+    /// Convert the VariableName to a std::string.
+    explicit operator const std::string&() const { return name_;}
+
     /// Return the length of the variable name string.
     SizeType size() const noexcept { return name_.size(); }
 

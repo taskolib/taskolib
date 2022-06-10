@@ -121,6 +121,17 @@ TEST_CASE("VariableName: operator+(string_view, VariableName)", "[VariableName]"
     REQUIRE(str + var == "StringVar");
 }
 
+TEST_CASE("VariableName: Cast to std::string", "[VariableName]")
+{
+    const VariableName var{ "Var" };
+
+    const std::string& str_cref = static_cast<const std::string&>(var);
+    std::string str = static_cast<std::string>(var);
+
+    REQUIRE(str_cref == "Var");
+    REQUIRE(str == "Var");
+}
+
 TEST_CASE("VariableName: size()", "[VariableName]")
 {
     REQUIRE(VariableName{ "i" }.size() == 1);
