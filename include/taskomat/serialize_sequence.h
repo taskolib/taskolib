@@ -48,14 +48,14 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  * 
  * - the sequence label is extracted to a folder name, where underneath all steps are
  *  serialized. If the label has one of the following characters they are escaped to
- *  hexadecimal format: /\:?*"'<>|$&. Moreover all control characters (<= 32) are 
+ *  hexadecimal format: /\\:?*"'<>|$&. Moreover all control characters (<= 32) are 
  *  converted to space character (' ').
  * - underneath the sequence folder you will find the \a Step serialized in file. To
  *  differ the \a Step from the sequence they are enumerated. Each filename starts with 
- *  \code step followed by a consecutive step enumeration number followed
+ *  `step` followed by a consecutive step enumeration number followed
  *  by type. Since you can directly evaluate the step as a Lua script it has the
- *  extension \code '.lua'. Here is one example for the first step that has type 
- *  \code action: \code step_1_action.lua
+ *  extension `'.lua'`. Here is one example for the first step that has type 
+ *  `action`: `step_1_action.lua`
  * - important \a Step parameters are exported to the beginning of the file as Lua
  *  comments.
  *
