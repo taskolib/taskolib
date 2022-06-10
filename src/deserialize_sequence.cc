@@ -41,8 +41,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// SPDX-License-Identifier: LGPL-2.1-or-later
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: LGPL-2.1-or-later AND MIT
 
 #include <chrono>
 #include <fstream>
