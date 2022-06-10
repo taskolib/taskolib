@@ -18,9 +18,31 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * MIT license
+ *  
+ * Copyright (c) 2020-22 Richard Spencer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ * software and associated documentation files (the "Software"), to deal in the Software
+ * without restriction, including without limitation the rights to use, copy, modify,
+ * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies
+ * or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
+// SPDX-License-Identifier: MIT
 
 #include <chrono>
 #include <fstream>
@@ -29,6 +51,7 @@
 #include <sstream>
 #include <cctype>
 #include <ctime>
+#include <string_view>
 #include <gul14/gul.h>
 #include "taskomat/deserialize_sequence.h"
 
@@ -40,7 +63,8 @@ static const char task[] = "task";
 
 /// Adapt switch statement with stringify items:
 /// https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
-constexpr auto hash(const gul14::string_view sv)
+/// Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer, see above
+constexpr auto hash(const std::string_view sv)
 {
     unsigned long hash{ 5381 };
     for (unsigned char c : sv) {
@@ -51,9 +75,10 @@ constexpr auto hash(const gul14::string_view sv)
  
 /// Adapt switch statement with stringify items:
 /// https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
+/// Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer, see above
 constexpr auto operator"" _sh(const char *str, size_t len)
 {
-    return hash(gul14::string_view{ str, len });
+    return hash(std::string_view{ str, len });
 }
 
 /// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
@@ -240,8 +265,7 @@ std::istream& operator>>(std::istream& stream, Step& step)
     {
         auto keyword = extract_keyword(extract);
 
-        // Using switch statement with string comparision:
-        // https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
+        // Using switch cases with string hash (see operator"" _sh etc)
         switch(hash(keyword))
         {
             case "type"_sh:
