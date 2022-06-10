@@ -43,6 +43,9 @@ namespace task {
 class VariableName
 {
 public:
+    using SizeType = std::string::size_type;
+    using size_type = std::string::size_type;
+
     /**
      * Construct a variable name from a C string.
      *
@@ -61,57 +64,75 @@ public:
     explicit VariableName(const std::string& name);
     explicit VariableName(std::string&& name);
 
+    /// Return the length of the variable name string.
+    SizeType length() const noexcept { return name_.size(); }
+
+    /// Determine if two variable names are identical.
     friend bool operator==(const VariableName& a, const VariableName& b) noexcept
     {
         return a.string() == b.string();
     }
 
+    /// Determine if two variable names differ.
     friend bool operator!=(const VariableName& a, const VariableName& b) noexcept
     {
         return a.string() != b.string();
     }
 
+    /// Determine if the left variable name is lexicographically less than the right one.
     friend bool operator<(const VariableName& a, const VariableName& b) noexcept
     {
         return a.string() < b.string();
     }
 
+    /// Determine if the left variable name is lexicographically greater than the right one.
     friend bool operator>(const VariableName& a, const VariableName& b) noexcept
     {
         return a.string() > b.string();
     }
 
+    /**
+     * Determine if the left variable name is lexicographically less than or equal to the
+     * right one.
+     */
     friend bool operator<=(const VariableName& a, const VariableName& b) noexcept
     {
         return a.string() <= b.string();
     }
 
+    /**
+     * Determine if the left variable name is lexicographically greater than or equal to
+     * the right one.
+     */
     friend bool operator>=(const VariableName& a, const VariableName& b) noexcept
     {
         return a.string() >= b.string();
     }
 
-    /// Return a const reference to the internal string member.
-    const std::string& string() const noexcept { return name_; }
-
     /// Append a VariableName to a std::string.
     friend std::string& operator+=(std::string& lhs, const VariableName& rhs)
     {
-        lhs += rhs.name_;
+        lhs += rhs.string();
         return lhs;
     }
 
     /// Concatenate a VariableName and a string_view.
     friend std::string operator+(const VariableName& lhs, gul14::string_view rhs)
     {
-        return lhs.name_ + rhs;
+        return lhs.string() + rhs;
     }
 
     /// Concatenate a string_view and a VariableName.
     friend std::string operator+(gul14::string_view lhs, const VariableName& rhs)
     {
-        return lhs + rhs.name_;
+        return lhs + rhs.string();
     }
+
+    /// Return the length of the variable name string.
+    SizeType size() const noexcept { return name_.size(); }
+
+    /// Return a const reference to the internal string member.
+    const std::string& string() const noexcept { return name_; }
 
 private:
     std::string name_;
