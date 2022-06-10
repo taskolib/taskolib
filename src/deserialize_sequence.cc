@@ -29,7 +29,6 @@
 #include <sstream>
 #include <cctype>
 #include <ctime>
-#include <string_view>
 #include <gul14/gul.h>
 #include "taskomat/case_string.h"
 #include "taskomat/deserialize_sequence.h"
@@ -37,8 +36,6 @@
 namespace task {
 
 namespace {
-
-static const char task[] = "task";
 
 /// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
 int hex2dec(const char c)
