@@ -85,3 +85,30 @@ TEST_CASE("VariableName: VariableName(std::string&&)", "[VariableName]")
     for (const std::string& str : good_names)
         REQUIRE_NOTHROW(VariableName(std::move(str)));
 }
+
+TEST_CASE("VariableName: operator+=(std::string, VariableName)")
+{
+    std::string str{ "Hello" };
+    const VariableName var{ "World" };
+
+    str += var;
+    REQUIRE(str == "HelloWorld");
+}
+
+TEST_CASE("VariableName: operator+(VariableName, string_view)")
+{
+    std::string str{ "String" };
+    const VariableName var{ "Var" };
+
+    REQUIRE(var + "Cstring" == "VarCstring");
+    REQUIRE(var + str == "VarString");
+}
+
+TEST_CASE("VariableName: operator+(string_view, VariableName)")
+{
+    std::string str{ "String" };
+    const VariableName var{ "Var" };
+
+    REQUIRE("Cstring" + var == "CstringVar");
+    REQUIRE(str + var == "StringVar");
+}

@@ -94,6 +94,25 @@ public:
     /// Return a const reference to the internal string member.
     const std::string& string() const noexcept { return name_; }
 
+    /// Append a VariableName to a std::string.
+    friend std::string& operator+=(std::string& lhs, const VariableName& rhs)
+    {
+        lhs += rhs.name_;
+        return lhs;
+    }
+
+    /// Concatenate a VariableName and a string_view.
+    friend std::string operator+(const VariableName& lhs, gul14::string_view rhs)
+    {
+        return lhs.name_ + rhs;
+    }
+
+    /// Concatenate a string_view and a VariableName.
+    friend std::string operator+(gul14::string_view lhs, const VariableName& rhs)
+    {
+        return lhs + rhs.name_;
+    }
+
 private:
     std::string name_;
 };
