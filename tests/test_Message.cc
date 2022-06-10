@@ -34,20 +34,31 @@ TEST_CASE("Message: Constructors", "[Message]")
 {
     static_assert(std::is_default_constructible_v<Message>,
         "Message is default constructible");
-    static_assert(std::is_constructible_v<Message, Message::Type, std::string, TimePoint>,
+    static_assert(std::is_constructible_v<Message, Message::Type, std::string, TimePoint,
+                                          Message::IndexType>,
         "Message can be constructed with init values");
 
     const TimePoint t0 = Clock::now();
 
     Message a;
-    Message b(Message::Type::log, "Test", t0);
+    Message b(Message::Type::log, "Test", t0, 42);
 
     REQUIRE(b.get_type() == Message::Type::log);
     REQUIRE(b.get_text() == "Test");
     REQUIRE(b.get_timestamp() == t0);
+    REQUIRE(b.get_index() == 42);
 }
 
-TEST_CASE("StoppedMessage: get_text()", "[Message]")
+TEST_CASE("Message: get_index()", "[Message]")
+{
+    Message msg;
+    REQUIRE(msg.get_index() == 0);
+
+    msg.set_index(42);
+    REQUIRE(msg.get_index() == 42);
+}
+
+TEST_CASE("Message: get_text()", "[Message]")
 {
     Message msg;
     REQUIRE(msg.get_text() == "");
@@ -67,7 +78,7 @@ TEST_CASE("Message: get_timestamp()", "[Message]")
     REQUIRE(msg.get_timestamp() == t0);
 }
 
-TEST_CASE("StoppedMessage: get_type()", "[Message]")
+TEST_CASE("Message: get_type()", "[Message]")
 {
     Message msg;
     REQUIRE(msg.get_type() == Message::Type::log);
@@ -76,7 +87,18 @@ TEST_CASE("StoppedMessage: get_type()", "[Message]")
     REQUIRE(msg.get_type() == Message::Type::step_started);
 }
 
-TEST_CASE("StoppedMessage: set_text()", "[Message]")
+TEST_CASE("Message: set_index()", "[Message]")
+{
+    Message msg;
+
+    msg.set_index(42);
+    REQUIRE(msg.get_index() == 42);
+
+    msg.set_index(0);
+    REQUIRE(msg.get_index() == 0);
+}
+
+TEST_CASE("Message: set_text()", "[Message]")
 {
     Message msg;
 
@@ -99,7 +121,7 @@ TEST_CASE("Message: set_timestamp()", "[Message]")
     REQUIRE(msg.get_timestamp() == TimePoint{});
 }
 
-TEST_CASE("StoppedMessage: set_type()", "[Message]")
+TEST_CASE("Message: set_type()", "[Message]")
 {
     Message msg;
 
@@ -120,16 +142,16 @@ TEST_CASE("send_message() across threads", "[Message]")
     MessageQueue queue{ 4 };
 
     // Does nothing
-    send_message(nullptr, Message::Type::log, "Test", timestamp);
+    send_message(nullptr, Message::Type::log, "Test", timestamp, 0);
 
     std::thread sender([=,&queue]()
         {
             for (int i = 1; i <= 100; ++i)
             {
                 send_message(&queue, Message::Type::step_started, "start",
-                    timestamp + std::chrono::seconds{ i });
+                    timestamp + std::chrono::seconds{ i }, i);
                 send_message(&queue, Message::Type::step_stopped, "stop",
-                    timestamp + std::chrono::seconds{ i + 1 });
+                    timestamp + std::chrono::seconds{ i + 1 }, i);
             }
         });
 
@@ -139,11 +161,13 @@ TEST_CASE("send_message() across threads", "[Message]")
         REQUIRE(msg.get_type() == Message::Type::step_started);
         REQUIRE(msg.get_text() == "start");
         REQUIRE(msg.get_timestamp() == timestamp + std::chrono::seconds{ i });
+        REQUIRE(msg.get_index() == i);
 
         msg = queue.pop();
         REQUIRE(msg.get_type() == Message::Type::step_stopped);
         REQUIRE(msg.get_text() == "stop");
         REQUIRE(msg.get_timestamp() == timestamp + std::chrono::seconds{ i + 1 });
+        REQUIRE(msg.get_index() == i);
     }
 
     sender.join();

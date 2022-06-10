@@ -50,56 +50,55 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
         return it;
 }
 
-using Iterator = Sequence::Iterator;
+} // anonymous namespace
 
-Iterator
-execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
-                      MessageQueue* queue);
 
-Iterator
-execute_while_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue)
+Sequence::Sequence(gul14::string_view label)
+{
+    check_label(label);
+    label_ = std::string{ label };
+}
+
+void Sequence::check_syntax() const
+{
+    if (not indentation_error_.empty())
+        throw Error(indentation_error_);
+
+    check_syntax(steps_.begin(), steps_.end());
+}
+
+void Sequence::check_label(gul14::string_view label)
+{
+    if (label.empty())
+        throw Error("Sequence label may not be empty");
+
+    if (label.size() > max_label_length)
+    {
+        throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
+                        " characters)"));
+    }
+}
+
+Sequence::Iterator
+Sequence::execute_else_block(Iterator begin, Iterator end, Context& context,
+                             MessageQueue* queue)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (begin->execute(context, queue))
-        execute_sequence_impl(begin + 1, block_end, context, queue);
+    execute_sequence_impl(begin + 1, block_end, context, queue);
 
-    return block_end + 1;
+    return block_end;
 }
 
-Iterator
-execute_try_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue)
-{
-    const auto it_catch = find_end_of_indented_block(
-        begin + 1, end, begin->get_indentation_level() + 1);
-
-    if (it_catch == end || it_catch->get_type() != Step::type_catch)
-        throw Error("Missing catch block");
-
-    const auto it_catch_block_end = find_end_of_indented_block(
-        it_catch + 1, end, begin->get_indentation_level() + 1);
-
-    try
-    {
-        execute_sequence_impl(begin + 1, it_catch, context, queue);
-    }
-    catch (const Error&)
-    {
-        execute_sequence_impl(it_catch + 1, it_catch_block_end, context, queue);
-    }
-
-    return it_catch_block_end;
-}
-
-Iterator
-execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
-                           MessageQueue* queue)
+Sequence::Iterator
+Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
+                                     MessageQueue* queue)
 {
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (begin->execute(context, queue))
+    if (begin->execute(context, queue, begin - steps_.begin()))
     {
         execute_sequence_impl(begin + 1, block_end, context, queue);
 
@@ -118,28 +117,9 @@ execute_if_or_elseif_block(Iterator begin, Iterator end, Context& context,
     return block_end;
 }
 
-Iterator
-execute_else_block(Iterator begin, Iterator end, Context& context, MessageQueue* queue)
-{
-    const auto block_end = find_end_of_indented_block(
-        begin + 1, end, begin->get_indentation_level() + 1);
-
-    execute_sequence_impl(begin + 1, block_end, context, queue);
-
-    return block_end;
-}
-
-/**
- * Internal traverse execution loop depending on indentation level.
- *
- * @param step_begin Iterator to the first step that should be executed
- * @param step_end   Iterator past the last step that should be executed
- * @param context    Context for executing the steps
- * @exception Error is thrown if a fault on one of the statements is caught by Lua.
- */
-Iterator
-execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
-                      MessageQueue* queue)
+Sequence::Iterator
+Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
+                                MessageQueue* queue)
 {
     Iterator step = step_begin;
 
@@ -169,7 +149,7 @@ execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
                 break;
 
             case Step::type_action:
-                step->execute(context, queue);
+                step->execute(context, queue, step - steps_.begin());
                 ++step;
                 break;
 
@@ -181,33 +161,42 @@ execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
     return step;
 }
 
-} // anonymous namespace
-
-
-Sequence::Sequence(gul14::string_view label)
+Sequence::Iterator
+Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
+                            MessageQueue* queue)
 {
-    check_label(label);
-    label_ = std::string{ label };
-}
+    const auto it_catch = find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
 
-void Sequence::check_syntax() const
-{
-    if (not indentation_error_.empty())
-        throw Error(indentation_error_);
+    if (it_catch == end || it_catch->get_type() != Step::type_catch)
+        throw Error("Missing catch block");
 
-    check_syntax(steps_.begin(), steps_.end());
-}
+    const auto it_catch_block_end = find_end_of_indented_block(
+        it_catch + 1, end, begin->get_indentation_level() + 1);
 
-void Sequence::check_label(gul14::string_view label)
-{
-    if (label.empty())
-        throw Error("Sequence label may not be empty");
-
-    if (label.size() > max_label_length)
+    try
     {
-        throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
-                        " characters)"));
+        execute_sequence_impl(begin + 1, it_catch, context, queue);
     }
+    catch (const Error&)
+    {
+        execute_sequence_impl(it_catch + 1, it_catch_block_end, context, queue);
+    }
+
+    return it_catch_block_end;
+}
+
+Sequence::Iterator
+Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
+                              MessageQueue* queue)
+{
+    const auto block_end = find_end_of_indented_block(
+        begin + 1, end, begin->get_indentation_level() + 1);
+
+    while (begin->execute(context, queue, begin - steps_.begin()))
+        execute_sequence_impl(begin + 1, block_end, context, queue);
+
+    return block_end + 1;
 }
 
 void Sequence::indent() noexcept
@@ -410,7 +399,7 @@ void Sequence::execute(Context& context, MessageQueue* queue)
     check_syntax();
 
     send_message(queue, Message::Type::sequence_started, "Sequence started",
-                 Clock::now());
+                 Clock::now(), 0);
 
     try
     {
@@ -419,12 +408,12 @@ void Sequence::execute(Context& context, MessageQueue* queue)
     catch (const std::exception& e)
     {
         send_message(queue, Message::Type::sequence_stopped_with_error, e.what(),
-                     Clock::now());
+                     Clock::now(), 0);
         throw;
     }
 
     send_message(queue, Message::Type::sequence_stopped, "Sequence finished",
-                 Clock::now());
+                 Clock::now(), 0);
 }
 
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,

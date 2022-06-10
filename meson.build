@@ -29,6 +29,7 @@ sol_version = '3.2.3'
 install_headers(files(
         'include/taskomat/Context.h',
         'include/taskomat/Error.h',
+        'include/taskomat/Executor.h',
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
@@ -48,6 +49,7 @@ install_subdir('include/taskomat/sol/sol',
 
 # Sources
 sources = files(
+    'src/Executor.cc',
     'src/Sequence.cc',
     'src/serialize_sequence.cc',
     'src/deserialize_sequence.cc',
@@ -58,6 +60,7 @@ sources = files(
 # Test sources
 test_src = files(
     'tests/test_Error.cc',
+    'tests/test_Executor.cc',
     'tests/test_main.cc',
     'tests/test_Message.cc',
     'tests/test_LockedQueue.cc',

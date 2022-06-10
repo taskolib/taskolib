@@ -1,16 +1,43 @@
 /**
  * \mainpage
  *
- * \image html desy.png
+ * \image html sequence_and_steps.png
  *
  * The Taskomat library helps to automate processes. Its main automatization unit is a
  * sequence of steps which are executed in order or through control flow statements. The
- * behavior of each step is defined in the LUA scripting language. The library uses the
- * namespace \ref task.
+ * behavior of each step is defined in the LUA scripting language.
  *
- * To use the library, include the single header file \link taskomat/taskomat.h \endlink
- * and link your code against both this library and the General Utility Library
- * (-ltaskomat -lgul14).
+ * The C++ classes for modeling sequences and steps are, unsurprisingly,
+ * \ref task::Sequence "Sequence" and \ref task::Step "Step". A sequence acts like a
+ * container for steps and can be executed in the current thread with the member function
+ * \ref task::Sequence::execute "Sequence::execute()":
+ *
+ * \code {.cpp}
+ * #include <taskomat/taskomat.h>
+ *
+ * using namespace task;
+ *
+ * // Create some steps
+ * Step step1{ Step::type_action };
+ * step1.set_script("a = 42");
+ *
+ * Step step2{ Step::type_action };
+ * step2.set_script("b = 13");
+ *
+ * // Assemble the steps into a sequence
+ * Sequence sequence;
+ * sequence.push_back(step1);
+ * sequence.push_back(step2);
+ *
+ * // Run the sequence
+ * sequence.execute();
+ * \endcode
+ *
+ * \section usage Usage
+ *
+ * All functions and classes are declared in the namespace \ref task. To use the library,
+ * include the single header file \link taskomat/taskomat.h \endlink and link your code
+ * against both this library and the General Utility Library (-ltaskomat -lgul14).
  *
  * The evolving design goals of the library are documented in a series of
  * \ref design_documents.
@@ -28,6 +55,8 @@
 /**
  * \page copyright Copyright Notices
  *
+ * \image html desy.png
+ *
  * \section copyright_notice Copyright Notice (LGPLv2.1)
  *
  * The Taskomat library is free software distributed under the terms of the
@@ -37,7 +66,7 @@
  *
  * <dl>
  * <dt>Taskomat library</dt>
- * <dd>Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * <dd>Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
