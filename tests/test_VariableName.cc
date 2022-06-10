@@ -94,6 +94,17 @@ TEST_CASE("VariableName: length()", "[VariableName]")
     REQUIRE(VariableName{ "pippo" }.length() == 5);
 }
 
+TEST_CASE("VariableName: operator+=(VariableName, string_view)", "[VariableName]")
+{
+    const std::string str{ "51" };
+    VariableName var{ "Area" };
+
+    var += str;
+    REQUIRE(var == "Area51");
+
+    REQUIRE_THROWS_AS(var += " not a valid name", task::Error);
+}
+
 TEST_CASE("VariableName: operator+=(std::string, VariableName)", "[VariableName]")
 {
     std::string str{ "Hello" };

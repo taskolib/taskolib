@@ -109,6 +109,13 @@ public:
         return a.string() >= b.string();
     }
 
+    /**
+     * Append a suffix to a VariableName.
+     *
+     * \exception Error is thrown if the resulting variable name is not valid.
+     */
+    VariableName& operator+=(gul14::string_view suffix);
+
     /// Append a VariableName to a std::string.
     friend std::string& operator+=(std::string& lhs, const VariableName& rhs)
     {
@@ -129,7 +136,7 @@ public:
     }
 
     /// Convert the VariableName to a std::string.
-    explicit operator const std::string&() const { return name_;}
+    explicit operator const std::string&() const { return name_; }
 
     /// Return the length of the variable name string.
     SizeType size() const noexcept { return name_.size(); }
