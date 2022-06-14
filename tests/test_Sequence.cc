@@ -2619,4 +2619,21 @@ TEST_CASE("modify()", "[Sequence]")
         REQUIRE(seq[1].get_indentation_level() == 1);
         REQUIRE(seq[2].get_indentation_level() == 0);
     }
+
+    SECTION("Throwing modification")
+    {
+        REQUIRE_THROWS_AS(
+            seq.modify(it,
+                [](Step& step)
+                {
+                    step.set_label("modified");
+                    step.set_indentation_level(12);
+                    throw Error("Test");
+                }),
+            Error);
+
+        REQUIRE(seq.get_indentation_error() == ""); // Sequence class invariants are respected
+        REQUIRE(seq[1].get_indentation_level() == 1); // ... e.g. by reindenting
+        REQUIRE(seq[1].get_label() == "modified"); // ... but the step may have been modified.
+    }
 }

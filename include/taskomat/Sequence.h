@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <gul14/finalizer.h>
 #include <gul14/string_view.h>
 #include <gul14/cat.h>
 #include "taskomat/Error.h"
@@ -391,22 +392,32 @@ public:
      * \param modification_fct  A function or function object with the signature
      *            `void fct(Step&)` that applies the desired modifications on a Step.
      *            The step reference becomes invalid after the call.
+     *
+     * \exception
+     * If an exception is thrown by the modification function, the step may only be
+     * partially modified, but the invariants of the sequence are maintained (basic
+     * exception guarantee).
      */
     template <typename Closure>
     void modify(ConstIterator it, Closure modification_fct)
     {
-        const auto old_indentation_level = it->get_indentation_level();
-        const auto old_type = it->get_type();
+        // Reindent at the end of the function, even if an exception is thrown
+        auto indent_if_necessary = gul14::finally(
+            [this,
+             it,
+             old_indentation_level = it->get_indentation_level(),
+             old_type = it->get_type()]()
+            {
+                if (it->get_indentation_level() != old_indentation_level ||
+                    it->get_type() != old_type)
+                {
+                    indent();
+                }
+            });
 
         auto mutable_it = steps_.begin() + (it - steps_.cbegin());
 
         modification_fct(*mutable_it);
-
-        if (it->get_indentation_level() != old_indentation_level ||
-            it->get_type() != old_type)
-        {
-            indent();
-        }
     }
 
 private:
