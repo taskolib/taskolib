@@ -4,7 +4,7 @@
  * \date   Created on May 06, 2022
  * \brief  Implementation of the serialize_sequence() free function.
  *
- * \copyright Copyright 
+ * \copyright Copyright
  * 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <fstream>
+#include <sstream>
 #include <gul14/gul.h>
 #include "taskomat/serialize_sequence.h"
 
@@ -31,12 +32,22 @@ namespace task {
 
 namespace {
 
-/**
- * Convert \a Type to string equivalent.
- * 
- * @param step \a Step
- * @return transformed type
- */
+/// Remove Step from the file system.
+void remove_step_path(const std::filesystem::path& path)
+{
+    try
+    {
+        if (std::filesystem::exists(path))
+            std::filesystem::remove(path); // remove previous stored step
+    }
+    catch(const std::exception& e)
+    {
+        auto err = errno;
+        throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
+    }
+}
+
+/// Convert Type to string equivalent.
 std::string type_to_string(const Step& step)
 {
     switch(step.get_type())
@@ -76,6 +87,23 @@ std::string escape_filename_characters(gul14::string_view str)
     return out.str();
 }
 
+/// Push the extra leading zero to the step numberings (ie. three leading zeros) to
+/// order them alphabetically.
+std::string convert_to_alphabetic_numbering(const int number)
+{
+    std::ostringstream ss;
+    ss << std::setw(3) << std::setfill('0') << number;
+    return gul14::cat("step_", ss.str());
+}
+
+void check_stream(std::ostream& stream)
+{
+    if (stream.bad())
+        throw Error(gul14::cat("I/O error: serious error on file system (bad flag is set)"));
+    else if (stream.fail())
+        throw Error(gul14::cat("I/O error: failure on storing step"));
+}
+
 } // namespace anonymous
 
 std::ostream& operator<<(std::ostream& stream, const Step& step)
@@ -85,13 +113,12 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
 
     stream << "-- type: " << type_to_string(step) << '\n';
-    stream << "-- label: " << step.get_label() << "\n";
-    stream << "-- use context variable names: [";
+    stream << "-- label: " << gul14::escape(step.get_label()) << "\n";
 
+    stream << "-- use context variable names: [";
     // Needs improvement: how to adapt the variable with its name string to the ostream?
     //auto variables = step.get_used_context_variable_names();
     //stream << gul14::join(variables.begin(), variables.end(), ", ") << "]\n";
-    
     auto v = step.get_used_context_variable_names();
     for(auto iter = v.begin(); iter != v.end(); ++iter)
     {
@@ -104,11 +131,11 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     auto modify = TimePoint::clock::to_time_t(step.get_time_of_last_modification());
     stream << "-- time of last modification: "
         << std::put_time(std::localtime(&modify), "%Y-%m-%d %H:%M:%S") << "\n";
-    
+
     auto execution = TimePoint::clock::to_time_t(step.get_time_of_last_execution());
-    stream << "-- time of last execution: " 
+    stream << "-- time of last execution: "
         << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << "\n";
-    
+
     stream << "-- timeout: ";
     if ( step.get_timeout() == Step::infinite_timeout )
         stream << "infinite\n";
@@ -117,35 +144,22 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
 
     stream << step.get_script() << '\n'; // (Marcus) good practice to add a cr at the end
 
+    check_stream(stream);
+
     return stream;
 }
 
-namespace {
-
-/**
- * Serialize \a Step to the file system.
- * 
- * @param step step to serialize
- * @param path for the \a Step
- */
 void serialize_step(const std::filesystem::path& path, const Step& step)
 {
-    try
-    {
-        if (std::filesystem::exists(path))
-            std::filesystem::remove(path); // remove previous stored step
-        std::ofstream stream(path);
-        stream << step;
-        stream.close();
-    }
-    catch(const std::exception& e)
-    {
-        // TODO: provide more information about failure
-        throw Error(e.what());
-    }
-}
+    remove_step_path(path);
 
-} // namespace anonymous
+    std::ofstream stream(path);
+
+    if (not stream.is_open())
+        throw Error(gul14::cat("I/O error: unable to open file (", path.string(), ")"));
+
+    stream << step; // RAII closes the stream (let the destructor do the job)
+}
 
 void serialize_sequence(const std::filesystem::path& path, const Sequence& sequence)
 {
@@ -159,12 +173,12 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seque
     }
     catch(const std::exception& e)
     {
-        // TODO: provide more information about failure
-        throw Error(e.what());
+        auto err = errno;
+        throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
     for(const auto step: sequence)
-        serialize_step(seq_path / gul14::cat("step_", ++idx, '_', type_to_string(step), 
-            ".lua" ), step);
+        serialize_step(seq_path / gul14::cat(convert_to_alphabetic_numbering(++idx),
+            '_', type_to_string(step), ".lua" ), step);
 }
 
 } // namespace task

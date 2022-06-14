@@ -33,19 +33,67 @@
 namespace task {
 
 /**
- * Deserialize parameters of \a Step from the input stream. 
- * 
+ * Deserialize parameters of Step from the input stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
  * @param stream input stream
- * @param step \a Step to be deserialized. 
+ * @param step Step to be deserialized.
  * @return passed input stream
  */
 std::istream& operator>>(std::istream& stream, Step& step);
 
 /**
- * Deserialize \a Sequence from file path.
+ * Extracts and creates from \a path a Step and returns it. The file path must be a Lua
+ * script and should have the extension 'lua'.
  *
- * @param path Path to load \a Sequence and all included \a Step 's
- * @return deserialized \a Sequence
+ * It will throw an Error exception if an I/O error occurs on the external file path or
+ * the file does not exist.
+ *
+ * To deserialize a Step it must consist with following minimum properties:
+ * /code
+ * -- type: action \a or if \a or ...
+ * -- label: < \a label \a description >
+ * /endcode
+ *
+ * Optional are the following properties:
+ * /code
+ * -- use context variable names: [ \a variable1, ... ]
+ * -- time of last modification: %Y-%m-%d %H:%M:%S
+ * -- time of last execution: %Y-%m-%d %H:%M:%S
+ * -- timeout: [infinity|< \a timeout \a in \a milliseconds >]
+ * /endcode
+ *
+ * Here is one example of a stored Step \a step_001_while.lua :
+ * /code
+ * -- type: while
+ * -- label: Is increment lower then 10?
+ * -- use context variable names: [incr]
+ * -- time of last modification: 2022-06-13 16:30:32
+ * -- time of last execution: 2022-06-13 16:55:21
+ * -- timeout: 60000
+ * return incr < 10
+ * /end code
+ *
+ * The label is explicitly escaped on storing and unescaped on loading.
+ *
+ * \note \c '--' is a Lua comment and interpreted with special keywords to fill the Step
+ * properties.
+ * \note for time interpretation see <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>
+ * \note if <tt>>time of last modification</tt> is not provided in the file it is set to
+ * the time on loading the step.
+ * \note the collection of context variable names can also be an empty list, ie. \c [] .
+ *
+ * @param path file path to load the Step
+ * @return fresh create Step
+ */
+Step deserialize_step(const std::filesystem::path& path);
+
+/**
+ * Deserialize Sequence from file path.
+ *
+ * @param path to load Sequence and all included Step 's
+ * @return deserialized Sequence
  */
 Sequence deserialize_sequence(const std::filesystem::path& path);
 

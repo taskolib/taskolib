@@ -28,6 +28,7 @@
 #include <chrono>
 #include <filesystem>
 #include <system_error>
+#include <iostream>
 #include "taskomat/serialize_sequence.h"
 #include "taskomat/deserialize_sequence.h"
 
@@ -38,29 +39,31 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
     std::stringstream ss;
     Step step{};
+    step.set_type(Step::type_while);
+    step.set_label("This is a label");
 
-    SECTION("deserialize type")
+    SECTION("deserialize: minimum type & label")
     {
-        step.set_type(Step::type_while);
         ss << step;
 
         Step deserialize{};
         ss >> deserialize;
 
         REQUIRE(deserialize.get_type() == Step::type_while);
+        REQUIRE(deserialize.get_label() == "This is a label");
     }
-    
-    SECTION("deserialize label")
+
+    SECTION("deserialize: escaped label")
     {
-        step.set_label("This is a funny label");
+        step.set_label("This is a funny label\n-- label: NOT FUNNY");
         ss << step;
 
         Step deserialize{};
         ss >> deserialize;
 
-        REQUIRE(deserialize.get_label() == "This is a funny label");
+        REQUIRE(deserialize.get_label() == "This is a funny label\n-- label: NOT FUNNY");
     }
-    
+
     SECTION("deserialize infinite timeout")
     {
         step.set_timeout(Step::infinite_timeout);
@@ -71,7 +74,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
         REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
     }
-    
+
     SECTION("deserialize 1s timeout")
     {
         step.set_timeout(1s);
@@ -82,14 +85,14 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
         REQUIRE(deserialize.get_timeout() == 1s);
     }
-    
+
     SECTION("deserialize last modification time")
     {
         // IMPROVEMENT: very boring but since we store the time with second precision
         // there is a need for this nasty transition ... :/
         auto now = TimePoint::clock::to_time_t(Clock::now());
         auto ts = TimePoint::clock::from_time_t(now);
-        
+
         step.set_time_of_last_modification(ts);
         ss << step;
 
@@ -98,14 +101,14 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
         REQUIRE(deserialize.get_time_of_last_modification() == ts);
     }
-    
+
     SECTION("deserialize last execution time")
     {
         // IMPROVEMENT: very boring but since we store the time with second precision
         // there is a need for this nasty transition ... :/
         auto now = TimePoint::clock::to_time_t(Clock::now());
         auto ts = TimePoint::clock::from_time_t(now);
-        
+
         step.set_time_of_last_execution(ts);
         ss << step;
 
@@ -114,7 +117,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
         REQUIRE(deserialize.get_time_of_last_execution() == ts);
     }
-    
+
     SECTION("deserialize one variable name")
     {
         step.set_used_context_variable_names({"a"});
@@ -127,7 +130,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         REQUIRE(deserialize.get_used_context_variable_names().size() == 1);
         REQUIRE(deserialize.get_used_context_variable_names() == VariableNames{"a"});
     }
-    
+
     SECTION("deserialize more variable name")
     {
         step.set_used_context_variable_names({"a", "b"});
@@ -140,7 +143,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         REQUIRE(deserialize.get_used_context_variable_names().size() == 2);
         REQUIRE(deserialize.get_used_context_variable_names() == VariableNames{"a", "b"});
     }
-    
+
     SECTION("deserialize script")
     {
         step.set_script("-- some nasty comment\n\na = a + 1\n");
@@ -159,23 +162,67 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         Step deserialize{};
         ss >> deserialize;
 
-        REQUIRE(deserialize.get_type() == Step::type_action);
+        REQUIRE(deserialize.get_type() == Step::type_while);
+        REQUIRE(deserialize.get_label() == "This is a label");
         REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
         REQUIRE(deserialize.get_used_context_variable_names().empty());
         REQUIRE(deserialize.get_used_context_variable_names().size() == 0);
         REQUIRE(deserialize.get_used_context_variable_names() == VariableNames({}));
         REQUIRE(deserialize.get_indentation_level() == 0);
-        REQUIRE(deserialize.get_label() == "");
         REQUIRE(deserialize.get_time_of_last_execution() == TimePoint{});
     }
+}
+
+TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
+{
+    Step step01;
+    step01.set_label("action");
+
+    Sequence sequence{"sequence"};
+    sequence.push_back(step01);
+
+    REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
+
+    for (auto const& entry : std::filesystem::directory_iterator{"unit_test/sequence"})
+        REQUIRE(entry.path().filename().string() == "step_001_action.lua");
+
+    // remove the temp folder
+    std::error_code e;
+    std::filesystem::remove_all("unit_test", e);
+    if (e)
+        WARN("removing test folder fails: unit_test");
+}
+
+TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
+{
+    // empty path
+    REQUIRE_THROWS_AS(deserialize_sequence(""), Error);
+
+    std::filesystem::create_directory("unit_test");
+
+    // folder 'sequence' for Sequence does not exist
+    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+
+    std::filesystem::create_directory("unit_test/sequence");
+    // No steps found
+    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+
+    // remove the temp folder
+    std::error_code e;
+    std::filesystem::remove_all("unit_test", e);
+    if (e)
+        WARN("removing test folder fails: unit_test");
 }
 
 TEST_CASE("serialize_sequence: indentation level & type of sequence",
     "[serialize_sequence]")
 {
     Step step01{Step::type_while};
+    step01.set_label("while condition");
     Step step02{Step::type_action};
+    step02.set_label("action");
     Step step03{Step::type_end};
+    step03.set_label("while end");
 
     Sequence sequence{"This is a sequence"};
     sequence.push_back(step01);

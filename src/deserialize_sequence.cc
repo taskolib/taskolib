@@ -140,7 +140,7 @@ void extract_label(const std::string& extract, Step& step)
     auto end = extract.size();
 
     if (start + 1 != end)
-        step.set_label(extract.substr(start, end - start));
+        step.set_label(gul14::unescape(extract.substr(start, end - start)));
 }
 
 void extract_context_variable_names(const std::string& extract, Step& step)
@@ -199,7 +199,7 @@ void extract_timeout(const std::string& extract, Step& step)
         step.set_timeout(Step::infinite_timeout);
     else
     {
-        try 
+        try
         {
             step.set_timeout(std::chrono::milliseconds(std::stoull(timeout)));
         }
@@ -217,6 +217,9 @@ std::istream& operator>>(std::istream& stream, Step& step)
     TimePoint last_modification{}; // since any manipulation on step sets a new time point
     std::string extract;
     std::stringstream script;
+    bool has_type = false; // sanity check: must have type
+    bool has_label = false; // sanity check: must have label
+    Step step_internal;
     while(std::getline(stream, extract, '\n'))
     {
         auto keyword = extract_keyword(extract);
@@ -228,70 +231,87 @@ std::istream& operator>>(std::istream& stream, Step& step)
         switch(hash_djb2a(keyword))
         {
             case "type"_sh:
-                extract_type(extract, step); break;
+                extract_type(extract, step_internal); has_type = true; break;
             case "label"_sh:
-                extract_label(extract, step); break;
+                extract_label(extract, step_internal); has_label = true; break;
             case "use context variable names"_sh:
-                extract_context_variable_names(extract, step); break;
+                extract_context_variable_names(extract, step_internal); break;
             case "time of last modification"_sh:
                 last_modification = extract_time("time of last modification", extract); break;
             case "time of last execution"_sh:
-                extract_time_of_last_execution(extract, step); break;
+                extract_time_of_last_execution(extract, step_internal); break;
             case "timeout"_sh:
-                extract_timeout(extract, step); break;
+                extract_timeout(extract, step_internal); break;
             default:
                 script << extract << '\n';
         }
     }
 
+    if (stream.bad())
+        throw Error(gul14::cat("I/O error: serious error on file system (bad flag is set)"));
+    // need to get !eof that also indicates fail bit which is here not wanted
+    else if (not stream.eof() and stream.fail())
+        throw Error(gul14::cat("I/O error: failure on loading step"));
+
+    if (not has_type) // sanity check: missing type
+        throw Error("Step must have type declaration.");
+    else if (not has_label) // sanity check: missing label
+        throw Error("Step must have label declaration.");
+
     if (not script.str().empty())
     {
         auto temp = script.str();
-        step.set_script(temp.substr(0, temp.size() - 1)); // remove last cr
+        step_internal.set_script(temp.substr(0, temp.size() - 1)); // remove last cr
     }
 
     // finally set time points ...
     if (last_modification.time_since_epoch().count() != 0LL)
-        step.set_time_of_last_modification(last_modification);
+        step_internal.set_time_of_last_modification(last_modification);
+    else // sanity check: if no time is provided set it to current time
+        step_internal.set_time_of_last_modification(TimePoint::clock::now());
+
+    step = std::move(step_internal);
 
     return stream;
 }
 
-namespace {
-
-void load_step(const std::filesystem::path& step_filename, Step& step)
+Step deserialize_step(const std::filesystem::path& path)
 {
-    std::ifstream stream(step_filename);
-    stream >> step;
-    stream.close();
-}
+    Step step{};
+    std::ifstream stream(path);
 
-} // namespace anonymous
+    if (not stream.is_open())
+        throw Error(gul14::cat("I/O error: unable to open file '", path.string(), "'"));
+
+    stream >> step; // RAII closes the stream (let the destructor do the job)
+
+    return step;
+}
 
 Sequence deserialize_sequence(const std::filesystem::path& path)
 {
     if (path.empty())
         throw Error("Must specify a valid path. Currently it is empty.");
     else if (not std::filesystem::exists(path))
-        throw Error(gul14::cat("Path does not exists: '", path.string(), "'"));
+        throw Error(gul14::cat("Path does not exist: '", path.string(), "'"));
 
     auto label = unescape_filename_characters(path.filename().string());
     Sequence seq{label};
 
     std::vector<std::filesystem::path> steps;
-    for (auto const& entry : std::filesystem::directory_iterator{path}) 
+    for (auto const& entry : std::filesystem::directory_iterator{path})
         if (entry.is_regular_file())
             steps.push_back(entry.path());
-    std::sort(std::begin(steps), std::end(steps), 
+
+    if (steps.empty())
+        throw Error(gul14::cat("No steps found: ", path.string()));
+
+    std::sort(std::begin(steps), std::end(steps),
         [](const auto& lhs, const auto& rhs) -> bool
         { return lhs.filename() < rhs.filename(); });
 
     for(auto entry: steps)
-    {
-        Step step{};
-        load_step(entry, step);
-        seq.push_back(step);
-    }
+        seq.push_back(deserialize_step(entry));
 
     return seq;
 }
