@@ -116,17 +116,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     stream << "-- label: " << gul14::escape(step.get_label()) << "\n";
 
     stream << "-- use context variable names: [";
-    // Needs improvement: how to adapt the variable with its name string to the ostream?
-    //auto variables = step.get_used_context_variable_names();
-    //stream << gul14::join(variables.begin(), variables.end(), ", ") << "]\n";
-    auto v = step.get_used_context_variable_names();
-    for(auto iter = v.begin(); iter != v.end(); ++iter)
-    {
-        if (iter != v.begin() )
-            stream << ", ";
-        stream << (*iter).string();
-    }
-    stream << "]\n";
+    stream << gul14::join(step.get_used_context_variable_names(), ", ") << "]\n";
 
     auto modify = TimePoint::clock::to_time_t(step.get_time_of_last_modification());
     stream << "-- time of last modification: "

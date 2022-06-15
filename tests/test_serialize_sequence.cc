@@ -38,7 +38,7 @@ using namespace std::chrono_literals;
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
     std::stringstream ss;
-    Step step{};
+    Step step;
     step.set_type(Step::type_while);
     step.set_label("This is a label");
 
@@ -46,7 +46,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     {
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_type() == Step::type_while);
@@ -58,7 +58,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_label("This is a funny label\n-- label: NOT FUNNY");
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_label() == "This is a funny label\n-- label: NOT FUNNY");
@@ -69,7 +69,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_timeout(Step::infinite_timeout);
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
@@ -80,7 +80,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_timeout(1s);
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_timeout() == 1s);
@@ -96,7 +96,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_time_of_last_modification(ts);
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_time_of_last_modification() == ts);
@@ -112,7 +112,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_time_of_last_execution(ts);
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_time_of_last_execution() == ts);
@@ -123,7 +123,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_used_context_variable_names({"a"});
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(not deserialize.get_used_context_variable_names().empty());
@@ -136,7 +136,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_used_context_variable_names({"a", "b"});
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(not deserialize.get_used_context_variable_names().empty());
@@ -149,7 +149,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         step.set_script("-- some nasty comment\n\na = a + 1\n");
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_script() == "-- some nasty comment\n\na = a + 1\n");
@@ -159,7 +159,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     {
         ss << step;
 
-        Step deserialize{};
+        Step deserialize;
         ss >> deserialize;
 
         REQUIRE(deserialize.get_type() == Step::type_while);
@@ -173,8 +173,107 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
     }
 }
 
+TEST_CASE("serialize_sequence: deserialize with nasty blanks (1)", "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+    -- label: This is a label
+)"};
+
+    Step deserialize;
+    ss >> deserialize;
+
+    REQUIRE(deserialize.get_type() == Step::type_action);
+    REQUIRE(deserialize.get_label() == "This is a label");
+}
+
+TEST_CASE("serialize_sequence: deserialize with nasty blanks (2)", "[serialize_sequence]")
+{
+    std::stringstream ss{"\n\t-- type:  action\t \n   \n--    label:  This is a label  "};
+
+    Step deserialize;
+    ss >> deserialize;
+
+    REQUIRE(deserialize.get_type() == Step::type_action);
+    REQUIRE(deserialize.get_label() == "This is a label");
+}
+
+TEST_CASE("serialize_sequence: deserialize with unknown type", "[serialize_sequence]")
+{
+    std::stringstream ss{R"(
+-- type: abc
+-- label: This is a label)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
+TEST_CASE("serialize_sequence: deserialize with nasty delimiter on variable names",
+    "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(-- type: action
+-- label: This is a label
+-- use context variable names: [ aaa   ,   bb,cc , d ]
+--)"};
+
+    Step deserialize;
+    ss >> deserialize;
+
+    VariableNames compare_variable_names{"aaa", "bb", "cc", "d"};
+
+    REQUIRE(deserialize.get_type() == Step::type_action);
+    REQUIRE(deserialize.get_label() == "This is a label");
+    REQUIRE(not deserialize.get_used_context_variable_names().empty());
+    REQUIRE(deserialize.get_used_context_variable_names().size() == 4);
+    REQUIRE(deserialize.get_used_context_variable_names() == compare_variable_names);
+}
+
+TEST_CASE("serialize_sequence: deserialize with Step properties last",
+    "[serialize_sequence]")
+{
+    std::stringstream ss{R"(
+-- type: action
+-- label: This is a label
+
+a = a + 1
+-- label: This label has no meaning for Step declaration)"};
+
+    Step deserialize;
+    ss >> deserialize;
+
+    REQUIRE(deserialize.get_label() == "This is a label");
+    REQUIRE(deserialize.get_script() == R"(a = a + 1
+-- label: This label has no meaning for Step declaration)");
+}
+
+TEST_CASE("serialize_sequence: deserialize with reseting Step", "[serialize_sequence]")
+{
+    std::stringstream ss{R"(
+-- type: action
+-- label: This is a label)"};
+
+    Step deserialize;
+    deserialize.set_type(Step::type_while);
+    deserialize.set_label("This is another label");
+    deserialize.set_timeout(1s);
+
+    ss >> deserialize;
+
+    REQUIRE(deserialize.get_type() == Step::type_action);
+    REQUIRE(deserialize.get_label() == "This is a label");
+    REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
+}
+
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
+    // remove the previous created temp folder
+    std::error_code e;
+    std::filesystem::remove_all("unit_test", e);
+    if (e)
+        WARN("removing test folder fails: unit_test");
+
     Step step01;
     step01.set_label("action");
 
@@ -185,38 +284,38 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 
     for (auto const& entry : std::filesystem::directory_iterator{"unit_test/sequence"})
         REQUIRE(entry.path().filename().string() == "step_001_action.lua");
-
-    // remove the temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
 }
 
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
 {
+    // remove the previous created temp folder
+    std::error_code e;
+    std::filesystem::remove_all("unit_test", e);
+    if (e)
+        WARN("removing test folder fails: unit_test");
+
     // empty path
     REQUIRE_THROWS_AS(deserialize_sequence(""), Error);
 
     std::filesystem::create_directory("unit_test");
 
-    // folder 'sequence' for Sequence does not exist
+    // folder 'sequence' does not exist
     REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
 
     std::filesystem::create_directory("unit_test/sequence");
     // No steps found
     REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
 
-    // remove the temp folder
+}
+
+TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]")
+{
+    // remove the previous created temp folder
     std::error_code e;
     std::filesystem::remove_all("unit_test", e);
     if (e)
         WARN("removing test folder fails: unit_test");
-}
 
-TEST_CASE("serialize_sequence: indentation level & type of sequence",
-    "[serialize_sequence]")
-{
     Step step01{Step::type_while};
     step01.set_label("while condition");
     Step step02{Step::type_action};
@@ -241,10 +340,4 @@ TEST_CASE("serialize_sequence: indentation level & type of sequence",
     REQUIRE(deserialize_seq[1].get_type() == Step::type_action);
     REQUIRE(deserialize_seq[2].get_indentation_level() == 0);
     REQUIRE(deserialize_seq[2].get_type() == Step::type_end);
-
-    // remove the temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
 }
