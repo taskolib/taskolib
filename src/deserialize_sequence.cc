@@ -31,7 +31,7 @@
 #include <ctime>
 #include <regex>
 #include <gul14/gul.h>
-#include "taskomat/case_string.h"
+#include "taskomat/hash_string.h"
 #include "taskomat/deserialize_sequence.h"
 
 namespace task {
