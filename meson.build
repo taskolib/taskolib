@@ -53,6 +53,7 @@ install_subdir('include/taskomat/sol/sol',
 # Sources
 sources = files(
     'src/Executor.cc',
+    'src/lua_details.cc',
     'src/Sequence.cc',
     'src/serialize_sequence.cc',
     'src/deserialize_sequence.cc',

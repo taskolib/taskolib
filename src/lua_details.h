@@ -1,0 +1,85 @@
+/**
+ * \file   lua_details.h
+ * \author Lars Froehlich
+ * \date   Created on June 15, 2022
+ * \brief  Declaration of free functions dealing with LUA specifics.
+ *
+ * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 2.1 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// SPDX-License-Identifier: LGPL-2.1-or-later
+
+#ifndef TASKOMAT_LUA_DETAILS_H_
+#define TASKOMAT_LUA_DETAILS_H_
+
+#include <chrono>
+#include <string>
+#include "sol/sol.hpp"
+#include "taskomat/CommChannel.h"
+
+namespace task {
+
+// Abort the execution of the script by raising a LUA error with the given error message.
+void abort_script_with_error(lua_State* lua_state, const std::string& msg);
+
+// Check if immediate termination has been requested via the CommChannel. If so, raise a
+// LUA error.
+void check_immediate_termination_request(lua_State* lua_state);
+
+// Check if the step timeout has expired and raise a LUA error if that is the case.
+void check_script_timeout(lua_State* lua_state);
+
+// Return a time point in milliseconds since the epoch, calculated from a time point t0
+// plus a duration dt. In case of overflow, the maximum representable time point is
+// returned.
+long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt);
+
+// A LUA hook that stops the execution of the script by raising a LUA error.
+// This hook reinstalls itself so that it is called immediately if the execution should
+// resume. This helps to break out of pcalls.
+void hook_abort_with_error(lua_State* lua_state, lua_Debug*);
+
+// Check if the step timeout has expired or if immediate termination has been requested
+// via the comm channel. If so, raise a LUA error.
+void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*);
+
+// Install implementations for some custom functions in the given LUA state.
+// \code
+// sleep() -- wait for a given number of seconds
+// \endcode
+void install_custom_commands(sol::state& lua);
+
+// Install hooks that check for timeouts and immediate termination requests while a LUA
+// script is being executed. If one of both occurs, the script terminates with an error
+// message that starts with "[ABORT]".
+void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
+    std::chrono::milliseconds timeout, CommChannel* comm_channel);
+
+// Open a safe subset of the LUA standard libraries in the given LUA state.
+//
+// This opens the math, string, table, and UTF8 libraries. The base library is also
+// opened, but the following potentially dangerous commands are removed:
+// \code
+// collectgarbage, debug, dofile, load, loadfile, print, require
+// \endcode
+void open_safe_library_subset(sol::state& lua);
+
+// Pause execution for the specified time, observing timeouts and termination requests.
+void sleep_fct(double seconds, sol::this_state sol);
+
+} // namespace task
+
+#endif
