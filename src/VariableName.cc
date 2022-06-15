@@ -78,5 +78,15 @@ VariableName::VariableName(std::string&& name)
     name_ = std::move(name);
 }
 
+VariableName& VariableName::operator+=(gul14::string_view suffix)
+{
+    std::string new_name = name_ + suffix;
+
+    check_name(new_name);
+
+    name_ = std::move(new_name);
+    return *this;
+}
+
 
 } // namespace task

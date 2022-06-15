@@ -22,7 +22,9 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <array>
 #include <gul14/catch.h>
+#include <gul14/join_split.h>
 #include "taskomat/Error.h"
 #include "taskomat/VariableName.h"
 
@@ -84,4 +86,72 @@ TEST_CASE("VariableName: VariableName(std::string&&)", "[VariableName]")
 
     for (const std::string& str : good_names)
         REQUIRE_NOTHROW(VariableName(std::move(str)));
+}
+
+TEST_CASE("VariableName: length()", "[VariableName]")
+{
+    REQUIRE(VariableName{ "i" }.length() == 1);
+    REQUIRE(VariableName{ "pippo" }.length() == 5);
+}
+
+TEST_CASE("VariableName: operator+=(VariableName, string_view)", "[VariableName]")
+{
+    const std::string str{ "51" };
+    VariableName var{ "Area" };
+
+    var += str;
+    REQUIRE(var == "Area51");
+
+    REQUIRE_THROWS_AS(var += " not a valid name", task::Error);
+}
+
+TEST_CASE("VariableName: operator+=(std::string, VariableName)", "[VariableName]")
+{
+    std::string str{ "Hello" };
+    const VariableName var{ "World" };
+
+    str += var;
+    REQUIRE(str == "HelloWorld");
+}
+
+TEST_CASE("VariableName: operator+(VariableName, string_view)", "[VariableName]")
+{
+    std::string str{ "String" };
+    const VariableName var{ "Var" };
+
+    REQUIRE(var + "Cstring" == "VarCstring");
+    REQUIRE(var + str == "VarString");
+}
+
+TEST_CASE("VariableName: operator+(string_view, VariableName)", "[VariableName]")
+{
+    std::string str{ "String" };
+    const VariableName var{ "Var" };
+
+    REQUIRE("Cstring" + var == "CstringVar");
+    REQUIRE(str + var == "StringVar");
+}
+
+TEST_CASE("VariableName: Cast to std::string", "[VariableName]")
+{
+    const VariableName var{ "Var" };
+
+    const std::string& str_cref = static_cast<const std::string&>(var);
+    std::string str = static_cast<std::string>(var);
+
+    REQUIRE(str_cref == "Var");
+    REQUIRE(str == "Var");
+}
+
+TEST_CASE("VariableName: size()", "[VariableName]")
+{
+    REQUIRE(VariableName{ "i" }.size() == 1);
+    REQUIRE(VariableName{ "pippo" }.size() == 5);
+}
+
+TEST_CASE("VariableName: Compatibility with gul14::join()", "[VariableName]")
+{
+    const std::array<VariableName, 3> vars{ "a", "bb", "ccc" };
+
+    REQUIRE(gul14::join(vars, ", ") == "a, bb, ccc");
 }
