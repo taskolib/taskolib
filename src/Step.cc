@@ -45,25 +45,25 @@ static const char step_timeout_s_key[] =
     "TASKOMAT_STEP_TIMEOUT_S";
 static const char comm_channel_key[] =
     "TASKOMAT_COMM_CHANNEL";
+static const char abort_error_message_key[] =
+    "TASKOMAT_ABORT_ERROR_MESSAGE";
 
 template <typename>
 inline constexpr bool always_false_v = false;
 
-void exit_script_with_error(lua_State* lua_state, const std::string& msg);
+void abort_script_with_error(lua_State*, const std::string&);
 
-// Check if the timeout from the LUA state has been reached and raise a LUA error if so.
-// As we use a C++ compiled LUA, the error is thrown as an exception that is caught by a
-// LUA-internal handler.
-void check_script_timeout(lua_State* lua_state, lua_Debug*)
+// Check if immediate termination has been requested via the CommChannel. If so, raise a
+// LUA error.
+void check_immediate_termination_request(lua_State* lua_state)
 {
     sol::state_view lua(lua_state);
-
     const auto registry = lua.registry();
 
     sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
     if (not opt_comm_channel_ptr.has_value())
     {
-        exit_script_with_error(lua_state,
+        abort_script_with_error(lua_state,
             cat(comm_channel_key, " not found in LUA registry"));
     }
     else
@@ -72,19 +72,24 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
         if (comm)
         {
             if (comm->immediate_termination_requested_)
-                exit_script_with_error(lua_state, "Step aborted on user request");
+                abort_script_with_error(lua_state, "Step aborted on user request");
         }
     }
+}
+
+// Check if the step timeout has expired and raise a LUA error if that is the case.
+void check_script_timeout(lua_State* lua_state)
+{
+    sol::state_view lua(lua_state);
+
+    const auto registry = lua.registry();
 
     sol::optional<long long> timeout_ms = registry[step_timeout_ms_since_epoch_key];
 
     if (not timeout_ms.has_value())
     {
-        // Throw an error and repeat that when returning to LUA execution (helps break out
-        // of pcalls)
-        lua_sethook(lua_state, check_script_timeout, LUA_MASKLINE, 0);
-        luaL_error(lua_state, "Timeout time point not found in LUA registry (%s)",
-            step_timeout_ms_since_epoch_key);
+        abort_script_with_error(lua_state, cat("Timeout time point not found in LUA "
+            "registry (", step_timeout_ms_since_epoch_key, ')'));
     }
     else
     {
@@ -97,21 +102,49 @@ void check_script_timeout(lua_State* lua_state, lua_Debug*)
         if (now_ms > *timeout_ms)
         {
             double seconds = registry[step_timeout_s_key].get_or(-1.0);
-            // Throw an error and repeat that when returning to LUA execution (helps break
-            // out of pcalls)
-            lua_sethook(lua_state, check_script_timeout, LUA_MASKLINE, 0);
-            luaL_error(lua_state, cat("Timeout: Script took more than ", seconds,
-                                      " s to run").c_str());
+            abort_script_with_error(lua_state,
+                cat("Timeout: Script took more than ", seconds, " s to run"));
         }
     }
 }
 
-// Throw an error and repeat that when returning to LUA execution (helps break out
-// of pcalls)
-void exit_script_with_error(lua_State* lua_state, const std::string& msg)
+// Check if the step timeout has expired or if immediate termination has been requested
+// via the comm channel. If so, raise a LUA error.
+void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*)
 {
-    lua_sethook(lua_state, check_script_timeout, LUA_MASKLINE, 0);
-    luaL_error(lua_state, msg.c_str());
+    // If necessary, these functions raise LUA errors to terminate the execution of the
+    // script. As we use a C++ compiled LUA, the error is thrown as an exception that is
+    // caught by a LUA-internal handler.
+    check_immediate_termination_request(lua_state);
+    check_script_timeout(lua_state);
+}
+
+// A LUA hook that stops the execution of the script by raising a LUA error.
+// This hook reinstalls itself so that it is called immediately if the execution should
+// resume. This helps to break out of pcalls.
+void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
+{
+    sol::state_view lua(lua_state);
+    const auto registry = lua.registry();
+    const std::string err_msg = registry[abort_error_message_key];
+
+    lua_sethook(lua_state, hook_abort_with_error, LUA_MASKLINE, 0);
+    luaL_error(lua_state, err_msg.c_str());
+}
+
+// Abort the execution of the script by raising a LUA error with the given error message.
+void abort_script_with_error(lua_State* lua_state, const std::string& msg)
+{
+    sol::state_view lua(lua_state);
+    auto registry = lua.registry();
+
+    // The [ABORT] prefix marks this error as one that can not be caught by CATCH blocks.
+    // We store the error message in the registry...
+    registry[abort_error_message_key] = "[ABORT] " + msg;
+
+    // ... and call the abort hook which raises a LUA error with the message from the
+    // registry.
+    hook_abort_with_error(lua_state, nullptr);
 }
 
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
@@ -138,7 +171,7 @@ void sleep_fct(double seconds, sol::this_state sol)
     auto t0 = gul14::tic();
     while (gul14::toc(t0) < seconds)
     {
-        check_script_timeout(sol, nullptr);
+        hook_check_timeout_and_termination_request(sol, nullptr);
         double sec = gul14::clamp(seconds - gul14::toc(t0), 0.0, 0.01);
         gul14::sleep(sec);
     }
@@ -150,8 +183,8 @@ void install_custom_commands(sol::state& lua)
     globals["sleep"] = sleep_fct;
 }
 
-void install_timeout_hook(sol::state& lua, TimePoint now,
-                          std::chrono::milliseconds timeout, CommChannel* comm_channel)
+void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
+    std::chrono::milliseconds timeout, CommChannel* comm_channel)
 {
     auto registry = lua.registry();
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
@@ -159,7 +192,7 @@ void install_timeout_hook(sol::state& lua, TimePoint now,
     registry[comm_channel_key] = comm_channel;
 
     // Install a hook that is called after every 100 LUA instructions
-    lua_sethook(lua.lua_state(), check_script_timeout, LUA_MASKCOUNT, 100);
+    lua_sethook(lua, hook_check_timeout_and_termination_request, LUA_MASKCOUNT, 100);
 }
 
 void open_safe_library_subset(sol::state& lua)
@@ -249,7 +282,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     if (context.lua_init_function)
         context.lua_init_function(lua);
 
-    install_timeout_hook(lua, now, get_timeout(), comm);
+    install_timeout_and_termination_request_hook(lua, now, get_timeout(), comm);
 
     copy_used_variables_from_context_to_lua(context, lua);
 
