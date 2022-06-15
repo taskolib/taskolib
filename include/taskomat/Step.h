@@ -66,6 +66,7 @@ public:
     /// Construct a Step of a certain type.
     explicit Step(Type type = type_action)
         : type_{ type }
+        , time_of_last_modification_{ Clock::now() }
     {}
 
     /**
@@ -269,7 +270,8 @@ private:
     std::string label_;
     std::string script_;
     VariableNames used_context_variable_names_;
-    TimePoint time_of_last_modification_, time_of_last_execution_;
+    TimePoint time_of_last_modification_;
+    TimePoint time_of_last_execution_;
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
     short indentation_level_{ 0 };
