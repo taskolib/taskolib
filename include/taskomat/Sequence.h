@@ -38,30 +38,20 @@
 namespace task {
 
 /**
- * \section Main Sequencer class
+ * A sequence of \ref task::Step "Step"s to be executed under a given Context.
  *
- * A sequence of \a Step 's to be executed under a given \a Context .
- *
- * On executing a validation is performed due to check if the steps are consistent. When
- * a fault is detected an \a Error is thrown including a precise error message about what
+ * On executing a validation is performed to check if the steps are consistent. When a
+ * fault is detected an Error is thrown including a precise error message about what
  * fails.
  *
  * To modify the sequence the following member functions are implemented:
  *
- * -# push_back(): add new \a Step at the end
- * -# pop_back(): remove last \a Step from the end
- * -# insert(): insert \a Step or range of \a Step 's either with position or iterator.
- * -# assign(): assign a new \a Step to an existing element.
- * -# erase(): remove \a Step or range of \a Step 's either with position or iterator.
- *
- * After modifing the sequence all before retrieved iterators are invalidated and further
- * usage will result with an undefined behavior.
- *
- * Since the reverse iterator are only used to iterate through the sequence one will
- * not find any member function for manipulation or modification.
- *
- * \note To use one of the member functions for modification with index one can use the
- * following workaround:
+ * -# push_back(): add a new Step at the end
+ * -# pop_back(): remove a Step from the end
+ * -# insert(): insert a Step or a range of steps
+ * -# assign(): assign a new Step to an existing element
+ * -# erase(): remove a Step or a range of steps
+ * -# modify(): modify a Step inside the sequence via a function or function object
  *
  * \code {.cpp}
  * Sequence seq;
@@ -70,8 +60,8 @@ namespace task {
  * seq.push_back(Step{Step::type_catch});
  * seq.push_back(Step{Step::type_action});
  * seq.push_back(Step{Step::type_end});
- * // insert at index 1 an action step
- * seq.insert(seq.begin()+1, Step{Step::type_action});
+ * // insert an action step at index 1
+ * seq.insert(seq.begin() + 1, Step{Step::type_action});
  * \endcode
  */
 class Sequence
