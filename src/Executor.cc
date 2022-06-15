@@ -78,7 +78,8 @@ bool Executor::update(Sequence& sequence)
     while (const auto opt_msg = queue_->try_pop())
     {
         const Message& msg = *opt_msg;
-        const auto idx = msg.get_index();
+        const auto step_idx = msg.get_index();
+        const auto step_it = sequence.begin() + step_idx;
 
         switch (msg.get_type())
         {
@@ -91,26 +92,14 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::sequence_stopped_with_error:
             break;
         case Message::Type::step_started:
-        {
-            Step step = sequence[idx];
-            step.set_running(true);
-            sequence.assign(sequence.begin() + idx, std::move(step));
+            sequence.modify(step_it, [](Step& s) { s.set_running(true); });
             break;
-        }
         case Message::Type::step_stopped:
-        {
-            Step step = sequence[idx];
-            step.set_running(false);
-            sequence.assign(sequence.begin() + idx, std::move(step));
+            sequence.modify(step_it, [](Step& s) { s.set_running(false); });
             break;
-        }
         case Message::Type::step_stopped_with_error:
-        {
-            Step step = sequence[idx];
-            step.set_running(false);
-            sequence.assign(sequence.begin() + idx, std::move(step));
+            sequence.modify(step_it, [](Step& s) { s.set_running(false); });
             break;
-        }
         default:
             throw Error(cat("Unknown message type ", static_cast<int>(msg.get_type())));
         }
