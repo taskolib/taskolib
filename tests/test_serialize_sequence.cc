@@ -266,6 +266,91 @@ TEST_CASE("serialize_sequence: deserialize with reseting Step", "[serialize_sequ
     REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
 }
 
+TEST_CASE("serialize_sequence: deserialize with two types", "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+-- label: This is a label
+-- type: action
+)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
+TEST_CASE("serialize_sequence: deserialize with two labels", "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+-- label: This is a label
+-- label: This is again a label
+)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
+TEST_CASE("serialize_sequence: deserialize with two time of last modifications",
+    "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+-- label: This is a label
+-- time of last modification: 2022-6-15 19:11:00
+-- time of last modification: 2022-6-15 19:11:00
+)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
+TEST_CASE("serialize_sequence: deserialize with two time of last executions",
+    "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+-- label: This is a label
+-- time of last execution: 2022-6-15 19:11:00
+-- time of last execution: 2022-6-15 19:11:00
+)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
+TEST_CASE("serialize_sequence: deserialize with two context variables names",
+    "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+-- label: This is a label
+-- use context variable names: [aa]
+-- use context variable names: [aa]
+)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
+TEST_CASE("serialize_sequence: deserialize with two timeouts", "[serialize_sequence]")
+{
+    std::stringstream ss{
+R"(
+-- type: action
+-- label: This is a label
+-- timeout: 1000
+-- timeout: 1000
+)"};
+
+    Step deserialize;
+    REQUIRE_THROWS_AS(ss >> deserialize, Error);
+}
+
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
     // remove the previous created temp folder
