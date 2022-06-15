@@ -77,9 +77,10 @@ TEST_CASE("Step: get_time_of_last_execution()", "[Step]")
 TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
 
-    auto ts = Clock::now();
+    auto ts = Clock::now() + 100s;
     step.set_time_of_last_modification(ts);
     REQUIRE(step.get_time_of_last_modification() == ts);
 }
@@ -143,7 +144,8 @@ TEST_CASE("Step: set_indentation_level()", "[Step]")
 TEST_CASE("Step: set_label()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
+    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
+    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
 
     step.set_label("Do nothing");
     REQUIRE(step.get_label() == "Do nothing");
@@ -208,7 +210,9 @@ TEST_CASE("Step: set_timeout()", "[Step]")
 TEST_CASE("Step: set_type()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
+    auto ts = Clock::now() - 100s;
+    step.set_time_of_last_modification(ts);
+    REQUIRE(step.get_time_of_last_modification() == ts);
 
     step.set_type(Step::type_while);
     REQUIRE(step.get_type() == Step::type_while);
@@ -224,7 +228,9 @@ TEST_CASE("Step: set_type()", "[Step]")
 TEST_CASE("Step: set_script()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() == TimePoint{});
+    auto ts = Clock::now() - 100s;
+    step.set_time_of_last_modification(ts);
+    REQUIRE(step.get_time_of_last_modification() == ts);
 
     step.set_script("test");
     REQUIRE(step.get_script() == "test");
@@ -363,8 +369,9 @@ TEST_CASE("execute(): Setting 'last executed' timestamp", "[Step]")
 {
     Context context;
     Step step;
-
-    REQUIRE(step.get_time_of_last_execution() == TimePoint{});
+    auto ts = Clock::now() - 100s;
+    step.set_time_of_last_modification(ts);
+    REQUIRE(step.get_time_of_last_modification() == ts);
 
     step.execute(context);
     REQUIRE(Clock::now() - step.get_time_of_last_execution() >= 0s);
