@@ -34,7 +34,7 @@ install_headers(files(
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
-        'include/taskomat/case_string.h',
+        'include/taskomat/hash_string.h',
         'include/taskomat/serialize_sequence.h',
         'include/taskomat/deserialize_sequence.h',
         'include/taskomat/Step.h',
