@@ -359,16 +359,59 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     if (e)
         WARN("removing test folder fails: unit_test");
 
-    Step step01;
+    Step step01{Step::type_action};
     step01.set_label("action");
+    Step step02{Step::type_if};
+    step02.set_label("if");
+    Step step03{Step::type_action};
+    step03.set_label("action");
+    Step step04{Step::type_elseif};
+    step04.set_label("elseif");
+    Step step05{Step::type_action};
+    step05.set_label("action");
+    Step step06{Step::type_end};
+    step06.set_label("end");
+    Step step07{Step::type_while};
+    step07.set_label("while");
+    Step step08{Step::type_action};
+    step08.set_label("action");
+    Step step09{Step::type_end};
+    step09.set_label("end");
+    Step step10{Step::type_action};
+    step10.set_label("action");
 
     Sequence sequence{"sequence"};
     sequence.push_back(step01);
+    sequence.push_back(step02);
+    sequence.push_back(step03);
+    sequence.push_back(step04);
+    sequence.push_back(step05);
+    sequence.push_back(step06);
+    sequence.push_back(step07);
+    sequence.push_back(step08);
+    sequence.push_back(step09);
+    sequence.push_back(step10);
 
     REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
 
-    for (auto const& entry : std::filesystem::directory_iterator{"unit_test/sequence"})
-        REQUIRE(entry.path().filename().string() == "step_001_action.lua");
+    std::set<std::string> expect{
+        "step_01_action.lua",
+        "step_02_if.lua",
+        "step_03_action.lua",
+        "step_04_elseif.lua",
+        "step_05_action.lua",
+        "step_06_end.lua",
+        "step_07_while.lua",
+        "step_08_action.lua",
+        "step_09_end.lua",
+        "step_10_action.lua"
+    };
+
+    auto iter_entry = std::filesystem::directory_iterator{"unit_test/sequence"};
+    auto iter_expect = expect.begin();
+    for (int i = 0; i < 10; ++i, ++iter_entry, ++iter_expect)
+        REQUIRE((*iter_entry).path().filename().string() == *iter_expect);
+
 }
 
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")

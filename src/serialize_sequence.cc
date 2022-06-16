@@ -87,13 +87,15 @@ std::string escape_filename_characters(gul14::string_view str)
     return out.str();
 }
 
-/// Push the extra leading zero to the step numberings (ie. three leading zeros) to
-/// order them alphabetically.
-std::string convert_to_alphabetic_numbering(const int number)
+/// Create the filename. Push the extra leading zero to the step numberings (ie. leading
+/// zeros) to order them alphabetically.
+std::string extract_filename(const int number, int max_digits,
+    const Step& step)
 {
     std::ostringstream ss;
-    ss << std::setw(3) << std::setfill('0') << number;
-    return gul14::cat("step_", ss.str());
+    ss << "step_" << std::setw(max_digits) << std::setfill('0') << number << '_'
+        << type_to_string(step) << ".lua";
+    return ss.str();
 }
 
 void check_stream(std::ostream& stream)
@@ -154,6 +156,7 @@ void serialize_step(const std::filesystem::path& path, const Step& step)
 void serialize_sequence(const std::filesystem::path& path, const Sequence& sequence)
 {
     unsigned int idx = 0;
+    const int max_digits = int( sequence.size() / 10 ) + 1;
     auto seq_path = path / escape_filename_characters(sequence.get_label());
     try
     {
@@ -167,8 +170,7 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seque
         throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
     for(const auto step: sequence)
-        serialize_step(seq_path / gul14::cat(convert_to_alphabetic_numbering(++idx),
-            '_', type_to_string(step), ".lua" ), step);
+        serialize_step(seq_path / extract_filename(++idx, max_digits, step), step);
 }
 
 } // namespace task
