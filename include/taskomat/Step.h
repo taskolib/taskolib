@@ -269,7 +269,8 @@ private:
     std::string label_;
     std::string script_;
     VariableNames used_context_variable_names_;
-    TimePoint time_of_last_modification_, time_of_last_execution_;
+    TimePoint time_of_last_modification_{ Clock::now() };
+    TimePoint time_of_last_execution_;
     std::chrono::milliseconds timeout_{ infinite_timeout };
     Type type_{ type_action };
     short indentation_level_{ 0 };
