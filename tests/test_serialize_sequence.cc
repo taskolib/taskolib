@@ -410,8 +410,10 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     auto iter_entry = std::filesystem::directory_iterator{"unit_test/sequence"};
     auto iter_expect = expect.begin();
     for (int i = 0; i < 10; ++i, ++iter_entry, ++iter_expect)
+    {
+        std::cout << (*iter_entry).path().filename().string() << " - " << *iter_expect << std::endl;
         REQUIRE((*iter_entry).path().filename().string() == *iter_expect);
-
+    }
 }
 
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
