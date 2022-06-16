@@ -28,7 +28,8 @@
 #include <chrono>
 #include <filesystem>
 #include <system_error>
-#include <iostream>
+#include <algorithm>
+#include <vector>
 #include "taskomat/serialize_sequence.h"
 #include "taskomat/deserialize_sequence.h"
 
@@ -394,7 +395,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 
     REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
 
-    std::set<std::string> expect{
+    std::vector<std::string> expect{
         "step_01_action.lua",
         "step_02_if.lua",
         "step_03_action.lua",
@@ -407,13 +408,14 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
         "step_10_action.lua"
     };
 
-    auto iter_entry = std::filesystem::directory_iterator{"unit_test/sequence"};
-    auto iter_expect = expect.begin();
-    for (int i = 0; i < 10; ++i, ++iter_entry, ++iter_expect)
-    {
-        std::cout << (*iter_entry).path().filename().string() << " - " << *iter_expect << std::endl;
-        REQUIRE((*iter_entry).path().filename().string() == *iter_expect);
-    }
+    std::vector<std::string> actual;
+    for(const auto& entry: std::filesystem::directory_iterator{"unit_test/sequence"})
+        actual.push_back(entry.path().filename().string());
+
+    std::sort(actual.begin(), actual.end());
+
+    REQUIRE(10 == actual.size());
+    REQUIRE(expect == actual);
 }
 
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
