@@ -22,6 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/substring_checks.h>
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 
@@ -177,8 +178,13 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
     {
         execute_sequence_impl(begin + 1, it_catch, context, comm);
     }
-    catch (const Error&)
+    catch (const Error& e)
     {
+        // Typical error message with abort marker:
+        // "Error while executing script of step 3: sol: runtime error: [ABORT] Step aborted on user request"
+        if (gul14::contains(e.what(), "[ABORT]"))
+            throw;
+
         execute_sequence_impl(it_catch + 1, it_catch_block_end, context, comm);
     }
 

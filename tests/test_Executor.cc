@@ -111,7 +111,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
         REQUIRE(step.is_running() == false);
 }
 
-TEST_CASE("Executor: cancel()", "[Executor]")
+TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
 {
     Context context;
 
@@ -140,6 +140,60 @@ TEST_CASE("Executor: cancel()", "[Executor]")
 
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
+}
+
+TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
+{
+    Context context;
+
+    Step step_while{ Step::type_while };
+    step_while.set_script("return true");
+    Step step_try{ Step::type_try };
+    Step step_action( Step::type_action );
+    step_action.set_script(R"(
+        local function infinite_loop()
+            while true do
+                for i = 1, 10000 do
+                end
+            end
+        end
+
+        while true do
+            pcall(infinite_loop)
+        end
+        )");
+    Step step_catch{ Step::type_catch };
+
+    Sequence sequence;
+    sequence.push_back(std::move(step_while));  // while
+    sequence.push_back(std::move(step_try));    //   try
+    sequence.push_back(std::move(step_action)); //     action: infinite loop
+    sequence.push_back(std::move(step_catch));  //   catch
+    sequence.push_back(Step{ Step::type_end }); //   end
+    sequence.push_back(Step{ Step::type_end }); // end
+
+    Executor executor;
+
+    const auto t0 = gul14::tic();
+
+    executor.run_asynchronously(sequence, context);
+
+    gul14::sleep(5ms);
+    executor.cancel();
+
+    REQUIRE(gul14::toc(t0) >= 0.005);
+    REQUIRE(gul14::toc(t0) < 0.2);
+
+    // Thread has now finished. As long as we do not start another one, update() and
+    // is_busy() keep returning false
+    REQUIRE(executor.update(sequence) == false);
+    REQUIRE(executor.is_busy() == false);
+
+    for (const auto& step : sequence)
+    {
+        CAPTURE(step.get_type());
+        REQUIRE(step.is_running() == false);
+    }
 }
 
 TEST_CASE("Executor: is_busy() on newly constructed Executor", "[Executor]")
