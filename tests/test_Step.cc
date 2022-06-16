@@ -415,7 +415,7 @@ TEST_CASE("execute(): Immediate termination", "[Step]")
     step.set_script("a = -1; request_termination(); for a = 1, 1000 do end; return true");
 
     REQUIRE_THROWS_AS(step.execute(context, &comm, 0), Error);
-    REQUIRE(comm.immediate_termination_requested_ == true);
+    REQUIRE(comm.immediate_termination_requested_);
     REQUIRE(std::get<long long>(context.variables["a"]) == 0LL);
 }
 
