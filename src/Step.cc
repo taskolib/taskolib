@@ -132,10 +132,10 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
 
         copy_used_variables_from_lua_to_context(lua, context);
 
-        sol::optional<bool> result = protected_result;
+        sol::optional<bool> opt_result = protected_result;
 
-        if (result)
-            return *result;
+        if (opt_result)
+            result = *opt_result;
     }
     catch (const sol::error& e)
     {
