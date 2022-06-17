@@ -34,6 +34,9 @@ install_headers(files(
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
+        'include/taskomat/hash_string.h',
+        'include/taskomat/serialize_sequence.h',
+        'include/taskomat/deserialize_sequence.h',
         'include/taskomat/Step.h',
         'include/taskomat/taskomat.h',
         'include/taskomat/time_types.h',
@@ -50,19 +53,21 @@ install_subdir('include/taskomat/sol/sol',
 sources = files(
     'src/Executor.cc',
     'src/Sequence.cc',
+    'src/serialize_sequence.cc',
+    'src/deserialize_sequence.cc',
     'src/Step.cc',
     'src/VariableName.cc',
 )
 
 # Test sources
 test_src = files(
-    'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_Executor.cc',
     'tests/test_main.cc',
     'tests/test_Message.cc',
     'tests/test_LockedQueue.cc',
     'tests/test_Sequence.cc',
+    'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
     'tests/test_VariableName.cc',
 )
@@ -90,6 +95,12 @@ endif
 libno = '.'.join([ libno_parts[0], libno_parts[1], libno_parts[2].split('-')[0] ])
 libno_full = '.'.join(libno_parts)
 
+## Add slightly modified dependency for std::filesystem during linking (on some Linux OS,
+## for example Debian 10, "Buster", we do not have an automated linker option although we
+## still building on C++17 standard - amazing)
+## See StackOverflow:
+## https://stackoverflow.com/questions/52516165/cannot-use-the-c-stdfilesystem-library-with-meson-build
+add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
 # Generate the static LUA library
 # It can be used via lua_dep

@@ -31,6 +31,7 @@
 #include "taskomat/Context.h"
 #include "taskomat/Message.h"
 #include "taskomat/time_types.h"
+#include "taskomat/VariableName.h"
 
 namespace task {
 

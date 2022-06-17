@@ -28,9 +28,9 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-#include <gul14/finalizer.h>
-#include <gul14/string_view.h>
-#include <gul14/cat.h>
+#include <filesystem>
+#include <gul14/gul.h>
+#include "taskomat/Context.h"
 #include "taskomat/Error.h"
 #include "taskomat/Message.h"
 #include "taskomat/Step.h"
@@ -67,7 +67,7 @@ namespace task {
 class Sequence
 {
 public:
-    /// Abbraviation for steps.
+    /// Abbreviation for steps.
     using Steps = std::vector<Step>;
     using SizeType = std::uint16_t;
     using size_type = SizeType;
@@ -87,7 +87,7 @@ public:
      * \exception Error is thrown if the label is empty or if its length exceeds
      *            max_label_length characters.
      */
-    explicit Sequence(gul14::string_view label = "[anonymous]");
+    explicit Sequence(gul14::string_view label = "anonymous");
 
     /**
      * Validates if the \a Step 's token are correctly enclosed in a proper way.

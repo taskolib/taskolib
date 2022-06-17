@@ -23,6 +23,26 @@ test-release-focal:
 
 ##################################################################################################
 
+# Sanitizers are apparently broken on bionic's version of clang
+#test-sanitizers-bionic:
+#    stage: test-sanitizers
+#    extends:
+#        - .setup_bionic
+#        - .meson_test_sanitizers
+
+# Commented out bionic test release due to missing std::filesystem on C++17 (should be included
+# but is unfortunately not).
+#test-release-bionic:
+#    stage: test-release
+#    extends:
+#        - .setup_bionic
+#        - .meson_test_release
+#    needs:
+#        - job: test-sanitizers-bionic
+#          artifacts: false
+
+##################################################################################################
+
 test-sanitizers-buster:
     stage: test-sanitizers
     extends:

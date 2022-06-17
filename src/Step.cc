@@ -22,6 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <ctime>
+#include <iomanip> // for std::put_time
 #include <gul14/cat.h>
 #include "taskomat/Error.h"
 #include "taskomat/Step.h"
@@ -289,6 +291,5 @@ void Step::set_type(Type type)
     type_ = type;
     set_time_of_last_modification(Clock::now());
 }
-
 
 } // namespace task

@@ -27,8 +27,6 @@
 
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
-#include "taskomat/LockedQueue.h"
-#include "taskomat/Message.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 #include "taskomat/time_types.h"

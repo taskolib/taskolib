@@ -28,6 +28,9 @@
 #include <functional>
 #include <unordered_map>
 #include <variant>
+#include <iostream>
+#include <gul14/cat.h>
+
 #include "sol/sol.hpp"
 #include "taskomat/VariableName.h"
 
@@ -53,6 +56,5 @@ struct Context
 };
 
 } // namespace task
-
 
 #endif
