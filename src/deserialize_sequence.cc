@@ -29,7 +29,7 @@
 #include <sstream>
 #include <cctype>
 #include <ctime>
-#include <regex>
+#include <set>
 #include <gul14/gul.h>
 #include "taskomat/hash_string.h"
 #include "taskomat/deserialize_sequence.h"
@@ -220,19 +220,15 @@ std::istream& operator>>(std::istream& stream, Step& step)
     std::stringstream script;
     bool load_script = false; // flag to store non Step properties to the script
     bool has_type = false; // sanity check: must have type
-    bool declare_type = false; // only one type is allowed
     bool has_label = false; // sanity check: must have label
-    bool declare_label = false; // only one label is allowed
-    bool declare_context_variable_names = false; // only one context variable names is allowed
-    bool declare_modification_time = false; // only one modification time is allowed
-    bool declare_execution_time = false; // only one execution time is allowed
-    bool declare_timeout = false; // only one timeout is allowed
+    std::set<unsigned long> encountered_keywords; // validate multiple keyword definition
     Step step_internal; // temporary Step. Will be move to step after loading
 
     while(std::getline(stream, extract, '\n'))
     {
         auto internal = gul14::trim(extract);
-        auto keyword = extract_keyword(internal);
+        auto keyword_str = extract_keyword(internal);
+        auto keyword = hash_djb2a(keyword_str);
 
         if (load_script)
         {
@@ -242,60 +238,42 @@ std::istream& operator>>(std::istream& stream, Step& step)
         else if (internal.empty()) // load_script is false -> nothing useful
             continue;
 
+        // validate multiple keyword declaration
+        if(encountered_keywords.count(keyword))
+            throw Error(gul14::cat("Syntax error: encountered multiple times the keyword",
+                keyword_str));
+        encountered_keywords.insert(keyword);
+
         // Using switch cases with string hashes (see operator"" _sh in case_string.h)
         // DJB2A hash algorithm: http://www.cse.yorku.ca/%7Eoz/hash.html
         // Interesting hashing algorithm comparison:
         // https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed/145633#145633
-        switch(hash_djb2a(keyword))
+        switch(keyword)
         {
             case "type"_sh:
-                if (declare_type)
-                    throw Error("Step type is declared twice");
-
                 extract_type(internal, step_internal);
                 has_type = true;
-                declare_type = true;
                 break;
 
             case "label"_sh:
-                if (declare_label)
-                    throw Error("Step type is declared twice");
-
                 extract_label(internal, step_internal);
                 has_label = true;
-                declare_label = true;
                 break;
 
             case "use context variable names"_sh:
-                if (declare_context_variable_names)
-                    throw Error("Step context variable names is declared twice");
-
                 extract_context_variable_names(internal, step_internal);
-                declare_context_variable_names = true;
                 break;
 
             case "time of last modification"_sh:
-                if (declare_modification_time)
-                    throw Error("Step last modification time is declared twice");
-
                 last_modification = extract_time("time of last modification", internal);
-                declare_modification_time = true;
                 break;
 
             case "time of last execution"_sh:
-                if (declare_execution_time)
-                    throw Error("Step last execution time is declared twice");
-
                 extract_time_of_last_execution(internal, step_internal);
-                declare_execution_time = true;
                 break;
 
             case "timeout"_sh:
-                if (declare_timeout)
-                    throw Error("Step timeout is declared twice");
-
                 extract_timeout(internal, step_internal);
-                declare_timeout = true;
                 break;
 
             default:
