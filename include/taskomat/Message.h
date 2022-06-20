@@ -25,8 +25,9 @@
 #ifndef TASKOMAT_MESSAGE_H_
 #define TASKOMAT_MESSAGE_H_
 
+#include <cstdint>
 #include <memory>
-#include "taskomat/LockedQueue.h"
+#include <string>
 #include "taskomat/time_types.h"
 
 namespace task {

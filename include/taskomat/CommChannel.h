@@ -26,6 +26,7 @@
 #define TASKOMAT_COMMCHANNEL_H_
 
 #include <atomic>
+#include "taskomat/LockedQueue.h"
 #include "taskomat/Message.h"
 
 namespace task {
