@@ -1,5 +1,5 @@
 /**
- * \file   case_string.h
+ * \file   hash_string.h
  * \author Richard Spencer
  * \date   Created on January 15, 2022
  * \brief  Allow string literals as case labels, -std=c++17.
