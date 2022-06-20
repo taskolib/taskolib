@@ -1201,7 +1201,9 @@ HTML_EXTRA_STYLESHEET  = data/style.css
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
 HTML_EXTRA_FILES       = "data/documents/2021-12-10 Evolving Design.pdf" \
-                         "data/documents/2021-12-17 Evolving Design.pdf"
+                         "data/documents/2021-12-17 Evolving Design.pdf" \
+                         "data/documents/2022-01-07 Evolving Design.pdf" \
+                         "data/documents/2022-04-04 Evolving Design.pdf"
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to

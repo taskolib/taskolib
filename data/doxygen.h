@@ -278,10 +278,10 @@
  *     party to this document and has no duty or obligation with respect to
  *     this CC0 or use of the Work.
  * </dd>
- * 
+ *
  * <dt>Allow string literals as case labels</dt>
  * <dd>Copyright 2020-2022 2020-22 Richard Spencer
- * 
+ *
  * MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
@@ -301,7 +301,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * </dd>
- * 
+ *
  * </dl>
  */
 
@@ -316,5 +316,7 @@
  * <ul>
  * <li><a href="2021-12-17 Evolving Design.pdf">2021-12-17 Evolving Design</a></li>
  * <li><a href="2021-12-10 Evolving Design.pdf">2021-12-10 Evolving Design</a></li>
+ * <li><a href="2022-01-07 Evolving Design.pdf">2022-01-07 Evolving Design</a></li>
+ * <li><a href="2022-04-04 Evolving Design.pdf">2022-04-04 Evolving Design</a></li>
  * </ul>
  */
