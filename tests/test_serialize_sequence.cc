@@ -464,3 +464,14 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
     REQUIRE(deserialize_seq[2].get_indentation_level() == 0);
     REQUIRE(deserialize_seq[2].get_type() == Step::type_end);
 }
+
+TEST_CASE("serialize_sequence: default constructed Step", "[serialize_sequence]")
+{
+    Step step{ };
+
+    Sequence sequence{ "BlueAsBlood" };
+    sequence.push_back(std::move(step));
+
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(deserialize_sequence(temp_dir + "/BlueAsBlood"));
+}
