@@ -36,6 +36,10 @@
 using namespace task;
 using namespace std::chrono_literals;
 
+// Remove the previous created temp folder
+// This is executed before main() is called
+static auto prepare_filesystem = []() { return std::filesystem::remove_all("unit_test"); }();
+
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
     std::stringstream ss;
@@ -354,11 +358,7 @@ R"(
 
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
-    // remove the previous created temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
+    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
 
     Step step01{Step::type_action};
     step01.set_label("action");
@@ -420,34 +420,22 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
 {
-    // remove the previous created temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
-
     // empty path
     REQUIRE_THROWS_AS(deserialize_sequence(""), Error);
 
     std::filesystem::create_directory("unit_test");
 
     // folder 'sequence' does not exist
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/empty_sequence"), Error);
 
-    std::filesystem::create_directory("unit_test/sequence");
+    std::filesystem::create_directory("unit_test/empty_sequence");
     // No steps found
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/empty_sequence"), Error);
 
 }
 
 TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]")
 {
-    // remove the previous created temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
-
     Step step01{Step::type_while};
     step01.set_label("while condition");
     Step step02{Step::type_action};
