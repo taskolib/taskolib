@@ -508,3 +508,36 @@ TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
     Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
     REQUIRE(sequence.get_label() == deserialize_seq.get_label());
 }
+
+TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]")
+{
+    auto before = collect_filenames(temp_dir);
+
+    // Unfortunately this is legal:
+    // (Maybe labels of Step and Sequence should not allow control characters?)
+    Sequence sequence{ "A\bbell" };
+
+    sequence.push_back(std::move(Step{ }));
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+
+    auto after = collect_filenames(temp_dir);
+    after.erase(std::remove_if(after.begin(), after.end(),
+        [&before](std::string const& e) -> bool {
+            for (auto const& b : before)
+                if (e == b)
+                    return true;
+            return false;
+        }),
+        after.end());
+
+    REQUIRE(after.size() == 1);
+    REQUIRE(after[0] == "A bell"); // This is strictly speaking not required
+
+    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
+    // REQUIRE(sequence.get_label() == deserialize_seq.get_label());
+    // Compare all chars but not the control char which is at index 1:
+    REQUIRE(sequence.get_label().substr(0,1) == deserialize_seq.get_label().substr(0,1));
+    REQUIRE(sequence.get_label().substr(2) == deserialize_seq.get_label().substr(2));
+    // Control char shall be encoded as blank
+    REQUIRE(deserialize_seq.get_label().substr(1, 1) == " ");
+}
