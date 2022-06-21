@@ -43,6 +43,15 @@ static const auto temp_dir = "unit_test"s;
 // This is executed before main() is called
 static auto prepare_filesystem = []() { return std::filesystem::remove_all(temp_dir); }();
 
+// Helper that returns all entries of a directory (i.e. files or subdirs)
+std::vector<std::string> collect_filenames(const std::filesystem::path& path) {
+    std::vector<std::string> result;
+    for (const auto& entry: std::filesystem::directory_iterator{ path })
+        result.push_back(entry.path().filename().string());
+    return result;
+}
+
+
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
     std::stringstream ss;
@@ -411,10 +420,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
         "step_10_action.lua"
     };
 
-    std::vector<std::string> actual;
-    for(const auto& entry: std::filesystem::directory_iterator{temp_dir + "/sequence"})
-        actual.push_back(entry.path().filename().string());
-
+    std::vector<std::string> actual = collect_filenames(temp_dir + "/sequence");
     std::sort(actual.begin(), actual.end());
 
     REQUIRE(10 == actual.size());
@@ -474,4 +480,31 @@ TEST_CASE("serialize_sequence: default constructed Step", "[serialize_sequence]"
 
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
     REQUIRE_NOTHROW(deserialize_sequence(temp_dir + "/BlueAsBlood"));
+}
+
+TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
+{
+    auto before = collect_filenames(temp_dir);
+
+    Sequence sequence{ "A/\"sequence\"$<again>" };
+    sequence.push_back(std::move(Step{ }));
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+
+    auto after = collect_filenames(temp_dir);
+    // Man do I hate C++, I just want to subtract one array from another
+    // after = after - before;
+    after.erase(std::remove_if(after.begin(), after.end(),
+        [&before](std::string const& e) -> bool {
+            for (auto const& b : before)
+                if (e == b)
+                    return true;
+            return false;
+        }),
+        after.end());
+
+    REQUIRE(after.size() == 1);
+    REQUIRE(after[0] == "A$2f$22sequence$22$24$3cagain$3e"); // This is strictly speaking not required
+
+    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
+    REQUIRE(sequence.get_label() == deserialize_seq.get_label());
 }
