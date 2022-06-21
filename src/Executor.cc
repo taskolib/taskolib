@@ -31,20 +31,30 @@ using namespace std::literals;
 namespace task {
 
 Executor::Executor()
-    : queue_{ std::make_shared<MessageQueue>(32) }
+    : comm_channel_{ std::make_shared<CommChannel>() }
 {
 }
 
+void Executor::cancel()
+{
+    if (not future_.valid())
+        return;
+
+    comm_channel_->immediate_termination_requested_ = true;
+    future_.get(); // Wait for thread to join
+    comm_channel_->immediate_termination_requested_ = false;
+}
+
 void Executor::execute_sequence(Sequence sequence, Context context,
-                                std::shared_ptr<MessageQueue> queue) noexcept
+                                std::shared_ptr<CommChannel> comm) noexcept
 {
     try
     {
-        sequence.execute(context, queue.get());
+        sequence.execute(context, comm.get());
     }
     catch (const std::exception& e)
     {
-        queue->push(Message(Message::Type::sequence_stopped_with_error,
+        comm->queue_.push(Message(Message::Type::sequence_stopped_with_error,
             cat("Sequence stopped with error: ", e.what()), Clock::now(), 0));
     }
 }
@@ -69,13 +79,13 @@ void Executor::run_asynchronously(Sequence sequence, Context context)
         throw Error("Busy executing another sequence");
 
     future_ = std::async(std::launch::async, execute_sequence, std::move(sequence),
-                         std::move(context), queue_);
+                         std::move(context), comm_channel_);
 }
 
 bool Executor::update(Sequence& sequence)
 {
     // Read all messages that are currently in the queue
-    while (const auto opt_msg = queue_->try_pop())
+    while (const auto opt_msg = comm_channel_->queue_.try_pop())
     {
         const Message& msg = *opt_msg;
         const auto step_idx = msg.get_index();

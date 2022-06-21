@@ -2513,7 +2513,8 @@ TEST_CASE("execute(): complex sequence with misplaced if", "[Sequence]")
 TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
 {
     const auto t0 = Clock::now();
-    MessageQueue queue(10);
+    CommChannel comm;
+    auto& queue = comm.queue_;
 
     Context context;
     context.variables["a"] = 0LL;
@@ -2530,7 +2531,7 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     sequence.push_back(std::move(step1));
     sequence.push_back(std::move(step2));
 
-    sequence.execute(context, &queue);
+    sequence.execute(context, &comm);
 
     // 2 sequence messages plus 4 step start/stop messages
     REQUIRE(queue.size() == 6);

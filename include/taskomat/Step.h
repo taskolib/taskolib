@@ -28,8 +28,8 @@
 #include <chrono>
 #include <set>
 #include <string>
+#include "taskomat/CommChannel.h"
 #include "taskomat/Context.h"
-#include "taskomat/Message.h"
 #include "taskomat/time_types.h"
 #include "taskomat/VariableName.h"
 
@@ -82,25 +82,27 @@ public:
      * 5. Selected variables are exported from the runtime environment back into the
      *    context.
      *
-     * \param context        The context to be used for executing the step
-     * \param message_queue  Pointer to a message queue; If this is null, messaging is
-     *                       disabled. Otherwise, the queue receives the following
-     *                       messages:
-     *                       - A message of type step_started when the step is started
-     *                       - A message of type step_stopped when the step has finished
-     *                         successfully
-     *                       - A message of type step_stopped_with_error when the step has
-     *                         been stopped due to an error condition
-     * \param index          Index of the step in its parent Sequence.
+     * \param context       The context to be used for executing the step
+     * \param comm_channel  Pointer to a communication channel; If this is null, messaging
+     *                      is disabled and there is no way to stop the execution.
+     *                      Otherwise, termination requests are honored and the queue
+     *                      receives the following messages:
+     *                      - A message of type step_started when the step is started
+     *                      - A message of type step_stopped when the step has finished
+     *                        successfully
+     *                      - A message of type step_stopped_with_error when the step has
+     *                        been stopped due to an error condition
+     * \param index         Index of the step in its parent Sequence.
      *
      * \returns true if the script returns a value that evaluates as true in the scripting
      *          language, or false otherwise (even in the case that the script returns no
      *          value at all).
      *
-     * \exception Error is thrown if the script cannot be started or if it raises an error
-     *            during execution.
+     * \exception Error is thrown if the script cannot be started, if there is a LUA error
+     *            during execution, if a timeout is encountered, or if termination has
+     *            been requested via the communication channel.
      */
-    bool execute(Context& context, MessageQueue* message_queue, Message::IndexType index);
+    bool execute(Context& context, CommChannel* comm_channel, Message::IndexType index);
 
     /**
      * Execute the step script within the given context (without messaging).

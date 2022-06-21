@@ -328,6 +328,21 @@ TEST_CASE("execute(): Sandboxing", "[Step]")
     }
 }
 
+TEST_CASE("execute(): Custom commands", "[Step]")
+{
+    Context context;
+    Step step;
+
+    SECTION("sleep()")
+    {
+        step.set_script("sleep(0.001)");
+
+        auto t0 = gul14::tic();
+        step.execute(context);
+        REQUIRE(gul14::toc(t0) >= 0.001);
+    }
+}
+
 TEST_CASE("execute(): Timeout", "[Step]")
 {
     Context context;
@@ -340,6 +355,16 @@ TEST_CASE("execute(): Timeout", "[Step]")
         step.set_timeout(20ms);
         REQUIRE_THROWS_AS(step.execute(context), Error);
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
+        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
+    }
+
+    SECTION("sleep() is terminated")
+    {
+        auto t0 = gul14::tic();
+        step.set_script("sleep(10)");
+        step.set_timeout(5ms);
+        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 5);
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
 
@@ -363,6 +388,35 @@ TEST_CASE("execute(): Timeout", "[Step]")
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
         REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
+}
+
+TEST_CASE("execute(): Immediate termination", "[Step]")
+{
+    Context context;
+    context.variables["a"] = 0LL;
+
+    Step step;
+    CommChannel comm;
+
+    context.lua_init_function =
+        [&comm](sol::state& sol)
+        {
+            sol["request_termination"] =
+                [&comm]
+                {
+                    comm.immediate_termination_requested_ = true;
+                };
+        };
+
+    step.set_used_context_variable_names(VariableNames{ "a" });
+
+    // The script needs a certain number of steps to make sure the termination
+    // condition is even tested
+    step.set_script("a = -1; request_termination(); for a = 1, 1000 do end; return true");
+
+    REQUIRE_THROWS_AS(step.execute(context, &comm, 0), Error);
+    REQUIRE(comm.immediate_termination_requested_);
+    REQUIRE(std::get<long long>(context.variables["a"]) == 0LL);
 }
 
 TEST_CASE("execute(): Setting 'last executed' timestamp", "[Step]")
@@ -495,8 +549,7 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
     }
 }
 
-TEST_CASE("execute(): Running a step with multiple import and exports",
-    "[Step]")
+TEST_CASE("execute(): Running a step with multiple import and exports", "[Step]")
 {
     Context context;
     Step step;
@@ -607,7 +660,7 @@ TEST_CASE("execute(): LUA initialization function", "[Step]")
 TEST_CASE("execute(): Messages", "[Step]")
 {
     const auto t0 = Clock::now();
-    MessageQueue queue(10);
+    CommChannel comm;
 
     Context context;
     context.variables["a"] = 0LL;
@@ -616,12 +669,12 @@ TEST_CASE("execute(): Messages", "[Step]")
     step.set_used_context_variable_names(VariableNames{ "a" });
     step.set_script("a = a + 42");
 
-    step.execute(context, &queue, 42);
+    step.execute(context, &comm, 42);
 
-    REQUIRE(queue.size() == 2);
+    REQUIRE(comm.queue_.size() == 2);
 
     // First, a "step started" message
-    auto msg = queue.pop();
+    auto msg = comm.queue_.pop();
     REQUIRE(msg.get_type() == Message::Type::step_started);
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t0);
@@ -631,7 +684,7 @@ TEST_CASE("execute(): Messages", "[Step]")
     const auto t1 = msg.get_timestamp();
 
     // Then, a "step stopped" message
-    msg = queue.pop();
+    msg = comm.queue_.pop();
     REQUIRE(msg.get_type() == Message::Type::step_stopped);
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t1);

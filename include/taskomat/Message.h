@@ -25,8 +25,9 @@
 #ifndef TASKOMAT_MESSAGE_H_
 #define TASKOMAT_MESSAGE_H_
 
+#include <cstdint>
 #include <memory>
-#include "taskomat/LockedQueue.h"
+#include <string>
 #include "taskomat/time_types.h"
 
 namespace task {
@@ -99,38 +100,6 @@ private:
     Type type_{ Type::log };
     IndexType index_{ 0 };
 };
-
-/// A thread-safe queue holding Message objects.
-using MessageQueue = LockedQueue<Message>;
-
-
-/**
- * Create a new message on the heap and enqueue in the given message queue.
- *
- * \param queue      Pointer to the message queue. If this is null, the function does
- *                   nothing.
- * \param type       Message type (see Message::Type)
- * \param text       Message text
- * \param timestamp  Timestamp of the message
- * \param index      Index (of a Step in its parent Sequence)
- *
- * \code
- * send_message(queue, type, text, timestamp, index);
- * // ... is equivalent to:
- * if (queue)
- *     queue->push(Message(type, text, timestamp, index));
- * \endcode
- */
-inline
-void send_message(MessageQueue* queue, Message::Type type, std::string text,
-                  TimePoint timestamp, Message::IndexType index)
-{
-    if (queue == nullptr)
-        return;
-
-    queue->push(Message(type, std::move(text), timestamp, index));
-}
-
 
 } // namespace task
 
