@@ -22,23 +22,26 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/gul.h>
-#include <gul14/catch.h>
-#include <sstream>
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
+#include <gul14/catch.h>
+#include <gul14/gul.h>
+#include <sstream>
 #include <system_error>
-#include <algorithm>
 #include <vector>
-#include "taskomat/serialize_sequence.h"
+
 #include "taskomat/deserialize_sequence.h"
+#include "taskomat/serialize_sequence.h"
 
 using namespace task;
-using namespace std::chrono_literals;
+using namespace std::literals;
+
+static const auto temp_dir = "unit_test"s;
 
 // Remove the previous created temp folder
 // This is executed before main() is called
-static auto prepare_filesystem = []() { return std::filesystem::remove_all("unit_test"); }();
+static auto prepare_filesystem = []() { return std::filesystem::remove_all(temp_dir); }();
 
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
@@ -358,7 +361,7 @@ R"(
 
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence"), Error);
 
     Step step01{Step::type_action};
     step01.set_label("action");
@@ -393,7 +396,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     sequence.push_back(step09);
     sequence.push_back(step10);
 
-    REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     std::vector<std::string> expect{
         "step_01_action.lua",
@@ -409,7 +412,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     };
 
     std::vector<std::string> actual;
-    for(const auto& entry: std::filesystem::directory_iterator{"unit_test/sequence"})
+    for(const auto& entry: std::filesystem::directory_iterator{temp_dir + "/sequence"})
         actual.push_back(entry.path().filename().string());
 
     std::sort(actual.begin(), actual.end());
@@ -423,14 +426,14 @@ TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]"
     // empty path
     REQUIRE_THROWS_AS(deserialize_sequence(""), Error);
 
-    std::filesystem::create_directory("unit_test");
+    std::filesystem::create_directory(temp_dir);
 
     // folder 'sequence' does not exist
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/empty_sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence2"), Error);
 
-    std::filesystem::create_directory("unit_test/empty_sequence");
+    std::filesystem::create_directory(temp_dir + "/sequence2");
     // No steps found
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/empty_sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence2"), Error);
 
 }
 
@@ -448,9 +451,9 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
     sequence.push_back(step02);
     sequence.push_back(step03);
 
-    REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
-    Sequence deserialize_seq = deserialize_sequence("unit_test/This is a sequence");
+    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/This is a sequence");
 
     REQUIRE(not deserialize_seq.empty());
     REQUIRE(deserialize_seq.size() == 3);
