@@ -93,7 +93,13 @@ bool Executor::update(Sequence& sequence)
 
         switch (msg.get_type())
         {
-        case Message::Type::log:
+        case Message::Type::output:
+            break;
+        case Message::Type::log_info:
+            break;
+        case Message::Type::log_warning:
+            break;
+        case Message::Type::log_error:
             break;
         case Message::Type::sequence_started:
             break;
