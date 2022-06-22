@@ -201,3 +201,30 @@ TEST_CASE("Executor: is_busy() on newly constructed Executor", "[Executor]")
     Executor ex;
     REQUIRE(ex.is_busy() == false);
 }
+
+TEST_CASE("Executor: Redirection of print() output", "[Executor]")
+{
+    std::string output;
+
+    Context context;
+    context.print_function =
+        [&output](const std::string& str, CommChannel*)
+        {
+            output += str;
+        };
+
+    Step step( Step::type_action );
+    step.set_script("print('pippo')");
+
+    Sequence sequence;
+    sequence.push_back(std::move(step));
+
+    Executor executor;
+
+    executor.run_asynchronously(sequence, context);
+
+    while (executor.update(sequence))
+        gul14::sleep(5ms);
+
+    REQUIRE(output == "pippo");
+}
