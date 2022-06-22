@@ -23,9 +23,10 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/cat.h>
-#include "lua_details.h"
 #include <gul14/num_util.h>
 #include <gul14/time_util.h>
+#include "taskomat/Error.h"
+#include "lua_details.h"
 
 using gul14::cat;
 
@@ -61,23 +62,19 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg)
 
 void check_immediate_termination_request(lua_State* lua_state)
 {
-    sol::state_view lua(lua_state);
-    const auto registry = lua.registry();
+    try
+    {
+        CommChannel* comm = get_comm_channel_ptr_from_registry(lua_state);
 
-    sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
-    if (not opt_comm_channel_ptr.has_value())
-    {
-        abort_script_with_error(lua_state,
-            cat(comm_channel_key, " not found in LUA registry"));
-    }
-    else
-    {
-        CommChannel* comm = *opt_comm_channel_ptr;
         if (comm)
         {
             if (comm->immediate_termination_requested_)
                 abort_script_with_error(lua_state, "Step aborted on user request");
         }
+    }
+    catch (const Error& e)
+    {
+        abort_script_with_error(lua_state, e.what());
     }
 }
 
@@ -109,6 +106,18 @@ void check_script_timeout(lua_State* lua_state)
                 cat("Timeout: Script took more than ", seconds, " s to run"));
         }
     }
+}
+
+CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
+{
+    sol::state_view lua(lua_state);
+    const auto registry = lua.registry();
+
+    sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
+    if (not opt_comm_channel_ptr.has_value())
+        throw Error(cat(comm_channel_key, " not found in LUA registry"));
+
+    return *opt_comm_channel_ptr;
 }
 
 long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)

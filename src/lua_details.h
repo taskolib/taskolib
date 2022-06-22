@@ -42,6 +42,14 @@ void check_immediate_termination_request(lua_State* lua_state);
 // Check if the step timeout has expired and raise a LUA error if that is the case.
 void check_script_timeout(lua_State* lua_state);
 
+/**
+ * Retrieve a pointer to the used CommChannel from the LUA registry.
+ * The pointer can be null to indicate that no CommChannel is used.
+ *
+ * \exception Error is thrown if the appropriate registry key is not found.
+ */
+CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state);
+
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
 // plus a duration dt. In case of overflow, the maximum representable time point is
 // returned.
