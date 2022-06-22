@@ -691,3 +691,22 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_timestamp() - t1 < 1s);
     REQUIRE(msg.get_index() == 42);
 }
+
+TEST_CASE("execute(): print function", "[Step]")
+{
+    std::string output;
+
+    Context context;
+    context.print_function =
+        [&output](const std::string& str, CommChannel*)
+        {
+            output += str;
+        };
+
+    Step step;
+    step.set_script("print('Hello world!')");
+
+    step.execute(context);
+
+    REQUIRE(output == "Hello world!");
+}
