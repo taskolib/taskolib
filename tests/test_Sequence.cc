@@ -920,15 +920,14 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
     REQUIRE(context.variables["a"] == VariableValue{ 0LL } );
 }
 
-TEST_CASE("execute(): complex sequence with disallowed 'function'",
-          "[Sequence]")
+TEST_CASE("execute(): complex sequence with prohibited LUA function", "[Sequence]")
 {
     Context context;
 
     Step step;
     step.set_label("Action");
     step.set_type(Step::type_action);
-    step.set_script("print('Hello world!')"); // provokes Error exception
+    step.set_script("require 'io'"); // provokes Error exception
 
     Sequence sequence("Complex sequence");
     sequence.push_back(step);
@@ -945,7 +944,7 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
     Step step_action1;
     step_action1.set_label("Action");
     step_action1.set_type(Step::type_action);
-    step_action1.set_script("print('Hello world!')"); // provokes Error exception
+    step_action1.set_script("require 'io'"); // provokes Error exception
 
     Step step_action2;
     step_action2.set_label("Action");
