@@ -25,6 +25,7 @@
 #include <gul14/cat.h>
 #include <gul14/num_util.h>
 #include <gul14/time_util.h>
+#include "taskomat/CommChannel.h"
 #include "taskomat/Error.h"
 #include "lua_details.h"
 
@@ -154,9 +155,10 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
     luaL_error(lua_state, err_msg.c_str());
 }
 
-void install_custom_commands(sol::state& lua)
+void install_custom_commands(sol::state& lua, const Context& context)
 {
     auto globals = lua.globals();
+    globals["print"] = make_print_fct(context.print_function);
     globals["sleep"] = sleep_fct;
 }
 
@@ -185,6 +187,24 @@ void open_safe_library_subset(sol::state& lua)
     globals["loadfile"] = sol::nil;
     globals["print"] = sol::nil;
     globals["require"] = sol::nil;
+}
+
+std::function<void(const std::string&, sol::this_state)>
+make_print_fct(std::function<void(const std::string&, CommChannel*)> print_fct)
+{
+    return
+        [print_fct = std::move(print_fct)](const std::string& text, sol::this_state sol)
+        {
+            try
+            {
+                CommChannel* comm = get_comm_channel_ptr_from_registry(sol);
+                print_fct(text, comm);
+            }
+            catch (const Error& e)
+            {
+                abort_script_with_error(sol, e.what());
+            }
+        };
 }
 
 void sleep_fct(double seconds, sol::this_state sol)

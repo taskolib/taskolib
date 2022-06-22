@@ -107,7 +107,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     sol::state lua;
 
     open_safe_library_subset(lua);
-    install_custom_commands(lua);
+    install_custom_commands(lua, context);
 
     if (context.lua_init_function)
         context.lua_init_function(lua);

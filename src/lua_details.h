@@ -26,9 +26,11 @@
 #define TASKOMAT_LUA_DETAILS_H_
 
 #include <chrono>
+#include <functional>
 #include <string>
 #include "sol/sol.hpp"
 #include "taskomat/CommChannel.h"
+#include "taskomat/Context.h"
 
 namespace task {
 
@@ -64,17 +66,25 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*);
 // via the comm channel. If so, raise a LUA error.
 void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*);
 
-// Install implementations for some custom functions in the given LUA state.
-// \code
-// sleep() -- wait for a given number of seconds
-// \endcode
-void install_custom_commands(sol::state& lua);
+/**
+ * Install implementations for some custom functions in the given LUA state.
+ * \code
+ * print() -- print a string on the (virtual) console; this function calls the
+ *            print_function callback from the given context
+ * sleep() -- wait for a given number of seconds
+ * \endcode
+ */
+void install_custom_commands(sol::state& lua, const Context& context);
 
 // Install hooks that check for timeouts and immediate termination requests while a LUA
 // script is being executed. If one of both occurs, the script terminates with an error
 // message that starts with "[ABORT]".
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
     std::chrono::milliseconds timeout, CommChannel* comm_channel);
+
+/// Create a print() function for LUA that wraps a print callback from the Context.
+std::function<void(const std::string&, sol::this_state)>
+make_print_fct(std::function<void(const std::string&, CommChannel*)> print_fct);
 
 // Open a safe subset of the LUA standard libraries in the given LUA state.
 //
@@ -84,6 +94,9 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
 // collectgarbage, debug, dofile, load, loadfile, print, require
 // \endcode
 void open_safe_library_subset(sol::state& lua);
+
+// Print a string to the (virtual) console.
+void print_fct(const std::string& text, sol::this_state sol);
 
 // Pause execution for the specified time, observing timeouts and termination requests.
 void sleep_fct(double seconds, sol::this_state sol);
