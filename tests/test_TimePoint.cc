@@ -1,8 +1,8 @@
 /**
- * \file   time_types.h
- * \author Lars Froehlich
- * \date   Created on April 8, 2022
- * \brief  Declaration of time-related types.
+ * \file   test_TimePoint.cc
+ * \author Fini Jastrow
+ * \date   Created on June 22, 2022
+ * \brief  Test suite for the TimePoint class (i.e. alias).
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -22,19 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_TIME_TYPES_H_
-#define TASKOMAT_TIME_TYPES_H_
+#include <gul14/catch.h>
+#include <sstream>
 
-#include <chrono>
-#include <ostream>
+#include "taskomat/time_types.h"
 
-namespace task {
-
-using Clock = std::chrono::system_clock;
-using TimePoint = std::chrono::time_point<Clock>;
-
-} // namespace task
-
-std::ostream& operator<<(std::ostream& stream, task::TimePoint const& t);
-
-#endif
+TEST_CASE("TimePoint: Dump to stream", "[TimePoint]")
+{
+    std::stringstream ss{ };
+    ss << task::TimePoint{ };
+    REQUIRE(ss.str() == "1970-01-01 00:00:00 UTC");
+}

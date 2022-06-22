@@ -58,6 +58,7 @@ sources = files(
     'src/serialize_sequence.cc',
     'src/deserialize_sequence.cc',
     'src/Step.cc',
+    'src/time_types.cc',
     'src/VariableName.cc',
 )
 
@@ -73,6 +74,7 @@ test_src = files(
     'tests/test_Sequence.cc',
     'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
+    'tests/test_TimePoint.cc',
     'tests/test_VariableName.cc',
 )
 
