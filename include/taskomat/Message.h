@@ -27,7 +27,9 @@
 
 #include <cstdint>
 #include <memory>
+#include <ostream>
 #include <string>
+
 #include "taskomat/time_types.h"
 
 namespace task {
@@ -93,6 +95,11 @@ public:
 
     /// Set the message type.
     void set_type(Type type) noexcept { type_ = type; }
+
+    friend std::ostream& operator<<(std::ostream& stream, Message const& mess) {
+        stream << "Message{ " << mess.index_ << ": " << static_cast<std::underlying_type_t<Type>>(mess.type_) << " \"" << mess.text_ << "\" " << mess.timestamp_ << " }\n";
+        return stream;
+    };
 
 private:
     std::string text_;

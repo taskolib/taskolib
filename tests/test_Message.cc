@@ -22,9 +22,11 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <sstream>
 #include <thread>
 #include <type_traits>
 #include <gul14/catch.h>
+#include <gul14/trim.h>
 #include "taskomat/Message.h"
 
 using namespace task;
@@ -130,4 +132,18 @@ TEST_CASE("Message: set_type()", "[Message]")
 
     msg.set_type(Message::Type::log);
     REQUIRE(msg.get_type() == Message::Type::log);
+}
+
+TEST_CASE("Message: Dump to stream", "[Message]")
+{
+    Message msg;
+
+    msg.set_type(Message::Type::step_started);
+    msg.set_timestamp(TimePoint{});
+    msg.set_text("Beware of the foxes");
+    msg.set_index(32);
+
+    std::stringstream ss{ };
+    ss << msg;
+    REQUIRE(gul14::trim(ss.str()) == "Message{ 32: 4 \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
 }
