@@ -29,6 +29,7 @@ sol_version = '3.2.3'
 # Headers to be installed under ${prefix}/include/
 install_headers(files(
         'include/taskomat/CommChannel.h',
+        'include/taskomat/console.h',
         'include/taskomat/Context.h',
         'include/taskomat/Error.h',
         'include/taskomat/Executor.h',
@@ -53,6 +54,7 @@ install_subdir('include/taskomat/sol/sol',
 
 # Sources
 sources = files(
+    'src/console.cc',
     'src/Executor.cc',
     'src/lua_details.cc',
     'src/Sequence.cc',
