@@ -125,6 +125,12 @@ private:
      */
     std::future<void> future_;
 
+    /**
+     * A local copy of the context that was used to start the last sequence.
+     * Its output callbacks are used to produce "console" and logging output.
+     */
+    Context context_;
+
     /// The function that is run in the execution thread.
     static void execute_sequence(Sequence sequence, Context context,
                                  std::shared_ptr<CommChannel> comm_channel) noexcept;
