@@ -53,9 +53,25 @@ public:
         sequence_stopped_with_error, ///< a sequence has been stopped because of an error
         step_started, ///< a step inside a sequence has been started
         step_stopped, ///< a step inside a sequence has stopped regularly
-        step_stopped_with_error ///< a step inside a sequence has been stopped because of an error
+        step_stopped_with_error, ///< a step inside a sequence has been stopped because of an error
+        undefined_type ///< marker for last type
     };
 
+private:
+    static constexpr std::array<char const*, static_cast<int>(Type::undefined_type) + 1> type_description_ =
+    {
+        "log",
+        "sequence_started",
+        "sequence_stopped",
+        "sequence_stopped_with_error",
+        "step_started",
+        "step_stopped",
+        "step_stopped_with_error",
+        "undefined_type"
+    };
+
+
+public:
     /// Construct an empty message.
     Message() = default;
 
@@ -96,8 +112,21 @@ public:
     /// Set the message type.
     void set_type(Type type) noexcept { type_ = type; }
 
+    friend std::ostream& operator<<(std::ostream& stream, Type const& t) {
+        stream << Message::type_description_[static_cast<int>(t)];
+        return stream;
+    }
+
     friend std::ostream& operator<<(std::ostream& stream, Message const& mess) {
-        stream << "Message{ " << mess.index_ << ": " << static_cast<std::underlying_type_t<Type>>(mess.type_) << " \"" << mess.text_ << "\" " << mess.timestamp_ << " }\n";
+        stream << "Message{ "
+            << mess.index_
+            << ": "
+            << mess.type_
+            << " \""
+            << mess.text_
+            << "\" "
+            << mess.timestamp_
+            << " }\n";
         return stream;
     };
 

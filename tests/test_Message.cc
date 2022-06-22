@@ -145,5 +145,5 @@ TEST_CASE("Message: Dump to stream", "[Message]")
 
     std::stringstream ss{ };
     ss << msg;
-    REQUIRE(gul14::trim(ss.str()) == "Message{ 32: 4 \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
+    REQUIRE(gul14::trim(ss.str()) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
 }
