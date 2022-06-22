@@ -83,7 +83,7 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
     std::chrono::milliseconds timeout, CommChannel* comm_channel);
 
 /// Create a print() function for LUA that wraps a print callback from the Context.
-std::function<void(const std::string&, sol::this_state)>
+std::function<void(sol::this_state, sol::variadic_args)>
 make_print_fct(std::function<void(const std::string&, CommChannel*)> print_fct);
 
 // Open a safe subset of the LUA standard libraries in the given LUA state.

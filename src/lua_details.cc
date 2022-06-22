@@ -189,16 +189,23 @@ void open_safe_library_subset(sol::state& lua)
     globals["require"] = sol::nil;
 }
 
-std::function<void(const std::string&, sol::this_state)>
+std::function<void(sol::this_state, sol::variadic_args)>
 make_print_fct(std::function<void(const std::string&, CommChannel*)> print_fct)
 {
     return
-        [print_fct = std::move(print_fct)](const std::string& text, sol::this_state sol)
+        [print_fct = std::move(print_fct)](sol::this_state sol, sol::variadic_args va)
         {
+            sol::state_view state{ sol };
+            auto tostring{ state["tostring"] };
+
             try
             {
+                std::string str;
+                for (auto v : va)
+                    str += tostring(v);
+
                 CommChannel* comm = get_comm_channel_ptr_from_registry(sol);
-                print_fct(text, comm);
+                print_fct(str, comm);
             }
             catch (const Error& e)
             {
