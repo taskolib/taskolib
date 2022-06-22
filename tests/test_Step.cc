@@ -315,9 +315,9 @@ TEST_CASE("execute(): Sandboxing", "[Step]")
         REQUIRE(step.execute(context) == true);
     }
 
-    SECTION("print() is not available")
+    SECTION("require() is not available")
     {
-        step.set_script("print(42)");
+        step.set_script("require('io')");
         REQUIRE_THROWS_AS(step.execute(context), Error);
     }
 
@@ -704,9 +704,9 @@ TEST_CASE("execute(): print function", "[Step]")
         };
 
     Step step;
-    step.set_script("print('Hello world!')");
+    step.set_script("print('Hello ', 42, '!')");
 
     step.execute(context);
 
-    REQUIRE(output == "Hello world!");
+    REQUIRE(output == "Hello 42!");
 }

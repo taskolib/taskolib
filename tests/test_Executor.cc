@@ -214,7 +214,7 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
         };
 
     Step step( Step::type_action );
-    step.set_script("print('pippo')");
+    step.set_script("print('Mary had ', 3, ' little lambs.')");
 
     Sequence sequence;
     sequence.push_back(std::move(step));
@@ -226,5 +226,5 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
     while (executor.update(sequence))
         gul14::sleep(5ms);
 
-    REQUIRE(output == "pippo");
+    REQUIRE(output == "Mary had 3 little lambs.");
 }
