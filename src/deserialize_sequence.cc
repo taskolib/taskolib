@@ -226,7 +226,7 @@ std::istream& operator>>(std::istream& stream, Step& step)
 
     while(std::getline(stream, extract, '\n'))
     {
-        auto internal = gul14::trim(extract);
+        auto internal = gul14::trim_left(extract);
         auto keyword_str = extract_keyword(internal);
         auto keyword = hash_djb2a(keyword_str);
 

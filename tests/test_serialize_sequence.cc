@@ -22,19 +22,35 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/gul.h>
-#include <gul14/catch.h>
-#include <sstream>
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
+#include <gul14/catch.h>
+#include <gul14/gul.h>
+#include <sstream>
 #include <system_error>
-#include <algorithm>
 #include <vector>
-#include "taskomat/serialize_sequence.h"
+
 #include "taskomat/deserialize_sequence.h"
+#include "taskomat/serialize_sequence.h"
 
 using namespace task;
-using namespace std::chrono_literals;
+using namespace std::literals;
+
+static const auto temp_dir = "unit_test"s;
+
+// Remove the previous created temp folder
+// This is executed before main() is called
+static auto prepare_filesystem = []() { return std::filesystem::remove_all(temp_dir); }();
+
+// Helper that returns all entries of a directory (i.e. files or subdirs)
+std::vector<std::string> collect_filenames(const std::filesystem::path& path) {
+    std::vector<std::string> result;
+    for (const auto& entry: std::filesystem::directory_iterator{ path })
+        result.push_back(entry.path().filename().string());
+    return result;
+}
+
 
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
@@ -354,11 +370,7 @@ R"(
 
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
-    // remove the previous created temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
+    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence"), Error);
 
     Step step01{Step::type_action};
     step01.set_label("action");
@@ -393,7 +405,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     sequence.push_back(step09);
     sequence.push_back(step10);
 
-    REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     std::vector<std::string> expect{
         "step_01_action.lua",
@@ -408,10 +420,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
         "step_10_action.lua"
     };
 
-    std::vector<std::string> actual;
-    for(const auto& entry: std::filesystem::directory_iterator{"unit_test/sequence"})
-        actual.push_back(entry.path().filename().string());
-
+    std::vector<std::string> actual = collect_filenames(temp_dir + "/sequence");
     std::sort(actual.begin(), actual.end());
 
     REQUIRE(10 == actual.size());
@@ -420,34 +429,22 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
 {
-    // remove the previous created temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
-
     // empty path
     REQUIRE_THROWS_AS(deserialize_sequence(""), Error);
 
-    std::filesystem::create_directory("unit_test");
+    std::filesystem::create_directory(temp_dir);
 
     // folder 'sequence' does not exist
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence2"), Error);
 
-    std::filesystem::create_directory("unit_test/sequence");
+    std::filesystem::create_directory(temp_dir + "/sequence2");
     // No steps found
-    REQUIRE_THROWS_AS(deserialize_sequence("unit_test/sequence"), Error);
+    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence2"), Error);
 
 }
 
 TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]")
 {
-    // remove the previous created temp folder
-    std::error_code e;
-    std::filesystem::remove_all("unit_test", e);
-    if (e)
-        WARN("removing test folder fails: unit_test");
-
     Step step01{Step::type_while};
     step01.set_label("while condition");
     Step step02{Step::type_action};
@@ -460,9 +457,9 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
     sequence.push_back(step02);
     sequence.push_back(step03);
 
-    REQUIRE_NOTHROW(serialize_sequence("unit_test", sequence));
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
-    Sequence deserialize_seq = deserialize_sequence("unit_test/This is a sequence");
+    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/This is a sequence");
 
     REQUIRE(not deserialize_seq.empty());
     REQUIRE(deserialize_seq.size() == 3);
@@ -472,4 +469,75 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
     REQUIRE(deserialize_seq[1].get_type() == Step::type_action);
     REQUIRE(deserialize_seq[2].get_indentation_level() == 0);
     REQUIRE(deserialize_seq[2].get_type() == Step::type_end);
+}
+
+TEST_CASE("serialize_sequence: default constructed Step", "[serialize_sequence]")
+{
+    Step step{ };
+
+    Sequence sequence{ "BlueAsBlood" };
+    sequence.push_back(step);
+
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(deserialize_sequence(temp_dir + "/BlueAsBlood"));
+}
+
+TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
+{
+    auto before = collect_filenames(temp_dir);
+
+    Sequence sequence{ "A/\"sequence\"$<again>" };
+    sequence.push_back(Step{ });
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+
+    auto after = collect_filenames(temp_dir);
+    // Man do I hate C++, I just want to subtract one array from another
+    // after = after - before;
+    after.erase(std::remove_if(after.begin(), after.end(),
+        [&before](std::string const& e) -> bool {
+            for (auto const& b : before)
+                if (e == b)
+                    return true;
+            return false;
+        }),
+        after.end());
+
+    REQUIRE(after.size() == 1);
+    REQUIRE(after[0] == "A$2f$22sequence$22$24$3cagain$3e"); // This is strictly speaking not required
+
+    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
+    REQUIRE(sequence.get_label() == deserialize_seq.get_label());
+}
+
+TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]")
+{
+    auto before = collect_filenames(temp_dir);
+
+    // Unfortunately this is legal:
+    // (Maybe labels of Step and Sequence should not allow control characters?)
+    Sequence sequence{ "A\bbell" };
+
+    sequence.push_back(Step{ });
+    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+
+    auto after = collect_filenames(temp_dir);
+    after.erase(std::remove_if(after.begin(), after.end(),
+        [&before](std::string const& e) -> bool {
+            for (auto const& b : before)
+                if (e == b)
+                    return true;
+            return false;
+        }),
+        after.end());
+
+    REQUIRE(after.size() == 1);
+    REQUIRE(after[0] == "A bell"); // This is strictly speaking not required
+
+    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
+    // REQUIRE(sequence.get_label() == deserialize_seq.get_label());
+    // Compare all chars but not the control char which is at index 1:
+    REQUIRE(sequence.get_label().substr(0,1) == deserialize_seq.get_label().substr(0,1));
+    REQUIRE(sequence.get_label().substr(2) == deserialize_seq.get_label().substr(2));
+    // Control char shall be encoded as blank
+    REQUIRE(deserialize_seq.get_label().substr(1, 1) == " ");
 }
