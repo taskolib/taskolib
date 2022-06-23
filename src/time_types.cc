@@ -29,6 +29,6 @@
 
 std::ostream& operator<<(std::ostream& stream, task::TimePoint t) {
     auto in_time_t = task::Clock::to_time_t(t);
-    stream << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %X UTC");
+    stream << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %H:%M:%S UTC");
     return stream;
 }
