@@ -476,7 +476,7 @@ TEST_CASE("serialize_sequence: default constructed Step", "[serialize_sequence]"
     Step step{ };
 
     Sequence sequence{ "BlueAsBlood" };
-    sequence.push_back(std::move(step));
+    sequence.push_back(step);
 
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
     REQUIRE_NOTHROW(deserialize_sequence(temp_dir + "/BlueAsBlood"));
@@ -487,7 +487,7 @@ TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
     auto before = collect_filenames(temp_dir);
 
     Sequence sequence{ "A/\"sequence\"$<again>" };
-    sequence.push_back(std::move(Step{ }));
+    sequence.push_back(Step{ });
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     auto after = collect_filenames(temp_dir);
@@ -517,7 +517,7 @@ TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]"
     // (Maybe labels of Step and Sequence should not allow control characters?)
     Sequence sequence{ "A\bbell" };
 
-    sequence.push_back(std::move(Step{ }));
+    sequence.push_back(Step{ });
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     auto after = collect_filenames(temp_dir);
