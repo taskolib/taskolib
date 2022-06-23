@@ -54,11 +54,11 @@ public:
         step_started, ///< a step inside a sequence has been started
         step_stopped, ///< a step inside a sequence has stopped regularly
         step_stopped_with_error, ///< a step inside a sequence has been stopped because of an error
-        undefined_type ///< marker for last type
+        undefined ///< marker for last type
     };
 
 private:
-    static constexpr std::array<char const*, static_cast<int>(Type::undefined_type) + 1> type_description_ =
+    static constexpr std::array<char const*, static_cast<int>(Type::undefined) + 1> type_description_ =
     {
         "log",
         "sequence_started",
@@ -67,7 +67,7 @@ private:
         "step_started",
         "step_stopped",
         "step_stopped_with_error",
-        "undefined_type"
+        "undefined"
     };
 
 
