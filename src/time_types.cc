@@ -27,8 +27,8 @@
 
 #include "taskomat/time_types.h"
 
-std::ostream& operator<<(std::ostream& stream, task::TimePoint const& t) {
-    auto in_time_t = std::chrono::system_clock::to_time_t(t);
+std::ostream& operator<<(std::ostream& stream, task::TimePoint t) {
+    auto in_time_t = task::Clock::to_time_t(t);
     stream << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %X UTC");
     return stream;
 }

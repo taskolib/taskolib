@@ -35,6 +35,6 @@ using TimePoint = std::chrono::time_point<Clock>;
 
 } // namespace task
 
-std::ostream& operator<<(std::ostream& stream, task::TimePoint const& t);
+std::ostream& operator<<(std::ostream& stream, task::TimePoint t);
 
 #endif
