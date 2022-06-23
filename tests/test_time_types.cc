@@ -1,5 +1,5 @@
 /**
- * \file   test_TimePoint.cc
+ * \file   test_time_types.cc
  * \author Fini Jastrow
  * \date   Created on June 22, 2022
  * \brief  Test suite for the TimePoint class (i.e. alias).

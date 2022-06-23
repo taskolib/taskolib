@@ -76,7 +76,7 @@ test_src = files(
     'tests/test_Sequence.cc',
     'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
-    'tests/test_TimePoint.cc',
+    'tests/test_time_types.cc',
     'tests/test_VariableName.cc',
 )
 
