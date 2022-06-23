@@ -22,9 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/cat.h>
-#include <gul14/num_util.h>
-#include <gul14/time_util.h>
+#include <gul14/gul.h>
 #include "taskomat/CommChannel.h"
 #include "taskomat/Error.h"
 #include "lua_details.h"
@@ -200,12 +198,14 @@ make_print_fct(std::function<void(const std::string&, CommChannel*)> print_fct)
 
             try
             {
-                std::string str;
-                for (auto v : va)
-                    str += tostring(v);
+                gul14::SmallVector<std::string, 8> stringified_args;
+                stringified_args.reserve(va.size());
 
-                CommChannel* comm = get_comm_channel_ptr_from_registry(sol);
-                print_fct(str, comm);
+                for (auto v : va)
+                    stringified_args.push_back(tostring(v));
+
+                print_fct(gul14::join(stringified_args, "\t") + "\n",
+                          get_comm_channel_ptr_from_registry(sol));
             }
             catch (const Error& e)
             {

@@ -704,9 +704,9 @@ TEST_CASE("execute(): print function", "[Step]")
         };
 
     Step step;
-    step.set_script("print('Hello ', 42, '!')");
+    step.set_script("print('Hello', 42, '!')");
 
     step.execute(context);
 
-    REQUIRE(output == "Hello 42!");
+    REQUIRE(output == "Hello\t42\t!\n");
 }
