@@ -146,4 +146,10 @@ TEST_CASE("Message: Dump to stream", "[Message]")
     std::stringstream ss{ };
     ss << msg;
     REQUIRE(gul14::trim(ss.str()) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
+
+    // msg.set_type(Message::Type::output); We don't have that yet
+    msg.set_text("Lua print() has been called\n");
+    ss.str(""s);
+    ss << msg;
+    REQUIRE(gul14::trim(ss.str()) == "Message{ 32: step_started \"Lua print() has been called\\n\" 1970-01-01 00:00:00 UTC }");
 }

@@ -30,6 +30,8 @@
 #include <ostream>
 #include <string>
 
+#include <gul14/escape.h>
+
 #include "taskomat/time_types.h"
 
 namespace task {
@@ -123,7 +125,7 @@ public:
             << ": "
             << mess.type_
             << " \""
-            << mess.text_
+            << gul14::escape(mess.text_)
             << "\" "
             << mess.timestamp_
             << " }\n";
