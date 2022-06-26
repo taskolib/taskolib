@@ -26,9 +26,15 @@
 #include <type_traits>
 #include <gul14/catch.h>
 #include "taskomat/Message.h"
+#include "taskomat/Sequence.h"
 
 using namespace task;
 using namespace std::literals;
+
+TEST_CASE("Message: Check IndexType", "[Message]")
+{
+    REQUIRE(std::is_same_v<Message::IndexType, Sequence::SizeType> == true);
+}
 
 TEST_CASE("Message: Constructors", "[Message]")
 {
