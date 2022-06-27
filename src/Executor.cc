@@ -34,24 +34,24 @@ namespace task {
 
 namespace {
 
-void print_to_message_queue(const std::string& text, CommChannel* comm_channel)
+void print_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
 {
-    send_message(comm_channel, Message::Type::output, text, Clock::now(), 0);
+    send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
 }
 
-void log_info_to_message_queue(const std::string& text, CommChannel* comm_channel)
+void log_info_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
 {
-    send_message(comm_channel, Message::Type::log_info, text, Clock::now(), 0);
+    send_message(comm_channel, Message::Type::log_info, text, Clock::now(), idx);
 }
 
-void log_warning_to_message_queue(const std::string& text, CommChannel* comm_channel)
+void log_warning_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
 {
-    send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), 0);
+    send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), idx);
 }
 
-void log_error_to_message_queue(const std::string& text, CommChannel* comm_channel)
+void log_error_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
 {
-    send_message(comm_channel, Message::Type::log_error, text, Clock::now(), 0);
+    send_message(comm_channel, Message::Type::log_error, text, Clock::now(), idx);
 }
 
 } // anonymous namespace
@@ -131,19 +131,19 @@ bool Executor::update(Sequence& sequence)
         {
         case Message::Type::output:
             if (context_.print_function)
-                context_.print_function(msg.get_text(), nullptr);
+                context_.print_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::log_info:
             if (context_.log_info_function)
-                context_.log_info_function(msg.get_text(), nullptr);
+                context_.log_info_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::log_warning:
             if (context_.log_warning_function)
-                context_.log_warning_function(msg.get_text(), nullptr);
+                context_.log_warning_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::log_error:
             if (context_.log_error_function)
-                context_.log_error_function(msg.get_text(), nullptr);
+                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::sequence_started:
             break;

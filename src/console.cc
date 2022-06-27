@@ -27,22 +27,22 @@
 
 namespace task {
 
-void print_to_stdout(const std::string& str, CommChannel*)
+void print_to_stdout(const std::string& str, Message::IndexType, CommChannel*)
 {
     std::cout << str;
 }
 
-void print_info_to_stdout(const std::string& str, CommChannel*)
+void print_info_to_stdout(const std::string& str, Message::IndexType, CommChannel*)
 {
     std::cout << "INFO: " << str << "\n";
 }
 
-void print_warning_to_stdout(const std::string& str, CommChannel*)
+void print_warning_to_stdout(const std::string& str, Message::IndexType, CommChannel*)
 {
     std::cout << "WARNING: " << str << "\n";
 }
 
-void print_error_to_stdout(const std::string& str, CommChannel*)
+void print_error_to_stdout(const std::string& str, Message::IndexType, CommChannel*)
 {
     std::cout << "ERROR: " << str << "\n";
 }

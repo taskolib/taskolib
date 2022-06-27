@@ -112,7 +112,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     if (context.lua_init_function)
         context.lua_init_function(lua);
 
-    install_timeout_and_termination_request_hook(lua, now, get_timeout(), comm);
+    install_timeout_and_termination_request_hook(lua, now, get_timeout(), index, comm);
 
     copy_used_variables_from_context_to_lua(context, lua);
 
