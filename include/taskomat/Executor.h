@@ -61,6 +61,45 @@ namespace task {
  * worker thread can make progress. This is because the message queue for communication
  * between the threads has only a limited capacity, and execution is paused once it is
  * full. Only calls to update() take messages out of the queue again.
+ *
+ * <h3>The Context and its output functions</h3>
+ *
+ * The sequence can produce (virtual) console output and logging messages of various
+ * kinds. The user can set several callback functions in the Context to determine what to
+ * do with this output:
+ * \code
+ * using OutputCallback = std::function<void(const std::string&, CommChannel*)>;
+ *
+ * struct Context
+ * {
+ *     // ...
+ *
+ *     /// A callback that is invoked every time the script uses print().
+ *     OutputCallback print_function = print_to_stdout;
+ *
+ *     /// A callback that is invoked for informational log messages.
+ *     OutputCallback log_info_function = print_info_to_stdout;
+ *
+ *     /// A callback that is invoked for warning log messages.
+ *     OutputCallback log_warning_function = print_warning_to_stdout;
+ *
+ *     /// A callback that is invoked for error log messages.
+ *     OutputCallback log_error_function = print_error_to_stderr;
+ * };
+ * \endcode
+ * From a user perspective, these functions only need a string argument to do their job.
+ * Under the hood, however, things get a little tricky when a sequence is run in a
+ * parallel thread because that thread may not invoke the callback functions directly due
+ * to lack of inter-thread synchronization. What happens instead is the following:
+ *
+ * - The Executor makes a copy of the Context for the parallel thread.
+ * - In that Context copy, it replaces the callback functions by versions that send
+ *   appropriate messages via a message queue (CommChannel) instead.
+ * - The Executor receives these messages and takes care about calling the original user
+ *   callbacks in the main thread.
+ *
+ * This also explains why there is a second argument in the OutputCallback function
+ * signature. User code should generally ignore it.
  */
 class Executor
 {
