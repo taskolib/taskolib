@@ -40,8 +40,8 @@ void print_info_to_stdout(const std::string& str, CommChannel* comm_channel);
 /// Print a string to stdout with a "WARNING: " prefix.
 void print_warning_to_stdout(const std::string& str, CommChannel* comm_channel);
 
-/// Print a string to stderr with an "ERROR: " prefix.
-void print_error_to_stderr(const std::string& str, CommChannel* comm_channel);
+/// Print a string to stdout with an "ERROR: " prefix.
+void print_error_to_stdout(const std::string& str, CommChannel* comm_channel);
 
 } // namespace task
 

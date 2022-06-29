@@ -42,9 +42,9 @@ void print_warning_to_stdout(const std::string& str, CommChannel*)
     std::cout << "WARNING: " << str << "\n";
 }
 
-void print_error_to_stderr(const std::string& str, CommChannel*)
+void print_error_to_stdout(const std::string& str, CommChannel*)
 {
-    std::cerr << "ERROR: " << str << "\n";
+    std::cout << "ERROR: " << str << "\n";
 }
 
 } // namespace task

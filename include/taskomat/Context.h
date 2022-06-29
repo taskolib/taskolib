@@ -76,7 +76,7 @@ struct Context
     OutputCallback log_warning_function = print_warning_to_stdout;
 
     /// A callback that is invoked for error log messages.
-    OutputCallback log_error_function = print_error_to_stderr;
+    OutputCallback log_error_function = print_error_to_stdout;
 };
 
 } // namespace task
