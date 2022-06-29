@@ -32,6 +32,7 @@ install_headers(files(
         'include/taskomat/Context.h',
         'include/taskomat/Error.h',
         'include/taskomat/Executor.h',
+        'include/taskomat/format.h',
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
@@ -58,6 +59,7 @@ sources = files(
     'src/serialize_sequence.cc',
     'src/deserialize_sequence.cc',
     'src/Step.cc',
+    'src/time_types.cc',
     'src/VariableName.cc',
 )
 
@@ -67,12 +69,14 @@ test_src = files(
     'tests/test_Context.cc',
     'tests/test_Error.cc',
     'tests/test_Executor.cc',
+    #'tests/test_format.cc' needs fmt{} library
     'tests/test_main.cc',
     'tests/test_Message.cc',
     'tests/test_LockedQueue.cc',
     'tests/test_Sequence.cc',
     'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
+    'tests/test_time_types.cc',
     'tests/test_VariableName.cc',
 )
 
@@ -174,6 +178,17 @@ test('all',
     workdir : meson.current_build_dir(),
     timeout : 10,
 )
+
+fmt_dep = dependency('fmt', required : false)
+if fmt_dep.found()
+    test('format',
+        executable(meson.project_name() + '_format_test',
+            [ 'tests/test_format.cc', 'tests/test_main.cc', ],
+            dependencies : [ taskomat_dep, dependency('fmt'), ],
+        ),
+        timeout : 10,
+    )
+endif
 
 
 ## Examples

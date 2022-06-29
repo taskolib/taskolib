@@ -1,8 +1,8 @@
 /**
- * \file   time_types.h
- * \author Lars Froehlich
- * \date   Created on April 8, 2022
- * \brief  Declaration of time-related types.
+ * \file   time_types.cc
+ * \author Fini Jastrow
+ * \date   Created on June 22, 2022
+ * \brief  Conversion for TimePoint
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -22,19 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_TIME_TYPES_H_
-#define TASKOMAT_TIME_TYPES_H_
+#include <ctime>
+#include <iomanip>
 
-#include <chrono>
-#include <ostream>
+#include "taskomat/time_types.h"
 
-namespace task {
-
-using Clock = std::chrono::system_clock;
-using TimePoint = std::chrono::time_point<Clock>;
-
-} // namespace task
-
-std::ostream& operator<<(std::ostream& stream, task::TimePoint t);
-
-#endif
+std::ostream& operator<<(std::ostream& stream, task::TimePoint t) {
+    auto in_time_t = task::Clock::to_time_t(t);
+    stream << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %H:%M:%S UTC");
+    return stream;
+}

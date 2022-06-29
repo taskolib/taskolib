@@ -27,7 +27,11 @@
 
 #include <cstdint>
 #include <memory>
+#include <ostream>
 #include <string>
+
+#include <gul14/escape.h>
+
 #include "taskomat/time_types.h"
 
 namespace task {
@@ -51,9 +55,25 @@ public:
         sequence_stopped_with_error, ///< a sequence has been stopped because of an error
         step_started, ///< a step inside a sequence has been started
         step_stopped, ///< a step inside a sequence has stopped regularly
-        step_stopped_with_error ///< a step inside a sequence has been stopped because of an error
+        step_stopped_with_error, ///< a step inside a sequence has been stopped because of an error
+        undefined ///< marker for last type
     };
 
+private:
+    static constexpr std::array<char const*, static_cast<int>(Type::undefined) + 1> type_description_ =
+    {
+        "log",
+        "sequence_started",
+        "sequence_stopped",
+        "sequence_stopped_with_error",
+        "step_started",
+        "step_stopped",
+        "step_stopped_with_error",
+        "undefined"
+    };
+
+
+public:
     /// Construct an empty message.
     Message() = default;
 
@@ -93,6 +113,24 @@ public:
 
     /// Set the message type.
     void set_type(Type type) noexcept { type_ = type; }
+
+    friend std::ostream& operator<<(std::ostream& stream, Type const& t) {
+        stream << Message::type_description_[static_cast<int>(t)];
+        return stream;
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, Message const& mess) {
+        stream << "Message{ "
+            << mess.index_
+            << ": "
+            << mess.type_
+            << " \""
+            << gul14::escape(mess.text_)
+            << "\" "
+            << mess.timestamp_
+            << " }\n";
+        return stream;
+    };
 
 private:
     std::string text_;
