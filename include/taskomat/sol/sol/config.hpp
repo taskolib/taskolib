@@ -33,6 +33,7 @@ the build system, or the command line options of your compiler.
 // Tell Sol3 that we are using a custom LUA build that was compiled with C++ and therefore
 // properly handles exceptions.
 #define SOL_USING_CXX_LUA 1
+#define SOL_EXCEPTIONS_SAFE_PROPAGATION 1
 
 // Tell Sol3 to make several checks so that we can actually differentiate integers from
 // floating-point numbers.
