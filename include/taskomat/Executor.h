@@ -107,6 +107,14 @@ public:
     /// Construct an Executor.
     Executor();
 
+    // Not copyable but movable (you can't copy a future)
+    Executor(Executor const&) = delete;
+    Executor& operator=(Executor const&) = delete;
+    Executor(Executor&&) = default;
+    Executor& operator=(Executor&&) = default;
+
+    ~Executor() { cancel(); };
+
     /**
      * Terminate a running sequence.
      *
