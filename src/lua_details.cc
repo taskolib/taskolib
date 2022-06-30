@@ -22,10 +22,10 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/cat.h>
+#include <gul14/gul.h>
+#include "taskomat/CommChannel.h"
+#include "taskomat/Error.h"
 #include "lua_details.h"
-#include <gul14/num_util.h>
-#include <gul14/time_util.h>
 
 using gul14::cat;
 
@@ -61,23 +61,19 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg)
 
 void check_immediate_termination_request(lua_State* lua_state)
 {
-    sol::state_view lua(lua_state);
-    const auto registry = lua.registry();
+    try
+    {
+        CommChannel* comm = get_comm_channel_ptr_from_registry(lua_state);
 
-    sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
-    if (not opt_comm_channel_ptr.has_value())
-    {
-        abort_script_with_error(lua_state,
-            cat(comm_channel_key, " not found in LUA registry"));
-    }
-    else
-    {
-        CommChannel* comm = *opt_comm_channel_ptr;
         if (comm)
         {
             if (comm->immediate_termination_requested_)
                 abort_script_with_error(lua_state, "Step aborted on user request");
         }
+    }
+    catch (const Error& e)
+    {
+        abort_script_with_error(lua_state, e.what());
     }
 }
 
@@ -109,6 +105,18 @@ void check_script_timeout(lua_State* lua_state)
                 cat("Timeout: Script took more than ", seconds, " s to run"));
         }
     }
+}
+
+CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
+{
+    sol::state_view lua(lua_state);
+    const auto registry = lua.registry();
+
+    sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
+    if (not opt_comm_channel_ptr.has_value())
+        throw Error(cat(comm_channel_key, " not found in LUA registry"));
+
+    return *opt_comm_channel_ptr;
 }
 
 long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
@@ -145,9 +153,10 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
     luaL_error(lua_state, err_msg.c_str());
 }
 
-void install_custom_commands(sol::state& lua)
+void install_custom_commands(sol::state& lua, const Context& context)
 {
     auto globals = lua.globals();
+    globals["print"] = make_print_fct(context.print_function);
     globals["sleep"] = sleep_fct;
 }
 
@@ -176,6 +185,33 @@ void open_safe_library_subset(sol::state& lua)
     globals["loadfile"] = sol::nil;
     globals["print"] = sol::nil;
     globals["require"] = sol::nil;
+}
+
+std::function<void(sol::this_state, sol::variadic_args)>
+make_print_fct(std::function<void(const std::string&, CommChannel*)> print_fct)
+{
+    return
+        [print_fct = std::move(print_fct)](sol::this_state sol, sol::variadic_args va)
+        {
+            sol::state_view state{ sol };
+            auto tostring{ state["tostring"] };
+
+            try
+            {
+                gul14::SmallVector<std::string, 8> stringified_args;
+                stringified_args.reserve(va.size());
+
+                for (auto v : va)
+                    stringified_args.push_back(tostring(v));
+
+                print_fct(gul14::join(stringified_args, "\t") + "\n",
+                          get_comm_channel_ptr_from_registry(sol));
+            }
+            catch (const Error& e)
+            {
+                abort_script_with_error(sol, e.what());
+            }
+        };
 }
 
 void sleep_fct(double seconds, sol::this_state sol)

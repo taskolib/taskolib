@@ -26,12 +26,13 @@
 #define TASKOMAT_CONTEXT_H_
 
 #include <functional>
+#include <string>
 #include <unordered_map>
 #include <variant>
-#include <iostream>
-#include <gul14/cat.h>
 
 #include "sol/sol.hpp"
+#include "taskomat/CommChannel.h"
+#include "taskomat/console.h"
 #include "taskomat/VariableName.h"
 
 namespace task {
@@ -44,15 +45,38 @@ namespace task {
 using VariableValue = std::variant<long long, double, std::string>;
 
 /**
+ * An output function accepts a string and a CommChannel* as parameters.
+ * The latter may be null to indicate that there is no associated communication channel.
+ */
+using OutputCallback = std::function<void(const std::string&, CommChannel*)>;
+
+/**
  * A context stores information that influences the execution of steps and sequences,
  * namely:
- * - An initialization function that is called on a LUA state before a step is executed.
  * - A list of variables that can be im-/exported into steps.
+ * - An initialization function that is called on a LUA state before a step is executed.
+ * - Several callbacks that are invoked when a script calls print() or when the engine
+ *   produces log output.
  */
 struct Context
 {
-    std::function<void(sol::state&)> lua_init_function;
+    /// A list of variables that can be im-/exported into steps.
     std::unordered_map<VariableName, VariableValue> variables;
+
+    /// An initialization function that is called on a LUA state before a step is executed.
+    std::function<void(sol::state&)> lua_init_function;
+
+    /// A callback that is invoked every time the script uses print().
+    OutputCallback print_function = print_to_stdout;
+
+    /// A callback that is invoked for informational log messages.
+    OutputCallback log_info_function = print_info_to_stdout;
+
+    /// A callback that is invoked for warning log messages.
+    OutputCallback log_warning_function = print_warning_to_stdout;
+
+    /// A callback that is invoked for error log messages.
+    OutputCallback log_error_function = print_error_to_stdout;
 };
 
 } // namespace task

@@ -47,7 +47,7 @@ TEST_CASE("send_message() across threads", "[CommChannel][send_message]")
     CommChannel comm;
 
     // Does nothing
-    send_message(nullptr, Message::Type::log, "Test", timestamp, 0);
+    send_message(nullptr, Message::Type::output, "Test", timestamp, 0);
 
     std::thread sender([=,&comm]()
         {

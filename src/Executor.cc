@@ -23,12 +23,39 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/cat.h>
+#include "sol/sol.hpp"
 #include "taskomat/Executor.h"
+#include "lua_details.h"
 
 using gul14::cat;
 using namespace std::literals;
 
 namespace task {
+
+namespace {
+
+void print_to_message_queue(const std::string& text, CommChannel* comm_channel)
+{
+    send_message(comm_channel, Message::Type::output, text, Clock::now(), 0);
+}
+
+void log_info_to_message_queue(const std::string& text, CommChannel* comm_channel)
+{
+    send_message(comm_channel, Message::Type::log_info, text, Clock::now(), 0);
+}
+
+void log_warning_to_message_queue(const std::string& text, CommChannel* comm_channel)
+{
+    send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), 0);
+}
+
+void log_error_to_message_queue(const std::string& text, CommChannel* comm_channel)
+{
+    send_message(comm_channel, Message::Type::log_error, text, Clock::now(), 0);
+}
+
+} // anonymous namespace
+
 
 Executor::Executor()
     : comm_channel_{ std::make_shared<CommChannel>() }
@@ -78,6 +105,15 @@ void Executor::run_asynchronously(Sequence sequence, Context context)
     if (future_.valid())
         throw Error("Busy executing another sequence");
 
+    // Store a copy of the context for its local print and logging functions
+    context_ = context;
+
+    // Redirect the output functions used by the parallel thread to the message queue
+    context.print_function = print_to_message_queue;
+    context.log_info_function = log_info_to_message_queue;
+    context.log_warning_function = log_warning_to_message_queue;
+    context.log_error_function = log_error_to_message_queue;
+
     future_ = std::async(std::launch::async, execute_sequence, std::move(sequence),
                          std::move(context), comm_channel_);
 }
@@ -93,7 +129,21 @@ bool Executor::update(Sequence& sequence)
 
         switch (msg.get_type())
         {
-        case Message::Type::log:
+        case Message::Type::output:
+            if (context_.print_function)
+                context_.print_function(msg.get_text(), nullptr);
+            break;
+        case Message::Type::log_info:
+            if (context_.log_info_function)
+                context_.log_info_function(msg.get_text(), nullptr);
+            break;
+        case Message::Type::log_warning:
+            if (context_.log_warning_function)
+                context_.log_warning_function(msg.get_text(), nullptr);
+            break;
+        case Message::Type::log_error:
+            if (context_.log_error_function)
+                context_.log_error_function(msg.get_text(), nullptr);
             break;
         case Message::Type::sequence_started:
             break;

@@ -45,8 +45,8 @@
  * \note
  * The Taskomat library requires at least C++17.
  *
- * \authors Lars Froehlich, Olaf Hensler, Marcus Walla (for third-party code see
- *          \ref copyright)
+ * \authors Lars Froehlich, Olaf Hensler, Ulf Fini Jastrow, Marcus Walla (for third-party
+ *          code see \ref copyright)
  *
  * \copyright
  * See \ref copyright
