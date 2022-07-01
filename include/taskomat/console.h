@@ -29,7 +29,7 @@
 
 namespace task {
 
-class CommChannel;
+struct CommChannel;
 
 /// Print a string to stdout.
 void print_to_stdout(const std::string& str, CommChannel* comm_channel);
