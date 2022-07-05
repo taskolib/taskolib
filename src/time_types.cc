@@ -26,11 +26,20 @@
 #include <iomanip>
 #include <sstream>
 
+#include "taskomat/Error.h"
 #include "taskomat/time_types.h"
 
-std::string task::dump_timepoint(task::TimePoint t) {
-    auto in_time_t = task::Clock::to_time_t(t);
-    auto stream = std::stringstream{ };
-    stream << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %H:%M:%S UTC");
-    return stream.str();
+namespace task {
+
+std::string dump_timepoint(TimePoint t) {
+    auto in_time_t = Clock::to_time_t(t);
+    auto in_tm = std::gmtime(&in_time_t);
+    auto str = std::string(25, '\0');
+    auto len = std::strftime(str.data(), str.capacity(), "%Y-%m-%d %H:%M:%S UTC", in_tm);
+    if (len == 0)
+        throw Error{ "Can not format TimePoint" };
+    str.resize(len);
+    return str;
 }
+
+} // namespace task
