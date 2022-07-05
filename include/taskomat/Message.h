@@ -133,7 +133,7 @@ public:
             << " \""
             << gul14::escape(mess.text_)
             << "\" "
-            << mess.timestamp_
+            << dump_timepoint(mess.timestamp_)
             << " }\n";
         return stream;
     };

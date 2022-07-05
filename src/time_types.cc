@@ -24,11 +24,13 @@
 
 #include <ctime>
 #include <iomanip>
+#include <sstream>
 
 #include "taskomat/time_types.h"
 
-std::ostream& operator<<(std::ostream& stream, task::TimePoint t) {
+std::string task::dump_timepoint(task::TimePoint t) {
     auto in_time_t = task::Clock::to_time_t(t);
+    auto stream = std::stringstream{ };
     stream << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %H:%M:%S UTC");
-    return stream;
+    return stream.str();
 }

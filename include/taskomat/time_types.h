@@ -26,15 +26,15 @@
 #define TASKOMAT_TIME_TYPES_H_
 
 #include <chrono>
-#include <ostream>
+#include <string>
 
 namespace task {
 
 using Clock = std::chrono::system_clock;
 using TimePoint = std::chrono::time_point<Clock>;
 
-} // namespace task
+std::string dump_timepoint(task::TimePoint t);
 
-std::ostream& operator<<(std::ostream& stream, task::TimePoint t);
+} // namespace task
 
 #endif

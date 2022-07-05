@@ -37,9 +37,7 @@ template<> struct fmt::formatter<task::TimePoint> {
     }
     template <typename FormatContext>
     auto format(task::TimePoint const& val, FormatContext& ctx) -> decltype(ctx.out()) {
-        std::stringstream ss{ };
-        ss << val;
-        return format_to(ctx.out(), "{}", ss.str());
+        return format_to(ctx.out(), "{}", task::dump_timepoint(val).c_str());
     }
 };
 
