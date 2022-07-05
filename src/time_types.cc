@@ -25,6 +25,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <time.h>
 
 #include "taskomat/Error.h"
 #include "taskomat/time_types.h"
@@ -33,9 +34,16 @@ namespace task {
 
 std::string dump_timepoint(TimePoint t) {
     auto in_time_t = Clock::to_time_t(t);
-    auto in_tm = std::gmtime(&in_time_t);
+    auto in_tm = std::tm{ };
+#if defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+    auto ret = gmtime_s(&in_tm, &in_time_t); // Windows swaps the arguments
+#else
+    auto ret = gmtime_r(&in_time_t, &in_tm);
+#endif
+    if (not ret) // ret is std::tm* on Linux or errno_t on Windows
+        throw Error{ "Can not format TimePoint" };
     auto str = std::string(25, '\0');
-    auto len = std::strftime(str.data(), str.capacity(), "%Y-%m-%d %H:%M:%S UTC", in_tm);
+    auto len = std::strftime(str.data(), str.capacity(), "%Y-%m-%d %H:%M:%S UTC", &in_tm);
     if (len == 0)
         throw Error{ "Can not format TimePoint" };
     str.resize(len);
