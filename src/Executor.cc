@@ -162,6 +162,8 @@ bool Executor::update(Sequence& sequence)
             break;
         case Message::Type::step_stopped_with_error:
             sequence.modify(step_it, [](Step& s) { s.set_running(false); });
+            if (context_.log_error_function)
+                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         default:
             throw Error(cat("Unknown message type ", static_cast<int>(msg.get_type())));
