@@ -33,3 +33,20 @@ TEST_CASE("TimePoint: Dump to stream", "[TimePoint]")
     ss << task::dump_timepoint(task::TimePoint{ });
     REQUIRE(ss.str() == "1970-01-01 00:00:00 UTC");
 }
+
+TEST_CASE("timegm() random conversions", "[timegm]")
+{
+    std::random_device r{ };
+    std::default_random_engine re{ r() };
+    std::uniform_int_distribution<std::time_t> uniform_dist(0, std::time(nullptr) * 2);
+
+    for (int i = 10'000; i != 0; --i) {
+        auto r = uniform_dist(re);
+        INFO(r);
+        auto t1 = std::time_t{ r };
+        auto in_tm = gmtime(&t1);
+        auto t2 = task::timegm(*in_tm);
+        INFO(t1 - t2);
+        REQUIRE(t1 == t2);
+    }
+}

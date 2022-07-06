@@ -50,4 +50,22 @@ std::string dump_timepoint(TimePoint t) {
     return str;
 }
 
+std::time_t timegm(const std::tm& t) {
+        // Does not allow for tm_mon > 11
+        // Inspired from http://www.catb.org/esr/time-programming/
+        static const int cumulated_days[12] =
+                { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+        long year = t.tm_year + 1900;
+        std::time_t days = (year - 1970) * 365 + cumulated_days[t.tm_mon];
+        if (t.tm_mon < 2) // January and February are normal in leap years regarding cumulated_days
+            year--;
+        days += (year - 1968) / 4;
+        days -= (year - 1900) / 100;
+        days += (year - 1600) / 400;
+        return (days + t.tm_mday - 1) * 24 * 60 * 60 // days
+                + (t.tm_hour - (t.tm_isdst == 1)) * 60 * 60 // hours
+                + t.tm_min * 60 // minutes
+                + t.tm_sec; // seconds
+}
+
 } // namespace task
