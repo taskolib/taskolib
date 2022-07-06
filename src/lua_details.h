@@ -53,7 +53,7 @@ void check_script_timeout(lua_State* lua_state);
 CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state);
 
 /**
- * Get the index of the currently executet Step from the LUA registry.
+ * Get the index of the currently executed Step from the LUA registry.
  *
  * \exception Error is thrown if the appropriate registry key is not found.
  */
