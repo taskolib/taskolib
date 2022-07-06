@@ -27,21 +27,23 @@
 
 #include <string>
 
+#include "taskomat/Message.h"
+
 namespace task {
 
 struct CommChannel;
 
 /// Print a string to stdout.
-void print_to_stdout(const std::string& str, CommChannel* comm_channel);
+void print_to_stdout(const std::string& str, Message::IndexType, CommChannel* comm_channel);
 
 /// Print a string to stdout with an "INFO: " prefix.
-void print_info_to_stdout(const std::string& str, CommChannel* comm_channel);
+void print_info_to_stdout(const std::string& str, Message::IndexType, CommChannel* comm_channel);
 
 /// Print a string to stdout with a "WARNING: " prefix.
-void print_warning_to_stdout(const std::string& str, CommChannel* comm_channel);
+void print_warning_to_stdout(const std::string& str, Message::IndexType, CommChannel* comm_channel);
 
 /// Print a string to stdout with an "ERROR: " prefix.
-void print_error_to_stdout(const std::string& str, CommChannel* comm_channel);
+void print_error_to_stdout(const std::string& str, Message::IndexType, CommChannel* comm_channel);
 
 } // namespace task
 

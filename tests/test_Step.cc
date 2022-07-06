@@ -698,7 +698,7 @@ TEST_CASE("execute(): print function", "[Step]")
 
     Context context;
     context.print_function =
-        [&output](const std::string& str, CommChannel*)
+        [&output](const std::string& str, Message::IndexType, CommChannel*)
         {
             output += str;
         };
