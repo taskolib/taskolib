@@ -152,7 +152,10 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::sequence_stopped_with_error:
             break;
         case Message::Type::step_started:
-            sequence.modify(step_it, [](Step& s) { s.set_running(true); });
+            sequence.modify(step_it, [ts = msg.get_timestamp()](Step& s) {
+                s.set_running(true);
+                s.set_time_of_last_execution(ts);
+            });
             break;
         case Message::Type::step_stopped:
             sequence.modify(step_it, [](Step& s) { s.set_running(false); });
