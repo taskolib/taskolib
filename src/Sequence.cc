@@ -129,7 +129,7 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
         disable = disable or step->is_disabled();
         if (disable) {
             step = find_end_of_indented_block(step + 1, step_end, step->get_indentation_level() + 1);
-            if (step->is_continuation_type())
+            if (step->is_continuation_type() or step->is_disabled())
                 continue;
         }
         disable = false;

@@ -2732,3 +2732,53 @@ TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
         REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
     }
 }
+
+TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
+{
+    Step step1{ Step::type_action };
+    step1.set_label("a = 1");
+    step1.set_used_context_variable_names(VariableNames{"a"});
+    step1.set_script("a = 1");
+
+    Step step2{ Step::type_action };
+    step2.set_label("a++");
+    step2.set_used_context_variable_names(VariableNames{"a"});
+    step2.set_script("a = a + 1");
+
+    Sequence sequence;
+    sequence.push_back(step1);
+    sequence.push_back(step2);
+    sequence.push_back(step2);
+    sequence.push_back(step2);
+    sequence.push_back(step2);
+    sequence.push_back(step2);
+
+    SECTION("All steps enabled")
+    {
+        Context context;
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+        REQUIRE(std::get<long long>(context.variables["a"] ) == 6LL );
+    }
+
+    sequence.modify(sequence.begin() + 1, [](Step& s) {
+        s.set_disabled(true);
+    });
+
+    SECTION("One step diabled")
+    {
+        Context context;
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+        REQUIRE(std::get<long long>(context.variables["a"] ) == 5LL );
+    }
+
+    sequence.modify(sequence.begin() + 2, [](Step& s) {
+        s.set_disabled(true);
+    });
+
+    SECTION("Two steps diabled")
+    {
+        Context context;
+        REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+        REQUIRE(std::get<long long>(context.variables["a"] ) == 4LL );
+    }
+}
