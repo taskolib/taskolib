@@ -122,9 +122,17 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
                                 CommChannel* comm)
 {
     Iterator step = step_begin;
+    auto disable = false;
 
     while (step < step_end)
     {
+        disable = disable or step->is_disabled();
+        if (disable) {
+            step = find_end_of_indented_block(step + 1, step_end, step->get_indentation_level() + 1);
+            if (step->is_continuation_type())
+                continue;
+        }
+        disable = false;
         switch (step->get_type())
         {
             case Step::type_while:
