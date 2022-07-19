@@ -187,6 +187,18 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         REQUIRE(deserialize.get_used_context_variable_names() == VariableNames({}));
         REQUIRE(deserialize.get_indentation_level() == 0);
         REQUIRE(deserialize.get_time_of_last_execution() == TimePoint{});
+        REQUIRE(deserialize.is_disabled() == false);
+    }
+
+    SECTION("deserialize disabled flag")
+    {
+        step.set_disabled(true);
+        ss << step;
+
+        Step deserialize;
+        ss >> deserialize;
+
+        REQUIRE(deserialize.is_disabled() == true);
     }
 }
 

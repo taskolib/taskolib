@@ -134,6 +134,8 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     else
         stream << step.get_timeout().count() << "\n";
 
+    stream << "-- disabled: " << std::boolalpha << step.is_disabled() << '\n';
+
     stream << step.get_script() << '\n'; // (Marcus) good practice to add a cr at the end
 
     check_stream(stream);

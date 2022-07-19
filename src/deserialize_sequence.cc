@@ -211,6 +211,21 @@ void extract_timeout(const std::string& extract, Step& step)
     }
 }
 
+void extract_disabled(const std::string& extract, Step& step)
+{
+    auto start = extract.find(": ");
+    if (start == std::string::npos)
+        throw Error("disabled: cannot find leading ': '");
+
+    auto val = gul14::trim(extract.substr(start + 2));
+    if (val == "true")
+        step.set_disabled(true);
+    else if (val == "false")
+        step.set_disabled(false);
+    else
+        throw Error("disabled: unknown value, expect true or false");
+}
+
 } // namespace anonymous
 
 std::istream& operator>>(std::istream& stream, Step& step)
@@ -274,6 +289,10 @@ std::istream& operator>>(std::istream& stream, Step& step)
 
             case "timeout"_sh:
                 extract_timeout(internal, step_internal);
+                break;
+
+            case "disabled"_sh:
+                extract_disabled(internal, step_internal);
                 break;
 
             default:
