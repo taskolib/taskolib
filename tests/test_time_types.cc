@@ -36,9 +36,16 @@ TEST_CASE("TimePoint: Dump to stream", "[TimePoint]")
 
 TEST_CASE("timegm() random conversions", "[timegm]")
 {
+    // For 32bit time_t we probably can not go twice-now into the future
+    auto not_far_future = std::time(nullptr);
+    if (std::numeric_limits<std::time_t>::max() / 2 > not_far_future)
+        not_far_future *= 2;
+    else
+        not_far_future = std::numeric_limits<std::time_t>::max();
+
     std::random_device r{ };
     std::default_random_engine re{ r() };
-    std::uniform_int_distribution<std::time_t> uniform_dist(0, std::time(nullptr) * 2);
+    std::uniform_int_distribution<std::time_t> uniform_dist(0, not_far_future);
 
     for (int i = 10'000; i != 0; --i) {
         auto r = uniform_dist(re);
