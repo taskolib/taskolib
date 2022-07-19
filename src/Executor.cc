@@ -152,13 +152,18 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::sequence_stopped_with_error:
             break;
         case Message::Type::step_started:
-            sequence.modify(step_it, [](Step& s) { s.set_running(true); });
+            sequence.modify(step_it, [ts = msg.get_timestamp()](Step& s) {
+                s.set_running(true);
+                s.set_time_of_last_execution(ts);
+            });
             break;
         case Message::Type::step_stopped:
             sequence.modify(step_it, [](Step& s) { s.set_running(false); });
             break;
         case Message::Type::step_stopped_with_error:
             sequence.modify(step_it, [](Step& s) { s.set_running(false); });
+            if (context_.log_error_function)
+                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         default:
             throw Error(cat("Unknown message type ", static_cast<int>(msg.get_type())));
