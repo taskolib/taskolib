@@ -208,6 +208,9 @@ public:
      */
     bool is_running() const noexcept { return is_running_; }
 
+    /// Return whether this step is currently disabled.
+    bool is_disabled() const noexcept { return is_disabled_; }
+
     /// Set the names of the variables that should be im-/exported from/to the script.
     void set_used_context_variable_names(const VariableNames& used_context_variable_names);
     void set_used_context_variable_names(VariableNames&& used_context_variable_names);
@@ -235,6 +238,9 @@ public:
      * This is normally done by an Executor.
      */
     void set_running(bool is_running) { is_running_ = is_running; }
+
+    /// Set whether the step should be disabled (or possibly executed)
+    void set_disabled(bool disable);
 
     /**
      * Set the script that should be executed when this step is run.
@@ -278,6 +284,7 @@ private:
     Type type_{ type_action };
     short indentation_level_{ 0 };
     bool is_running_{ false };
+    bool is_disabled_{ false };
 
     /**
      * Copy the variables listed in used_context_variable_names_ from the given Context

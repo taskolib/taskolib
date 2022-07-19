@@ -186,6 +186,12 @@ void Step::set_label(const std::string& label)
     set_time_of_last_modification(Clock::now());
 }
 
+void Step::set_disabled(bool disable)
+{
+    is_disabled_ = disable;
+    set_type(type_); // avoid code duplication
+}
+
 void Step::set_script(const std::string& script)
 {
     script_ = script;
@@ -204,6 +210,16 @@ void Step::set_type(Type type)
 {
     type_ = type;
     set_time_of_last_modification(Clock::now());
+    switch (type) {
+        // types where the step_level >= current_level on indentation
+        case Type::type_action:
+        case Type::type_if:
+        case Type::type_try:
+        case Type::type_while:
+            break;
+        default:
+            is_disabled_ = false; // other types can not be disabled as they are pairs
+    }
 }
 
 } // namespace task

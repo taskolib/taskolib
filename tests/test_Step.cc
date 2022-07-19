@@ -710,3 +710,58 @@ TEST_CASE("execute(): print function", "[Step]")
 
     REQUIRE(output == "Hello\t42\t!\n");
 }
+
+TEST_CASE("Step: set_disabled()", "[Step]")
+{
+    Step step;
+
+    REQUIRE(step.is_disabled() == false);
+    step.set_disabled(true);
+    REQUIRE(step.is_disabled() == true);
+
+    std::vector<Step::Type> disable_unable =
+        { Step::Type::type_catch, Step::Type::type_else, Step::Type::type_elseif, Step::Type::type_end };
+
+    for (auto t : disable_unable) {
+
+        // set type first, then disabled
+        step.set_type(Step::Type::type_action); // reset
+        step.set_disabled(false); // reset
+        step.set_type(t);
+        REQUIRE(step.is_disabled() == false);
+        step.set_disabled(true);
+        REQUIRE(step.is_disabled() == false);
+        REQUIRE(step.get_type() == t);
+
+        // set disabled first, then type
+        step.set_type(Step::Type::type_action); // reset
+        step.set_disabled(false); // reset
+        step.set_disabled(true);
+        step.set_type(t);
+        REQUIRE(step.is_disabled() == false);
+        REQUIRE(step.get_type() == t);
+    }
+
+    std::vector<Step::Type> disable_able =
+        { Step::Type::type_action, Step::Type::type_if, Step::Type::type_while, Step::Type::type_try };
+
+    for (auto t : disable_able) {
+
+        // set type first, then disabled
+        step.set_type(Step::Type::type_action); // reset
+        step.set_disabled(false); // reset
+        step.set_type(t);
+        REQUIRE(step.is_disabled() == false);
+        step.set_disabled(true);
+        REQUIRE(step.is_disabled() == true);
+        REQUIRE(step.get_type() == t);
+
+        // set disabled first, then type
+        step.set_type(Step::Type::type_action); // reset
+        step.set_disabled(false); // reset
+        step.set_disabled(true);
+        step.set_type(t);
+        REQUIRE(step.is_disabled() == true);
+        REQUIRE(step.get_type() == t);
+    }
+}
