@@ -30,7 +30,7 @@
 TEST_CASE("TimePoint: Dump to stream", "[TimePoint]")
 {
     std::stringstream ss{ };
-    ss << task::dump_timepoint(task::TimePoint{ });
+    ss << task::to_string(task::TimePoint{ });
     REQUIRE(ss.str() == "1970-01-01 00:00:00 UTC");
 }
 

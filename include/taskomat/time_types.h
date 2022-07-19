@@ -33,7 +33,7 @@ namespace task {
 using Clock = std::chrono::system_clock;
 using TimePoint = std::chrono::time_point<Clock>;
 
-std::string dump_timepoint(task::TimePoint t);
+std::string to_string(task::TimePoint t);
 std::time_t timegm(const std::tm& t);
 
 } // namespace task

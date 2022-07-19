@@ -32,7 +32,7 @@
 
 namespace task {
 
-std::string dump_timepoint(TimePoint t) {
+std::string to_string(TimePoint t) {
     auto in_time_t = Clock::to_time_t(t);
     auto in_tm = std::tm{ };
 #if defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
