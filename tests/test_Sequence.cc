@@ -22,6 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <thread>
 #include <gul14/catch.h>
 #include "taskomat/Sequence.h"
 
@@ -2636,4 +2637,41 @@ TEST_CASE("modify()", "[Sequence]")
         REQUIRE(seq[1].get_indentation_level() == 1); // ... e.g. by reindenting
         REQUIRE(seq[1].get_label() == "modified"); // ... but the step may have been modified.
     }
+}
+
+TEST_CASE("check_if_sequence_is_running()", "[Sequence]")
+{
+    Step step_01{ Step::type_action };
+    step_01.set_label("Long running step");
+    step_01.set_script("sleep(0.5)");
+
+    Step step_modify{ Step::type_action };
+    step_modify.set_label("Modify");
+
+    Sequence seq;
+    seq.push_back(step_01);
+
+    std::thread execute_sequence([=,&seq]()
+        {
+            Context ctx;
+            seq.execute(ctx, nullptr);
+            REQUIRE(not seq.is_running());
+        });
+    std::this_thread::sleep_for(100ms);
+
+    REQUIRE(seq.is_running());
+
+    REQUIRE_THROWS_AS(seq.modify(seq.begin(), [](Step& step) {
+        step.set_label("New label"); }), Error);
+    REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{Step::type_action}), Error);
+    REQUIRE_THROWS_AS(seq.assign(seq.begin(), step_modify), Error);
+    REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{Step::type_action}), Error);
+    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
+    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
+    REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
+    REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
+    REQUIRE_THROWS_AS(seq.push_back(step_modify), Error);
+    REQUIRE_THROWS_AS(seq.pop_back(), Error);
+
+    execute_sequence.join();
 }
