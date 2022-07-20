@@ -59,6 +59,12 @@ Sequence::Sequence(gul14::string_view label)
     label_ = std::string{ label };
 }
 
+void Sequence::check_if_sequence_is_running() const
+{
+    if (is_running_)
+        throw Error("Reject on manipulating a running sequence");
+}
+
 void Sequence::check_syntax() const
 {
     if (not indentation_error_.empty())
@@ -401,24 +407,41 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
 
 void Sequence::execute(Context& context, CommChannel* comm)
 {
-    check_syntax();
-
-    send_message(comm, Message::Type::sequence_started, "Sequence started",
-                 Clock::now(), 0);
-
     try
     {
-        execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
-    }
-    catch (const std::exception& e)
-    {
-        send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
-                     Clock::now(), 0);
-        throw;
-    }
+        is_running_ = true;
 
-    send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
-                 Clock::now(), 0);
+        check_syntax();
+
+        send_message(comm, Message::Type::sequence_started, "Sequence started",
+                    Clock::now(), 0);
+
+        try
+        {
+            execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
+        }
+        catch (const std::exception& e)
+        {
+            send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
+                        Clock::now(), 0);
+            throw;
+        }
+
+        send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
+                    Clock::now(), 0);
+    }
+    // exception order is important
+    catch(const Error& e)
+    {
+        is_running_ = false;
+        throw e;
+    }
+    catch(const std::exception& e)
+    {
+        is_running_ = false;
+        throw e;
+    }
+    is_running_ = false;
 }
 
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,

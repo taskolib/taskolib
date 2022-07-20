@@ -111,6 +111,13 @@ public:
     void check_syntax() const;
 
     /**
+     * Retrieve if the sequence is executed.
+     *
+     * @return true on executing otherwise false.
+     */
+    bool is_running() const { return is_running_; }
+
+    /**
      * Return an error string if the sequence is not consistently nested, or an empty
      * string if the nesting is correct.
      */
@@ -198,14 +205,24 @@ public:
      *
      * @param step [IN] \a Step
      */
-    void push_back(const Step& step) { steps_.push_back(step); indent(); }
+    void push_back(const Step& step)
+    {
+        check_if_sequence_is_running();
+        steps_.push_back(step);
+        indent();
+    }
 
     /**
      * Attach \a Step rvalue reference to the end of the sequence.
      *
      * @param step [MOVE] \a Step
      */
-    void push_back(Step&& step) { steps_.push_back(step); indent(); }
+    void push_back(Step&& step)
+    {
+        check_if_sequence_is_running();
+        steps_.push_back(step);
+        indent();
+    }
 
     /**
      * Remove the last element from the sequence.
@@ -213,7 +230,13 @@ public:
      * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the
      * last element as well as the end() iterator are invalidated.
      */
-    void pop_back() { if (not steps_.empty()) steps_.pop_back(); indent(); }
+    void pop_back()
+    {
+        check_if_sequence_is_running();
+        if (not steps_.empty())
+            steps_.pop_back();
+        indent();
+    }
 
     /**
      * Insert the given \a Step before of the constant iterator into Sequence.
@@ -227,6 +250,7 @@ public:
      */
     ConstIterator insert(ConstIterator iter, const Step& step)
     {
+        check_if_sequence_is_running();
         auto return_iter = steps_.insert(iter, step);
         indent();
         return return_iter;
@@ -245,6 +269,7 @@ public:
      */
     ConstIterator insert(ConstIterator iter, Step&& step)
     {
+        check_if_sequence_is_running();
         auto return_iter = steps_.insert(iter, std::move(step));
         indent();
         return return_iter;
@@ -262,6 +287,7 @@ public:
      */
     ConstIterator erase(ConstIterator iter)
     {
+        check_if_sequence_is_running();
         auto return_iter = steps_.erase(iter);
         indent();
         return return_iter;
@@ -311,6 +337,7 @@ public:
      */
     ConstIterator erase(ConstIterator first, ConstIterator last)
     {
+        check_if_sequence_is_running();
         auto return_iter = steps_.erase(first, last);
         indent();
         return return_iter;
@@ -324,6 +351,7 @@ public:
      */
     void assign(ConstIterator iter, const Step& step)
     {
+        check_if_sequence_is_running();
         auto it = steps_.begin() + (iter - steps_.cbegin());
         *it = step;
         indent();
@@ -337,6 +365,7 @@ public:
      */
     void assign(ConstIterator iter, Step&& step)
     {
+        check_if_sequence_is_running();
         auto it = steps_.begin() + (iter - steps_.cbegin());
         *it = std::move(step);
         indent();
@@ -395,6 +424,7 @@ public:
     template <typename Closure>
     void modify(ConstIterator it, Closure modification_fct)
     {
+        check_if_sequence_is_running();
         // Reindent at the end of the function, even if an exception is thrown
         auto indent_if_necessary = gul14::finally(
             [this,
@@ -420,6 +450,11 @@ private:
 
     std::string label_;
     Steps steps_;
+    bool is_running_{false};
+
+    /// When the sequence is executed it rejects with an Error exception.
+    void check_if_sequence_is_running() const;
+
 
     /// Check that the given description is valid. If not then throws a task::Error.
     void check_label(gul14::string_view label);
