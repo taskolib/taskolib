@@ -400,10 +400,12 @@ public:
             [this,
              it,
              old_indentation_level = it->get_indentation_level(),
-             old_type = it->get_type()]()
+             old_type = it->get_type(),
+             old_disabled = it->is_disabled()]()
             {
-                if (it->get_indentation_level() != old_indentation_level ||
-                    it->get_type() != old_type)
+                if (it->get_indentation_level() != old_indentation_level
+                    or it->get_type() != old_type
+                    or it->is_disabled() != old_disabled)
                 {
                     indent();
                 }
@@ -557,6 +559,9 @@ private:
      * If errors in the logical nesting are found, an approximate indentation is assigned
      * and the member string indentation_error_ is filled with an error message. If the
      * nesting is correct and complete, indentation_error_ is set to an empty string.
+     *
+     * It also updates the disabled flag of all steps, keeping either a complete control
+     * structure disabled (and all that is contained) or not.
      */
     void indent() noexcept;
 

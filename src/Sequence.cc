@@ -212,9 +212,13 @@ Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
     return block_end + 1;
 }
 
+// The default for disable_level must be representable:
+static_assert(Step::max_indentation_level < std::numeric_limits<decltype(Step::max_indentation_level)>::max());
+
 void Sequence::indent() noexcept
 {
     short level = 0;
+    short disable_level = Step::max_indentation_level + 1;
 
     indentation_error_.clear();
 
@@ -226,12 +230,16 @@ void Sequence::indent() noexcept
         {
             case Step::type_action:
                 step_level = level;
+                if (step.is_disabled())
+                    disable_level = std::min(disable_level, step_level);
                 break;
             case Step::type_if:
             case Step::type_try:
             case Step::type_while:
                 step_level = level;
                 ++level;
+                if (step.is_disabled())
+                    disable_level = std::min(disable_level, step_level);
                 break;
             case Step::type_catch:
             case Step::type_else:
@@ -253,6 +261,13 @@ void Sequence::indent() noexcept
         }
 
         step.set_indentation_level(step_level);// cannot throw because we check step_level
+
+        step.set_disabled(level >= disable_level);
+        if ((level == step_level and step_level == disable_level) or level < disable_level) {
+            // Current step is type_action or type_end and disable level ends
+            // `level == step_level` is equivalent to `not is_continuation_type()`
+            disable_level = Step::max_indentation_level + 1;
+        }
 
         if (level < 0)
         {

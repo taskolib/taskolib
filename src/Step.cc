@@ -188,8 +188,6 @@ void Step::set_label(const std::string& label)
 
 void Step::set_disabled(bool disable)
 {
-    if (is_continuation_type())
-        return;
     is_disabled_ = disable;
     set_time_of_last_modification(Clock::now());
 }
@@ -211,8 +209,6 @@ void Step::set_timeout(std::chrono::milliseconds timeout)
 void Step::set_type(Type type)
 {
     type_ = type;
-    if (is_continuation_type())
-        is_disabled_ = false; // types can not be disabled as they are pairs
     set_time_of_last_modification(Clock::now());
 }
 
