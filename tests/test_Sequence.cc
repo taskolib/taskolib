@@ -2859,9 +2859,6 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 5LL };
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == true);
         REQUIRE(sequence[2].is_disabled() == true);
@@ -2889,9 +2886,6 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 5LL };
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
         REQUIRE(sequence[2].is_disabled() == true);
@@ -2919,9 +2913,6 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         Context context;
         context.variables["a"] = VariableValue{ 5LL };
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
         REQUIRE(sequence[2].is_disabled() == false);
@@ -2992,29 +2983,26 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
     step_post.set_used_context_variable_names(VariableNames{"a", "b"});
     step_post.set_script("b = 1");
 
+    Sequence sequence;
+    sequence.push_back(step_pre); // a = 1
+    sequence.push_back(step_if); // IF a == 1
+    sequence.push_back(step_if_action); // a = 2
+    sequence.push_back(step_elseif); // ELSEIF a == 2
+    sequence.push_back(step_elseif_action); // a = 3
+    sequence.push_back(step_else); // ELSE
+    sequence.push_back(step_else_action); // a = 4
+    sequence.push_back(step_if_end); // END
+    sequence.push_back(step_post); // b = 1
+
+    Context context;
+    context.variables["a"] = VariableValue{ 5LL };
+
     SECTION("Second step diabled")
     {
-        Sequence sequence;
-        sequence.push_back(step_pre); // a = 1
-        sequence.push_back(step_if); // IF a == 1
-        sequence.push_back(step_if_action); // a = 2
-        sequence.push_back(step_elseif); // ELSEIF a == 2
-        sequence.push_back(step_elseif_action); // a = 3
-        sequence.push_back(step_else); // ELSE
-        sequence.push_back(step_else_action); // a = 4
-        sequence.push_back(step_if_end); // END
-        sequence.push_back(step_post); // b = 1
-
-        Context context;
-        context.variables["a"] = VariableValue{ 5LL };
-
         sequence.modify(sequence.begin() + 1, [](Step& s) {
             s.set_disabled(true);
         });
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == true);
         REQUIRE(sequence[2].is_disabled() == true);
@@ -3028,27 +3016,10 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
 
     SECTION("Third step diabled")
     {
-        Sequence sequence;
-        sequence.push_back(step_pre); // a = 1
-        sequence.push_back(step_if); // IF a == 1
-        sequence.push_back(step_if_action); // a = 2
-        sequence.push_back(step_elseif); // ELSEIF a == 2
-        sequence.push_back(step_elseif_action); // a = 3
-        sequence.push_back(step_else); // ELSE
-        sequence.push_back(step_else_action); // a = 4
-        sequence.push_back(step_if_end); // END
-        sequence.push_back(step_post); // b = 1
-
-        Context context;
-        context.variables["a"] = VariableValue{ 5LL };
-
         sequence.modify(sequence.begin() + 2, [](Step& s) {
             s.set_disabled(true);
         });
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
         REQUIRE(sequence[2].is_disabled() == true);
@@ -3062,27 +3033,10 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
 
     SECTION("Forth step diabled")
     {
-        Sequence sequence;
-        sequence.push_back(step_pre); // a = 1
-        sequence.push_back(step_if); // IF a == 1
-        sequence.push_back(step_if_action); // a = 2
-        sequence.push_back(step_elseif); // ELSEIF a == 2
-        sequence.push_back(step_elseif_action); // a = 3
-        sequence.push_back(step_else); // ELSE
-        sequence.push_back(step_else_action); // a = 4
-        sequence.push_back(step_if_end); // END
-        sequence.push_back(step_post); // b = 1
-
-        Context context;
-        context.variables["a"] = VariableValue{ 5LL };
-
         sequence.modify(sequence.begin() + 3, [](Step& s) {
             s.set_disabled(true);
         });
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
         REQUIRE(sequence[2].is_disabled() == false);
@@ -3096,38 +3050,152 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
 
     SECTION("Second step diabled then enabled")
     {
-        Sequence sequence;
-        sequence.push_back(step_pre); // a = 1
-        sequence.push_back(step_if); // IF a == 1
-        sequence.push_back(step_if_action); // a = 2
-        sequence.push_back(step_elseif); // ELSEIF a == 2
-        sequence.push_back(step_elseif_action); // a = 3
-        sequence.push_back(step_else); // ELSE
-        sequence.push_back(step_else_action); // a = 4
-        sequence.push_back(step_if_end); // END
-        sequence.push_back(step_post); // b = 1
-
-        Context context;
-        context.variables["a"] = VariableValue{ 5LL };
-
         sequence.modify(sequence.begin() + 1, [](Step& s) {
             s.set_disabled(true);
         });
+
+        REQUIRE(sequence[0].is_disabled() == false);
+        REQUIRE(sequence[1].is_disabled() == true);
+        REQUIRE(sequence[2].is_disabled() == true);
+        REQUIRE(sequence[3].is_disabled() == true);
+        REQUIRE(sequence[4].is_disabled() == true);
+        REQUIRE(sequence[5].is_disabled() == true);
+        REQUIRE(sequence[6].is_disabled() == true);
+        REQUIRE(sequence[7].is_disabled() == true);
+        REQUIRE(sequence[8].is_disabled() == false);
+
         sequence.modify(sequence.begin() + 1, [](Step& s) {
             s.set_disabled(false);
         });
 
-        //REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        //REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
-        //REQUIRE(std::get<long long>(context.variables["b"] ) == 1LL );
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
-        REQUIRE(sequence[2].is_disabled() == true);
+        REQUIRE(sequence[2].is_disabled() == false);
         REQUIRE(sequence[3].is_disabled() == false);
-        REQUIRE(sequence[4].is_disabled() == true);
+        REQUIRE(sequence[4].is_disabled() == false);
         REQUIRE(sequence[5].is_disabled() == false);
-        REQUIRE(sequence[6].is_disabled() == true);
+        REQUIRE(sequence[6].is_disabled() == false);
         REQUIRE(sequence[7].is_disabled() == false);
         REQUIRE(sequence[8].is_disabled() == false);
     }
+}
+
+TEST_CASE("execute(): disable 'invariant' (complex)", "[Sequence]")
+{
+    //  0    ACTION
+    //  1    IF ...
+    //  2        ACTION
+    //  3        IF ...
+    //  4            ACTION
+    //  5            ACTION
+    //  6        ELSE
+    //  7            ACTION
+    //  8        END
+    //  9        ACTION
+    // 10    END
+    // 11    ACTION
+
+    Sequence s{ };
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_if });
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_if });
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_else });
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_end });
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_end });
+    s.push_back(Step{ Step::type_action });
+
+    REQUIRE(s[0].get_indentation_level() == 0);
+    REQUIRE(s[1].get_indentation_level() == 0);
+    REQUIRE(s[2].get_indentation_level() == 1);
+    REQUIRE(s[3].get_indentation_level() == 1);
+    REQUIRE(s[4].get_indentation_level() == 2);
+    REQUIRE(s[5].get_indentation_level() == 2);
+    REQUIRE(s[6].get_indentation_level() == 1);
+    REQUIRE(s[7].get_indentation_level() == 2);
+    REQUIRE(s[8].get_indentation_level() == 1);
+    REQUIRE(s[9].get_indentation_level() == 1);
+    REQUIRE(s[10].get_indentation_level() == 0);
+    REQUIRE(s[11].get_indentation_level() == 0);
+
+    SECTION("Disable and Enable 3 (IF...)")
+    {
+        s.modify(s.begin() + 3, [](Step& st) {
+            st.set_disabled(true);
+        });
+        REQUIRE(s[0].is_disabled() == false);
+        REQUIRE(s[1].is_disabled() == false);
+        REQUIRE(s[2].is_disabled() == false);
+        REQUIRE(s[3].is_disabled() == true);
+        REQUIRE(s[4].is_disabled() == true);
+        REQUIRE(s[5].is_disabled() == true);
+        REQUIRE(s[6].is_disabled() == true);
+        REQUIRE(s[7].is_disabled() == true);
+        REQUIRE(s[8].is_disabled() == true);
+        REQUIRE(s[9].is_disabled() == false);
+        REQUIRE(s[10].is_disabled() == false);
+        REQUIRE(s[11].is_disabled() == false);
+
+        s.modify(s.begin() + 3, [](Step& st) {
+            st.set_disabled(false);
+        });
+        REQUIRE(s[0].is_disabled() == false);
+        REQUIRE(s[1].is_disabled() == false);
+        REQUIRE(s[2].is_disabled() == false);
+        REQUIRE(s[3].is_disabled() == false);
+        REQUIRE(s[4].is_disabled() == false);
+        REQUIRE(s[5].is_disabled() == false);
+        REQUIRE(s[6].is_disabled() == false);
+        REQUIRE(s[7].is_disabled() == false);
+        REQUIRE(s[8].is_disabled() == false);
+        REQUIRE(s[9].is_disabled() == false);
+        REQUIRE(s[10].is_disabled() == false);
+        REQUIRE(s[11].is_disabled() == false);
+    }
+
+    SECTION("Disable and Enable 3 (IF...) with 9 disabled")
+    {
+        s.modify(s.begin() + 0, [](Step& st) {
+            st.set_disabled(true);
+        });
+        s.modify(s.begin() + 9, [](Step& st) {
+            st.set_disabled(true);
+        });
+        s.modify(s.begin() + 3, [](Step& st) {
+            st.set_disabled(true);
+        });
+        REQUIRE(s[0].is_disabled() == true);
+        REQUIRE(s[1].is_disabled() == false);
+        REQUIRE(s[2].is_disabled() == false);
+        REQUIRE(s[3].is_disabled() == true);
+        REQUIRE(s[4].is_disabled() == true);
+        REQUIRE(s[5].is_disabled() == true);
+        REQUIRE(s[6].is_disabled() == true);
+        REQUIRE(s[7].is_disabled() == true);
+        REQUIRE(s[8].is_disabled() == true);
+        REQUIRE(s[9].is_disabled() == true);
+        REQUIRE(s[10].is_disabled() == false);
+        REQUIRE(s[11].is_disabled() == false);
+
+        s.modify(s.begin() + 3, [](Step& st) {
+            st.set_disabled(false);
+        });
+        REQUIRE(s[0].is_disabled() == true);
+        REQUIRE(s[1].is_disabled() == false);
+        REQUIRE(s[2].is_disabled() == false);
+        REQUIRE(s[3].is_disabled() == false);
+        REQUIRE(s[4].is_disabled() == false);
+        REQUIRE(s[5].is_disabled() == false);
+        REQUIRE(s[6].is_disabled() == false);
+        REQUIRE(s[7].is_disabled() == false);
+        REQUIRE(s[8].is_disabled() == false);
+        REQUIRE(s[9].is_disabled() == true);
+        REQUIRE(s[10].is_disabled() == false);
+        REQUIRE(s[11].is_disabled() == false);
+    }
+
 }
