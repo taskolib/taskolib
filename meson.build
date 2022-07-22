@@ -37,6 +37,7 @@ install_headers(files(
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
+        'include/taskomat/Taskomat.h',
         'include/taskomat/hash_string.h',
         'include/taskomat/serialize_sequence.h',
         'include/taskomat/deserialize_sequence.h',
@@ -55,12 +56,13 @@ install_subdir('include/taskomat/sol/sol',
 # Sources
 sources = files(
     'src/console.cc',
+    'src/deserialize_sequence.cc',
     'src/Executor.cc',
     'src/lua_details.cc',
     'src/Sequence.cc',
     'src/serialize_sequence.cc',
-    'src/deserialize_sequence.cc',
     'src/Step.cc',
+    'src/Taskomat.cc',
     'src/time_types.cc',
     'src/VariableName.cc',
 )
@@ -78,6 +80,7 @@ test_src = files(
     'tests/test_Sequence.cc',
     'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
+    'tests/test_Taskomat.cc',
     'tests/test_time_types.cc',
     'tests/test_VariableName.cc',
 )

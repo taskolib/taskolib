@@ -1,10 +1,10 @@
 /**
- * \file   taskomat.h
- * \author Lars Froehlich
- * \date   Created on November 26, 2021
- * \brief  Main include file for the Taskomat Library.
+ * \file   Taskomat.cc
+ * \author Marcus Walla
+ * \date   Created on July 22, 2022
+ * \brief  Manage and control sequences.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -21,20 +21,3 @@
  */
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
-
-#ifndef TASKOMAT_TASKOMAT_H_
-#define TASKOMAT_TASKOMAT_H_
-
-#include "taskomat/Context.h"
-#include "taskomat/Error.h"
-#include "taskomat/Executor.h"
-#include "taskomat/Sequence.h"
-#include "taskomat/Step.h"
-#include "taskomat/Taskomat.h"
-#include "taskomat/time_types.h"
-#include "taskomat/VariableName.h"
-
-/// Namespace task contains all functions and classes of the Taskomat library.
-namespace task { }
-
-#endif
