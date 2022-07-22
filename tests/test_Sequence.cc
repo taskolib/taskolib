@@ -2666,7 +2666,7 @@ TEST_CASE("check_if_sequence_is_running()", "[Sequence]")
     REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{Step::type_action}), Error);
     REQUIRE_THROWS_AS(seq.assign(seq.begin(), step_modify), Error);
     REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
+    REQUIRE_THROWS_AS(seq.insert(seq.begin(), step_modify), Error);
     REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
     REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
     REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
@@ -2713,7 +2713,7 @@ TEST_CASE("throw at check_if_sequence_is_running()", "[Sequence]")
     REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{Step::type_action}), Error);
     REQUIRE_THROWS_AS(seq.assign(seq.begin(), step_modify), Error);
     REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
+    REQUIRE_THROWS_AS(seq.insert(seq.begin(), step_modify), Error);
     REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
     REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
     REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
