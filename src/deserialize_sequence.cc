@@ -163,7 +163,7 @@ void extract_context_variable_names(gul14::string_view extract, Step& step)
     for (auto variable: gul14::split(extract.substr(0, end), std::regex{"[ \t]*,[ \t]*"})) {
         variable = gul14::trim(variable);
         if (not variable.empty())
-            variableNames.emplace(gul14::trim(variable));
+            variableNames.emplace(variable);
     }
     if (not variableNames.empty())
         step.set_used_context_variable_names(variableNames);
