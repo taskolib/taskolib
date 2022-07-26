@@ -156,14 +156,10 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     return result;
 }
 
-void Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
+void Step::set_disabled(bool disable)
 {
-    used_context_variable_names_ = used_context_variable_names;
-}
-
-void Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
-{
-    used_context_variable_names_ = std::move(used_context_variable_names);
+    is_disabled_ = disable;
+    set_time_of_last_modification(Clock::now());
 }
 
 void Step::set_indentation_level(short level)
@@ -186,12 +182,6 @@ void Step::set_label(const std::string& label)
     set_time_of_last_modification(Clock::now());
 }
 
-void Step::set_disabled(bool disable)
-{
-    is_disabled_ = disable;
-    set_time_of_last_modification(Clock::now());
-}
-
 void Step::set_script(const std::string& script)
 {
     script_ = script;
@@ -210,6 +200,16 @@ void Step::set_type(Type type)
 {
     type_ = type;
     set_time_of_last_modification(Clock::now());
+}
+
+void Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
+{
+    used_context_variable_names_ = used_context_variable_names;
+}
+
+void Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
+{
+    used_context_variable_names_ = std::move(used_context_variable_names);
 }
 
 } // namespace task
