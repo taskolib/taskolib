@@ -2722,7 +2722,7 @@ TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
     });
 
 
-    SECTION("Second step diabled")
+    SECTION("Second step disabled")
     {
         Context context;
         context.variables["a"] = VariableValue{ 5LL };
@@ -2764,7 +2764,7 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
         s.set_disabled(true);
     });
 
-    SECTION("One step diabled")
+    SECTION("One step disabled")
     {
         Context context;
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
@@ -2775,7 +2775,7 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
         s.set_disabled(true);
     });
 
-    SECTION("Two steps diabled")
+    SECTION("Two steps disabled")
     {
         Context context;
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
@@ -2843,7 +2843,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
     step_post.set_used_context_variable_names(VariableNames{"a", "b"});
     step_post.set_script("b = 1");
 
-    SECTION("Second step diabled")
+    SECTION("Second step disabled")
     {
         Sequence sequence;
         sequence.push_back(step_pre); // a = 1
@@ -2870,7 +2870,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         REQUIRE(sequence[8].is_disabled() == false);
     }
 
-    SECTION("Third step diabled")
+    SECTION("Third step disabled")
     {
         Sequence sequence;
         sequence.push_back(step_pre); // a = 1
@@ -2897,7 +2897,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         REQUIRE(sequence[8].is_disabled() == false);
     }
 
-    SECTION("Forth step diabled")
+    SECTION("Fourth step disabled")
     {
         Sequence sequence;
         sequence.push_back(step_pre); // a = 1
@@ -2997,7 +2997,7 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 5LL };
 
-    SECTION("Second step diabled")
+    SECTION("Second step disabled")
     {
         sequence.modify(sequence.begin() + 1, [](Step& s) {
             s.set_disabled(true);
@@ -3014,7 +3014,7 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
         REQUIRE(sequence[8].is_disabled() == false);
     }
 
-    SECTION("Third step diabled")
+    SECTION("Third step disabled")
     {
         sequence.modify(sequence.begin() + 2, [](Step& s) {
             s.set_disabled(true);
@@ -3031,7 +3031,7 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
         REQUIRE(sequence[8].is_disabled() == false);
     }
 
-    SECTION("Forth step diabled")
+    SECTION("Fourth step disabled")
     {
         sequence.modify(sequence.begin() + 3, [](Step& s) {
             s.set_disabled(true);
@@ -3048,7 +3048,7 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
         REQUIRE(sequence[8].is_disabled() == false);
     }
 
-    SECTION("Second step diabled then enabled")
+    SECTION("Second step disabled then enabled")
     {
         sequence.modify(sequence.begin() + 1, [](Step& s) {
             s.set_disabled(true);
@@ -3197,5 +3197,4 @@ TEST_CASE("execute(): disable 'invariant' (complex)", "[Sequence]")
         REQUIRE(s[10].is_disabled() == false);
         REQUIRE(s[11].is_disabled() == false);
     }
-
 }
