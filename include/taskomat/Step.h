@@ -202,18 +202,6 @@ public:
     Type get_type() const noexcept { return type_; }
 
     /**
-     * Check if this Step needs specific other Steps before it to be valid.
-     * If it is false the Step can stand anywhere.
-     */
-    bool is_continuation_type() const
-    {
-        return type_ == Type::type_else
-            or type_ == Type::type_elseif
-            or type_ == Type::type_end
-            or type_ == Type::type_catch;
-    }
-
-    /**
      * Return whether this step is currently being executed.
      *
      * This flag is normally set by an Executor.

@@ -268,7 +268,7 @@ void Sequence::indent(ConstIterator enable_nested_from) noexcept
         step->set_disabled(level >= disable_level);
         if ((level == step_level and (step_level == disable_level or step_level == endlevel))) {
             // Current step is type_action or type_end and disable level ends
-            // `level == step_level` is equivalent to `not is_continuation_type()`
+            // `level == step_level` is equivalent to "is not a continuation type"
             disable_level = Step::max_indentation_level + 1;
             if (distance >= 0)
                 enable_nested_from = steps_.end();
