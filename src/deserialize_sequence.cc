@@ -91,16 +91,30 @@ std::string unescape_filename_characters(gul14::string_view str)
     return out;
 }
 
-gul14::string_view extract_keyword(gul14::string_view& extract)
+/**
+ * Separate a comment line from a LUA script into a keyword and a remainder.
+ *
+ * "-- label: Hello" -> ["label", " Hello"]
+ * "   -- label:Pippo " -> ["label", "Pippo "]
+ * " -- Comment" -> ["", " -- Comment"]
+ * "  something" -> ["", "  something"]
+ */
+std::pair<gul14::string_view, gul14::string_view>
+extract_keyword(const gul14::string_view line)
 {
-    if (not gul14::starts_with(extract, "-- "))
-        return {};
-    auto found_value = extract.find(":");
+    auto remainder = gul14::trim_left_sv(line);
+
+    if (not gul14::starts_with(remainder, "-- "))
+        return {{}, line};
+
+    auto found_value = remainder.find(":");
     if (found_value == gul14::string_view::npos)
-        return {};
-    auto ret = gul14::trim_sv(extract.substr(3, found_value - 3)); // 3: length of "-- "
-    extract.remove_prefix(found_value + 1); // incl the ":"
-    return { ret.data(), ret.size() };
+        return {{}, line};
+
+    auto keyword = gul14::trim_sv(remainder.substr(3, found_value - 3)); // 3: length of "-- "
+    remainder.remove_prefix(found_value + 1); // incl the ":"
+
+    return { keyword, remainder };
 }
 
 void extract_type(gul14::string_view extract, Step& step)
@@ -209,7 +223,7 @@ void extract_disabled(gul14::string_view extract, Step& step)
 std::istream& operator>>(std::istream& stream, Step& step)
 {
     TimePoint last_modification{}; // since any manipulation on step sets a new time point
-    std::string extract;
+    std::string line;
     std::stringstream script;
     bool load_script = false; // flag to store non Step properties to the script
     bool has_type = false; // sanity check: must have type
@@ -217,64 +231,65 @@ std::istream& operator>>(std::istream& stream, Step& step)
     std::set<unsigned long> encountered_keywords; // validate multiple keyword definition
     Step step_internal; // temporary Step. Will be move to step after loading
 
-    while(std::getline(stream, extract, '\n'))
+    while(std::getline(stream, line, '\n'))
     {
         if (load_script)
         {
-            script << extract << '\n';
+            script << line << '\n';
             continue;
         }
-        auto internal = gul14::trim_left_sv(extract);
-        auto keyword_str = extract_keyword(internal);
-        auto keyword = hash_djb2a(keyword_str);
-
-        if (internal.empty()) // load_script is false -> nothing useful
+        auto [keyword, remaining_line] = extract_keyword(line);
+        if (keyword.empty() && gul14::trim_sv(remaining_line).empty()) // load_script is false -> nothing useful
             continue;
 
+        const auto keyword_hash = hash_djb2a(keyword);
+
         // validate multiple keyword declaration
-        if(encountered_keywords.count(keyword))
-            throw Error(gul14::cat("Syntax error: encountered multiple times the keyword",
-                gul14::string_view{ keyword_str.data(), keyword_str.size() }));
-        encountered_keywords.insert(keyword);
+        if (encountered_keywords.count(keyword_hash))
+        {
+            throw Error(gul14::cat("Syntax error: Encountered keyword '", keyword,
+                                   "' multiple times"));
+        }
+        encountered_keywords.insert(keyword_hash);
 
         // Using switch cases with string hashes (see operator"" _sh in case_string.h)
         // DJB2A hash algorithm: http://www.cse.yorku.ca/%7Eoz/hash.html
         // Interesting hashing algorithm comparison:
         // https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed/145633#145633
-        switch(keyword)
+        switch(keyword_hash)
         {
             case "type"_sh:
-                extract_type(internal, step_internal);
+                extract_type(remaining_line, step_internal);
                 has_type = true;
                 break;
 
             case "label"_sh:
-                extract_label(internal, step_internal);
+                extract_label(remaining_line, step_internal);
                 has_label = true;
                 break;
 
             case "use context variable names"_sh:
-                extract_context_variable_names(internal, step_internal);
+                extract_context_variable_names(remaining_line, step_internal);
                 break;
 
             case "time of last modification"_sh:
-                last_modification = extract_time("time of last modification", internal);
+                last_modification = extract_time("time of last modification", remaining_line);
                 break;
 
             case "time of last execution"_sh:
-                extract_time_of_last_execution(internal, step_internal);
+                extract_time_of_last_execution(remaining_line, step_internal);
                 break;
 
             case "timeout"_sh:
-                extract_timeout(internal, step_internal);
+                extract_timeout(remaining_line, step_internal);
                 break;
 
             case "disabled"_sh:
-                extract_disabled(internal, step_internal);
+                extract_disabled(remaining_line, step_internal);
                 break;
 
             default:
-                script << extract << '\n';
+                script << line << '\n';
                 load_script = true;
         }
     }
