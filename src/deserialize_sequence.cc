@@ -91,7 +91,7 @@ std::string unescape_filename_characters(gul14::string_view str)
     return out;
 }
 
-std::string_view extract_keyword(gul14::string_view& extract)
+gul14::string_view extract_keyword(gul14::string_view& extract)
 {
     if (not gul14::starts_with(extract, "-- "))
         return {};
