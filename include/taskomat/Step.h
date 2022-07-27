@@ -299,6 +299,8 @@ private:
     void copy_used_variables_from_lua_to_context(const sol::state& lua, Context& context);
 };
 
+/// Return a lower-case name for a step type ("action", "if", "end").
+std::string to_string(Step::Type type);
 
 } // namespace task
 
