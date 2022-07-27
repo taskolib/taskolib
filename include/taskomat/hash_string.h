@@ -4,9 +4,11 @@
  * \date   Created on January 15, 2022
  * \brief  Allow string literals as case labels, -std=c++17.
  *
- * \copyright Copyright 2020-2022 2020-22 Richard Spencer
+ * \copyright Copyright 2020-2022 Richard Spencer
  *
  * Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
+ *
+ * Adaptations for libtaskomat: L. Froehlich, U. Jastrow, M. Walla, 2022.
  *
  * MIT license
  *
@@ -30,17 +32,17 @@
 
 // SPDX-License-Identifier: MIT
 
-#ifndef CASE_STRING_H
-#define CASE_STRING_H
+#ifndef TASKOMAT_CASE_STRING_H_
+#define TASKOMAT_CASE_STRING_H_
 
-#include <string_view>
+#include <gul14/string_view.h>
 
 namespace task {
 
 /// Adapt switch statement with stringify items:
 /// https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
 /// Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
-inline constexpr unsigned long hash_djb2a(const std::string_view sv) {
+inline constexpr unsigned long hash_djb2a(gul14::string_view sv) {
     unsigned long hash{ 5381 };
     for (unsigned char c : sv) {
         hash = ((hash << 5) + hash) ^ c;
@@ -51,8 +53,8 @@ inline constexpr unsigned long hash_djb2a(const std::string_view sv) {
 /// Adapt switch statement with stringify items:
 /// https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
 /// Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
-inline constexpr unsigned long operator"" _sh(const char *str, size_t len) {
-    return hash_djb2a(std::string_view{ str, len });
+inline constexpr unsigned long operator"" _sh(const char *str, std::size_t len) {
+    return hash_djb2a(gul14::string_view{ str, len });
 }
 
 } // namespace task

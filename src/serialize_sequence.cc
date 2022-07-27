@@ -115,24 +115,26 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
 
     stream << "-- type: " << type_to_string(step) << '\n';
-    stream << "-- label: " << gul14::escape(step.get_label()) << "\n";
+    stream << "-- label: " << gul14::escape(step.get_label()) << '\n';
 
     stream << "-- use context variable names: [";
     stream << gul14::join(step.get_used_context_variable_names(), ", ") << "]\n";
 
     auto modify = TimePoint::clock::to_time_t(step.get_time_of_last_modification());
     stream << "-- time of last modification: "
-        << std::put_time(std::localtime(&modify), "%Y-%m-%d %H:%M:%S") << "\n";
+        << std::put_time(std::localtime(&modify), "%Y-%m-%d %H:%M:%S") << '\n';
 
     auto execution = TimePoint::clock::to_time_t(step.get_time_of_last_execution());
     stream << "-- time of last execution: "
-        << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << "\n";
+        << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << '\n';
 
     stream << "-- timeout: ";
     if ( step.get_timeout() == Step::infinite_timeout )
         stream << "infinite\n";
     else
-        stream << step.get_timeout().count() << "\n";
+        stream << step.get_timeout().count() << '\n';
+
+    stream << "-- disabled: " << std::boolalpha << step.is_disabled() << '\n';
 
     stream << step.get_script() << '\n'; // (Marcus) good practice to add a cr at the end
 

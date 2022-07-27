@@ -208,9 +208,11 @@ public:
      */
     bool is_running() const noexcept { return is_running_; }
 
-    /// Set the names of the variables that should be im-/exported from/to the script.
-    void set_used_context_variable_names(const VariableNames& used_context_variable_names);
-    void set_used_context_variable_names(VariableNames&& used_context_variable_names);
+    /// Return whether this step is currently disabled.
+    bool is_disabled() const noexcept { return is_disabled_; }
+
+    /// Set whether the step should be disabled (or possibly executed).
+    void set_disabled(bool disable);
 
     /**
      * Set the indentation level of this step.
@@ -268,6 +270,10 @@ public:
      */
     void set_type(Type type);
 
+    /// Set the names of the variables that should be im-/exported from/to the script.
+    void set_used_context_variable_names(const VariableNames& used_context_variable_names);
+    void set_used_context_variable_names(VariableNames&& used_context_variable_names);
+
 private:
     std::string label_;
     std::string script_;
@@ -278,6 +284,7 @@ private:
     Type type_{ type_action };
     short indentation_level_{ 0 };
     bool is_running_{ false };
+    bool is_disabled_{ false };
 
     /**
      * Copy the variables listed in used_context_variable_names_ from the given Context
