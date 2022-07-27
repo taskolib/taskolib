@@ -1,5 +1,5 @@
 /**
- * \file   Taskomat.cc
+ * \file   SequenceManager.cc
  * \author Marcus Walla
  * \date   Created on July 22, 2022
  * \brief  Manage and control sequences.

@@ -37,7 +37,7 @@ install_headers(files(
         'include/taskomat/LockedQueue.h',
         'include/taskomat/Message.h',
         'include/taskomat/Sequence.h',
-        'include/taskomat/Taskomat.h',
+        'include/taskomat/SequenceManager.h',
         'include/taskomat/hash_string.h',
         'include/taskomat/serialize_sequence.h',
         'include/taskomat/deserialize_sequence.h',
@@ -62,7 +62,7 @@ sources = files(
     'src/Sequence.cc',
     'src/serialize_sequence.cc',
     'src/Step.cc',
-    'src/Taskomat.cc',
+    'src/SequenceManager.cc',
     'src/time_types.cc',
     'src/VariableName.cc',
 )
@@ -80,7 +80,7 @@ test_src = files(
     'tests/test_Sequence.cc',
     'tests/test_serialize_sequence.cc',
     'tests/test_Step.cc',
-    'tests/test_Taskomat.cc',
+    'tests/test_SequenceManager.cc',
     'tests/test_time_types.cc',
     'tests/test_VariableName.cc',
 )

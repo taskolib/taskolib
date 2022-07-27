@@ -1,8 +1,8 @@
 /**
- * \file   test_Taskomat.cc
+ * \file   test_SequenceManager.cc
  * \author Marcus Walla
  * \date   Created on July 22, 2022
- * \brief  Test suite for the Taskomat class.
+ * \brief  Test suite for the SequenceManager class.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -24,21 +24,21 @@
 
 #include <gul14/catch.h>
 #include <type_traits>
-#include "taskomat/Taskomat.h"
+#include "taskomat/SequenceManager.h"
 
 using namespace task;
 
-TEST_CASE("Construct empty Taskomat", "[Taskomat]")
+TEST_CASE("Construct empty SequenceManager", "[SequenceManager]")
 {
-    Taskomat::TaskomatRef taskomat = Taskomat::get();
-    REQUIRE(not taskomat.get_path().empty());
-    REQUIRE(taskomat.get_path() == ".");
+    SequenceManager::SequenceManagerRef sm = SequenceManager::get();
+    REQUIRE(not sm.get_path().empty());
+    REQUIRE(sm.get_path() == ".");
 }
 
-TEST_CASE("Construct Taskomat with path", "[Taskomat]")
+TEST_CASE("Construct SequenceManager with path", "[SequenceManager]")
 {
-    Taskomat::TaskomatRef taskomat = Taskomat::get();
-    taskomat.set_path("./some/path/to/sequences");
-    REQUIRE(not taskomat.get_path().empty());
-    REQUIRE(taskomat.get_path() == "./some/path/to/sequences");
+    SequenceManager::SequenceManagerRef sm = SequenceManager::get();
+    sm.set_path("./some/path/to/sequences");
+    REQUIRE(not sm.get_path().empty());
+    REQUIRE(sm.get_path() == "./some/path/to/sequences");
 }

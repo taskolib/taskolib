@@ -1,5 +1,5 @@
 /**
- * \file   Taskomat.h
+ * \file   SequenceManager.h
  * \author Marcus Walla
  * \date   Created on July 22, 2022
  * \brief  Manage and control sequences.
@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_TASKOMAT_OVERVIEW_H_
-#define TASKOMAT_TASKOMAT_OVERVIEW_H_
+#ifndef TASKOMAT_SEQUENCEMANAGER_H_
+#define TASKOMAT_SEQUENCEMANAGER_H_
 
 #include <vector>
 #include <gul14/string_view.h>
@@ -56,24 +56,24 @@ namespace task {
  *
  * [NOTE: NEEDS MORE DOCUMENTATION]
  */
-class Taskomat
+class SequenceManager
 {
 public:
     using SequenceList = std::unordered_map<std::string, Sequence>;
-    using TaskomatRef = Taskomat&;
+    using SequenceManagerRef = SequenceManager&;
 
     /**
      * Get a singleton Taskomat instance.
      *
-     * @return TaskomatRef as one instance.
+     * @return SequenceManagerRef as one instance.
      */
-    static TaskomatRef get()
+    static SequenceManagerRef get()
     {
         // This is:
         // - guaranteed to be destroyed
         // - instantiated on first use
         // - thread safe since C+11
-        static Taskomat instance{}; // ...{}: initialize member variables
+        static SequenceManager instance{}; // ...{}: initialize member variables
         return instance;
     }
 
@@ -99,22 +99,22 @@ private:
      * Creates a new instance to manage and control of sequences that are serialized in
      * the underlying file system.
      */
-    explicit Taskomat() = default;
+    explicit SequenceManager() = default;
 
     /// Destructor.
-    ~Taskomat() = default;
+    ~SequenceManager() = default;
 
     /// Copy constructor is disabled.
-    Taskomat(const Taskomat&) = delete;
+    SequenceManager(const SequenceManager&) = delete;
 
     /// Copy assignment operator is disabled.
-    Taskomat& operator=(const Taskomat&) = delete;
+    SequenceManager& operator=(const SequenceManager&) = delete;
 
     // Note: since we cannot use move semantics with the move constructor or move
     // assignment operator there is no need to declare it here, at least it will throw a
     // compile error (https://en.cppreference.com/w/cpp/language/move_constructor):
-    //Taskomat(const Taskomat&&) = delete;
-    //Taskomat& operator=(const Taskomat&&) = delete;
+    //SequenceManager(const SequenceManager&&) = delete;
+    //SequenceManager& operator=(const SequenceManager&&) = delete;
 };
 
 } // namespace task
