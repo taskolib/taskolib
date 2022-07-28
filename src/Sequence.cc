@@ -79,6 +79,12 @@ void Sequence::check_label(gul14::string_view label)
     }
 }
 
+void Sequence::enforce_invariants() noexcept
+{
+    indent();
+    enforce_consistency_of_disabled_flags();
+}
+
 Sequence::Iterator
 Sequence::execute_else_block(Iterator begin, Iterator end, Context& context,
                              CommChannel* comm)
@@ -210,37 +216,61 @@ Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
     return block_end + 1;
 }
 
+Sequence::Iterator
+Sequence::find_end_of_continuation(Sequence::Iterator block_start)
+{
+    auto it = std::find_if(block_start, steps_.end(),
+        [lvl = block_start->get_indentation_level()](const Step& s)
+        {
+            return s.get_indentation_level() == lvl &&
+                   s.get_type() == Step::type_end;
+        });
+
+    if (it != steps_.end())
+        ++it;
+
+    return it;
+}
+
+Sequence::ConstIterator
+Sequence::find_end_of_continuation(Sequence::ConstIterator block_start) const
+{
+    auto it = std::find_if(block_start, steps_.end(),
+        [lvl = block_start->get_indentation_level()](const Step& s)
+        {
+            return s.get_indentation_level() == lvl &&
+                   s.get_type() == Step::type_end;
+        });
+
+    if (it != steps_.end())
+        ++it;
+
+    return it;
+}
+
 // The default for disable_level must be representable:
 static_assert(Step::max_indentation_level < std::numeric_limits<decltype(Step::max_indentation_level)>::max());
 
-void Sequence::indent(ConstIterator enable_nested_from) noexcept
+void Sequence::indent() noexcept
 {
     short level = 0;
-    short endlevel = -1;
-    short disable_level = Step::max_indentation_level + 1;
 
     indentation_error_.clear();
 
-    for (auto step = steps_.begin(); step != steps_.end(); ++step)
+    for (Step& step : steps_)
     {
         short step_level = -1;
-        // negative values means 'before the changed step':
-        auto distance = std::distance(enable_nested_from, ConstIterator{ step });
 
-        switch (step->get_type())
+        switch (step.get_type())
         {
             case Step::type_action:
                 step_level = level;
-                if (distance <= 0 and step->is_disabled())
-                    disable_level = std::min(disable_level, step_level);
                 break;
             case Step::type_if:
             case Step::type_try:
             case Step::type_while:
                 step_level = level;
                 ++level;
-                if (distance <= 0 and step->is_disabled())
-                    disable_level = std::min(disable_level, step_level);
                 break;
             case Step::type_catch:
             case Step::type_else:
@@ -260,19 +290,8 @@ void Sequence::indent(ConstIterator enable_nested_from) noexcept
             if (indentation_error_.empty())
                 indentation_error_ = "Steps are not nested correctly";
         }
-        if (distance == 0)
-            endlevel = step_level;
 
-        step->set_indentation_level(step_level);// cannot throw because we check step_level
-
-        step->set_disabled(level >= disable_level);
-        if ((level == step_level and (step_level == disable_level or step_level == endlevel))) {
-            // Current step is type_action or type_end and disable level ends
-            // `level == step_level` is equivalent to "is not a continuation type"
-            disable_level = Step::max_indentation_level + 1;
-            if (distance >= 0)
-                enable_nested_from = steps_.end();
-        }
+        step.set_indentation_level(step_level);// cannot throw because we check step_level
 
         if (level < 0)
         {
@@ -301,6 +320,53 @@ void Sequence::indent(ConstIterator enable_nested_from) noexcept
             indentation_error_ = "Steps are not nested correctly (there must be one END "
                 "for each IF, TRY, WHILE)";
         }
+    }
+}
+
+void Sequence::enforce_consistency_of_disabled_flags() noexcept
+{
+    auto step = steps_.begin();
+
+    while (step != steps_.end())
+    {
+        short level = step->get_indentation_level();
+
+        switch (step->get_type())
+        {
+            case Step::type_if:
+            case Step::type_try:
+            case Step::type_while:
+            {
+                const auto it_end = find_end_of_continuation(step);
+
+                if (step->is_disabled())
+                {
+                    // Disable the entire block-with-continuation, then continue afterwards
+                    std::for_each(step, it_end, [](Step& st) { st.set_disabled(true); });
+                    step = it_end;
+                }
+                else
+                {
+                    // Disable the associated else/elseif/end/catch statements, then
+                    // continue with the next statement
+                    std::for_each(step, it_end,
+                        [level](Step& st)
+                        {
+                            if (st.get_indentation_level() == level)
+                                st.set_disabled(false);
+                        });
+                    ++step;
+                }
+                break;
+            }
+            case Step::type_action:
+            case Step::type_catch:
+            case Step::type_else:
+            case Step::type_elseif:
+            case Step::type_end:
+                ++step;
+                break;
+        };
     }
 }
 
