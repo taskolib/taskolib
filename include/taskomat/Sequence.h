@@ -452,36 +452,36 @@ private:
      *
      * @param begin Iterator pointing to the first step to be checked
      * @param end   Iterator pointing past the last step to be checked
-     * @exception throws an \a Error exception if an ill-formed token is found.
+     * @exception Error is thrown if a syntax error is found.
      * @see check_syntax()
      */
     void check_syntax(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for while-clauses. Invoked by
-     * \a check_syntax(const int, SizeType).
+     * check_syntax(ConstIterator, ConstIterator).
      *
      * @param begin Iterator pointing to the WHILE step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
      * @returns an iterator pointing to the first step after the WHILE..END construct.
-     * @exception throws an \a Error exception if an ill-formed 'while' token is found.
+     * @exception Error is thrown if a syntax error is found.
      */
     ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by
-     * \a check_syntax(const int, SizeType).
+     * check_syntax(ConstIterator, ConstIterator).
      *
      * @param begin Iterator pointing to the TRY step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
      * @returns an iterator pointing to the first step after the TRY..CATCH..END construct.
-     * @exception throws an \a Error exception if an ill-formed 'try' token is found.
+     * @exception Error is thrown if a syntax error is found.
      */
     ConstIterator check_syntax_for_try(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for if-elseif-else-clauses. Invoked by
-     * \a check_syntax(const int, SizeType).
+     * check_syntax(ConstIterator, ConstIterator).
      *
      * @param begin Iterator pointing to the IF step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
