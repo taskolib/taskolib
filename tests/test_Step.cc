@@ -744,3 +744,14 @@ TEST_CASE("Step: set_disabled()", "[Step]")
         REQUIRE(step.get_type() == t);
     }
 }
+
+//
+// Unit tests for free functions
+//
+
+TEST_CASE("to_string(Step::Type)", "[Step]")
+{
+    REQUIRE(to_string(Step::type_action) == "action");
+    REQUIRE(to_string(Step::type_elseif) == "elseif");
+    REQUIRE(to_string(static_cast<Step::Type>(127)) == "unknown");
+}
