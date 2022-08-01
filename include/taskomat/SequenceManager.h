@@ -26,6 +26,8 @@
 #define TASKOMAT_SEQUENCEMANAGER_H_
 
 #include <vector>
+#include <filesystem>
+#include <string>
 #include <gul14/string_view.h>
 #include "taskomat/Sequence.h"
 
@@ -35,86 +37,94 @@ namespace task {
  * A class to have a birds eye view on the underlying serialized sequences in the file
  * system. It allows to manage and control sequences.
  *
- * Per default the root sequence path is set to '.'.
+ * Per default the root path is set to '.'.
  *
  * Since we have a predefined flat struture for serialize sequences we come to the
  * assumption for the following specification:
  *
  * \code
  * ./sequence_1 <- folder name that represents the first sequence
- *    step_action_01.lua <- first step of sequence 1
+ *    step_while_01.lua <- first step of sequence 1
  *    ...
  *    step_action_<n>.lua <- n-th step of sequence 1
  * ...
  * ./sequence_<m> <- folder name that represents the m-th sequence
- *    step_action_01.lua <- first step of sequence 1
+ *    step_if_01.lua <- first step of sequence 1
  *    ...
  *    step_action_<n>.lua <- n-th step of sequence 1
  * \endcode
  *
- * As a root path we have the current relative folder '.'.
- *
- * [NOTE: NEEDS MORE DOCUMENTATION]
+ * Above we have as root path the folder '.'.
  */
 class SequenceManager
 {
 public:
-    using SequenceList = std::unordered_map<std::string, Sequence>;
-    using SequenceManagerRef = SequenceManager&;
+    using SequenceList = std::vector<std::string>;
 
     /**
-     * Get a singleton Taskomat instance.
+     * Creates a new instance to manage and control of sequences that are serialized in
+     * the underlying file system. When no root path is specified it set to '.'.
      *
-     * @return SequenceManagerRef as one instance.
+     * \param path set root path to the sequence folders.
+     *
+     * \exception throws Error exception if path is empty.
      */
-    static SequenceManagerRef get()
+    explicit SequenceManager(std::filesystem::path path = ".")
     {
-        // This is:
-        // - guaranteed to be destroyed
-        // - instantiated on first use
-        // - thread safe since C+11
-        static SequenceManager instance{}; // ...{}: initialize member variables
-        return instance;
+        if (path.empty())
+            throw Error("Root sequences path must not be empty.");
+        path_ = path;
+    }
+
+    /// Destructor.
+    ~SequenceManager() = default;
+
+    /// Copy constructor.
+    SequenceManager(const SequenceManager& orig) = default;
+
+    /// Copy assignment operator.
+    SequenceManager& operator=(const SequenceManager& orig) = default;
+
+    /// Equality operator.
+    bool operator==(const SequenceManager& compare) const
+    {
+        return path_ == compare.path_;
+    }
+
+    /// Inequality operator.
+    bool operator!=(const SequenceManager& compare) const
+    {
+        return not operator==(compare);
     }
 
     /**
      * Returns the root path of the serialized sequences.
      *
-     * @return gul14::string_view root path of the serialized sequences.
+     * \return root path of the serialized sequences.
      */
-    gul14::string_view get_path() const { return path_; }
+    std::string get_path() const { return path_.string(); }
 
     /**
-     * Set root path for the serialize sequences.
+     * Get sequence names without the previous path.
      *
-     * @param path new root path.
+     * \return sequences as a list of strings.
      */
-    void set_path(gul14::string_view path) { path_ = path; }
+    SequenceList get_sequence_names();
+
+    /**
+     * Loads sequence on the sequence file path.
+     *
+     * \param sequence_path path to sequence.
+     *
+     * \return deserialized sequence.
+     *
+     * \exception throws Error if the sequence path is invalid.
+     */
+    Sequence load_sequence(std::string sequence_path);
 
 private:
     /// Root path to the sequences
-    gul14::string_view path_{"."};
-
-    /**
-     * Creates a new instance to manage and control of sequences that are serialized in
-     * the underlying file system.
-     */
-    explicit SequenceManager() = default;
-
-    /// Destructor.
-    ~SequenceManager() = default;
-
-    /// Copy constructor is disabled.
-    SequenceManager(const SequenceManager&) = delete;
-
-    /// Copy assignment operator is disabled.
-    SequenceManager& operator=(const SequenceManager&) = delete;
-
-    // Note: since we cannot use move semantics with the move constructor or move
-    // assignment operator there is no need to declare it here, at least it will throw a
-    // compile error (https://en.cppreference.com/w/cpp/language/move_constructor):
-    //SequenceManager(const SequenceManager&&) = delete;
-    //SequenceManager& operator=(const SequenceManager&&) = delete;
+    std::filesystem::path path_;
 };
 
 } // namespace task

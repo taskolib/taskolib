@@ -23,22 +23,180 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
-#include <type_traits>
+#include <utility>
+#include <algorithm>
 #include "taskomat/SequenceManager.h"
+#include "taskomat/serialize_sequence.h"
 
 using namespace task;
 
 TEST_CASE("Construct empty SequenceManager", "[SequenceManager]")
 {
-    SequenceManager::SequenceManagerRef sm = SequenceManager::get();
-    REQUIRE(not sm.get_path().empty());
-    REQUIRE(sm.get_path() == ".");
+    SequenceManager sm;
+
+    SECTION("Empty constructor")
+    {
+        REQUIRE(not sm.get_path().empty());
+        REQUIRE(sm.get_path() == ".");
+    }
+
+    SECTION("Copy constructor")
+    {
+        auto sm1 = sm;
+        REQUIRE(not sm1.get_path().empty());
+        REQUIRE(sm1.get_path() == ".");
+        REQUIRE(sm == sm1);
+    }
+
+    SECTION("Equality operator")
+    {
+        SequenceManager sm1;
+        REQUIRE(sm == sm1);
+        REQUIRE_FALSE(sm != sm1);
+    }
+
+    SECTION("Inequality operator")
+    {
+        SequenceManager sm1{"./another/path/to/sequences"};
+        REQUIRE(sm != sm1);
+        REQUIRE_FALSE(sm == sm1);
+    }
 }
 
 TEST_CASE("Construct SequenceManager with path", "[SequenceManager]")
 {
-    SequenceManager::SequenceManagerRef sm = SequenceManager::get();
-    sm.set_path("./some/path/to/sequences");
-    REQUIRE(not sm.get_path().empty());
-    REQUIRE(sm.get_path() == "./some/path/to/sequences");
+    SequenceManager sm{"./another/path/to/sequences"};
+
+    SECTION("Another path to sequences")
+    {
+        REQUIRE(not sm.get_path().empty());
+        REQUIRE(sm.get_path() == "./another/path/to/sequences");
+    }
+}
+
+TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
+{
+    struct S {
+        SequenceManager sm_;
+        S(SequenceManager&& sm) { sm_ = sm; }
+        S(const SequenceManager&& sm) { sm_ = sm; }
+    };
+
+    SECTION("Implicit move constructor")
+    {
+        S s{SequenceManager("unit_test")};
+        REQUIRE(not s.sm_.get_path().empty());
+        REQUIRE(s.sm_.get_path() == "unit_test");
+    }
+
+    SECTION("Explicit move constructor")
+    {
+        SequenceManager sm{"unit_test"};
+        S s{std::move(sm)};
+        REQUIRE(not s.sm_.get_path().empty());
+        REQUIRE(s.sm_.get_path() == "unit_test");
+    }
+
+    SECTION("Explicit move constructor, part II")
+    {
+        SequenceManager sm{std::move(SequenceManager{"unit_test"})};
+        REQUIRE(not sm.get_path().empty());
+        REQUIRE(sm.get_path() == "unit_test");
+    }
+}
+
+TEST_CASE("Get sequence names", "[SequenceManager]")
+{
+    // prepare first sequence for test
+    Step step_1_01{Step::type_while};
+    step_1_01.set_label("while");
+    step_1_01.set_script("return i < 10");
+
+    Step step_1_02{Step::type_action};
+    step_1_02.set_label("action");
+    step_1_02.set_script("i = i + 1");
+
+    Sequence seq_1{"test.seq.1"};
+    seq_1.push_back(step_1_01);
+    seq_1.push_back(step_1_02);
+
+    // prepare second sequence for test
+    Step step_2_01{Step::type_while};
+    step_2_01.set_label("while");
+    step_2_01.set_script("return i < 10");
+
+    Step step_2_02{Step::type_action};
+    step_2_02.set_label("action");
+    step_2_02.set_script("i = i + 1");
+
+    Sequence seq_2{"test.seq.2"};
+    seq_2.push_back(step_1_01);
+    seq_2.push_back(step_1_02);
+
+    serialize_sequence("unit_test_2", seq_1);
+    serialize_sequence("unit_test_2", seq_2);
+
+    SequenceManager sm{"unit_test_2"};
+    auto sequence_paths = sm.get_sequence_names();
+
+    REQUIRE(sequence_paths.size() == 2);
+    REQUIRE(sequence_paths[0] == "test.seq.1");
+    REQUIRE(sequence_paths[1] == "test.seq.2");
+}
+
+TEST_CASE("Load sequence", "[SequenceManager]")
+{
+    const std::string sequence_name{"test.seq"};
+
+    // prepare some sequence for the test
+    Step step_01{Step::type_while};
+    step_01.set_label("while");
+    step_01.set_script("return i < 10");
+
+    Step step_02{Step::type_action};
+    step_02.set_label("action");
+    step_02.set_script("i = i + 1");
+
+    Sequence seq{sequence_name};
+    seq.push_back(step_01);
+    seq.push_back(step_02);
+
+    auto check = [](const Step& lhs, const Step& rhs)
+    {
+        bool r = lhs.get_type() == rhs.get_type()
+            and lhs.get_indentation_level() == rhs.get_indentation_level()
+            and lhs.get_label() == rhs.get_label()
+            and lhs.get_script() == rhs.get_script();
+        if (not r)
+            WARN(gul14::cat("Step '", lhs.get_label(), "' is unequal."));
+        return r;
+    };
+
+    SECTION("Simple path")
+    {
+        // store sequence to the default path '.'
+        serialize_sequence(".", seq);
+
+        SequenceManager sm{};
+        Sequence load = sm.load_sequence(sequence_name);
+
+        REQUIRE(load.get_label() == seq.get_label());
+        REQUIRE(load.size() == seq.size());
+        auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
+        REQUIRE(result);
+    }
+
+    SECTION("Complex path")
+    {
+        // store sequence to the default path 'unit_test'
+        serialize_sequence("unit_test", seq);
+
+        SequenceManager sm{"unit_test"};
+        Sequence load = sm.load_sequence(sequence_name);
+
+        REQUIRE(load.get_label() == seq.get_label());
+        REQUIRE(load.size() == seq.size());
+        auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
+        REQUIRE(result);
+    }
 }

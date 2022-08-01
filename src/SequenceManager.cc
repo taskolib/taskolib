@@ -21,3 +21,31 @@
  */
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
+
+#include <algorithm>
+#include "taskomat/SequenceManager.h"
+#include "taskomat/deserialize_sequence.h"
+
+namespace task {
+
+SequenceManager::SequenceList SequenceManager::get_sequence_names()
+{
+    SequenceList sequences;
+    for (auto const& entry : std::filesystem::directory_iterator{path_})
+        sequences.push_back(entry.path().filename());
+
+    std::sort(sequences.begin(), sequences.end());
+
+    return sequences;
+}
+
+Sequence SequenceManager::load_sequence(std::string sequence_path)
+{
+    auto sequence = path_/sequence_path;
+    if (not std::filesystem::exists(sequence))
+        throw Error(gul14::cat("Sequence file path does not exist: ",
+            sequence.string()));
+    return deserialize_sequence(sequence);
+}
+
+} // namespace task
