@@ -710,3 +710,48 @@ TEST_CASE("execute(): print function", "[Step]")
 
     REQUIRE(output == "Hello\t42\t!\n");
 }
+
+TEST_CASE("Step: set_disabled()", "[Step]")
+{
+    Step step;
+
+    REQUIRE(step.is_disabled() == false);
+    step.set_disabled(true);
+    REQUIRE(step.is_disabled() == true);
+
+    // (There are no disable_unable types anymore)
+    std::vector<Step::Type> disable_able =
+        { Step::Type::type_catch, Step::Type::type_else, Step::Type::type_elseif, Step::Type::type_end,
+        Step::Type::type_action, Step::Type::type_if, Step::Type::type_while, Step::Type::type_try };
+
+    for (auto t : disable_able) {
+
+        // set type first, then disabled
+        step.set_type(Step::Type::type_action); // reset
+        step.set_disabled(false); // reset
+        step.set_type(t);
+        REQUIRE(step.is_disabled() == false);
+        step.set_disabled(true);
+        REQUIRE(step.is_disabled() == true);
+        REQUIRE(step.get_type() == t);
+
+        // set disabled first, then type
+        step.set_type(Step::Type::type_action); // reset
+        step.set_disabled(false); // reset
+        step.set_disabled(true);
+        step.set_type(t);
+        REQUIRE(step.is_disabled() == true);
+        REQUIRE(step.get_type() == t);
+    }
+}
+
+//
+// Unit tests for free functions
+//
+
+TEST_CASE("to_string(Step::Type)", "[Step]")
+{
+    REQUIRE(to_string(Step::type_action) == "action");
+    REQUIRE(to_string(Step::type_elseif) == "elseif");
+    REQUIRE(to_string(static_cast<Step::Type>(127)) == "unknown");
+}

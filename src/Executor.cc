@@ -150,6 +150,8 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::sequence_stopped:
             break;
         case Message::Type::sequence_stopped_with_error:
+            if (context_.log_error_function)
+                context_.log_error_function(msg.get_text(), 0, nullptr);
             break;
         case Message::Type::step_started:
             sequence.modify(step_it, [ts = msg.get_timestamp()](Step& s) {
