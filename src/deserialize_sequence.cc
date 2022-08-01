@@ -91,23 +91,37 @@ std::string unescape_filename_characters(gul14::string_view str)
     return out;
 }
 
-const std::string extract_keyword(const std::string& extract)
+/**
+ * Separate a comment line from a LUA script into a keyword and a remainder.
+ *
+ * "-- label: Hello" -> ["label", " Hello"]
+ * "   -- label:Pippo " -> ["label", "Pippo "]
+ * " -- Comment" -> ["", " -- Comment"]
+ * "  something" -> ["", "  something"]
+ */
+std::pair<gul14::string_view, gul14::string_view>
+extract_keyword(const gul14::string_view line)
 {
-    auto found_value = extract.find(":");
-    if (gul14::starts_with(extract, "-- ") && found_value != std::string::npos)
-        return gul14::trim(extract.substr(3, found_value - 3)); // 3: length of "-- "
-    return "";
+    auto remainder = gul14::trim_left_sv(line);
+
+    if (not gul14::starts_with(remainder, "-- "))
+        return {{}, line};
+
+    auto found_value = remainder.find(":");
+    if (found_value == gul14::string_view::npos)
+        return {{}, line};
+
+    auto keyword = gul14::trim_sv(remainder.substr(3, found_value - 3)); // 3: length of "-- "
+    remainder.remove_prefix(found_value + 1); // incl the ":"
+
+    return { keyword, remainder };
 }
 
-void extract_type(const std::string& extract, Step& step)
+void extract_type(gul14::string_view extract, Step& step)
 {
-    auto pos = extract.find(": ");
-    if (pos == std::string::npos)
-        throw Error("type: cannot find leading ': '");
+    auto keyword = gul14::trim_sv(extract);
 
-    auto keyword = gul14::trim(extract.substr(pos + 2));
-
-    switch(hash_djb2a(keyword))
+    switch(hash_djb2a({keyword.data(), keyword.size()}))
     {
         case "action"_sh:
             step.set_type(Step::type_action); break;
@@ -130,49 +144,36 @@ void extract_type(const std::string& extract, Step& step)
     }
 }
 
-void extract_label(const std::string& extract, Step& step)
+void extract_label(gul14::string_view extract, Step& step)
 {
-    auto start = extract.find(": ");
-    if (start == std::string::npos)
-        throw Error("label: cannot find leading ': '");
-
-    start += 2;
-
-    auto end = extract.size();
-
-    if (start + 1 != end)
-        step.set_label(gul14::unescape(gul14::trim(extract.substr(start, end - start))));
+    step.set_label(gul14::unescape(gul14::trim_sv(extract)));
 }
 
-void extract_context_variable_names(const std::string& extract, Step& step)
+void extract_context_variable_names(gul14::string_view extract, Step& step)
 {
-    auto start = extract.find(": [");
-    if (start == std::string::npos)
-        throw Error("context variable names: cannot find leading ': ['");
+    extract = gul14::trim_sv(extract);
+    if (not gul14::starts_with(extract, "["))
+        throw Error("context variable names: cannot find leading '['");
+    extract.remove_prefix(1);
 
-    start += 3;
-
-    auto end = extract.find("]", start);
-    if (end == std::string::npos)
+    auto end = extract.find("]");
+    if (end == gul14::string_view::npos)
         throw Error("context variable names: cannot find trailing ']'");
-    else if (start < end)
-    {
-        VariableNames variableNames{};
-        for(auto variable: gul14::split(extract.substr(start, end - start), std::regex{"[ \t]*,[ \t]*"}))
-            variableNames.emplace(gul14::trim(variable));
-        step.set_used_context_variable_names(variableNames);
+    VariableNames variableNames{};
+    for (auto variable: gul14::split(extract.substr(0, end), std::regex{"[ \t]*,[ \t]*"})) {
+        variable = gul14::trim(variable);
+        if (not variable.empty())
+            variableNames.emplace(variable);
     }
+    if (not variableNames.empty())
+        step.set_used_context_variable_names(variableNames);
 }
 
-TimePoint extract_time(const std::string& issue, const std::string& extract)
+TimePoint extract_time(const std::string& issue, gul14::string_view extract)
 {
     std::tm t;
 
-    auto start = extract.find(": ");
-    if (start == std::string::npos)
-        throw Error(gul14::cat(issue, ": cannot find leading ': '"));
-
-    if (strptime(extract.substr(start + 2).c_str(), "%Y-%m-%d %H:%M:%S",&t) == nullptr)
+    if (strptime(std::string{ extract }.c_str(), "%Y-%m-%d %H:%M:%S",&t) == nullptr)
         throw Error(gul14::cat(issue, ": unable to parse time ('", extract, "')"));
     t.tm_isdst = -1; // Daylight Saving Time (DST) is unknown -> use local time zone
     auto convert = std::mktime(&t);
@@ -180,20 +181,16 @@ TimePoint extract_time(const std::string& issue, const std::string& extract)
     return TimePoint::clock::from_time_t(convert);
 }
 
-void extract_time_of_last_execution(const std::string& extract, Step& step)
+void extract_time_of_last_execution(gul14::string_view extract, Step& step)
 {
     step.set_time_of_last_execution(extract_time("time of last execution", extract));
 }
 
-void extract_timeout(const std::string& extract, Step& step)
+void extract_timeout(gul14::string_view extract, Step& step)
 {
-    const auto start = extract.find(": ");
-    if (start == std::string::npos)
-        throw Error("timeout: cannot find leading ': '");
-
-    auto start_timeout = extract.find_first_not_of(" \t", start + 2);
+    auto start_timeout = extract.find_first_not_of(" \t");
     if (start_timeout == std::string::npos)
-        throw Error(gul14::cat("timeout: unable to parse ('", extract.substr(start), "')"));
+        throw Error(gul14::cat("timeout: unable to parse ('", extract, "')"));
 
     auto timeout = gul14::trim(extract.substr(start_timeout));
     if ("infinite" == timeout)
@@ -211,12 +208,22 @@ void extract_timeout(const std::string& extract, Step& step)
     }
 }
 
+void extract_disabled(gul14::string_view extract, Step& step)
+{
+    bool val{ };
+    std::stringstream ss{ std::string{ extract } };
+    ss >> std::boolalpha >> val;
+    if (ss.fail())
+        throw Error("disabled: unknown value, expect true or false");
+    step.set_disabled(val);
+}
+
 } // namespace anonymous
 
 std::istream& operator>>(std::istream& stream, Step& step)
 {
     TimePoint last_modification{}; // since any manipulation on step sets a new time point
-    std::string extract;
+    std::string line;
     std::stringstream script;
     bool load_script = false; // flag to store non Step properties to the script
     bool has_type = false; // sanity check: must have type
@@ -224,60 +231,65 @@ std::istream& operator>>(std::istream& stream, Step& step)
     std::set<unsigned long> encountered_keywords; // validate multiple keyword definition
     Step step_internal; // temporary Step. Will be move to step after loading
 
-    while(std::getline(stream, extract, '\n'))
+    while(std::getline(stream, line, '\n'))
     {
-        auto internal = gul14::trim_left(extract);
-        auto keyword_str = extract_keyword(internal);
-        auto keyword = hash_djb2a(keyword_str);
-
         if (load_script)
         {
-            script << extract << '\n';
+            script << line << '\n';
             continue;
         }
-        else if (internal.empty()) // load_script is false -> nothing useful
+        auto [keyword, remaining_line] = extract_keyword(line);
+        if (keyword.empty() && gul14::trim_sv(remaining_line).empty()) // load_script is false -> nothing useful
             continue;
 
+        const auto keyword_hash = hash_djb2a(keyword);
+
         // validate multiple keyword declaration
-        if(encountered_keywords.count(keyword))
-            throw Error(gul14::cat("Syntax error: encountered multiple times the keyword",
-                keyword_str));
-        encountered_keywords.insert(keyword);
+        if (encountered_keywords.count(keyword_hash))
+        {
+            throw Error(gul14::cat("Syntax error: Encountered keyword '", keyword,
+                                   "' multiple times"));
+        }
+        encountered_keywords.insert(keyword_hash);
 
         // Using switch cases with string hashes (see operator"" _sh in case_string.h)
         // DJB2A hash algorithm: http://www.cse.yorku.ca/%7Eoz/hash.html
         // Interesting hashing algorithm comparison:
         // https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed/145633#145633
-        switch(keyword)
+        switch(keyword_hash)
         {
             case "type"_sh:
-                extract_type(internal, step_internal);
+                extract_type(remaining_line, step_internal);
                 has_type = true;
                 break;
 
             case "label"_sh:
-                extract_label(internal, step_internal);
+                extract_label(remaining_line, step_internal);
                 has_label = true;
                 break;
 
             case "use context variable names"_sh:
-                extract_context_variable_names(internal, step_internal);
+                extract_context_variable_names(remaining_line, step_internal);
                 break;
 
             case "time of last modification"_sh:
-                last_modification = extract_time("time of last modification", internal);
+                last_modification = extract_time("time of last modification", remaining_line);
                 break;
 
             case "time of last execution"_sh:
-                extract_time_of_last_execution(internal, step_internal);
+                extract_time_of_last_execution(remaining_line, step_internal);
                 break;
 
             case "timeout"_sh:
-                extract_timeout(internal, step_internal);
+                extract_timeout(remaining_line, step_internal);
+                break;
+
+            case "disabled"_sh:
+                extract_disabled(remaining_line, step_internal);
                 break;
 
             default:
-                script << extract << '\n';
+                script << line << '\n';
                 load_script = true;
         }
     }

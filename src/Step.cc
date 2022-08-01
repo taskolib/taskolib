@@ -156,14 +156,10 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     return result;
 }
 
-void Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
+void Step::set_disabled(bool disable)
 {
-    used_context_variable_names_ = used_context_variable_names;
-}
-
-void Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
-{
-    used_context_variable_names_ = std::move(used_context_variable_names);
+    is_disabled_ = disable;
+    set_time_of_last_modification(Clock::now());
 }
 
 void Step::set_indentation_level(short level)
@@ -204,6 +200,38 @@ void Step::set_type(Type type)
 {
     type_ = type;
     set_time_of_last_modification(Clock::now());
+}
+
+void Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
+{
+    used_context_variable_names_ = used_context_variable_names;
+}
+
+void Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
+{
+    used_context_variable_names_ = std::move(used_context_variable_names);
+}
+
+
+//
+// Free functions
+//
+
+std::string to_string(Step::Type type)
+{
+    switch(type)
+    {
+        case Step::type_action: return "action";
+        case Step::type_if: return "if";
+        case Step::type_else: return "else";
+        case Step::type_elseif: return "elseif";
+        case Step::type_end: return "end";
+        case Step::type_while: return "while";
+        case Step::type_try: return "try";
+        case Step::type_catch: return "catch";
+    }
+
+    return "unknown";
 }
 
 } // namespace task

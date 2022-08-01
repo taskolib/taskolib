@@ -400,12 +400,18 @@ public:
             [this,
              it,
              old_indentation_level = it->get_indentation_level(),
-             old_type = it->get_type()]()
+             old_type = it->get_type(),
+             old_disabled = it->is_disabled()]()
             {
-                if (it->get_indentation_level() != old_indentation_level ||
-                    it->get_type() != old_type)
+                auto disable_changed = old_disabled != it->is_disabled();
+                if (it->get_indentation_level() != old_indentation_level
+                    or it->get_type() != old_type
+                    or disable_changed)
                 {
-                    indent();
+                    if (disable_changed)
+                        indent(it); // This forces the same disable-ness of the complete structure
+                    else
+                        indent();
                 }
             });
 
@@ -557,8 +563,22 @@ private:
      * If errors in the logical nesting are found, an approximate indentation is assigned
      * and the member string indentation_error_ is filled with an error message. If the
      * nesting is correct and complete, indentation_error_ is set to an empty string.
+     *
+     * It also updates the disabled flag of all steps, keeping either a complete control
+     * structure disabled (and all that is contained) or not.
+     *
+     * If enable_nested_from is set the complete control structure that starts there is
+     * re-enabled, and not only the control structure itself without all what is contained.
+     *
      */
-    void indent() noexcept;
+    void indent(ConstIterator enable_nested_from) noexcept;
+
+    /**
+     * Convenience helper for indent(ConstIterator) that just checks the indentation levels
+     * and the disabled flags, but does not turn on (dis-disable) complete control structures
+     * with what is contained (keeps contained stuff on or off, however is has been set before).
+     */
+    void indent() noexcept { indent(steps_.end()); }
 
     /**
      * Throw a syntax error for the specified step.

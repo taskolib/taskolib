@@ -4,8 +4,7 @@
  * \date   Created on May 06, 2022
  * \brief  Implementation of the serialize_sequence() free function.
  *
- * \copyright Copyright
- * 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -47,23 +46,6 @@ void remove_step_path(const std::filesystem::path& path)
     }
 }
 
-/// Convert Type to string equivalent.
-std::string type_to_string(const Step& step)
-{
-    switch(step.get_type())
-    {
-        case Step::type_action: return "action";
-        case Step::type_if: return "if";
-        case Step::type_elseif: return "elseif";
-        case Step::type_else: return "else";
-        case Step::type_while: return "while";
-        case Step::type_try: return "try";
-        case Step::type_catch: return "catch";
-        case Step::type_end: return "end";
-        default: return "unknown"; // TODO: maybe include unknown enum Type?
-    }
-}
-
 /// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
 std::string escape_filename_characters(gul14::string_view str)
 {
@@ -89,12 +71,11 @@ std::string escape_filename_characters(gul14::string_view str)
 
 /// Create the filename. Push the extra leading zero to the step numberings (ie. leading
 /// zeros) to order them alphabetically.
-std::string extract_filename(const int number, int max_digits,
-    const Step& step)
+std::string extract_filename(const int number, int max_digits, const Step& step)
 {
     std::ostringstream ss;
     ss << "step_" << std::setw(max_digits) << std::setfill('0') << number << '_'
-        << type_to_string(step) << ".lua";
+       << to_string(step.get_type()) << ".lua";
     return ss.str();
 }
 
@@ -114,25 +95,27 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     //stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
     //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
 
-    stream << "-- type: " << type_to_string(step) << '\n';
-    stream << "-- label: " << gul14::escape(step.get_label()) << "\n";
+    stream << "-- type: " << to_string(step.get_type()) << '\n';
+    stream << "-- label: " << gul14::escape(step.get_label()) << '\n';
 
     stream << "-- use context variable names: [";
     stream << gul14::join(step.get_used_context_variable_names(), ", ") << "]\n";
 
     auto modify = TimePoint::clock::to_time_t(step.get_time_of_last_modification());
     stream << "-- time of last modification: "
-        << std::put_time(std::localtime(&modify), "%Y-%m-%d %H:%M:%S") << "\n";
+        << std::put_time(std::localtime(&modify), "%Y-%m-%d %H:%M:%S") << '\n';
 
     auto execution = TimePoint::clock::to_time_t(step.get_time_of_last_execution());
     stream << "-- time of last execution: "
-        << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << "\n";
+        << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << '\n';
 
     stream << "-- timeout: ";
     if ( step.get_timeout() == Step::infinite_timeout )
         stream << "infinite\n";
     else
-        stream << step.get_timeout().count() << "\n";
+        stream << step.get_timeout().count() << '\n';
+
+    stream << "-- disabled: " << std::boolalpha << step.is_disabled() << '\n';
 
     stream << step.get_script() << '\n'; // (Marcus) good practice to add a cr at the end
 
