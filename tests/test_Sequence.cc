@@ -3198,3 +3198,32 @@ TEST_CASE("execute(): disable 'invariant' (complex)", "[Sequence]")
         REQUIRE(s[11].is_disabled() == false);
     }
 }
+
+TEST_CASE("execute(): Disable + re-enable action inside while loop", "[Sequence]")
+{
+    //  0 WHILE ...
+    //  1   ACTION
+    //  2 END
+
+    Sequence s{ };
+    s.push_back(Step{ Step::type_while });
+    s.push_back(Step{ Step::type_action });
+    s.push_back(Step{ Step::type_end });
+
+    REQUIRE(s[0].get_indentation_level() == 0);
+    REQUIRE(s[1].get_indentation_level() == 1);
+    REQUIRE(s[2].get_indentation_level() == 0);
+
+    SECTION("Disable WHILE, then attempt to re-enable ACTION")
+    {
+        s.modify(s.begin(), [](Step& st) { st.set_disabled(true); });
+        REQUIRE(s[0].is_disabled() == true);
+        REQUIRE(s[1].is_disabled() == true);
+        REQUIRE(s[2].is_disabled() == true);
+
+        s.modify(s.begin() + 1, [](Step& st) { st.set_disabled(false); });
+        REQUIRE(s[0].is_disabled() == true);
+        REQUIRE(s[1].is_disabled() == true);
+        REQUIRE(s[2].is_disabled() == true);
+    }
+}
