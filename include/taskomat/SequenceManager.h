@@ -86,7 +86,7 @@ public:
      *
      * \return sequences as a list of strings.
      */
-    PathList get_sequence_names();
+    PathList get_sequence_names() const;
 
     /**
      * Loads sequence on the sequence file path.
@@ -97,7 +97,7 @@ public:
      *
      * \exception throws Error if the sequence path is invalid.
      */
-    Sequence load_sequence(std::filesystem::path sequence_path);
+    Sequence load_sequence(std::filesystem::path sequence_path) const;
 
 private:
     /// Root path to the sequences

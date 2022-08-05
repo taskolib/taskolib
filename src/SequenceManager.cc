@@ -28,7 +28,7 @@
 
 namespace task {
 
-SequenceManager::PathList SequenceManager::get_sequence_names()
+SequenceManager::PathList SequenceManager::get_sequence_names() const
 {
     PathList sequences;
     for (auto const& entry : std::filesystem::directory_iterator{path_})
@@ -40,7 +40,7 @@ SequenceManager::PathList SequenceManager::get_sequence_names()
     return sequences;
 }
 
-Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path)
+Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path) const
 {
     auto sequence = path_/sequence_path;
     if (not std::filesystem::exists(sequence))
