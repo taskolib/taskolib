@@ -433,6 +433,77 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
     }
 }
 
+void Sequence::push_back(const Step& step)
+{
+    check_if_sequence_is_running();
+    steps_.push_back(step);
+    indent();
+}
+
+void Sequence::push_back(Step&& step)
+{
+    check_if_sequence_is_running();
+    steps_.push_back(step);
+    indent();
+}
+
+void Sequence::pop_back()
+{
+    check_if_sequence_is_running();
+    if (not steps_.empty())
+        steps_.pop_back();
+    indent();
+}
+
+Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, const Step& step)
+{
+    check_if_sequence_is_running();
+    auto return_iter = steps_.insert(iter, step);
+    indent();
+    return return_iter;
+}
+
+Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, Step&& step)
+{
+    check_if_sequence_is_running();
+    auto return_iter = steps_.insert(iter, std::move(step));
+    indent();
+    return return_iter;
+}
+
+Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
+{
+    check_if_sequence_is_running();
+    auto return_iter = steps_.erase(iter);
+    indent();
+    return return_iter;
+}
+
+Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator first
+    , Sequence::ConstIterator last)
+{
+    check_if_sequence_is_running();
+    auto return_iter = steps_.erase(first, last);
+    indent();
+    return return_iter;
+}
+
+void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
+{
+    check_if_sequence_is_running();
+    auto it = steps_.begin() + (iter - steps_.cbegin());
+    *it = step;
+    indent();
+}
+
+void Sequence::assign(Sequence::ConstIterator iter, Step&& step)
+{
+    check_if_sequence_is_running();
+    auto it = steps_.begin() + (iter - steps_.cbegin());
+    *it = std::move(step);
+    indent();
+}
+
 void Sequence::execute(Context& context, CommChannel* comm)
 {
     try

@@ -205,24 +205,14 @@ public:
      *
      * @param step [IN] \a Step
      */
-    void push_back(const Step& step)
-    {
-        check_if_sequence_is_running();
-        steps_.push_back(step);
-        indent();
-    }
+    void push_back(const Step& step);
 
     /**
      * Attach \a Step rvalue reference to the end of the sequence.
      *
      * @param step [MOVE] \a Step
      */
-    void push_back(Step&& step)
-    {
-        check_if_sequence_is_running();
-        steps_.push_back(step);
-        indent();
-    }
+    void push_back(Step&& step);
 
     /**
      * Remove the last element from the sequence.
@@ -230,13 +220,7 @@ public:
      * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the
      * last element as well as the end() iterator are invalidated.
      */
-    void pop_back()
-    {
-        check_if_sequence_is_running();
-        if (not steps_.empty())
-            steps_.pop_back();
-        indent();
-    }
+    void pop_back();
 
     /**
      * Insert the given \a Step before of the constant iterator into Sequence.
@@ -248,13 +232,7 @@ public:
      * @param step the added \a Step
      * @return inserted \a Step
      */
-    ConstIterator insert(ConstIterator iter, const Step& step)
-    {
-        check_if_sequence_is_running();
-        auto return_iter = steps_.insert(iter, step);
-        indent();
-        return return_iter;
-    }
+    ConstIterator insert(ConstIterator iter, const Step& step);
 
     /**
      * Insert the given \a Step rvalue reference before of the constant iterator into
@@ -267,13 +245,7 @@ public:
      * @param step the added \a Step
      * @return inserted \a Step
      */
-    ConstIterator insert(ConstIterator iter, Step&& step)
-    {
-        check_if_sequence_is_running();
-        auto return_iter = steps_.insert(iter, std::move(step));
-        indent();
-        return return_iter;
-    }
+    ConstIterator insert(ConstIterator iter, Step&& step);
 
     /**
      * Remove \a Step iterator from sequence.
@@ -285,13 +257,7 @@ public:
      * @param iter \a Step iterator to be removed
      * @return Steps::iterator iterator after the removed \a Step
      */
-    ConstIterator erase(ConstIterator iter)
-    {
-        check_if_sequence_is_running();
-        auto return_iter = steps_.erase(iter);
-        indent();
-        return return_iter;
-    }
+    ConstIterator erase(ConstIterator iter);
 
     /**
      * Remove a bunch of \a Step 's iterator from sequence from \a first to \a last . The
@@ -335,13 +301,7 @@ public:
      * @param last last \a Step iterator to be removed (exclusive)
      * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
      */
-    ConstIterator erase(ConstIterator first, ConstIterator last)
-    {
-        check_if_sequence_is_running();
-        auto return_iter = steps_.erase(first, last);
-        indent();
-        return return_iter;
-    }
+    ConstIterator erase(ConstIterator first, ConstIterator last);
 
     /**
      * Modify the \a Step at the given position.
@@ -349,13 +309,7 @@ public:
      * @param iter position to assign the \a Step
      * @param step \a Step
      */
-    void assign(ConstIterator iter, const Step& step)
-    {
-        check_if_sequence_is_running();
-        auto it = steps_.begin() + (iter - steps_.cbegin());
-        *it = step;
-        indent();
-    }
+    void assign(ConstIterator iter, const Step& step);
 
     /**
      * Modify the \a Step at the given position.
@@ -363,13 +317,7 @@ public:
      * @param iter position to assign the \a Step
      * @param step refernce value \a Step
      */
-    void assign(ConstIterator iter, Step&& step)
-    {
-        check_if_sequence_is_running();
-        auto it = steps_.begin() + (iter - steps_.cbegin());
-        *it = std::move(step);
-        indent();
-    }
+    void assign(ConstIterator iter, Step&& step);
 
     /**
      * Execute the sequence within a given context.
