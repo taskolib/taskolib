@@ -46,6 +46,9 @@ Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path)
     if (not std::filesystem::exists(sequence))
         throw Error(gul14::cat("Sequence file path does not exist: ",
             sequence.string()));
+    else if (not std::filesystem::is_directory(sequence))
+        throw Error(gul14::cat("File path to sequence is not a directory: ",
+            sequence.string()));
     return deserialize_sequence(sequence);
 }
 

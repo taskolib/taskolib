@@ -113,6 +113,7 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
     serialize_sequence("unit_test_2", seq_1);
     serialize_sequence("unit_test_2", seq_2);
 
+    // create regular file to test sequence directory loading only.
     std::fstream f("unit_test_2/some_text_file.txt", std::ios::out);
     f.close();
 
@@ -122,6 +123,9 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
     REQUIRE(sequence_paths.size() == 2);
     REQUIRE(sequence_paths[0] == "unit_test_2/test.seq.1");
     REQUIRE(sequence_paths[1] == "unit_test_2/test.seq.2");
+
+    // check for loading sequence directories only (and not any arbritray regular file)
+    REQUIRE_THROWS_AS(sm.load_sequence("unit_test_2/some_text_file.txt"), Error);
 }
 
 TEST_CASE("Load sequence", "[SequenceManager]")
