@@ -25,6 +25,7 @@
 #include <gul14/catch.h>
 #include <utility>
 #include <algorithm>
+#include <fstream>
 #include "taskomat/SequenceManager.h"
 #include "taskomat/serialize_sequence.h"
 
@@ -111,6 +112,9 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
 
     serialize_sequence("unit_test_2", seq_1);
     serialize_sequence("unit_test_2", seq_2);
+
+    std::fstream f("unit_test_2/some_text_file.txt", std::ios::out);
+    f.close();
 
     SequenceManager sm{"unit_test_2"};
     auto sequence_paths = sm.get_sequence_names();

@@ -32,7 +32,8 @@ SequenceManager::SequenceList SequenceManager::get_sequence_names()
 {
     SequenceList sequences;
     for (auto const& entry : std::filesystem::directory_iterator{path_})
-        sequences.push_back(entry.path());
+        if (entry.is_directory())
+            sequences.push_back(entry.path());
 
     std::sort(sequences.begin(), sequences.end());
 
