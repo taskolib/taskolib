@@ -76,33 +76,9 @@ TEST_CASE("Construct SequenceManager with path", "[SequenceManager]")
 
 TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
 {
-    struct S {
-        SequenceManager sm_;
-        S(SequenceManager&& sm) { sm_ = sm; }
-        S(const SequenceManager&& sm) { sm_ = sm; }
-    };
-
-    SECTION("Implicit move constructor")
-    {
-        S s{SequenceManager("unit_test")};
-        REQUIRE(not s.sm_.get_path().empty());
-        REQUIRE(s.sm_.get_path() == "unit_test");
-    }
-
-    SECTION("Explicit move constructor")
-    {
-        SequenceManager sm{"unit_test"};
-        S s{std::move(sm)};
-        REQUIRE(not s.sm_.get_path().empty());
-        REQUIRE(s.sm_.get_path() == "unit_test");
-    }
-
-    SECTION("Explicit move constructor, part II")
-    {
-        SequenceManager sm{std::move(SequenceManager{"unit_test"})};
-        REQUIRE(not sm.get_path().empty());
-        REQUIRE(sm.get_path() == "unit_test");
-    }
+    SequenceManager s{SequenceManager("unit_test")};
+    REQUIRE(not s.get_path().empty());
+    REQUIRE(s.get_path() == "unit_test");
 }
 
 TEST_CASE("Get sequence names", "[SequenceManager]")
@@ -140,8 +116,8 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
     auto sequence_paths = sm.get_sequence_names();
 
     REQUIRE(sequence_paths.size() == 2);
-    REQUIRE(sequence_paths[0] == "test.seq.1");
-    REQUIRE(sequence_paths[1] == "test.seq.2");
+    REQUIRE(sequence_paths[0] == "unit_test_2/test.seq.1");
+    REQUIRE(sequence_paths[1] == "unit_test_2/test.seq.2");
 }
 
 TEST_CASE("Load sequence", "[SequenceManager]")

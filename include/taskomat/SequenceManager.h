@@ -59,7 +59,7 @@ namespace task {
 class SequenceManager
 {
 public:
-    using SequenceList = std::vector<std::string>;
+    using SequenceList = std::vector<std::filesystem::path>;
 
     /**
      * Creates a new instance to manage and control of sequences that are serialized in
@@ -75,15 +75,6 @@ public:
             throw Error("Root sequences path must not be empty.");
         path_ = path;
     }
-
-    /// Destructor.
-    ~SequenceManager() = default;
-
-    /// Copy constructor.
-    SequenceManager(const SequenceManager& orig) = default;
-
-    /// Copy assignment operator.
-    SequenceManager& operator=(const SequenceManager& orig) = default;
 
     /// Equality operator.
     bool operator==(const SequenceManager& compare) const
@@ -120,7 +111,7 @@ public:
      *
      * \exception throws Error if the sequence path is invalid.
      */
-    Sequence load_sequence(std::string sequence_path);
+    Sequence load_sequence(std::filesystem::path sequence_path);
 
 private:
     /// Root path to the sequences
