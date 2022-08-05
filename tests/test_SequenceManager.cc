@@ -31,39 +31,6 @@
 
 using namespace task;
 
-TEST_CASE("Construct empty SequenceManager", "[SequenceManager]")
-{
-    SequenceManager sm;
-
-    SECTION("Empty constructor")
-    {
-        REQUIRE(not sm.get_path().empty());
-        REQUIRE(sm.get_path() == ".");
-    }
-
-    SECTION("Copy constructor")
-    {
-        auto sm1 = sm;
-        REQUIRE(not sm1.get_path().empty());
-        REQUIRE(sm1.get_path() == ".");
-        REQUIRE(sm == sm1);
-    }
-
-    SECTION("Equality operator")
-    {
-        SequenceManager sm1;
-        REQUIRE(sm == sm1);
-        REQUIRE_FALSE(sm != sm1);
-    }
-
-    SECTION("Inequality operator")
-    {
-        SequenceManager sm1{"./another/path/to/sequences"};
-        REQUIRE(sm != sm1);
-        REQUIRE_FALSE(sm == sm1);
-    }
-}
-
 TEST_CASE("Construct SequenceManager with path", "[SequenceManager]")
 {
     SequenceManager sm{"./another/path/to/sequences"};
@@ -161,7 +128,7 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         // store sequence to the default path '.'
         serialize_sequence(".", seq);
 
-        SequenceManager sm{};
+        SequenceManager sm{"."};
         Sequence load = sm.load_sequence(sequence_name);
 
         REQUIRE(load.get_label() == seq.get_label());

@@ -37,8 +37,6 @@ namespace task {
  * A class to have a birds eye view on the underlying serialized sequences in the file
  * system. It allows to manage and control sequences.
  *
- * Per default the root path is set to '.'.
- *
  * Since we have a predefined flat struture for serialize sequences we come to the
  * assumption for the following specification:
  *
@@ -59,33 +57,21 @@ namespace task {
 class SequenceManager
 {
 public:
-    using SequenceList = std::vector<std::filesystem::path>;
+    using PathList = std::vector<std::filesystem::path>;
 
     /**
      * Creates a new instance to manage and control of sequences that are serialized in
-     * the underlying file system. When no root path is specified it set to '.'.
+     * the underlying file system.
      *
      * \param path set root path to the sequence folders.
      *
      * \exception throws Error exception if path is empty.
      */
-    explicit SequenceManager(std::filesystem::path path = ".")
+    explicit SequenceManager(std::filesystem::path path)
     {
         if (path.empty())
             throw Error("Root sequences path must not be empty.");
         path_ = path;
-    }
-
-    /// Equality operator.
-    bool operator==(const SequenceManager& compare) const
-    {
-        return path_ == compare.path_;
-    }
-
-    /// Inequality operator.
-    bool operator!=(const SequenceManager& compare) const
-    {
-        return not operator==(compare);
     }
 
     /**
@@ -93,14 +79,14 @@ public:
      *
      * \return root path of the serialized sequences.
      */
-    std::string get_path() const { return path_.string(); }
+    std::filesystem::path get_path() const { return path_; }
 
     /**
      * Get sequence names without the previous path.
      *
      * \return sequences as a list of strings.
      */
-    SequenceList get_sequence_names();
+    PathList get_sequence_names();
 
     /**
      * Loads sequence on the sequence file path.

@@ -28,9 +28,9 @@
 
 namespace task {
 
-SequenceManager::SequenceList SequenceManager::get_sequence_names()
+SequenceManager::PathList SequenceManager::get_sequence_names()
 {
-    SequenceList sequences;
+    PathList sequences;
     for (auto const& entry : std::filesystem::directory_iterator{path_})
         if (entry.is_directory())
             sequences.push_back(entry.path());
