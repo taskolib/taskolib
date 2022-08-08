@@ -2643,12 +2643,8 @@ TEST_CASE("is_running()", "[Sequence]")
     Step step1{ Step::type_action };
     step1.set_script("a = 10");
 
-    Step step2{ Step::type_action };
-    step2.set_script("b = 13");
-
     Sequence seq;
     seq.push_back(step1);
-    seq.push_back(step2);
 
     REQUIRE(not seq.is_running());
 
@@ -2656,6 +2652,65 @@ TEST_CASE("is_running()", "[Sequence]")
     seq.execute(ctx, nullptr);
 
     REQUIRE(not seq.is_running());
+
+    seq.set_running(true);
+    REQUIRE(seq.is_running() == true);
+
+    seq.set_running(false);
+    REQUIRE(seq.is_running() == false);
+}
+
+TEST_CASE("Sequence cannot be modified while is_running()", "[Sequence]")
+{
+    Step step1{ Step::type_action };
+    step1.set_label("Long running step");
+    step1.set_script("sleep(0.5)");
+
+    Step step2{ Step::type_if };
+    step2.set_label("conditional");
+    step2.set_script("return true");
+
+    Sequence seq;
+    seq.push_back(step1);
+
+    seq.set_running(true);
+    REQUIRE(seq.is_running() == true);
+
+    REQUIRE_THROWS_AS(seq.modify(seq.begin(),
+        [](Step& step) { step.set_label("New label"); }), Error);
+    REQUIRE(seq[0].get_label() == "Long running step");
+
+    REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{ Step::type_while }), Error);
+    REQUIRE(seq[0].get_type() == Step::type_action);
+
+    REQUIRE_THROWS_AS(seq.assign(seq.begin(), step2), Error);
+    REQUIRE(seq[0].get_type() == Step::type_action);
+
+    REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{ Step::type_action }), Error);
+    REQUIRE(seq.size() == 1);
+
+    REQUIRE_THROWS_AS(seq.insert(seq.begin(), step2), Error);
+    REQUIRE(seq.size() == 1);
+
+    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
+    REQUIRE(seq.size() == 1);
+
+    REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
+    REQUIRE(seq.size() == 1);
+
+    REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
+    REQUIRE(seq.size() == 1);
+
+    REQUIRE_THROWS_AS(seq.push_back(step2), Error);
+    REQUIRE(seq.size() == 1);
+
+    REQUIRE_THROWS_AS(seq.pop_back(), Error);
+    REQUIRE(seq.size() == 1);
+
+    // ... but we can modify a not-running sequence, right?
+    seq.set_running(false);
+    seq.pop_back();
+    REQUIRE(seq.empty());
 }
 
 TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")

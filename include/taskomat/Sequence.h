@@ -115,7 +115,7 @@ public:
      *
      * @return true on executing otherwise false.
      */
-    bool is_running() const { return is_running_; }
+    bool is_running() const noexcept { return is_running_; }
 
     /**
      * Return an error string if the sequence is not consistently nested, or an empty
@@ -412,6 +412,14 @@ public:
 
         modification_fct(*it);
     }
+
+    /**
+     * Set the sequence into the state "is running" (true) or "is not running" (false).
+     *
+     * This is usually not a useful call for end users of the library. It is used by the
+     * Executor class and by unit tests.
+     */
+    void set_running(bool running) noexcept { is_running_ = running; }
 
 private:
     /// Empty if indentation is correct and complete, error message otherwise
