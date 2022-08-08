@@ -596,8 +596,10 @@ private:
      * If errors in the logical nesting are found, an approximate indentation is assigned
      * and the member string indentation_error_ is filled with an error message. If the
      * nesting is correct and complete, indentation_error_ is set to an empty string.
+     *
+     * This function does not throw exceptions except for, possibly, std::bad_alloc.
      */
-    void indent() noexcept;
+    void indent();
 
     /**
      * Throw a syntax error for the specified step.

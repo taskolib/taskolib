@@ -258,7 +258,7 @@ Sequence::find_end_of_continuation(Sequence::ConstIterator block_start) const
 static_assert(Step::max_indentation_level
     < std::numeric_limits<decltype(Step::max_indentation_level)>::max());
 
-void Sequence::indent() noexcept
+void Sequence::indent()
 {
     short level = 0;
 
