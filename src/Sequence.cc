@@ -59,10 +59,10 @@ Sequence::Sequence(gul14::string_view label)
     label_ = std::string{ label };
 }
 
-void Sequence::check_if_sequence_is_running() const
+void Sequence::throw_if_running() const
 {
     if (is_running_)
-        throw Error("Reject on manipulating a running sequence");
+        throw Error("Cannot change a running sequence");
 }
 
 void Sequence::check_syntax() const
@@ -502,21 +502,21 @@ Sequence::ConstIterator Sequence::check_syntax_for_if(Sequence::ConstIterator be
 
 void Sequence::push_back(const Step& step)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     steps_.push_back(step);
     enforce_invariants();
 }
 
 void Sequence::push_back(Step&& step)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     steps_.push_back(step);
     enforce_invariants();
 }
 
 void Sequence::pop_back()
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     if (not steps_.empty())
         steps_.pop_back();
     enforce_invariants();
@@ -524,7 +524,7 @@ void Sequence::pop_back()
 
 Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, const Step& step)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     auto return_iter = steps_.insert(iter, step);
     enforce_invariants();
     return return_iter;
@@ -532,7 +532,7 @@ Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, const Ste
 
 Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, Step&& step)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     auto return_iter = steps_.insert(iter, std::move(step));
     enforce_invariants();
     return return_iter;
@@ -540,7 +540,7 @@ Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, Step&& st
 
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     auto return_iter = steps_.erase(iter);
     enforce_invariants();
     return return_iter;
@@ -549,7 +549,7 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator first
     , Sequence::ConstIterator last)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     auto return_iter = steps_.erase(first, last);
     enforce_invariants();
     return return_iter;
@@ -557,7 +557,7 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator first
 
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     auto it = steps_.begin() + (iter - steps_.cbegin());
     *it = step;
     enforce_invariants();
@@ -565,7 +565,7 @@ void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
 
 void Sequence::assign(Sequence::ConstIterator iter, Step&& step)
 {
-    check_if_sequence_is_running();
+    throw_if_running();
     auto it = steps_.begin() + (iter - steps_.cbegin());
     *it = std::move(step);
     enforce_invariants();

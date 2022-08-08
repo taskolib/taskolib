@@ -2639,7 +2639,7 @@ TEST_CASE("modify()", "[Sequence]")
     }
 }
 
-TEST_CASE("check_if_sequence_is_running()", "[Sequence]")
+TEST_CASE("throw_if_running()", "[Sequence]")
 {
     Step step_01{ Step::type_action };
     step_01.set_label("Long running step");
@@ -2676,7 +2676,7 @@ TEST_CASE("check_if_sequence_is_running()", "[Sequence]")
     execute_sequence.join();
 }
 
-TEST_CASE("throw at check_if_sequence_is_running()", "[Sequence]")
+TEST_CASE("throw at throw_if_running()", "[Sequence]")
 {
     Step step_01{Step::type_action};
     step_01.set_label("Long running step");

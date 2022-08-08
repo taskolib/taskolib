@@ -372,7 +372,7 @@ public:
     template <typename Closure>
     void modify(ConstIterator iter, Closure modification_fct)
     {
-        check_if_sequence_is_running();
+        throw_if_running();
 
         // Construct a mutable iterator from the given ConstIterator
         const auto it = steps_.begin() + (iter - steps_.cbegin());
@@ -419,7 +419,7 @@ private:
     bool is_running_{false};
 
     /// When the sequence is executed it rejects with an Error exception.
-    void check_if_sequence_is_running() const;
+    void throw_if_running() const;
 
 
     /// Check that the given description is valid. If not then throws a task::Error.
