@@ -94,24 +94,6 @@ public:
     explicit Sequence(gul14::string_view label = "anonymous");
 
     /**
-     * Add Step to the sequence.
-     *
-     * @param step [IN] \a Step
-     * @deprecated Replace by push_back(const Step&). Can be removed in future releases.
-     */
-    [[deprecated("No longer supported")]]
-    void add_step(const Step& step) { push_back(step); }
-
-    /**
-     * Add Step to the sequence.
-     *
-     * @param step [MOVE] \a Step
-     * @deprecated Replace by push_back(Step&&). Can be removed in future releases.
-     */
-    [[deprecated("No longer supported")]]
-    void add_step(Step&& step) { push_back(std::move(step)); }
-
-    /**
      * Assign a Step to the sequence entry at the given position.
      *
      * @param iter Position to which the Step should be assigned
