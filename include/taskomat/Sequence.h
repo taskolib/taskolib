@@ -327,6 +327,9 @@ public:
      * given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is
      * finished or has stopped with an error.
      *
+     * During execute(), is_running() returns true (which can only be observed by internal
+     * functions or LUA callbacks). Afterwards, it returns false.
+     *
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function
      *                that is run before each step.

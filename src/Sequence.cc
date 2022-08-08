@@ -573,41 +573,29 @@ void Sequence::assign(Sequence::ConstIterator iter, Step&& step)
 
 void Sequence::execute(Context& context, CommChannel* comm)
 {
+    const auto clear_is_running_at_function_exit =
+        gul14::finally([this]{ is_running_ = false; });
+
+    is_running_ = true;
+
+    check_syntax();
+
+    send_message(comm, Message::Type::sequence_started, "Sequence started",
+                 Clock::now(), 0);
+
     try
     {
-        is_running_ = true;
-
-        check_syntax();
-
-        send_message(comm, Message::Type::sequence_started, "Sequence started",
-                    Clock::now(), 0);
-
-        try
-        {
-            execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
-        }
-        catch (const std::exception& e)
-        {
-            send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
-                        Clock::now(), 0);
-            throw;
-        }
-
-        send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
-                    Clock::now(), 0);
+        execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
     }
-    // exception order is important
-    catch(const Error& e)
+    catch (const std::exception& e)
     {
-        is_running_ = false;
-        throw e;
+        send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
+                     Clock::now(), 0);
+        throw;
     }
-    catch(const std::exception& e)
-    {
-        is_running_ = false;
-        throw e;
-    }
-    is_running_ = false;
+
+    send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
+                 Clock::now(), 0);
 }
 
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
