@@ -29,9 +29,11 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+
 #include <gul14/finalizer.h>
 #include <gul14/string_view.h>
 #include <gul14/cat.h>
+
 #include "taskomat/CommChannel.h"
 #include "taskomat/Context.h"
 #include "taskomat/Error.h"
@@ -92,6 +94,62 @@ public:
     explicit Sequence(gul14::string_view label = "anonymous");
 
     /**
+     * Assign a Step to the sequence entry at the given position.
+     *
+     * @param iter Position to which the Step should be assigned
+     * @param step New step to be assigned to the sequence entry
+     */
+    void assign(ConstIterator iter, const Step& step);
+
+    /**
+     * Assign a Step to the sequence entry at the given position.
+     *
+     * @param iter Position to which the Step should be assigned
+     * @param step New step to be assigned to the sequence entry
+     */
+    void assign(ConstIterator iter, Step&& step);
+
+    /**
+     * Return a constant iterator to the first Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstIterator begin() const noexcept { return steps_.cbegin(); }
+
+    /**
+     * Return a constant iterator to the first Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstIterator cbegin() const noexcept { return steps_.cbegin(); }
+
+    /**
+     * Return a constant iterator pointing past the last Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstIterator cend() const noexcept { return steps_.cend(); }
+
+    /**
+     * Return a constant reverse iterator to the last Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstReverseIterator crbegin() const noexcept { return steps_.crbegin(); }
+
+    /**
+     * Return a constant reverse iterator pointing before the first Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstReverseIterator crend() const noexcept { return steps_.crend(); }
+
+    /**
      * Validates if the \a Step 's token are correctly enclosed in a proper way.
      *
      * It is done by validating the step types where each must fit to one of the
@@ -110,48 +168,8 @@ public:
      */
     void check_syntax() const;
 
-    /**
-     * Return an error string if the sequence is not consistently nested, or an empty
-     * string if the nesting is correct.
-     */
-    const std::string& get_indentation_error() const noexcept { return indentation_error_; }
-
-    /**
-     * Return the sequence label.
-     *
-     * @returns a descriptive name for the sequence.
-     */
-    const std::string& get_label() const noexcept { return label_; }
-
     /// Determine whether the sequence contains no steps.
     bool empty() const noexcept { return steps_.empty(); }
-
-    /**
-     * Access the step at a given index.
-     *
-     * The index operator can only be used for read access to the sequence steps. This is
-     * because Sequence has to maintain invariants such as the correct indentation
-     * whenever steps are modified.
-     */
-    const Step& operator[](SizeType idx) const noexcept { return steps_[idx]; }
-
-    /**
-     * Return a constant iterator to the first Step in the container.
-     *
-     * Non-const iterators are not available because Sequence has to maintain invariants
-     * such as the correct indentation whenever steps are modified.
-     */
-    ConstIterator begin() const noexcept { return steps_.cbegin(); }
-    ConstIterator cbegin() const noexcept { return steps_.cbegin(); }
-
-    /**
-     * Return a constant reverse iterator to the last Step in the container.
-     *
-     * Non-const iterators are not available because Sequence has to maintain invariants
-     * such as the correct indentation whenever steps are modified.
-     */
-    ConstReverseIterator rbegin() const noexcept { return steps_.crbegin(); }
-    ConstReverseIterator crbegin() const noexcept { return steps_.crbegin(); }
 
     /**
      * Return a constant iterator pointing past the last Step in the container.
@@ -160,95 +178,6 @@ public:
      * such as the correct indentation whenever steps are modified.
      */
     ConstIterator end() const noexcept { return steps_.cend(); }
-    ConstIterator cend() const noexcept { return steps_.cend(); }
-
-    /**
-     * Return a constant reverse iterator pointing before the first Step in the container.
-     * element of the
-     *
-     * Non-const iterators are not available because Sequence has to maintain invariants
-     * such as the correct indentation whenever steps are modified.
-     */
-    ConstReverseIterator rend() const noexcept { return steps_.crend(); }
-    ConstReverseIterator crend() const noexcept { return steps_.crend(); }
-
-    /// Return the number of steps contained in this sequence.
-    SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
-
-    /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [IN] \a Step
-     * @deprecated Replace by push_back(const Step&). Can be removed in future releases.
-     */
-    [[deprecated("No longer supported")]]
-    void add_step(const Step& step) { push_back(step); }
-
-    /**
-     * Add \a Step to the sequence.
-     *
-     * @param step [MOVE] \a Step
-     * @deprecated Replace by push_back(Step&&). Can be removed in future releases.
-     */
-    [[deprecated("No longer supported")]]
-    void add_step(Step&& step) { push_back(std::move(step)); }
-
-    /**
-     * Attach \a Step reference to the end of the sequence.
-     *
-     * @param step [IN] \a Step
-     */
-    void push_back(const Step& step) { steps_.push_back(step); enforce_invariants(); }
-
-    /**
-     * Attach \a Step rvalue reference to the end of the sequence.
-     *
-     * @param step [MOVE] \a Step
-     */
-    void push_back(Step&& step) { steps_.push_back(step); enforce_invariants(); }
-
-    /**
-     * Remove the last element from the sequence.
-     *
-     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the
-     * last element as well as the end() iterator are invalidated.
-     */
-    void pop_back() { if (not steps_.empty()) steps_.pop_back(); enforce_invariants(); }
-
-    /**
-     * Insert the given \a Step before of the constant iterator into Sequence.
-     *
-     * When the size increase the capacity a reallocation is performed that invalidates
-     * all iterators. One can check with has_valid_iterators().
-     *
-     * @param iter constant \a Step iterator in the Sequence
-     * @param step the added \a Step
-     * @return inserted \a Step
-     */
-    ConstIterator insert(ConstIterator iter, const Step& step)
-    {
-        auto return_iter = steps_.insert(iter, step);
-        enforce_invariants();
-        return return_iter;
-    }
-
-    /**
-     * Insert the given \a Step rvalue reference before of the constant iterator into
-     * Sequence.
-     *
-     * When the size increase the capacity a reallocation is performed that invalidates
-     * all iterators. One can check with has_valid_iterators().
-     *
-     * @param iter constant \a Step iterator in the Sequence
-     * @param step the added \a Step
-     * @return inserted \a Step
-     */
-    ConstIterator insert(ConstIterator iter, Step&& step)
-    {
-        auto return_iter = steps_.insert(iter, std::move(step));
-        enforce_invariants();
-        return return_iter;
-    }
 
     /**
      * Remove \a Step iterator from sequence.
@@ -260,12 +189,7 @@ public:
      * @param iter \a Step iterator to be removed
      * @return Steps::iterator iterator after the removed \a Step
      */
-    ConstIterator erase(ConstIterator iter)
-    {
-        auto return_iter = steps_.erase(iter);
-        enforce_invariants();
-        return return_iter;
-    }
+    ConstIterator erase(ConstIterator iter);
 
     /**
      * Remove a bunch of \a Step 's iterator from sequence from \a first to \a last . The
@@ -309,38 +233,7 @@ public:
      * @param last last \a Step iterator to be removed (exclusive)
      * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
      */
-    ConstIterator erase(ConstIterator first, ConstIterator last)
-    {
-        auto return_iter = steps_.erase(first, last);
-        enforce_invariants();
-        return return_iter;
-    }
-
-    /**
-     * Modify the \a Step at the given position.
-     *
-     * @param iter position to assign the \a Step
-     * @param step \a Step
-     */
-    void assign(ConstIterator iter, const Step& step)
-    {
-        auto it = steps_.begin() + (iter - steps_.cbegin());
-        *it = step;
-        enforce_invariants();
-    }
-
-    /**
-     * Modify the \a Step at the given position.
-     *
-     * @param iter position to assign the \a Step
-     * @param step refernce value \a Step
-     */
-    void assign(ConstIterator iter, Step&& step)
-    {
-        auto it = steps_.begin() + (iter - steps_.cbegin());
-        *it = std::move(step);
-        enforce_invariants();
-    }
+    ConstIterator erase(ConstIterator first, ConstIterator last);
 
     /**
      * Execute the sequence within a given context.
@@ -349,6 +242,9 @@ public:
      * fails. Then, it executes the sequence step by step, following the control flow
      * given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is
      * finished or has stopped with an error.
+     *
+     * During execute(), is_running() returns true (which can only be observed by internal
+     * functions or LUA callbacks). Afterwards, it returns false.
      *
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function
@@ -362,6 +258,51 @@ public:
      *            or if it raises an error during execution.
      */
     void execute(Context& context, CommChannel* comm_channel);
+
+    /**
+     * Return an error string if the sequence is not consistently nested, or an empty
+     * string if the nesting is correct.
+     */
+    const std::string& get_indentation_error() const noexcept { return indentation_error_; }
+
+    /**
+     * Return the sequence label.
+     *
+     * @returns a descriptive name for the sequence.
+     */
+    const std::string& get_label() const noexcept { return label_; }
+
+    /**
+     * Insert the given \a Step before of the constant iterator into Sequence.
+     *
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *
+     * @param iter constant \a Step iterator in the Sequence
+     * @param step the added \a Step
+     * @return inserted \a Step
+     */
+    ConstIterator insert(ConstIterator iter, const Step& step);
+
+    /**
+     * Insert the given \a Step rvalue reference before of the constant iterator into
+     * Sequence.
+     *
+     * When the size increase the capacity a reallocation is performed that invalidates
+     * all iterators. One can check with has_valid_iterators().
+     *
+     * @param iter constant \a Step iterator in the Sequence
+     * @param step the added \a Step
+     * @return inserted \a Step
+     */
+    ConstIterator insert(ConstIterator iter, Step&& step);
+
+    /**
+     * Retrieve if the sequence is executed.
+     *
+     * @return true on executing otherwise false.
+     */
+    bool is_running() const noexcept { return is_running_; }
 
     /**
      * Modify a step inside the sequence.
@@ -395,6 +336,8 @@ public:
     template <typename Closure>
     void modify(ConstIterator iter, Closure modification_fct)
     {
+        throw_if_running();
+
         // Construct a mutable iterator from the given ConstIterator
         const auto it = steps_.begin() + (iter - steps_.cbegin());
 
@@ -431,12 +374,72 @@ public:
         modification_fct(*it);
     }
 
+    /**
+     * Access the step at a given index.
+     *
+     * The index operator can only be used for read access to the sequence steps. This is
+     * because Sequence has to maintain invariants such as the correct indentation
+     * whenever steps are modified.
+     */
+    const Step& operator[](SizeType idx) const noexcept { return steps_[idx]; }
+
+    /**
+     * Remove the last element from the sequence.
+     *
+     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the
+     * last element as well as the end() iterator are invalidated.
+     */
+    void pop_back();
+
+    /**
+     * Attach \a Step reference to the end of the sequence.
+     *
+     * @param step [IN] \a Step
+     */
+    void push_back(const Step& step);
+
+    /**
+     * Attach \a Step rvalue reference to the end of the sequence.
+     *
+     * @param step [MOVE] \a Step
+     */
+    void push_back(Step&& step);
+
+    /**
+     * Return a constant reverse iterator to the last Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstReverseIterator rbegin() const noexcept { return steps_.crbegin(); }
+
+    /**
+     * Return a constant reverse iterator pointing before the first Step in the container.
+     *
+     * Non-const iterators are not available because Sequence has to maintain invariants
+     * such as the correct indentation whenever steps are modified.
+     */
+    ConstReverseIterator rend() const noexcept { return steps_.crend(); }
+
+    /**
+     * Set the sequence into the state "is running" (true) or "is not running" (false).
+     *
+     * This is usually not a useful call for end users of the library. It is used by the
+     * Executor class and by unit tests.
+     */
+    void set_running(bool running) noexcept { is_running_ = running; }
+
+    /// Return the number of steps contained in this sequence.
+    SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
+
 private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
     std::string label_;
     Steps steps_;
+    bool is_running_{false};
+
 
     /// Check that the given description is valid. If not then throws a task::Error.
     void check_label(gul14::string_view label);
@@ -458,15 +461,16 @@ private:
     void check_syntax(ConstIterator begin, ConstIterator end) const;
 
     /**
-     * Internal syntax check for while-clauses. Invoked by
+     * Internal syntax check for if-elseif-else-clauses. Invoked by
      * check_syntax(ConstIterator, ConstIterator).
      *
-     * @param begin Iterator pointing to the WHILE step; must be dereferenceable.
+     * @param begin Iterator pointing to the IF step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
-     * @returns an iterator pointing to the first step after the WHILE..END construct.
-     * @exception Error is thrown if a syntax error is found.
+     * @returns an iterator pointing to the first step after the IF..(ELSEIF)..(ELSE)..END
+     *          construct.
+     * @exception Error is thrown if an ill-formed 'if-elseif-else' token is found.
      */
-    ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
+    ConstIterator check_syntax_for_if(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by
@@ -480,16 +484,15 @@ private:
     ConstIterator check_syntax_for_try(ConstIterator begin, ConstIterator end) const;
 
     /**
-     * Internal syntax check for if-elseif-else-clauses. Invoked by
+     * Internal syntax check for while-clauses. Invoked by
      * check_syntax(ConstIterator, ConstIterator).
      *
-     * @param begin Iterator pointing to the IF step; must be dereferenceable.
+     * @param begin Iterator pointing to the WHILE step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
-     * @returns an iterator pointing to the first step after the IF..(ELSEIF)..(ELSE)..END
-     *          construct.
-     * @exception Error is thrown if an ill-formed 'if-elseif-else' token is found.
+     * @returns an iterator pointing to the first step after the WHILE..END construct.
+     * @exception Error is thrown if a syntax error is found.
      */
-    ConstIterator check_syntax_for_if(ConstIterator begin, ConstIterator end) const;
+    ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Update the disabled flag of all steps to ensure that control structures are not
@@ -508,9 +511,10 @@ private:
     /**
      * Make sure that all class invariants are upheld.
      *
-     * This call updates the indentation and the "disabled" flags.
+     * This call updates the indentation and the "disabled" flags. It does not throw
+     * exceptions except for, possibly, std::bad_alloc.
      */
-    void enforce_invariants() noexcept;
+    void enforce_invariants();
 
     /**
      * Execute an ELSE block.
@@ -612,8 +616,13 @@ private:
      * If errors in the logical nesting are found, an approximate indentation is assigned
      * and the member string indentation_error_ is filled with an error message. If the
      * nesting is correct and complete, indentation_error_ is set to an empty string.
+     *
+     * This function does not throw exceptions except for, possibly, std::bad_alloc.
      */
-    void indent() noexcept;
+    void indent();
+
+    /// When the sequence is executed it rejects with an Error exception.
+    void throw_if_running() const;
 
     /**
      * Throw a syntax error for the specified step.

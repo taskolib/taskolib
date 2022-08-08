@@ -68,6 +68,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 
     Executor executor;
 
+    REQUIRE(sequence.is_running() == false);
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
 
@@ -79,9 +80,11 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     // Starting another sequence must fail because the first one is still running
     REQUIRE_THROWS_AS(executor.run_asynchronously(sequence, context), Error);
 
-    // As long as the thread is running, update() and is_busy() must return true
+    // As long as the thread is running, update() and is_busy() must return true,
+    // and the sequence must signalize is_running().
     REQUIRE(executor.is_busy() == true);
     REQUIRE(executor.update(sequence) == true);
+    REQUIRE(sequence.is_running() == true);
 
     bool have_seen_running_step =
         std::any_of(sequence.begin(), sequence.end(),
@@ -103,10 +106,12 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     REQUIRE(gul14::toc(t0) >= 0.02);
 
     // Thread has now finished. As long as we do not start another one, update() and
-    // is_busy() keep returning false
+    // is_busy() keep returning false.
     REQUIRE(executor.update(sequence) == false);
     REQUIRE(executor.is_busy() == false);
 
+    // Both the sequence and all of its steps must show is_running() == false.
+    REQUIRE(sequence.is_running() == false);
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
 }

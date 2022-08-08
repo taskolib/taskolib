@@ -100,7 +100,7 @@ bool Executor::is_busy()
     return false;
 }
 
-void Executor::run_asynchronously(Sequence sequence, Context context)
+void Executor::run_asynchronously(Sequence& sequence, Context context)
 {
     if (future_.valid())
         throw Error("Busy executing another sequence");
@@ -114,8 +114,10 @@ void Executor::run_asynchronously(Sequence sequence, Context context)
     context.log_warning_function = log_warning_to_message_queue;
     context.log_error_function = log_error_to_message_queue;
 
-    future_ = std::async(std::launch::async, execute_sequence, std::move(sequence),
+    future_ = std::async(std::launch::async, execute_sequence, sequence,
                          std::move(context), comm_channel_);
+
+    sequence.set_running(true);
 }
 
 bool Executor::update(Sequence& sequence)
@@ -126,6 +128,8 @@ bool Executor::update(Sequence& sequence)
         const Message& msg = *opt_msg;
         const auto step_idx = msg.get_index();
         const auto step_it = sequence.begin() + step_idx;
+
+        const bool was_running = sequence.is_running();
 
         switch (msg.get_type())
         {
@@ -148,22 +152,30 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::sequence_started:
             break;
         case Message::Type::sequence_stopped:
+            sequence.set_running(false);
             break;
         case Message::Type::sequence_stopped_with_error:
+            sequence.set_running(false);
             if (context_.log_error_function)
                 context_.log_error_function(msg.get_text(), 0, nullptr);
             break;
         case Message::Type::step_started:
+            sequence.set_running(false); // temporarily allow modification
             sequence.modify(step_it, [ts = msg.get_timestamp()](Step& s) {
                 s.set_running(true);
                 s.set_time_of_last_execution(ts);
             });
+            sequence.set_running(was_running);
             break;
         case Message::Type::step_stopped:
+            sequence.set_running(false); // temporarily allow modification
             sequence.modify(step_it, [](Step& s) { s.set_running(false); });
+            sequence.set_running(was_running);
             break;
         case Message::Type::step_stopped_with_error:
+            sequence.set_running(false); // temporarily allow modification
             sequence.modify(step_it, [](Step& s) { s.set_running(false); });
+            sequence.set_running(was_running);
             if (context_.log_error_function)
                 context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;

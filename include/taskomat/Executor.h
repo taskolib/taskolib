@@ -135,12 +135,14 @@ public:
      * Start a copy of the given sequence in a separate thread.
      * The given sequence is updated in this thread whenever update() is called.
      *
-     * \param sequence  The sequence to be executed
+     * \param sequence  Reference to the sequence to be executed; This sequence is marked
+     *                  as is_running(), but the actual execution takes place on a copy
+     *                  in a separate thread.
      * \param context   The context in which the sequence should be executed.
      *
      * \exception Error is thrown if this executor is still busy running another sequence.
      */
-    void run_asynchronously(Sequence sequence, Context context);
+    void run_asynchronously(Sequence& sequence, Context context);
 
     /**
      * Update the local copy of the sequence from messages that have arrived from the
