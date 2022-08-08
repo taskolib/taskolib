@@ -30,6 +30,7 @@
 #include "taskomat/Executor.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
+#include "taskomat/Taskomat.h"
 #include "taskomat/time_types.h"
 #include "taskomat/VariableName.h"
 

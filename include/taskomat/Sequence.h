@@ -358,11 +358,11 @@ public:
      * invariants (like "all steps are always correctly indented"). A call to modify(),
      * however, reestablishes these invariants after the modification if necessary.
      *
-     * \param it  An iterator to the Step that should be modified. The step must be part
-     *            of this sequence.
+     * \param iter  An iterator to the Step that should be modified. The step must be part
+     *              of this sequence.
      * \param modification_fct  A function or function object with the signature
-     *            `void fct(Step&)` that applies the desired modifications on a Step.
-     *            The step reference becomes invalid after the call.
+     *              `void fct(Step&)` that applies the desired modifications on a Step.
+     *              The step reference becomes invalid after the call.
      *
      * \exception
      * If an exception is thrown by the modification function, the step may only be
@@ -370,9 +370,13 @@ public:
      * exception guarantee).
      */
     template <typename Closure>
-    void modify(ConstIterator it, Closure modification_fct)
+    void modify(ConstIterator iter, Closure modification_fct)
     {
         check_if_sequence_is_running();
+
+        // Construct a mutable iterator from the given ConstIterator
+        const auto it = steps_.begin() + (iter - steps_.cbegin());
+
         // Reindent at the end of the function, even if an exception is thrown
         auto indent_if_necessary = gul14::finally(
             [this,
@@ -381,21 +385,29 @@ public:
              old_type = it->get_type(),
              old_disabled = it->is_disabled()]()
             {
-                auto disable_changed = old_disabled != it->is_disabled();
-                if (it->get_indentation_level() != old_indentation_level
-                    or it->get_type() != old_type
-                    or disable_changed)
+                if (it->get_type() != old_type
+                    || it->get_indentation_level() != old_indentation_level)
                 {
-                    if (disable_changed)
-                        indent(it); // This forces the same disable-ness of the complete structure
-                    else
-                        indent();
+                    indent();
                 }
+
+                // Special treatment for re-enabling an entire block-with-continuation
+                // if its head step is re-enabled
+                if (it->is_disabled() == false && old_disabled == true)
+                {
+                    if (it->get_type() == Step::type_if
+                        || it->get_type() == Step::type_while
+                        || it->get_type() == Step::type_try)
+                    {
+                        auto it_end = find_end_of_continuation(it);
+                        std::for_each(it, it_end, [](Step& st) { st.set_disabled(false); });
+                    }
+                }
+
+                enforce_consistency_of_disabled_flags();
             });
 
-        auto mutable_it = steps_.begin() + (it - steps_.cbegin());
-
-        modification_fct(*mutable_it);
+        modification_fct(*it);
     }
 
 private:
@@ -424,36 +436,36 @@ private:
      *
      * @param begin Iterator pointing to the first step to be checked
      * @param end   Iterator pointing past the last step to be checked
-     * @exception throws an \a Error exception if an ill-formed token is found.
+     * @exception Error is thrown if a syntax error is found.
      * @see check_syntax()
      */
     void check_syntax(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for while-clauses. Invoked by
-     * \a check_syntax(const int, SizeType).
+     * check_syntax(ConstIterator, ConstIterator).
      *
      * @param begin Iterator pointing to the WHILE step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
      * @returns an iterator pointing to the first step after the WHILE..END construct.
-     * @exception throws an \a Error exception if an ill-formed 'while' token is found.
+     * @exception Error is thrown if a syntax error is found.
      */
     ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for try-catch-clauses. Invoked by
-     * \a check_syntax(const int, SizeType).
+     * check_syntax(ConstIterator, ConstIterator).
      *
      * @param begin Iterator pointing to the TRY step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
      * @returns an iterator pointing to the first step after the TRY..CATCH..END construct.
-     * @exception throws an \a Error exception if an ill-formed 'try' token is found.
+     * @exception Error is thrown if a syntax error is found.
      */
     ConstIterator check_syntax_for_try(ConstIterator begin, ConstIterator end) const;
 
     /**
      * Internal syntax check for if-elseif-else-clauses. Invoked by
-     * \a check_syntax(const int, SizeType).
+     * check_syntax(ConstIterator, ConstIterator).
      *
      * @param begin Iterator pointing to the IF step; must be dereferenceable.
      * @param end   Iterator pointing past the last step to be checked
@@ -462,6 +474,27 @@ private:
      * @exception Error is thrown if an ill-formed 'if-elseif-else' token is found.
      */
     ConstIterator check_syntax_for_if(ConstIterator begin, ConstIterator end) const;
+
+    /**
+     * Update the disabled flag of all steps to ensure that control structures are not
+     * partially disabled.
+     *
+     * In particular, if the starting step of a control structure is disabled, all steps
+     * contained within it as well as the final end are disabled. If the starting step of
+     * a control structure is enabled, all associated control steps (else, elseif, catch,
+     * end) are enabled as well.
+     *
+     * \pre
+     * The steps must be correctly indented as per calling indent().
+     */
+    void enforce_consistency_of_disabled_flags() noexcept;
+
+    /**
+     * Make sure that all class invariants are upheld.
+     *
+     * This call updates the indentation and the "disabled" flags.
+     */
+    void enforce_invariants() noexcept;
 
     /**
      * Execute an ELSE block.
@@ -541,27 +574,30 @@ private:
     execute_while_block(Iterator begin, Iterator end, Context& context, CommChannel* comm);
 
     /**
+     * Return an iterator past the END step that ends the block-with-continuation starting
+     * at a given iterator.
+     *
+     * \code
+     * WHILE    <- block_start
+     *   ACTION
+     * END
+     * ACTION   <- find_end_of_continuation(block_start)
+     * \endcode
+     *
+     * \returns an iterator past the matching END step or steps_.end() if there is no
+     *          matching END step.
+     */
+    Iterator find_end_of_continuation(Iterator block_start);
+    ConstIterator find_end_of_continuation(ConstIterator block_start) const;
+
+    /**
      * Assign indentation levels to all steps according to their logical nesting.
      *
      * If errors in the logical nesting are found, an approximate indentation is assigned
      * and the member string indentation_error_ is filled with an error message. If the
      * nesting is correct and complete, indentation_error_ is set to an empty string.
-     *
-     * It also updates the disabled flag of all steps, keeping either a complete control
-     * structure disabled (and all that is contained) or not.
-     *
-     * If enable_nested_from is set the complete control structure that starts there is
-     * re-enabled, and not only the control structure itself without all what is contained.
-     *
      */
-    void indent(ConstIterator enable_nested_from) noexcept;
-
-    /**
-     * Convenience helper for indent(ConstIterator) that just checks the indentation levels
-     * and the disabled flags, but does not turn on (dis-disable) complete control structures
-     * with what is contained (keeps contained stuff on or off, however is has been set before).
-     */
-    void indent() noexcept { indent(steps_.end()); }
+    void indent() noexcept;
 
     /**
      * Throw a syntax error for the specified step.
