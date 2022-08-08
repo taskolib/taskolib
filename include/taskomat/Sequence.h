@@ -495,9 +495,10 @@ private:
     /**
      * Make sure that all class invariants are upheld.
      *
-     * This call updates the indentation and the "disabled" flags.
+     * This call updates the indentation and the "disabled" flags. It does not throw
+     * exceptions except for, possibly, std::bad_alloc.
      */
-    void enforce_invariants() noexcept;
+    void enforce_invariants();
 
     /**
      * Execute an ELSE block.

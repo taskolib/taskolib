@@ -85,7 +85,7 @@ void Sequence::check_label(gul14::string_view label)
     }
 }
 
-void Sequence::enforce_invariants() noexcept
+void Sequence::enforce_invariants()
 {
     indent();
     enforce_consistency_of_disabled_flags();
