@@ -22,9 +22,9 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <ctime>
-#include <iomanip> // for std::put_time
 #include <gul14/cat.h>
+#include <gul14/finalizer.h>
+
 #include "sol/sol.hpp"
 #include "taskomat/Error.h"
 #include "taskomat/Step.h"
@@ -100,6 +100,11 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
 bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index)
 {
     const auto now = Clock::now();
+
+    const auto set_is_running_to_false_after_execution =
+        gul14::finally([this] { set_running(false); });
+
+    set_running(true);
     set_time_of_last_execution(now);
 
     send_message(comm, Message::Type::step_started, "Step started", now, index);
