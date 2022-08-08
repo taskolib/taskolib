@@ -22,7 +22,6 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <thread>
 #include <gul14/catch.h>
 #include "taskomat/Sequence.h"
 
@@ -2639,88 +2638,24 @@ TEST_CASE("modify()", "[Sequence]")
     }
 }
 
-TEST_CASE("throw_if_running()", "[Sequence]")
+TEST_CASE("is_running()", "[Sequence]")
 {
-    Step step_01{ Step::type_action };
-    step_01.set_label("Long running step");
-    step_01.set_script("sleep(0.5)");
+    Step step1{ Step::type_action };
+    step1.set_script("a = 10");
 
-    Step step_modify{ Step::type_action };
-    step_modify.set_label("Modify");
+    Step step2{ Step::type_action };
+    step2.set_script("b = 13");
 
     Sequence seq;
-    seq.push_back(step_01);
+    seq.push_back(step1);
+    seq.push_back(step2);
 
-    std::thread execute_sequence([=,&seq]()
-        {
-            Context ctx;
-            seq.execute(ctx, nullptr);
-            REQUIRE(not seq.is_running());
-        });
-    std::this_thread::sleep_for(100ms);
+    REQUIRE(not seq.is_running());
 
-    REQUIRE(seq.is_running());
+    Context ctx;
+    seq.execute(ctx, nullptr);
 
-    REQUIRE_THROWS_AS(seq.modify(seq.begin(), [](Step& step) {
-        step.set_label("New label"); }), Error);
-    REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.assign(seq.begin(), step_modify), Error);
-    REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.insert(seq.begin(), step_modify), Error);
-    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
-    REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
-    REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.push_back(step_modify), Error);
-    REQUIRE_THROWS_AS(seq.pop_back(), Error);
-
-    execute_sequence.join();
-}
-
-TEST_CASE("throw at throw_if_running()", "[Sequence]")
-{
-    Step step_01{Step::type_action};
-    step_01.set_label("Long running step");
-    step_01.set_script("sleep(0.5)");
-
-    // This step will throw an exception due to misinterpreting the Lua script
-    Step step_02{Step::type_action};
-    step_02.set_label("Crash step");
-    step_02.set_script("this Lua code will definitely crash");
-
-    Step step_modify{Step::type_action};
-    step_modify.set_label("Modify");
-
-    Sequence seq;
-    seq.push_back(step_01);
-    seq.push_back(step_02);
-
-    std::thread execute_sequence([=,&seq]()
-        {
-            Context ctx;
-
-            // Change to the previous unit test that throws an exception due to Lua
-            // syntax error in step 2
-            REQUIRE_THROWS_AS(seq.execute(ctx, nullptr), Error);
-
-            REQUIRE(not seq.is_running());
-        });
-    std::this_thread::sleep_for(100ms);
-
-    REQUIRE(seq.is_running());
-
-    REQUIRE_THROWS_AS(seq.modify(seq.begin(), [](Step& step) {
-        step.set_label("New label"); }), Error);
-    REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.assign(seq.begin(), step_modify), Error);
-    REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.insert(seq.begin(), step_modify), Error);
-    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
-    REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
-    REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
-    REQUIRE_THROWS_AS(seq.push_back(step_modify), Error);
-    REQUIRE_THROWS_AS(seq.pop_back(), Error);
-
-    execute_sequence.join();
+    REQUIRE(not seq.is_running());
 }
 
 TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
