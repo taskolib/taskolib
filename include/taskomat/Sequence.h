@@ -30,9 +30,9 @@
 #include <string>
 #include <vector>
 
+#include <gul14/cat.h>
 #include <gul14/finalizer.h>
 #include <gul14/string_view.h>
-#include <gul14/cat.h>
 
 #include "taskomat/CommChannel.h"
 #include "taskomat/Context.h"
@@ -72,13 +72,10 @@ class Sequence
 {
 public:
     /// Abbreviation for steps.
-    using Steps = std::vector<Step>;
     using SizeType = std::uint16_t;
-    using size_type = SizeType;
-    using Iterator = Steps::iterator;
-    using ReverseIterator = Steps::reverse_iterator;
-    using ConstIterator = Steps::const_iterator;
-    using ConstReverseIterator = Steps::const_reverse_iterator;
+    using Iterator = std::vector<Step>::iterator;
+    using ConstIterator = std::vector<Step>::const_iterator;
+    using ConstReverseIterator = std::vector<Step>::const_reverse_iterator;
 
     static constexpr std::size_t max_label_length = 128;
 
@@ -437,7 +434,7 @@ private:
     std::string indentation_error_;
 
     std::string label_;
-    Steps steps_;
+    std::vector<Step> steps_;
     bool is_running_{false};
 
 
