@@ -65,6 +65,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 
     Sequence sequence;
     sequence.push_back(std::move(step));
+    REQUIRE(sequence.get_error_message() == "");
 
     Executor executor;
 
@@ -114,6 +115,45 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     REQUIRE(sequence.is_running() == false);
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
+
+    REQUIRE(sequence.get_error_message() == "");
+}
+
+TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
+{
+    Context context;
+
+    Step step(Step::type_action);
+    step.set_script("not valid LUA");
+
+    Sequence sequence;
+    sequence.push_back(std::move(step));
+    REQUIRE(sequence.get_error_message() == "");
+
+    sequence.set_error_message("Test");
+
+    Executor executor;
+    executor.run_asynchronously(sequence, context);
+
+    // Error message must have been cleared
+    REQUIRE(sequence.get_error_message() == "");
+
+    // As long as the thread is running, update() and is_busy() must return true,
+    // and the sequence must signalize is_running().
+    REQUIRE(executor.is_busy() == true);
+    REQUIRE(executor.update(sequence) == true);
+    REQUIRE(sequence.is_running() == true);
+
+    // Process messages as long as the thread is running
+    while (executor.update(sequence))
+        gul14::sleep(5ms);
+
+    // Thread has now finished. As long as we do not start another one, update() and
+    // is_busy() keep returning false.
+    REQUIRE(executor.update(sequence) == false);
+    REQUIRE(executor.is_busy() == false);
+
+    REQUIRE(sequence.get_error_message() != "");
 }
 
 TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
