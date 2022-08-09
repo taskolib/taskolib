@@ -295,19 +295,19 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     is_running_ = true;
 
-    check_syntax();
-
     send_message(comm, Message::Type::sequence_started, "Sequence started",
-                 Clock::now(), 0);
+                Clock::now(), 0);
 
     try
     {
+        check_syntax();
         execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
     }
     catch (const std::exception& e)
     {
         send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
                      Clock::now(), 0);
+        set_error_message(e.what());
         throw;
     }
 

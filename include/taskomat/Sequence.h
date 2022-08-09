@@ -251,8 +251,11 @@ public:
      *                sequence is possible. Otherwise, messages for starting/stopping
      *                steps and the sequence itself are sent and termination requests are
      *                honored.
+     *
      * \exception Error is thrown if the script cannot be executed due to a syntax error
-     *            or if it raises an error during execution.
+     *            or if it raises an error during execution. In these cases, the error
+     *            message is also stored in the object and can be retrieved with
+     *            get_error_message().
      */
     void execute(Context& context, CommChannel* comm_channel);
 
