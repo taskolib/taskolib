@@ -592,6 +592,11 @@ void Sequence::push_back(Step&& step)
     enforce_invariants();
 }
 
+void Sequence::set_error_message(gul14::string_view msg)
+{
+    error_message_ = std::string(msg);
+}
+
 void Sequence::throw_if_running() const
 {
     if (is_running_)

@@ -257,6 +257,13 @@ public:
     void execute(Context& context, CommChannel* comm_channel);
 
     /**
+     * Return a string explaining why the sequence stopped prematurely.
+     *
+     * If the sequence finished normally, the returned string is empty.
+     */
+    const std::string& get_error_message() const noexcept { return error_message_; }
+
+    /**
      * Return an error string if the sequence is not consistently nested, or an empty
      * string if the nesting is correct.
      */
@@ -419,8 +426,21 @@ public:
     ConstReverseIterator rend() const noexcept { return steps_.crend(); }
 
     /**
+     * Set an error message for the sequence.
+     *
+     * \param msg  A string explaining why the sequence stopped prematurely; to signalize
+     *             that the sequence finished normally, it should be empty.
+     *
+     * \note
+     * This is usually not a useful call for end users of the library. It is used by the
+     * Executor class and by unit tests.
+     */
+    void set_error_message(gul14::string_view msg);
+
+    /**
      * Set the sequence into the state "is running" (true) or "is not running" (false).
      *
+     * \note
      * This is usually not a useful call for end users of the library. It is used by the
      * Executor class and by unit tests.
      */
@@ -430,6 +450,12 @@ public:
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
 private:
+    /**
+     * A string explaining why the sequence stopped prematurely (empty if it finished
+     * normally).
+     */
+    std::string error_message_;
+
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 

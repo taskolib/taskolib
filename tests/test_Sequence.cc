@@ -159,6 +159,15 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
     }
 }
 
+TEST_CASE("Sequence: get_error_message()", "[Sequence]")
+{
+    Sequence seq;
+    REQUIRE(seq.get_error_message() == "");
+
+    seq.set_error_message("Test");
+    REQUIRE(seq.get_error_message() == "Test");
+}
+
 TEST_CASE("Sequence: insert()", "[Sequence]")
 {
     Sequence seq;
@@ -344,6 +353,17 @@ TEST_CASE("Sequence: push_back()", "[Sequence]")
         REQUIRE(seq.empty() == false);
         REQUIRE(seq.size() == 2);
     }
+}
+
+TEST_CASE("Sequence: set_error_message()", "[Sequence]")
+{
+    Sequence seq;
+
+    seq.set_error_message("Test");
+    REQUIRE(seq.get_error_message() == "Test");
+
+    seq.set_error_message("");
+    REQUIRE(seq.get_error_message() == "");
 }
 
 TEST_CASE("Sequence: set_running()", "[Sequence]")
