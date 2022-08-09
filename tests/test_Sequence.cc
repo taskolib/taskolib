@@ -49,6 +49,35 @@ TEST_CASE("Sequence: Constructor with too long descriptive name", "[Sequence]")
     REQUIRE_NOTHROW(Sequence(std::string(Sequence::max_label_length, 'c')));
 }
 
+TEST_CASE("Sequence: assign()", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action});
+
+    SECTION("assign step as lvalue (iterator)")
+    {
+        Step step{Step::type_if};
+        seq.assign(seq.begin()+1, step);
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("assign step as rvalue (iterator)")
+    {
+        seq.assign(seq.begin()+1, Step{Step::type_if});
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+}
+
 TEST_CASE("Sequence: empty()", "[Sequence]")
 {
     Sequence seq;
@@ -57,106 +86,7 @@ TEST_CASE("Sequence: empty()", "[Sequence]")
     REQUIRE(seq.empty() == false);
 }
 
-TEST_CASE("Sequence: append Step to the end of Sequence", "[Sequence]")
-{
-    Sequence seq;
-
-    SECTION("append lvalue Step")
-    {
-        Step s1{};
-        seq.push_back(s1);
-        REQUIRE(seq.empty() == false);
-        REQUIRE(seq.size() == 1);
-
-        Step s2{};
-        seq.push_back(s2);
-        REQUIRE(seq.size() == 2);
-    }
-
-    SECTION("append rvalue Step")
-    {
-        seq.push_back(Step{});
-        REQUIRE(seq.empty() == false);
-        REQUIRE(seq.size() == 1);
-
-        seq.push_back(Step{});
-        REQUIRE(seq.empty() == false);
-        REQUIRE(seq.size() == 2);
-    }
-}
-
-TEST_CASE("Sequence: remove last Steps from Sequence", "[Sequence]")
-{
-    Sequence seq;
-    seq.push_back(Step{});
-    seq.push_back(Step{});
-    REQUIRE(seq.empty() == false);
-    REQUIRE(seq.size() == 2);
-
-    seq.pop_back();
-    REQUIRE(seq.size() == 1);
-
-    seq.pop_back();
-    REQUIRE(seq.size() == 0);
-    REQUIRE(seq.empty());
-
-    seq.pop_back(); // remove from an already empty sequence again the last step
-    REQUIRE(seq.size() == 0);
-    REQUIRE(seq.empty());
-}
-
-TEST_CASE("Sequence: insert Step to Sequence", "[Sequence]")
-{
-    Sequence seq;
-    seq.push_back(Step{Step::type_action});
-    seq.push_back(Step{Step::type_action});
-
-    SECTION("insert lvalue reference (iterator)")
-    {
-        Step insertStep{Step::type_if};
-        auto iter = seq.insert(seq.begin()+1, insertStep);
-
-        REQUIRE(not seq.empty());
-        REQUIRE(3 == seq.size());
-        REQUIRE(Step::type_if == (*iter).get_type());
-
-        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
-        int idx = 0;
-        for(auto step : seq)
-            REQUIRE(step.get_type() == expected[idx++]);
-    }
-
-    SECTION("insert const lvalue reference (iterator)")
-    {
-        const Step insertStep{Step::type_if};
-        auto iter = seq.insert(seq.begin()+1, insertStep);
-
-        REQUIRE(not seq.empty());
-        REQUIRE(3 == seq.size());
-        REQUIRE(Step::type_if == (*iter).get_type());
-
-        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
-        int idx = 0;
-        for(auto step : seq)
-            REQUIRE(step.get_type() == expected[idx++]);
-    }
-
-    SECTION("insert rvalue reference (iterator)")
-    {
-        auto iter = seq.insert(seq.begin()+1, Step{Step::type_if});
-
-        REQUIRE(not seq.empty());
-        REQUIRE(3 == seq.size());
-        REQUIRE(Step::type_if == (*iter).get_type());
-
-        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
-        int idx = 0;
-        for(auto step : seq)
-            REQUIRE(step.get_type() == expected[idx++]);
-    }
-}
-
-TEST_CASE("Sequence: erase Step(s) from Sequence", "[Sequence]")
+TEST_CASE("Sequence: erase()", "[Sequence]")
 {
     Sequence seq;
     seq.push_back(Step{Step::type_action});
@@ -229,17 +159,20 @@ TEST_CASE("Sequence: erase Step(s) from Sequence", "[Sequence]")
     }
 }
 
-TEST_CASE("Sequence: assign Step to Sequence", "[Sequence]")
+TEST_CASE("Sequence: insert()", "[Sequence]")
 {
     Sequence seq;
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_action});
-    seq.push_back(Step{Step::type_action});
 
-    SECTION("assign step as lvalue (iterator)")
+    SECTION("insert lvalue reference (iterator)")
     {
-        Step step{Step::type_if};
-        seq.assign(seq.begin()+1, step);
+        Step insertStep{Step::type_if};
+        auto iter = seq.insert(seq.begin()+1, insertStep);
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
 
         Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
         int idx = 0;
@@ -247,14 +180,228 @@ TEST_CASE("Sequence: assign Step to Sequence", "[Sequence]")
             REQUIRE(step.get_type() == expected[idx++]);
     }
 
-    SECTION("assign step as rvalue (iterator)")
+    SECTION("insert const lvalue reference (iterator)")
     {
-        seq.assign(seq.begin()+1, Step{Step::type_if});
+        const Step insertStep{Step::type_if};
+        auto iter = seq.insert(seq.begin()+1, insertStep);
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
 
         Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
         int idx = 0;
         for(auto step : seq)
             REQUIRE(step.get_type() == expected[idx++]);
+    }
+
+    SECTION("insert rvalue reference (iterator)")
+    {
+        auto iter = seq.insert(seq.begin()+1, Step{Step::type_if});
+
+        REQUIRE(not seq.empty());
+        REQUIRE(3 == seq.size());
+        REQUIRE(Step::type_if == (*iter).get_type());
+
+        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        int idx = 0;
+        for(auto step : seq)
+            REQUIRE(step.get_type() == expected[idx++]);
+    }
+}
+
+TEST_CASE("Sequence: is_running()", "[Sequence]")
+{
+    Step step1{ Step::type_action };
+    step1.set_script("a = 10");
+
+    Sequence seq;
+    seq.push_back(step1);
+
+    REQUIRE(not seq.is_running());
+
+    Context ctx;
+    seq.execute(ctx, nullptr);
+
+    REQUIRE(not seq.is_running());
+
+    seq.set_running(true);
+    REQUIRE(seq.is_running() == true);
+
+    seq.set_running(false);
+    REQUIRE(seq.is_running() == false);
+}
+
+TEST_CASE("Sequence: modify()", "[Sequence]")
+{
+    Step ori_step{ Step::type_action };
+    ori_step.set_label("Label");
+    ori_step.set_script("a = 1");
+    ori_step.set_time_of_last_execution(Clock::now());
+
+    Sequence seq;
+    seq.push_back(Step{ Step::type_if });
+    seq.push_back(ori_step);
+    seq.push_back(Step{ Step::type_end });
+
+    auto it = seq.begin() + 1;
+    REQUIRE(it->get_label() == "Label");
+    REQUIRE(it->get_indentation_level() == 1);
+
+    SECTION("Modify label")
+    {
+        seq.modify(it, [](Step& step) { step.set_label("Test"); });
+
+        // Check sequence
+        REQUIRE(seq.get_indentation_error() == "");
+        REQUIRE(seq.size() == 3);
+        REQUIRE(seq[0].get_indentation_level() == 0);
+        REQUIRE(seq[1].get_indentation_level() == 1);
+        REQUIRE(seq[2].get_indentation_level() == 0);
+
+        // Check modified step
+        REQUIRE(it->get_label() == "Test");
+        REQUIRE(it->get_script() == ori_step.get_script());
+        REQUIRE(it->get_time_of_last_execution() == ori_step.get_time_of_last_execution());
+    }
+
+    SECTION("Modify step type")
+    {
+        seq.modify(it, [](Step& step) { step.set_type(Step::type_try); });
+        REQUIRE(seq.get_indentation_error() != "");
+    }
+
+    SECTION("Modify indentation")
+    {
+        seq.modify(it, [](Step& step) { step.set_indentation_level(12); });
+        REQUIRE(seq.get_indentation_error() == ""); // indentation is automatically corrected
+        REQUIRE(seq[0].get_indentation_level() == 0);
+        REQUIRE(seq[1].get_indentation_level() == 1);
+        REQUIRE(seq[2].get_indentation_level() == 0);
+    }
+
+    SECTION("Throwing modification")
+    {
+        REQUIRE_THROWS_AS(
+            seq.modify(it,
+                [](Step& step)
+                {
+                    step.set_label("modified");
+                    step.set_indentation_level(12);
+                    throw Error("Test");
+                }),
+            Error);
+
+        REQUIRE(seq.get_indentation_error() == ""); // Sequence class invariants are respected
+        REQUIRE(seq[1].get_indentation_level() == 1); // ... e.g. by reindenting
+        REQUIRE(seq[1].get_label() == "modified"); // ... but the step may have been modified.
+    }
+}
+
+TEST_CASE("Sequence: pop_back()", "[Sequence]")
+{
+    Sequence seq;
+    seq.push_back(Step{});
+    seq.push_back(Step{});
+    REQUIRE(seq.empty() == false);
+    REQUIRE(seq.size() == 2);
+
+    seq.pop_back();
+    REQUIRE(seq.size() == 1);
+
+    seq.pop_back();
+    REQUIRE(seq.size() == 0);
+    REQUIRE(seq.empty());
+
+    seq.pop_back(); // remove from an already empty sequence again the last step
+    REQUIRE(seq.size() == 0);
+    REQUIRE(seq.empty());
+}
+
+TEST_CASE("Sequence: push_back()", "[Sequence]")
+{
+    Sequence seq;
+
+    SECTION("append lvalue Step")
+    {
+        Step s1{};
+        seq.push_back(s1);
+        REQUIRE(seq.empty() == false);
+        REQUIRE(seq.size() == 1);
+
+        Step s2{};
+        seq.push_back(s2);
+        REQUIRE(seq.size() == 2);
+    }
+
+    SECTION("append rvalue Step")
+    {
+        seq.push_back(Step{});
+        REQUIRE(seq.empty() == false);
+        REQUIRE(seq.size() == 1);
+
+        seq.push_back(Step{});
+        REQUIRE(seq.empty() == false);
+        REQUIRE(seq.size() == 2);
+    }
+}
+
+TEST_CASE("Sequence: set_running()", "[Sequence]")
+{
+    Step step1{ Step::type_action };
+    step1.set_label("Long running step");
+    step1.set_script("sleep(0.5)");
+
+    Step step2{ Step::type_if };
+    step2.set_label("conditional");
+    step2.set_script("return true");
+
+    Sequence seq;
+    seq.push_back(step1);
+
+    seq.set_running(true);
+    REQUIRE(seq.is_running() == true);
+
+    SECTION("Sequence can be modified while not is_running()")
+    {
+        seq.set_running(false);
+        REQUIRE(seq.is_running() == false);
+        seq.pop_back();
+        REQUIRE(seq.empty());
+    }
+
+    SECTION("Sequence cannot be modified while is_running()")
+    {
+        REQUIRE_THROWS_AS(seq.modify(seq.begin(),
+            [](Step& step) { step.set_label("New label"); }), Error);
+        REQUIRE(seq[0].get_label() == "Long running step");
+
+        REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{ Step::type_while }), Error);
+        REQUIRE(seq[0].get_type() == Step::type_action);
+
+        REQUIRE_THROWS_AS(seq.assign(seq.begin(), step2), Error);
+        REQUIRE(seq[0].get_type() == Step::type_action);
+
+        REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{ Step::type_action }), Error);
+        REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.insert(seq.begin(), step2), Error);
+        REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
+        REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
+        REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
+        REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.push_back(step2), Error);
+        REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.pop_back(), Error);
+        REQUIRE(seq.size() == 1);
     }
 }
 
@@ -2570,147 +2717,6 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     REQUIRE(msg.get_type() == Message::Type::sequence_stopped);
     REQUIRE(msg.get_timestamp() >= t0);
     REQUIRE(msg.get_timestamp() - t0 < 1s);
-}
-
-TEST_CASE("modify()", "[Sequence]")
-{
-    Step ori_step{ Step::type_action };
-    ori_step.set_label("Label");
-    ori_step.set_script("a = 1");
-    ori_step.set_time_of_last_execution(Clock::now());
-
-    Sequence seq;
-    seq.push_back(Step{ Step::type_if });
-    seq.push_back(ori_step);
-    seq.push_back(Step{ Step::type_end });
-
-    auto it = seq.begin() + 1;
-    REQUIRE(it->get_label() == "Label");
-    REQUIRE(it->get_indentation_level() == 1);
-
-    SECTION("Modify label")
-    {
-        seq.modify(it, [](Step& step) { step.set_label("Test"); });
-
-        // Check sequence
-        REQUIRE(seq.get_indentation_error() == "");
-        REQUIRE(seq.size() == 3);
-        REQUIRE(seq[0].get_indentation_level() == 0);
-        REQUIRE(seq[1].get_indentation_level() == 1);
-        REQUIRE(seq[2].get_indentation_level() == 0);
-
-        // Check modified step
-        REQUIRE(it->get_label() == "Test");
-        REQUIRE(it->get_script() == ori_step.get_script());
-        REQUIRE(it->get_time_of_last_execution() == ori_step.get_time_of_last_execution());
-    }
-
-    SECTION("Modify step type")
-    {
-        seq.modify(it, [](Step& step) { step.set_type(Step::type_try); });
-        REQUIRE(seq.get_indentation_error() != "");
-    }
-
-    SECTION("Modify indentation")
-    {
-        seq.modify(it, [](Step& step) { step.set_indentation_level(12); });
-        REQUIRE(seq.get_indentation_error() == ""); // indentation is automatically corrected
-        REQUIRE(seq[0].get_indentation_level() == 0);
-        REQUIRE(seq[1].get_indentation_level() == 1);
-        REQUIRE(seq[2].get_indentation_level() == 0);
-    }
-
-    SECTION("Throwing modification")
-    {
-        REQUIRE_THROWS_AS(
-            seq.modify(it,
-                [](Step& step)
-                {
-                    step.set_label("modified");
-                    step.set_indentation_level(12);
-                    throw Error("Test");
-                }),
-            Error);
-
-        REQUIRE(seq.get_indentation_error() == ""); // Sequence class invariants are respected
-        REQUIRE(seq[1].get_indentation_level() == 1); // ... e.g. by reindenting
-        REQUIRE(seq[1].get_label() == "modified"); // ... but the step may have been modified.
-    }
-}
-
-TEST_CASE("is_running()", "[Sequence]")
-{
-    Step step1{ Step::type_action };
-    step1.set_script("a = 10");
-
-    Sequence seq;
-    seq.push_back(step1);
-
-    REQUIRE(not seq.is_running());
-
-    Context ctx;
-    seq.execute(ctx, nullptr);
-
-    REQUIRE(not seq.is_running());
-
-    seq.set_running(true);
-    REQUIRE(seq.is_running() == true);
-
-    seq.set_running(false);
-    REQUIRE(seq.is_running() == false);
-}
-
-TEST_CASE("Sequence cannot be modified while is_running()", "[Sequence]")
-{
-    Step step1{ Step::type_action };
-    step1.set_label("Long running step");
-    step1.set_script("sleep(0.5)");
-
-    Step step2{ Step::type_if };
-    step2.set_label("conditional");
-    step2.set_script("return true");
-
-    Sequence seq;
-    seq.push_back(step1);
-
-    seq.set_running(true);
-    REQUIRE(seq.is_running() == true);
-
-    REQUIRE_THROWS_AS(seq.modify(seq.begin(),
-        [](Step& step) { step.set_label("New label"); }), Error);
-    REQUIRE(seq[0].get_label() == "Long running step");
-
-    REQUIRE_THROWS_AS(seq.assign(seq.begin(), Step{ Step::type_while }), Error);
-    REQUIRE(seq[0].get_type() == Step::type_action);
-
-    REQUIRE_THROWS_AS(seq.assign(seq.begin(), step2), Error);
-    REQUIRE(seq[0].get_type() == Step::type_action);
-
-    REQUIRE_THROWS_AS(seq.insert(seq.begin(), Step{ Step::type_action }), Error);
-    REQUIRE(seq.size() == 1);
-
-    REQUIRE_THROWS_AS(seq.insert(seq.begin(), step2), Error);
-    REQUIRE(seq.size() == 1);
-
-    REQUIRE_THROWS_AS(seq.erase(seq.begin()), Error);
-    REQUIRE(seq.size() == 1);
-
-    REQUIRE_THROWS_AS(seq.erase(seq.begin(), seq.end()), Error);
-    REQUIRE(seq.size() == 1);
-
-    REQUIRE_THROWS_AS(seq.push_back(Step{Step::type_action}), Error);
-    REQUIRE(seq.size() == 1);
-
-    REQUIRE_THROWS_AS(seq.push_back(step2), Error);
-    REQUIRE(seq.size() == 1);
-
-    REQUIRE_THROWS_AS(seq.pop_back(), Error);
-    REQUIRE(seq.size() == 1);
-
-    // ... but we can modify a not-running sequence, right?
-    seq.set_running(false);
-    seq.pop_back();
-    REQUIRE(seq.empty());
 }
 
 TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
