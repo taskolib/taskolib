@@ -119,6 +119,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
 {
     Context context;
+    context.log_error_function = nullptr; // suppress error output on console
 
     Step step(Step::type_action);
     step.set_script("sleep(2)");
@@ -150,6 +151,7 @@ TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
 TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
 {
     Context context;
+    context.log_error_function = nullptr; // suppress error output on console
 
     Step step_while{ Step::type_while };
     step_while.set_script("return true");
