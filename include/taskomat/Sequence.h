@@ -254,7 +254,7 @@ public:
      *
      * \exception Error is thrown if the script cannot be executed due to a syntax error
      *            or if it raises an error during execution. In these cases, the error
-     *            message is also stored in the object and can be retrieved with
+     *            message is also stored in the Sequence object and can be retrieved with
      *            get_error_message().
      */
     void execute(Context& context, CommChannel* comm_channel);
@@ -263,6 +263,8 @@ public:
      * Return a string explaining why the sequence stopped prematurely.
      *
      * If the sequence finished normally, the returned string is empty.
+     *
+     * \see execute()
      */
     const std::string& get_error_message() const noexcept { return error_message_; }
 
