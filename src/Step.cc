@@ -102,7 +102,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     const auto now = Clock::now();
 
     const auto set_is_running_to_false_after_execution =
-        gul14::finally([this] { set_running(false); });
+        gul14::finally([this]() { set_running(false); });
 
     set_running(true);
     set_time_of_last_execution(now);
