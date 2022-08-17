@@ -594,7 +594,7 @@ void Sequence::push_back(Step&& step)
 
 void Sequence::set_error_message(gul14::string_view msg)
 {
-    error_message_ = std::string(msg);
+    error_message_.assign(msg.data(), msg.size());
 }
 
 void Sequence::throw_if_running() const
