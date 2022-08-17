@@ -305,9 +305,10 @@ void Sequence::execute(Context& context, CommChannel* comm)
     }
     catch (const std::exception& e)
     {
-        send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
+        gul14::string_view err_msg{ e.what() };
+        send_message(comm, Message::Type::sequence_stopped_with_error, err_msg,
                      Clock::now(), 0);
-        set_error_message(e.what());
+        set_error_message(err_msg);
         throw;
     }
 
