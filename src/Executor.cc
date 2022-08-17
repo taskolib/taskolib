@@ -159,7 +159,7 @@ bool Executor::update(Sequence& sequence)
             sequence.set_running(false);
             sequence.set_error_message(msg.get_text());
             if (context_.log_error_function)
-                context_.log_error_function(msg.get_text(), 0, nullptr);
+                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::step_started:
             sequence.set_running(false); // temporarily allow modification
