@@ -601,7 +601,7 @@ void Sequence::throw_if_running() const
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
     gul14::string_view msg) const
 {
-    throw Error(cat("[syntax check] Step ", it - steps_.begin() + 1, ": ", msg));
+    throw Error(cat("Syntax error: ", msg));
 }
 
 } // namespace task
