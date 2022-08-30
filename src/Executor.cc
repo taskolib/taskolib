@@ -81,8 +81,8 @@ void Executor::execute_sequence(Sequence sequence, Context context,
     }
     catch (const std::exception& e)
     {
-        comm->queue_.push(Message(Message::Type::sequence_stopped_with_error,
-            cat("Sequence stopped with error: ", e.what()), Clock::now(), 0));
+        comm->queue_.push(Message(Message::Type::sequence_stopped_with_error, e.what(),
+                                  Clock::now(), 0));
     }
 }
 

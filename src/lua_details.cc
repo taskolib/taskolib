@@ -72,7 +72,7 @@ void check_immediate_termination_request(lua_State* lua_state)
         if (comm)
         {
             if (comm->immediate_termination_requested_)
-                abort_script_with_error(lua_state, "Step aborted on user request");
+                abort_script_with_error(lua_state, "Stop on user request");
         }
     }
     catch (const Error& e)

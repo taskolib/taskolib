@@ -22,8 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/join_split.h>
+#include <gul14/SmallVector.h>
+#include <gul14/string_view.h>
 #include <gul14/substring_checks.h>
+
 #include "internals.h"
+#include "taskomat/Error.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 
@@ -306,11 +311,27 @@ void Sequence::execute(Context& context, CommChannel* comm)
     }
     catch (const std::exception& e)
     {
-        gul14::string_view err_msg{ e.what() };
-        send_message(comm, Message::Type::sequence_stopped_with_error, err_msg,
+        gul14::string_view msg_in{ e.what() };
+        std::string msg_out;
+
+        if (gul14::contains(msg_in, abort_marker))
+        {
+            auto tokens = gul14::split<gul14::SmallVector<gul14::string_view, 3>>(
+                msg_in, abort_marker);
+            if (tokens.size() >= 2)
+                msg_in = tokens[1];
+            msg_out = cat("Sequence aborted: ", msg_in);
+        }
+        else
+        {
+            msg_out = cat("Sequence stopped with error: ", msg_in);
+        }
+
+        send_message(comm, Message::Type::sequence_stopped_with_error, msg_out,
                      Clock::now(), 0);
-        set_error_message(err_msg);
-        throw;
+        set_error_message(msg_out);
+
+        throw Error(std::move(msg_out));
     }
 
     send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
@@ -425,7 +446,7 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
     catch (const Error& e)
     {
         // Typical error message with (non-literal) abort marker:
-        // "Error while executing script of step 3: sol: runtime error: [ABORT]Step aborted on user request[ABORT]"
+        // "Error while executing script of step 3: sol: runtime error: [ABORT]Stop on user request[ABORT]"
         if (gul14::contains(e.what(), abort_marker))
             throw;
 
