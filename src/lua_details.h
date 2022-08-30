@@ -85,9 +85,10 @@ void install_custom_commands(sol::state& lua, const Context& context);
 
 // Install hooks that check for timeouts and immediate termination requests while a LUA
 // script is being executed. If one of both occurs, the script terminates with an error
-// message that starts with "[ABORT]".
+// message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
-    std::chrono::milliseconds timeout, Message::IndexType step_idx, CommChannel* comm_channel);
+    std::chrono::milliseconds timeout, Message::IndexType step_idx,
+    CommChannel* comm_channel);
 
 /// Create a print() function for LUA that wraps a print callback from the Context.
 std::function<void(sol::this_state, sol::variadic_args)>
