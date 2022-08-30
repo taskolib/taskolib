@@ -598,7 +598,7 @@ void Sequence::throw_if_running() const
         throw Error("Cannot change a running sequence");
 }
 
-void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
+void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator /*it*/,
     gul14::string_view msg) const
 {
     throw Error(cat("Syntax error: ", msg));
