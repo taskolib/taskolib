@@ -26,6 +26,7 @@
 #define TASKOMAT_COMMCHANNEL_H_
 
 #include <atomic>
+#include <gul14/string_view.h>
 #include "taskomat/LockedQueue.h"
 #include "taskomat/Message.h"
 
@@ -62,13 +63,13 @@ struct CommChannel
  * \endcode
  */
 inline
-void send_message(CommChannel* comm_channel, Message::Type type, std::string text,
+void send_message(CommChannel* comm_channel, Message::Type type, gul14::string_view text,
                   TimePoint timestamp, Message::IndexType index)
 {
     if (comm_channel == nullptr)
         return;
 
-    comm_channel->queue_.push(Message(type, std::move(text), timestamp, index));
+    comm_channel->queue_.push(Message(type, std::string(text), timestamp, index));
 }
 
 } // namespace task

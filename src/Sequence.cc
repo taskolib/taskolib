@@ -295,19 +295,20 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     is_running_ = true;
 
-    check_syntax();
-
     send_message(comm, Message::Type::sequence_started, "Sequence started",
-                 Clock::now(), 0);
+                Clock::now(), 0);
 
     try
     {
+        check_syntax();
         execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
     }
     catch (const std::exception& e)
     {
-        send_message(comm, Message::Type::sequence_stopped_with_error, e.what(),
+        gul14::string_view err_msg{ e.what() };
+        send_message(comm, Message::Type::sequence_stopped_with_error, err_msg,
                      Clock::now(), 0);
+        set_error_message(err_msg);
         throw;
     }
 
@@ -590,6 +591,11 @@ void Sequence::push_back(Step&& step)
     throw_if_running();
     steps_.push_back(step);
     enforce_invariants();
+}
+
+void Sequence::set_error_message(gul14::string_view msg)
+{
+    error_message_.assign(msg.data(), msg.size());
 }
 
 void Sequence::throw_if_running() const

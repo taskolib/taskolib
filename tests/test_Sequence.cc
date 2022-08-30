@@ -159,6 +159,15 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
     }
 }
 
+TEST_CASE("Sequence: get_error_message()", "[Sequence]")
+{
+    Sequence seq;
+    REQUIRE(seq.get_error_message() == "");
+
+    seq.set_error_message("Test");
+    REQUIRE(seq.get_error_message() == "Test");
+}
+
 TEST_CASE("Sequence: insert()", "[Sequence]")
 {
     Sequence seq;
@@ -344,6 +353,17 @@ TEST_CASE("Sequence: push_back()", "[Sequence]")
         REQUIRE(seq.empty() == false);
         REQUIRE(seq.size() == 2);
     }
+}
+
+TEST_CASE("Sequence: set_error_message()", "[Sequence]")
+{
+    Sequence seq;
+
+    seq.set_error_message("Test");
+    REQUIRE(seq.get_error_message() == "Test");
+
+    seq.set_error_message("");
+    REQUIRE(seq.get_error_message() == "");
 }
 
 TEST_CASE("Sequence: set_running()", "[Sequence]")
@@ -1039,6 +1059,7 @@ TEST_CASE("execute(): empty sequence", "[Sequence]")
     Sequence sequence("Empty sequence");
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+    REQUIRE(sequence.get_error_message() == "");
 }
 
 TEST_CASE("execute(): simple sequence", "[Sequence]")
@@ -1050,6 +1071,7 @@ TEST_CASE("execute(): simple sequence", "[Sequence]")
     sequence.push_back(step);
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+    REQUIRE(sequence.get_error_message() == "");
 }
 
 TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
@@ -1064,6 +1086,7 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
     sequence.push_back(step);
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+    REQUIRE(sequence.get_error_message() == "");
     REQUIRE(context.variables["a"] == VariableValue{ 0LL } );
 }
 
@@ -1080,6 +1103,7 @@ TEST_CASE("execute(): complex sequence with prohibited LUA function", "[Sequence
     sequence.push_back(step);
 
     REQUIRE_THROWS(sequence.execute(context, nullptr));
+    REQUIRE(sequence.get_error_message() != "");
 }
 
 TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
@@ -1103,6 +1127,7 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
     sequence.push_back(step_action2);
 
     REQUIRE_THROWS(sequence.execute(context, nullptr));
+    REQUIRE(sequence.get_error_message() != "");
     REQUIRE(std::get<long long>(context.variables["a"] ) == 1LL );
 }
 
@@ -1121,6 +1146,7 @@ TEST_CASE("execute(): complex sequence with context change", "[Sequence]")
     sequence.push_back(step_action1);
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
+    REQUIRE(sequence.get_error_message() == "");
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
@@ -1568,8 +1594,7 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
     }
 }
 
-TEST_CASE("execute(): if-elseif-else-end sequence with empty blocks",
-          "[Sequence]")
+TEST_CASE("execute(): if-elseif-else-end sequence with empty blocks", "[Sequence]")
 {
     /*
     pre-condition:
@@ -1709,7 +1734,9 @@ TEST_CASE("execute(): faulty if-else-elseif sequence", "[Sequence]")
     Context context;
     context.variables["a"] = VariableValue{ 0LL };
 
+    REQUIRE(sequence.get_error_message() == "");
     REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
+    REQUIRE(sequence.get_error_message() != "");
 }
 
 TEST_CASE("execute(): while sequence", "[Sequence]")
@@ -2057,6 +2084,7 @@ TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
     context.variables["a"] = VariableValue{ 0LL };
 
     REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
+    REQUIRE(sequence.get_error_message() != "");
     REQUIRE(std::get<long long>(context.variables["a"] ) == 2LL );
 }
 
