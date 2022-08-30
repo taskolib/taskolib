@@ -56,7 +56,7 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 Sequence::Sequence(gul14::string_view label)
 {
     check_label(label);
-    label_ = std::string{ label };
+    label_.assign(label.data(), label.size());
 }
 
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
