@@ -56,7 +56,7 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 Sequence::Sequence(gul14::string_view label)
 {
     check_label(label);
-    label_ = std::string{ label };
+    label_.assign(label.data(), label.size());
 }
 
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
@@ -604,10 +604,10 @@ void Sequence::throw_if_running() const
         throw Error("Cannot change a running sequence");
 }
 
-void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator it,
+void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator /*it*/,
     gul14::string_view msg) const
 {
-    throw Error(cat("[syntax check] Step ", it - steps_.begin() + 1, ": ", msg));
+    throw Error(cat("Syntax error: ", msg));
 }
 
 } // namespace task
