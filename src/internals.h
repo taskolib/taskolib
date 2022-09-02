@@ -25,7 +25,7 @@
 #ifndef TASKOMAT_INTERNALS_H_
 #define TASKOMAT_INTERNALS_H_
 
-#include <string>
+#include <gul14/string_view.h>
 
 namespace task {
 
@@ -33,7 +33,7 @@ namespace task {
  * A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence
  * anywhere in an error message signals that the execution of a script should be stopped.
  */
-extern const std::string abort_marker;
+extern const gul14::string_view abort_marker;
 
 } // namespace task
 
