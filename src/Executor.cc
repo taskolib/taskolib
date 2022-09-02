@@ -79,10 +79,10 @@ void Executor::execute_sequence(Sequence sequence, Context context,
     {
         sequence.execute(context, comm.get());
     }
-    catch (const std::exception& e)
+    catch (const std::exception&)
     {
-        comm->queue_.push(Message(Message::Type::sequence_stopped_with_error, e.what(),
-                                  Clock::now(), 0));
+        // Silently ignore any thrown exception - the sequence already takes care of
+        // sending the appropriate messages.
     }
 }
 
