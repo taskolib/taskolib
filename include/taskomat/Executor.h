@@ -180,7 +180,10 @@ private:
      */
     Context context_;
 
-    /// The function that is run in the execution thread.
+    /**
+     * This is the function running in the execution thread: It calls Sequence::execute()
+     * and silently swallows all exceptions.
+     */
     static void execute_sequence(Sequence sequence, Context context,
                                  std::shared_ptr<CommChannel> comm_channel) noexcept;
 };
