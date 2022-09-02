@@ -58,11 +58,12 @@ sources = files(
     'src/console.cc',
     'src/deserialize_sequence.cc',
     'src/Executor.cc',
+    'src/internals.cc',
     'src/lua_details.cc',
     'src/Sequence.cc',
+    'src/SequenceManager.cc',
     'src/serialize_sequence.cc',
     'src/Step.cc',
-    'src/SequenceManager.cc',
     'src/time_types.cc',
     'src/VariableName.cc',
 )

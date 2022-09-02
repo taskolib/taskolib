@@ -186,6 +186,9 @@ TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
 
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
+
+    // Make sure that exactly the desired error message comes out
+    REQUIRE(sequence.get_error_message() == "Sequence aborted: Stop on user request");
 }
 
 TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")

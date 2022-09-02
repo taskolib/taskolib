@@ -23,9 +23,10 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/gul.h>
+#include "internals.h"
+#include "lua_details.h"
 #include "taskomat/CommChannel.h"
 #include "taskomat/Error.h"
-#include "lua_details.h"
 
 using gul14::cat;
 
@@ -52,9 +53,10 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg)
     sol::state_view lua(lua_state);
     auto registry = lua.registry();
 
-    // The [ABORT] prefix marks this error as one that can not be caught by CATCH blocks.
+    // The [ABORT] marker ("ABORT" surrounded by two Unicode stop signs) marks this error
+    // as one that can not be caught by CATCH blocks.
     // We store the error message in the registry...
-    registry[abort_error_message_key] = "[ABORT] " + msg;
+    registry[abort_error_message_key] = gul14::cat(abort_marker, msg, abort_marker);
 
     // ... and call the abort hook which raises a LUA error with the message from the
     // registry.
@@ -70,7 +72,7 @@ void check_immediate_termination_request(lua_State* lua_state)
         if (comm)
         {
             if (comm->immediate_termination_requested_)
-                abort_script_with_error(lua_state, "Step aborted on user request");
+                abort_script_with_error(lua_state, "Stop on user request");
         }
     }
     catch (const Error& e)
