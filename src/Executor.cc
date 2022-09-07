@@ -1,6 +1,6 @@
 /**
  * \file   Executor.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on May 30, 2022
  * \brief  Implementation of the Executor class.
  *
@@ -154,6 +154,14 @@ bool Executor::update(Sequence& sequence)
             break;
         case Message::Type::sequence_stopped:
             sequence.set_running(false);
+            break;
+        case Message::Type::sequence_terminated:
+            sequence.set_running(false);
+            auto it = sequence.begin();
+            // algorithm of std::for_each becomes complex therefore using a handy for-loop
+            for(auto step = sequence.begin(); step != sequence.end(); step += 1)
+                if(step->is_running())
+                    sequence.modify(step, [](Step& s) { s.set_running(false); });
             break;
         case Message::Type::sequence_stopped_with_error:
             sequence.set_running(false);
