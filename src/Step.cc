@@ -1,6 +1,6 @@
 /**
  * \file   Step.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on December 7, 2021
  * \brief  Implementation of the Step class.
  *
@@ -22,12 +22,15 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <iostream>
+
 #include <gul14/cat.h>
 #include <gul14/finalizer.h>
 
 #include "sol/sol.hpp"
 #include "taskomat/Error.h"
 #include "taskomat/Step.h"
+#include "internals.h"
 #include "lua_details.h"
 
 using namespace std::literals;
@@ -100,6 +103,7 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
 bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index)
 {
     const auto now = Clock::now();
+    bool is_terminated = false; // flag for sequence termination
 
     const auto set_is_running_to_false_after_execution =
         gul14::finally([this]() { set_running(false); });
@@ -112,7 +116,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     sol::state lua;
 
     open_safe_library_subset(lua);
-    install_custom_commands(lua, context);
+    install_custom_commands(lua, context, is_terminated);
 
     if (context.lua_init_function)
         context.lua_init_function(lua);
@@ -149,6 +153,12 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
             Clock::now(), index);
 
         throw Error(msg);
+    }
+
+    if (is_terminated)
+    {
+        set_running(false);
+        throw Error(terminate_sequence_marker); // immediately return to the caller
     }
 
     send_message(comm, Message::Type::step_stopped,

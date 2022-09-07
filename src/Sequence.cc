@@ -322,6 +322,12 @@ void Sequence::execute(Context& context, CommChannel* comm)
                 msg_in = tokens[1];
             msg_out = cat("Sequence aborted: ", msg_in);
         }
+        else if(gul14::contains(msg_in, terminate_sequence_marker))
+        {
+            send_message(comm, Message::Type::sequence_terminated,
+                    "Sequence explicitly terminated", Clock::now(), 0);
+            return; // slightly return to the caller
+        }
         else
         {
             msg_out = cat("Sequence stopped with error: ", msg_in);

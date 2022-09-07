@@ -1,6 +1,6 @@
 /**
  * \file   lua_details.h
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on June 15, 2022
  * \brief  Declaration of free functions dealing with LUA specifics.
  *
@@ -42,7 +42,7 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg);
 void check_immediate_termination_request(lua_State* lua_state);
 
 // Check if the step timeout has expired and raise a LUA error if that is the case.
-void check_script_timeout(lua_State* lua_state);
+void check_script_timeout();
 
 /**
  * Retrieve a pointer to the used CommChannel from the LUA registry.
@@ -81,7 +81,7 @@ void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*
  * sleep() -- wait for a given number of seconds
  * \endcode
  */
-void install_custom_commands(sol::state& lua, const Context& context);
+void install_custom_commands(sol::state& lua, const Context& context, bool& is_terminated);
 
 // Install hooks that check for timeouts and immediate termination requests while a LUA
 // script is being executed. If one of both occurs, the script terminates with an error

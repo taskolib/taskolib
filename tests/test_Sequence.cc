@@ -3336,3 +3336,51 @@ TEST_CASE("execute(): Disable + re-enable action inside while loop", "[Sequence]
         REQUIRE(s[2].is_disabled() == true);
     }
 }
+
+TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
+{
+    CommChannel comm;
+    auto& queue = comm.queue_;
+
+    Context ctx;
+    Sequence seq;
+
+    Step step_while{Step::type_while};
+    Step step_increment{Step::type_action};
+    Step step_check_termination{Step::type_action};
+    Step step_while_end{Step::type_end};
+
+    step_while.set_label("loop until a >= 10");
+    step_while.set_script("return a < 10");
+    step_while.set_used_context_variable_names(VariableNames{"a"});
+
+    step_increment.set_label("increment a");
+    step_increment.set_script("a = a + 1");
+    step_increment.set_used_context_variable_names(VariableNames{"a"});
+
+    step_check_termination.set_label("exist sequence when a == 4");
+    step_check_termination.set_script("if a == 4 then terminate_sequence() end");
+    step_check_termination.set_used_context_variable_names(VariableNames{"a"});
+
+    step_while_end.set_label("end loop");
+
+    ctx.variables["a"] = VariableValue{ 0LL };
+
+    seq.push_back(step_while);
+    seq.push_back(step_increment);
+    seq.push_back(step_check_termination);
+    seq.push_back(step_while_end);
+
+    seq.execute(ctx, &comm);
+
+    // Both the sequence and all of its steps must show is_running() == false.
+    REQUIRE(seq.is_running() == false);
+    for (const auto& step : seq)
+        REQUIRE(step.is_running() == false);
+
+    REQUIRE(std::get<long long>(ctx.variables["a"] ) == 4LL);
+    REQUIRE(not queue.empty());
+    REQUIRE(queue.size() == 25);
+    REQUIRE(msg.get_type() == Message::Type::sequence_terminated);
+    REQUIRE(msg.get_text() == "Sequence explicitly terminated");
+}

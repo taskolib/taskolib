@@ -1,6 +1,6 @@
 /**
  * \file   internals.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on August 30, 2022
  * \brief  Definition of internal constants.
  *
@@ -27,5 +27,8 @@
 namespace task {
 
 const gul14::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
+
+const std::string terminate_sequence_marker{
+    u8"\U0001F6D1TERMINATE_SEQUENCE\U0001F6D1" };
 
 } // namespace task

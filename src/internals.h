@@ -1,6 +1,6 @@
 /**
  * \file   internals.h
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on August 30, 2022
  * \brief  Declaration of internal constants.
  *
@@ -25,6 +25,7 @@
 #ifndef TASKOMAT_INTERNALS_H_
 #define TASKOMAT_INTERNALS_H_
 
+#include <string>
 #include <gul14/string_view.h>
 
 namespace task {
@@ -34,6 +35,12 @@ namespace task {
  * anywhere in an error message signals that the execution of a script should be stopped.
  */
 extern const gul14::string_view abort_marker;
+
+/**
+ * An internal marker to terminate the sequence. The phrase is surrounded by Unicode stop
+ * signs.
+ */
+extern const std::string terminate_sequence_marker;
 
 } // namespace task
 

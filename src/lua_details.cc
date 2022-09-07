@@ -1,6 +1,6 @@
 /**
  * \file   lua_details.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on June 15, 2022
  * \brief  Implementation of free functions dealing with LUA specifics.
  *
@@ -169,11 +169,19 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
     luaL_error(lua_state, err_msg.c_str());
 }
 
-void install_custom_commands(sol::state& lua, const Context& context)
+void install_custom_commands(sol::state& lua, const Context& context, bool& is_terminated)
 {
     auto globals = lua.globals();
     globals["print"] = make_print_fct(context.print_function);
     globals["sleep"] = sleep_fct;
+
+    // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence.
+    // See Sol2 docu: https://sol2.readthedocs.io/en/latest/exceptions.html
+    // Error message from Sol2: https://github.com/ThePhD/sol2/issues/1072: lua: error: stack index 1, expected string, received function
+    globals["terminate_sequence"] = [&is_terminated]
+    {
+        is_terminated = true;
+    };
 }
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,

@@ -1,6 +1,6 @@
 /**
  * \file   LockedQueue.h
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on April 1, 2022
  * \brief  Declaration of the LockedQueue class.
  *
@@ -105,6 +105,25 @@ public:
 
         auto msg_ptr = std::move(queue_.front());
         queue_.pop_front();
+        lock.unlock();
+        cv_slot_available_.notify_one();
+        return msg_ptr;
+    }
+
+    /**
+     * Fetch the last message pushed to the queue and returns a copy of it. It will not be
+     * removed from the queue.
+     *
+     * This call blocks until a message is available.
+     */
+    MessageType back()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        if (queue_.empty())
+            cv_message_available_.wait(lock, [this] { return not queue_.empty(); });
+
+        auto msg_ptr = queue_.back();
         lock.unlock();
         cv_slot_available_.notify_one();
         return msg_ptr;

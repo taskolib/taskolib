@@ -1,6 +1,6 @@
 /**
  * \file   Message.h
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on April 1, 2022
  * \brief  Declaration of the Message class.
  *
@@ -55,6 +55,7 @@ public:
         log_error, ///< a log entry carrying an error message
         sequence_started, ///< a sequence has been started
         sequence_stopped, ///< a sequence has stopped regularly
+        sequence_terminated, ///< a sequence has terminated regularly
         sequence_stopped_with_error, ///< a sequence has been stopped because of an error
         step_started, ///< a step inside a sequence has been started
         step_stopped, ///< a step inside a sequence has stopped regularly
@@ -71,6 +72,7 @@ private:
         "log_error",
         "sequence_started",
         "sequence_stopped",
+        "sequence_terminated",
         "sequence_stopped_with_error",
         "step_started",
         "step_stopped",
