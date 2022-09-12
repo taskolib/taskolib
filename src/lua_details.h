@@ -42,7 +42,7 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg);
 void check_immediate_termination_request(lua_State* lua_state);
 
 // Check if the step timeout has expired and raise a LUA error if that is the case.
-void check_script_timeout();
+void check_script_timeout(lua_State* lua_state);
 
 /**
  * Retrieve a pointer to the used CommChannel from the LUA registry.
