@@ -177,7 +177,8 @@ void install_custom_commands(sol::state& lua, const Context& context, bool& is_t
 
     // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence.
     // See Sol2 docu: https://sol2.readthedocs.io/en/latest/exceptions.html
-    // Error message from Sol2: https://github.com/ThePhD/sol2/issues/1072: lua: error: stack index 1, expected string, received function
+    // Error message from Sol2: https://github.com/ThePhD/sol2/issues/1072:
+    // lua: error: stack index 1, expected string, received function
     globals["terminate_sequence"] = [&is_terminated]
     {
         is_terminated = true;
