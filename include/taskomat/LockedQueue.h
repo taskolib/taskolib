@@ -103,11 +103,11 @@ public:
         if (queue_.empty())
             cv_message_available_.wait(lock, [this] { return not queue_.empty(); });
 
-        auto msg_ptr = std::move(queue_.front());
+        auto msg = std::move(queue_.front());
         queue_.pop_front();
         lock.unlock();
         cv_slot_available_.notify_one();
-        return msg_ptr;
+        return msg;
     }
 
     /**
@@ -168,11 +168,11 @@ public:
         if (queue_.empty())
             return gul14::nullopt;
 
-        auto msg_ptr = std::move(queue_.front());
+        auto msg = std::move(queue_.front());
         queue_.pop_front();
         lock.unlock();
         cv_slot_available_.notify_one();
-        return msg_ptr;
+        return msg;
     }
 
     /**
