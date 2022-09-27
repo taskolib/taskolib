@@ -3380,8 +3380,8 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
 
     REQUIRE(std::get<long long>(ctx.variables["a"] ) == 4LL);
     REQUIRE(not queue.empty());
-    REQUIRE(queue.size() == 25);
+    REQUIRE(queue.size() == 26);
     auto msg = queue.back();
-    REQUIRE(msg.get_type() == Message::Type::sequence_terminated);
+    REQUIRE(msg.get_type() == Message::Type::sequence_stopped);
     REQUIRE(msg.get_text() == "Sequence explicitly terminated");
 }
