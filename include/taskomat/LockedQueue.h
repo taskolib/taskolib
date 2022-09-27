@@ -116,17 +116,16 @@ public:
      *
      * This call blocks until a message is available.
      */
-    MessageType back()
+    MessageType back() const
     {
         std::unique_lock<std::mutex> lock(mutex_);
 
         if (queue_.empty())
             cv_message_available_.wait(lock, [this] { return not queue_.empty(); });
 
-        auto msg_ptr = queue_.back();
+        auto msg = queue_.back();
         lock.unlock();
-        cv_slot_available_.notify_one();
-        return msg_ptr;
+        return msg;
     }
 
     /**
