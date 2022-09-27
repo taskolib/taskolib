@@ -316,8 +316,6 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
         if (gul14::contains(msg_in, abort_marker))
         {
-
-            // TODO (NEED A FIX!): explicit termination
             auto tokens = gul14::split<gul14::SmallVector<gul14::string_view, 3>>(
                 msg_in, abort_marker);
             if (tokens.size() >= 2)
