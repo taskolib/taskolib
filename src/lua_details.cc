@@ -169,7 +169,7 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
     luaL_error(lua_state, err_msg.c_str());
 }
 
-void install_custom_commands(sol::state& lua, const Context& context, bool& is_terminated)
+void install_custom_commands(sol::state& lua, const Context& context)
 {
     auto globals = lua.globals();
     globals["print"] = make_print_fct(context.print_function);
@@ -179,9 +179,9 @@ void install_custom_commands(sol::state& lua, const Context& context, bool& is_t
     // See Sol2 docu: https://sol2.readthedocs.io/en/latest/exceptions.html
     // Error message from Sol2: https://github.com/ThePhD/sol2/issues/1072:
     // lua: error: stack index 1, expected string, received function
-    globals["terminate_sequence"] = [&is_terminated]
+    globals["terminate_sequence"] = [&lua]
     {
-        is_terminated = true;
+        abort_script_with_error(lua.lua_state(), "");
     };
 }
 

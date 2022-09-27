@@ -155,13 +155,6 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::sequence_stopped:
             sequence.set_running(false);
             break;
-        case Message::Type::sequence_terminated:
-            sequence.set_running(false);
-            // algorithm of std::for_each becomes complex therefore using a handy for-loop
-            for(auto step = sequence.begin(); step != sequence.end(); step += 1)
-                if(step->is_running())
-                    sequence.modify(step, [](Step& s) { s.set_running(false); });
-            break;
         case Message::Type::sequence_stopped_with_error:
             sequence.set_running(false);
             sequence.set_error_message(msg.get_text());

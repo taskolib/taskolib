@@ -101,7 +101,6 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
 bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index)
 {
     const auto now = Clock::now();
-    bool is_terminated = false; // flag for sequence termination
 
     const auto set_is_running_to_false_after_execution =
         gul14::finally([this]() { set_running(false); });
@@ -114,7 +113,7 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     sol::state lua;
 
     open_safe_library_subset(lua);
-    install_custom_commands(lua, context, is_terminated);
+    install_custom_commands(lua, context);
 
     if (context.lua_init_function)
         context.lua_init_function(lua);
@@ -151,12 +150,6 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
             Clock::now(), index);
 
         throw Error(msg);
-    }
-
-    if (is_terminated)
-    {
-        set_running(false);
-        throw Error(terminate_sequence_marker); // immediately return to the caller
     }
 
     send_message(comm, Message::Type::step_stopped,

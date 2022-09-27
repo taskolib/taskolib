@@ -28,7 +28,4 @@ namespace task {
 
 const gul14::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
 
-const std::string terminate_sequence_marker{
-    u8"\U0001F6D1TERMINATE_SEQUENCE\U0001F6D1" };
-
 } // namespace task

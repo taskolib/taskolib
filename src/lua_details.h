@@ -81,7 +81,7 @@ void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*
  * sleep() -- wait for a given number of seconds
  * \endcode
  */
-void install_custom_commands(sol::state& lua, const Context& context, bool& is_terminated);
+void install_custom_commands(sol::state& lua, const Context& context);
 
 // Install hooks that check for timeouts and immediate termination requests while a LUA
 // script is being executed. If one of both occurs, the script terminates with an error
