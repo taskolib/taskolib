@@ -22,8 +22,6 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <iostream>
-
 #include <gul14/cat.h>
 #include <gul14/finalizer.h>
 
