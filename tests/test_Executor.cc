@@ -302,7 +302,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     step_sleep.set_label("sleep 10ms");
     step_sleep.set_script("sleep(0.01)");
 
-    step_check_termination.set_label("exist sequence when a == 4");
+    step_check_termination.set_label("exit sequence when a == 4");
     step_check_termination.set_script("if a == 4 then terminate_sequence() end");
     step_check_termination.set_used_context_variable_names(VariableNames{"a"});
 
