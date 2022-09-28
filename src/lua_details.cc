@@ -175,10 +175,7 @@ void install_custom_commands(sol::state& lua, const Context& context)
     globals["print"] = make_print_fct(context.print_function);
     globals["sleep"] = sleep_fct;
 
-    // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence.
-    // See Sol2 docu: https://sol2.readthedocs.io/en/latest/exceptions.html
-    // Error message from Sol2: https://github.com/ThePhD/sol2/issues/1072:
-    // lua: error: stack index 1, expected string, received function
+    // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence
     globals["terminate_sequence"] = [&lua]
     {
         abort_script_with_error(lua.lua_state(), "");
