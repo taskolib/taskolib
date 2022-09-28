@@ -94,19 +94,15 @@ public:
      *                        been stopped due to an error condition
      * \param index         Index of the step in its parent Sequence.
      *
-     * Note: when the Lua script explicitly terminates by a call to the custom Lua
-     * function \a terminate_sequence() it is set to not running and an Error exception is
-     * thrown carrying a special message for termination. When a sequence is run with
-     * such a step it is catch by the \a Sequence::execute() member and a special
-     * handling is performed.
-     *
      * \returns true if the script returns a value that evaluates as true in the scripting
      *          language, or false otherwise (even in the case that the script returns no
      *          value at all).
      *
      * \exception Error is thrown if the script cannot be started, if there is a LUA error
      *            during execution, if a timeout is encountered, or if termination has
-     *            been requested via the communication channel.
+     *            been requested via the communication channel. When the Lua script
+     *            explicitly terminates by a call to the custom Lua function
+     *            \a terminate_sequence() it is set to not running and throws.
      */
     bool execute(Context& context, CommChannel* comm_channel, Message::IndexType index);
 
@@ -122,12 +118,6 @@ public:
      * 5. Selected variables are exported from the runtime environment back into the
      *    context.
      *
-     * Note: when the Lua script explicitly terminates by a call to the custom Lua
-     * function \a terminate_sequence() it is set to not running and an Error exception is
-     * thrown carrying a special message for termination. When a sequence is run with
-     * such a step it is catch by the \a Sequence::execute() member and a special
-     * handling is performed.
-     *
      * \param context  The context to be used for executing the step
      *
      * \returns true if the script returns a value that evaluates as true in the scripting
@@ -135,7 +125,9 @@ public:
      *          value at all).
      *
      * \exception Error is thrown if the script cannot be started or if it raises an error
-     *            during execution.
+     *            during execution. When the Lua script explicitly terminates by a call to
+     *            the custom Lua function \a terminate_sequence() it is set to not running
+     *            and throws.
      */
     bool execute(Context& context)
     {
