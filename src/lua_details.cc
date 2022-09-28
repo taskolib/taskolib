@@ -178,6 +178,7 @@ void install_custom_commands(sol::state& lua, const Context& context)
     // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence
     globals["terminate_sequence"] = [&lua]
     {
+        // TODO Possible set here a predefined error string, for example "user abort"
         abort_script_with_error(lua.lua_state(), "");
     };
 }
