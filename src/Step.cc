@@ -28,7 +28,6 @@
 #include "sol/sol.hpp"
 #include "taskomat/Error.h"
 #include "taskomat/Step.h"
-#include "internals.h"
 #include "lua_details.h"
 
 using namespace std::literals;

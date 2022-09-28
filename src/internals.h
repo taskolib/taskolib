@@ -36,12 +36,6 @@ namespace task {
  */
 extern const gul14::string_view abort_marker;
 
-/**
- * An internal marker to terminate the sequence. The phrase is surrounded by Unicode stop
- * signs.
- */
-extern const std::string terminate_sequence_marker;
-
 } // namespace task
 
 #endif
