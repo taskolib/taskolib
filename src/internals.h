@@ -25,7 +25,6 @@
 #ifndef TASKOMAT_INTERNALS_H_
 #define TASKOMAT_INTERNALS_H_
 
-#include <string>
 #include <gul14/string_view.h>
 
 namespace task {
