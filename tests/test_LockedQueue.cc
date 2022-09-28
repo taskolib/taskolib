@@ -240,3 +240,26 @@ TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[LockedQueue]")
 
     sender.join();
 }
+
+TEST_CASE("LockedQueue: back()", "[LockedQueue]")
+{
+    LockedQueue<MyMessage> queue{ 2 };
+
+    queue.push(MyMessage(1));
+    auto msg_1 = queue.back();
+    REQUIRE(queue.size() == 1);
+    REQUIRE(msg_1.value_ == 1);
+
+    queue.push(MyMessage(2));
+    REQUIRE(queue.size() == 2);
+    auto msg_2 = queue.back();
+    REQUIRE(queue.size() == 2);
+    REQUIRE(msg_2.value_ == 2);
+
+    auto msg_pop = queue.pop();
+    REQUIRE(queue.size() == 1);
+    REQUIRE(msg_pop.value_ == 1);
+    auto msg_back = queue.back();
+    REQUIRE(queue.size() == 1);
+    REQUIRE(msg_back.value_ == 2);
+}

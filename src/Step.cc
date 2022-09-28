@@ -1,6 +1,6 @@
 /**
  * \file   Step.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on December 7, 2021
  * \brief  Implementation of the Step class.
  *

@@ -1,6 +1,6 @@
 /**
  * \file   internals.h
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on August 30, 2022
  * \brief  Declaration of internal constants.
  *

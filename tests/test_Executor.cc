@@ -1,6 +1,6 @@
 /**
  * \file   test_Executor.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on May 30, 2022
  * \brief  Test suite for the Executor class.
  *
@@ -277,4 +277,69 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
         gul14::sleep(5ms);
 
     REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
+}
+
+TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
+    "[Executor]")
+{
+    Context ctx;
+    Sequence seq;
+
+    Step step_while{Step::type_while};
+    Step step_increment{Step::type_action};
+    Step step_sleep{Step::type_action};
+    Step step_check_termination{Step::type_action};
+    Step step_while_end{Step::type_end};
+
+    step_while.set_label("loop until a >= 10");
+    step_while.set_script("return a < 10");
+    step_while.set_used_context_variable_names(VariableNames{"a"});
+
+    step_increment.set_label("increment a");
+    step_increment.set_script("a = a +1");
+    step_increment.set_used_context_variable_names(VariableNames{"a"});
+
+    step_sleep.set_label("sleep 10ms");
+    step_sleep.set_script("sleep(0.01)");
+
+    step_check_termination.set_label("exit sequence when a == 4");
+    step_check_termination.set_script("if a == 4 then terminate_sequence() end");
+    step_check_termination.set_used_context_variable_names(VariableNames{"a"});
+
+    step_while_end.set_label("end loop");
+
+    ctx.variables["a"] = VariableValue{ 0LL };
+
+    seq.push_back(step_while);
+    seq.push_back(step_increment);
+    seq.push_back(step_sleep);
+    seq.push_back(step_check_termination);
+    seq.push_back(step_while_end);
+
+    Executor executor;
+
+    // Start the sequence in a separate thread
+    executor.run_asynchronously(seq, ctx);
+
+    // As long as the thread is running, update() and is_busy() must return true,
+    // and the sequence must signalize is_running().
+    REQUIRE(executor.is_busy() == true);
+    REQUIRE(executor.update(seq) == true);
+    REQUIRE(seq.is_running() == true);
+
+    // Process messages as long as the thread is running
+    while (executor.update(seq))
+        gul14::sleep(5ms);
+
+    // Thread has now finished. As long as we do not start another one, update() and
+    // is_busy() keep returning false.
+    REQUIRE(executor.update(seq) == false);
+    REQUIRE(executor.is_busy() == false);
+
+    // Both the sequence and all of its steps must show is_running() == false.
+    REQUIRE(seq.is_running() == false);
+    for (const auto& step : seq)
+        REQUIRE(step.is_running() == false);
+
+    REQUIRE(seq.get_error_message() == "");
 }

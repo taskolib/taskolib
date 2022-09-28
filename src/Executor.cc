@@ -1,6 +1,6 @@
 /**
  * \file   Executor.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on May 30, 2022
  * \brief  Implementation of the Executor class.
  *

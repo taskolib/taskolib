@@ -1,6 +1,6 @@
 /**
  * \file   lua_details.cc
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on June 15, 2022
  * \brief  Implementation of free functions dealing with LUA specifics.
  *
@@ -174,6 +174,13 @@ void install_custom_commands(sol::state& lua, const Context& context)
     auto globals = lua.globals();
     globals["print"] = make_print_fct(context.print_function);
     globals["sleep"] = sleep_fct;
+
+    // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence
+    globals["terminate_sequence"] = [&lua]
+    {
+        // TODO Possible set here a predefined error string, for example "user abort"
+        abort_script_with_error(lua.lua_state(), "");
+    };
 }
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,

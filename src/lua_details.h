@@ -1,6 +1,6 @@
 /**
  * \file   lua_details.h
- * \author Lars Froehlich
+ * \author Lars Froehlich, Marcus Walla
  * \date   Created on June 15, 2022
  * \brief  Declaration of free functions dealing with LUA specifics.
  *

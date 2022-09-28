@@ -320,6 +320,12 @@ void Sequence::execute(Context& context, CommChannel* comm)
                 msg_in, abort_marker);
             if (tokens.size() >= 2)
                 msg_in = tokens[1];
+            if (msg_in.empty())
+            {
+                send_message(comm, Message::Type::sequence_stopped,
+                        "Sequence explicitly terminated", Clock::now(), 0);
+                return; // silently return to the caller
+            }
             msg_out = cat("Sequence aborted: ", msg_in);
         }
         else
