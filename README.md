@@ -6,7 +6,7 @@ sequence of steps which are executed in order or through control flow statements
 behavior of each step is defined in the LUA scripting language.
 
 The library API is documented with Doxygen on the web page
-https://ttfinfo.desy.de/doxygen/libtaskomat/html/index.html .
+https://taskolib.github.io/taskolib/ .
 
 License
 -------
@@ -46,8 +46,8 @@ from the library root directory to generate HTML documentation:
 
       ./make-doc.py
 
-This runs the open-source tool Doxygen and generates a web page that is accessible via
-the URL https://ttfinfo.desy.de/doxygen/libtaskomat/html/index.html .
+This runs the open-source tool Doxygen and generates a web page in the directory
+docs/html.
 
 Inspect Parameters
 ------------------
