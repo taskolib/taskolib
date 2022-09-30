@@ -1,7 +1,7 @@
 <map id="Context.h" name="Context.h">
 <area shape="rect" id="node1" title="Declaration of the Context and VariableValue types." alt="" coords="697,5,775,32"/>
 <area shape="rect" id="node2" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="755,229,839,256"/>
-<area shape="rect" id="node3" href="$taskomat_8h.html" title="Main include file for the Taskomat Library." alt="" coords="730,304,817,331"/>
+<area shape="rect" id="node3" href="$taskomat_8h.html" title="Main include file for Taskolib." alt="" coords="730,304,817,331"/>
 <area shape="rect" id="node5" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="420,155,511,181"/>
 <area shape="rect" id="node13" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="578,80,638,107"/>
 <area shape="rect" id="node15" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="915,80,1010,107"/>

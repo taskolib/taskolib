@@ -3,7 +3,7 @@
 <area shape="rect" id="node2" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="697,80,775,107"/>
 <area shape="rect" id="node18" href="$console_8cc.html" title="Implementation of several functions for console output." alt="" coords="800,80,885,107"/>
 <area shape="rect" id="node3" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="755,304,839,331"/>
-<area shape="rect" id="node4" href="$taskomat_8h.html" title="Main include file for the Taskomat Library." alt="" coords="730,379,817,405"/>
+<area shape="rect" id="node4" href="$taskomat_8h.html" title="Main include file for Taskolib." alt="" coords="730,379,817,405"/>
 <area shape="rect" id="node6" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="420,229,511,256"/>
 <area shape="rect" id="node14" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="578,155,638,181"/>
 <area shape="rect" id="node16" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="915,155,1010,181"/>

@@ -1,7 +1,7 @@
 <map id="VariableName.h" name="VariableName.h">
 <area shape="rect" id="node1" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="283,5,397,32"/>
 <area shape="rect" id="node2" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="262,80,341,107"/>
-<area shape="rect" id="node4" href="$taskomat_8h.html" title="Main include file for the Taskomat Library." alt="" coords="63,379,150,405"/>
+<area shape="rect" id="node4" href="$taskomat_8h.html" title="Main include file for Taskolib." alt="" coords="63,379,150,405"/>
 <area shape="rect" id="node14" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="477,155,537,181"/>
 <area shape="rect" id="node18" href="$VariableName_8cc.html" title="Implementation of the VariableName class." alt="" coords="417,80,538,107"/>
 <area shape="rect" id="node3" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="195,304,279,331"/>

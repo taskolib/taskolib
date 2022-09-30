@@ -1,5 +1,5 @@
 <map id="taskomat.h" name="taskomat.h">
-<area shape="rect" id="node1" title="Main include file for the Taskomat Library." alt="" coords="786,5,873,32"/>
+<area shape="rect" id="node1" title="Main include file for Taskolib." alt="" coords="786,5,873,32"/>
 <area shape="rect" id="node2" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="695,304,833,331"/>
 <area shape="rect" id="node21" href="$time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="20,528,175,555"/>
 <area shape="rect" id="node24" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="250,379,422,405"/>

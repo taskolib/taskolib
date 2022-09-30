@@ -7,7 +7,7 @@
 <area shape="rect" id="node15" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="648,229,708,256"/>
 <area shape="rect" id="node17" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="904,229,999,256"/>
 <area shape="rect" id="node18" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="1045,304,1148,331"/>
-<area shape="rect" id="node5" href="$taskomat_8h.html" title="Main include file for the Taskomat Library." alt="" coords="696,453,783,480"/>
+<area shape="rect" id="node5" href="$taskomat_8h.html" title="Main include file for Taskolib." alt="" coords="696,453,783,480"/>
 <area shape="rect" id="node6" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="881,453,971,480"/>
 <area shape="rect" id="node8" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="344,379,503,405"/>
 <area shape="rect" id="node11" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="180,379,320,405"/>
