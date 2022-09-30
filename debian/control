@@ -9,12 +9,12 @@ Package: libtaskomat-0-1-2
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Taskomat automatization library - runtime
- Binary files for the Taskomat automatization library.
+Description: Taskolib automatization library - runtime
+ Binary files for the Taskolib automatization library.
 
 Package: libtaskomat-dev
 Section: libdevel
 Architecture: any
 Depends: ${S:Source}
-Description: Taskomat automatization library - dev files
- Development files for the Taskomat automatization library.
+Description: Taskolib automatization library - dev files
+ Development files for the Taskolib automatization library.

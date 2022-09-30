@@ -3,7 +3,7 @@
  *
  * \image html sequence_and_steps.png
  *
- * The Taskomat library helps to automate processes. Its main automatization unit is a
+ * Taskolib is a library for automating processes. Its main automatization unit is a
  * sequence of steps which are executed in order or through control flow statements. The
  * behavior of each step is defined in the LUA scripting language.
  *
@@ -43,7 +43,7 @@
  * \ref design_documents.
  *
  * \note
- * The Taskomat library requires at least C++17.
+ * Taskolib requires at least C++17.
  *
  * \authors Lars Froehlich, Olaf Hensler, Ulf Fini Jastrow, Marcus Walla (for third-party
  *          code see \ref copyright)
@@ -59,13 +59,13 @@
  *
  * \section copyright_notice Copyright Notice (LGPLv2.1)
  *
- * The Taskomat library is free software distributed under the terms of the
+ * Taskolib is free software distributed under the terms of the
  * <a href="https://opensource.org/licenses/LGPL-2.1">GNU Lesser General Public License
  * version 2.1</a>. All files except those listed under \ref additional_copyright_notices
  * below are copyrighted by DESY:
  *
  * <dl>
- * <dt>Taskomat library</dt>
+ * <dt>Taskolib</dt>
  * <dd>Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify

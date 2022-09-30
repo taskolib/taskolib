@@ -2,7 +2,7 @@
  * \file   taskomat.h
  * \author Lars Froehlich
  * \date   Created on November 26, 2021
- * \brief  Main include file for the Taskomat Library.
+ * \brief  Main include file for Taskolib.
  *
  * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -34,7 +34,7 @@
 #include "taskomat/time_types.h"
 #include "taskomat/VariableName.h"
 
-/// Namespace task contains all functions and classes of the Taskomat library.
+/// Namespace task contains all Taskolib functions and classes.
 namespace task { }
 
 #endif
