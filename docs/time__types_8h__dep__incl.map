@@ -1,0 +1,25 @@
+<map id="time_types.h" name="time_types.h">
+<area shape="rect" id="node1" title="Declaration of time&#45;related types." alt="" coords="294,5,391,32"/>
+<area shape="rect" id="node2" href="$format_8h.html" title="Helper for fmt{} library to print our types." alt="" coords="139,155,210,181"/>
+<area shape="rect" id="node3" href="$Message_8h.html" title="Declaration of the Message class." alt="" coords="299,80,386,107"/>
+<area shape="rect" id="node7" href="$taskomat_8h.html" title="Main include file for the Taskomat Library." alt="" coords="383,528,470,555"/>
+<area shape="rect" id="node17" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="554,304,614,331"/>
+<area shape="rect" id="node23" href="$time__types_8cc.html" title="Conversion for TimePoint." alt="" coords="656,80,760,107"/>
+<area shape="rect" id="node4" href="$CommChannel_8h.html" title="Declaration of the CommChannel struct and of the send_message() function." alt="" coords="235,155,355,181"/>
+<area shape="rect" id="node5" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="342,229,421,256"/>
+<area shape="rect" id="node21" href="$console_8h.html" title="Declaration of several functions for console output." alt="" coords="430,155,509,181"/>
+<area shape="rect" id="node6" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="305,453,389,480"/>
+<area shape="rect" id="node9" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="539,379,629,405"/>
+<area shape="rect" id="node19" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="171,304,266,331"/>
+<area shape="rect" id="node20" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="94,379,197,405"/>
+<area shape="rect" id="node8" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="220,528,311,555"/>
+<area shape="rect" id="node10" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="854,453,1013,480"/>
+<area shape="rect" id="node13" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="566,453,706,480"/>
+<area shape="rect" id="node14" href="$serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="1037,453,1181,480"/>
+<area shape="rect" id="node16" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="731,453,829,480"/>
+<area shape="rect" id="node11" href="$deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="847,528,1012,555"/>
+<area shape="rect" id="node12" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="617,528,764,555"/>
+<area shape="rect" id="node15" href="$serialize__sequence_8cc.html" title="Implementation of the serialize_sequence() free function." alt="" coords="1037,528,1187,555"/>
+<area shape="rect" id="node18" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="323,379,389,405"/>
+<area shape="rect" id="node22" href="$console_8cc.html" title="Implementation of several functions for console output." alt="" coords="496,229,581,256"/>
+</map>

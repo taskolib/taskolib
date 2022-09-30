@@ -1,0 +1,13 @@
+<map id="Sequence.h" name="Sequence.h">
+<area shape="rect" id="node1" title="A sequence of Steps." alt="" coords="404,5,495,32"/>
+<area shape="rect" id="node2" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="49,80,207,107"/>
+<area shape="rect" id="node5" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="447,80,531,107"/>
+<area shape="rect" id="node6" href="$taskomat_8h.html" title="Main include file for the Taskomat Library." alt="" coords="366,155,453,181"/>
+<area shape="rect" id="node8" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="231,80,371,107"/>
+<area shape="rect" id="node9" href="$serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="556,80,700,107"/>
+<area shape="rect" id="node11" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="724,80,823,107"/>
+<area shape="rect" id="node3" href="$deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="5,155,171,181"/>
+<area shape="rect" id="node4" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="195,155,341,181"/>
+<area shape="rect" id="node7" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="477,155,568,181"/>
+<area shape="rect" id="node10" href="$serialize__sequence_8cc.html" title="Implementation of the serialize_sequence() free function." alt="" coords="593,155,743,181"/>
+</map>
