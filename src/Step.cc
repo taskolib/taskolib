@@ -24,6 +24,7 @@
 
 #include <gul14/cat.h>
 #include <gul14/finalizer.h>
+#include <gul14/trim.h>
 
 #include "sol/sol.hpp"
 #include "taskomat/Error.h"
@@ -180,7 +181,7 @@ void Step::set_indentation_level(short level)
 
 void Step::set_label(const std::string& label)
 {
-    label_ = label;
+    label_ = gul14::trim(label);
     set_time_of_last_modification(Clock::now());
 }
 

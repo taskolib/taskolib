@@ -81,6 +81,17 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
         REQUIRE(deserialize.get_label() == "This is a funny label\n-- label: NOT FUNNY");
     }
 
+    SECTION("deserialize: whitespaced label")
+    {
+        step.set_label(" L a b e l ");
+        ss << step;
+
+        Step deserialize;
+        ss >> deserialize;
+
+        REQUIRE(deserialize.get_label() == "L a b e l"); // stripped label
+    }
+
     SECTION("deserialize infinite timeout")
     {
         step.set_timeout(Step::infinite_timeout);
