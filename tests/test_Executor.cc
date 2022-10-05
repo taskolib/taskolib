@@ -23,6 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
+#include <gul14/substring_checks.h>
 #include <gul14/time_util.h>
 #include "taskomat/Executor.h"
 
@@ -338,4 +339,54 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
         REQUIRE(step.is_running() == false);
 
     REQUIRE(seq.get_error_message() == "");
+}
+
+// A function that would return the integer value 10 in Lua
+// if we do not throw ;-)
+auto lua_testfun(sol::this_state s) -> sol::object
+{
+    throw task::Error{ "Rainbows!" };
+    return sol::make_object(s, 10);
+}
+
+TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
+{
+    Context ctx{ };
+
+    ctx.lua_init_function = [](sol::state& s) {
+        s.set_function("testfun", &lua_testfun);
+    };
+
+    Sequence seq{ };
+    Step step{ Step::type_action };
+    step.set_script("a = testfun()");
+
+    seq.push_back(step);
+
+    // I. direct execution
+
+    REQUIRE_THROWS_AS(seq.execute(ctx, nullptr), task::Error);
+    try {
+        seq.execute(ctx, nullptr);
+    } catch (task::Error const& e) {
+        INFO("what is:");
+        INFO(e.what());
+        REQUIRE(gul14::contains(e.what(), "Rainbows"));
+    }
+
+    // II. run async
+    Executor executor{ };
+    executor.run_asynchronously(seq, ctx);
+
+    REQUIRE(executor.is_busy() == true);
+    REQUIRE(executor.update(seq) == true);
+    REQUIRE(seq.is_running() == true);
+
+    while (executor.update(seq))
+        gul14::sleep(5ms);
+
+    REQUIRE(executor.update(seq) == false);
+    REQUIRE(executor.is_busy() == false);
+
+    REQUIRE(gul14::contains(seq.get_error_message(), "Rainbows"));
 }
