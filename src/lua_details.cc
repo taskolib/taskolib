@@ -33,15 +33,15 @@ using gul14::cat;
 namespace {
 
 static const char step_index_key[] =
-    "TASKOMAT_STEP_INDEX";
+    "TASKOMAT_STP_INDEX";
 static const char step_timeout_ms_since_epoch_key[] =
-    "TASKOMAT_STEP_TIMEOUT_MS_SINCE_EPOCH";
+    "TASKOMAT_STP_TO_MS";
 static const char step_timeout_s_key[] =
-    "TASKOMAT_STEP_TIMEOUT_S";
+    "TASKOMAT_STP_TO_S";
 static const char comm_channel_key[] =
-    "TASKOMAT_COMM_CHANNEL";
+    "TASKOMAT_COMM_CH";
 static const char abort_error_message_key[] =
-    "TASKOMAT_ABORT_ERROR_MESSAGE";
+    "TASKOMAT_AB_END";
 
 } // anonymous namespace
 
