@@ -144,18 +144,23 @@ TEST_CASE("Step: set_indentation_level()", "[Step]")
 TEST_CASE("Step: set_label()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time1 = step.get_time_of_last_modification();
+    REQUIRE(time1 > Clock::now() - 2s);
+    REQUIRE(time1 < Clock::now() + 2s);
 
     REQUIRE(&step.set_label("Do nothing") == &step);
     REQUIRE(step.get_label() == "Do nothing");
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time2 = step.get_time_of_last_modification();
+    REQUIRE(time2 > Clock::now() - 2s);
+    REQUIRE(time2 < Clock::now() + 2s);
+    REQUIRE(time2 > time1);
 
     step.set_label("Do something");
     REQUIRE(step.get_label() == "Do something");
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time3 = step.get_time_of_last_modification();
+    REQUIRE(time3 > Clock::now() - 2s);
+    REQUIRE(time3 < Clock::now() + 2s);
+    REQUIRE(time3 > time2);
 }
 
 TEST_CASE("Step: set_running()", "[Step]")
@@ -216,13 +221,17 @@ TEST_CASE("Step: set_type()", "[Step]")
 
     REQUIRE(&step.set_type(Step::type_while) == &step);
     REQUIRE(step.get_type() == Step::type_while);
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time1 = step.get_time_of_last_modification();
+    REQUIRE(time1 > Clock::now() - 2s);
+    REQUIRE(time1 < Clock::now() + 2s);
+    REQUIRE(time1 > ts);
 
     step.set_type(Step::type_end);
     REQUIRE(step.get_type() == Step::type_end);
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time2 = step.get_time_of_last_modification();
+    REQUIRE(time2 > Clock::now() - 2s);
+    REQUIRE(time2 < Clock::now() + 2s);
+    REQUIRE(time2 > time1);
 }
 
 TEST_CASE("Step: set_script()", "[Step]")
@@ -234,13 +243,17 @@ TEST_CASE("Step: set_script()", "[Step]")
 
     REQUIRE(&step.set_script("test") == &step);
     REQUIRE(step.get_script() == "test");
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time1 = step.get_time_of_last_modification();
+    REQUIRE(time1 > Clock::now() - 2s);
+    REQUIRE(time1 < Clock::now() + 2s);
+    REQUIRE(time1 > ts);
 
     step.set_script("test 2");
     REQUIRE(step.get_script() == "test 2");
-    REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
-    REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
+    auto time2 = step.get_time_of_last_modification();
+    REQUIRE(time2 > Clock::now() - 2s);
+    REQUIRE(time2 < Clock::now() + 2s);
+    REQUIRE(time2 > time1);
 }
 
 TEST_CASE("Step: set_used_context_variable_names()", "[Step]")
