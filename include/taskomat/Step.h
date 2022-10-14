@@ -216,7 +216,7 @@ public:
     bool is_disabled() const noexcept { return is_disabled_; }
 
     /// Set whether the step should be disabled (or possibly executed).
-    void set_disabled(bool disable);
+    Step& set_disabled(bool disable);
 
     /**
      * Set the indentation level of this step.
@@ -227,7 +227,7 @@ public:
      *
      * \exception Error is thrown if level < 0 or level > max_indentation_level.
      */
-    void set_indentation_level(short level);
+    Step& set_indentation_level(short level);
 
     /**
      * Set the label.
@@ -236,50 +236,50 @@ public:
      * Labels must not start or end with whitespace; existing whitespace is
      * silently removed.
      */
-    void set_label(const std::string& label);
+    Step& set_label(const std::string& label);
 
     /**
      * Set whether the step should be marked as "currently running".
      *
      * This is normally done by an Executor.
      */
-    void set_running(bool is_running) { is_running_ = is_running; }
+    Step& set_running(bool is_running);
 
     /**
      * Set the script that should be executed when this step is run.
      * Syntax or semantics of the script are not checked.
      */
-    void set_script(const std::string& script);
+    Step& set_script(const std::string& script);
 
     /**
      * Set the timestamp of the last execution of this step's script.
      * This function should be called when an external execution engine starts the
      * embedded script or when the Step has been restored from serialized form.
      */
-    void set_time_of_last_execution(TimePoint t) { time_of_last_execution_ = t; }
+    Step& set_time_of_last_execution(TimePoint t);
 
     /**
      * Set the timestamp of the last modification of this step's script or label.
      * This function is only useful to restore a step from some serialized form, e.g. from
      * a file.
      */
-    void set_time_of_last_modification(TimePoint t) { time_of_last_modification_ = t; }
+    Step& set_time_of_last_modification(TimePoint t);
 
     /**
      * Set the timeout duration for executing the script.
      * Negative values set the timeout to zero.
      */
-    void set_timeout(std::chrono::milliseconds timeout);
+    Step& set_timeout(std::chrono::milliseconds timeout);
 
     /**
      * Set the type of this step.
      * This call also updates the time of last modification to the current system time.
      */
-    void set_type(Type type);
+    Step& set_type(Type type);
 
     /// Set the names of the variables that should be im-/exported from/to the script.
-    void set_used_context_variable_names(const VariableNames& used_context_variable_names);
-    void set_used_context_variable_names(VariableNames&& used_context_variable_names);
+    Step& set_used_context_variable_names(const VariableNames& used_context_variable_names);
+    Step& set_used_context_variable_names(VariableNames&& used_context_variable_names);
 
 private:
     std::string label_;
