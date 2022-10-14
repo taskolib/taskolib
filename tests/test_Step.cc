@@ -126,7 +126,7 @@ TEST_CASE("Step: set_indentation_level()", "[Step]")
 {
     Step step;
 
-    step.set_indentation_level(3);
+    REQUIRE(&step.set_indentation_level(3) == &step);
     REQUIRE(step.get_indentation_level() == 3);
 
     step.set_indentation_level(0);
@@ -147,7 +147,7 @@ TEST_CASE("Step: set_label()", "[Step]")
     REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
     REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
 
-    step.set_label("Do nothing");
+    REQUIRE(&step.set_label("Do nothing") == &step);
     REQUIRE(step.get_label() == "Do nothing");
     REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
     REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
@@ -162,7 +162,7 @@ TEST_CASE("Step: set_running()", "[Step]")
 {
     Step step;
 
-    step.set_running(true);
+    REQUIRE(&step.set_running(true) == &step);
     REQUIRE(step.is_running() == true);
 
     step.set_running(false);
@@ -174,7 +174,7 @@ TEST_CASE("Step: set_time_of_last_execution()", "[Step]")
     Step step;
 
     auto ts = Clock::now();
-    step.set_time_of_last_execution(ts);
+    REQUIRE(&step.set_time_of_last_execution(ts) == &step);
     REQUIRE(step.get_time_of_last_execution() == ts);
 
     step.set_time_of_last_execution(ts - 42s);
@@ -186,7 +186,7 @@ TEST_CASE("Step: set_time_of_last_modification()", "[Step]")
     Step step;
 
     auto ts = Clock::now();
-    step.set_time_of_last_modification(ts);
+    REQUIRE(&step.set_time_of_last_modification(ts) == &step);
     REQUIRE(step.get_time_of_last_modification() == ts);
 
     step.set_time_of_last_modification(ts - 42s);
@@ -197,7 +197,7 @@ TEST_CASE("Step: set_timeout()", "[Step]")
 {
     Step step;
 
-    step.set_timeout(42s);
+    REQUIRE(&step.set_timeout(42s) == &step);
     REQUIRE(step.get_timeout() == 42s);
 
     step.set_timeout(-2ms);
@@ -214,7 +214,7 @@ TEST_CASE("Step: set_type()", "[Step]")
     step.set_time_of_last_modification(ts);
     REQUIRE(step.get_time_of_last_modification() == ts);
 
-    step.set_type(Step::type_while);
+    REQUIRE(&step.set_type(Step::type_while) == &step);
     REQUIRE(step.get_type() == Step::type_while);
     REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
     REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
@@ -232,7 +232,7 @@ TEST_CASE("Step: set_script()", "[Step]")
     step.set_time_of_last_modification(ts);
     REQUIRE(step.get_time_of_last_modification() == ts);
 
-    step.set_script("test");
+    REQUIRE(&step.set_script("test") == &step);
     REQUIRE(step.get_script() == "test");
     REQUIRE(step.get_time_of_last_modification() > Clock::now() - 2s);
     REQUIRE(step.get_time_of_last_modification() < Clock::now() + 2s);
@@ -247,7 +247,7 @@ TEST_CASE("Step: set_used_context_variable_names()", "[Step]")
 {
     Step step;
 
-    step.set_used_context_variable_names(VariableNames{ "b52", "a" });
+    REQUIRE(&step.set_used_context_variable_names(VariableNames{ "b52", "a" }) == &step);
     REQUIRE(step.get_used_context_variable_names() == VariableNames{ "a", "b52" });
 }
 
@@ -716,7 +716,7 @@ TEST_CASE("Step: set_disabled()", "[Step]")
     Step step;
 
     REQUIRE(step.is_disabled() == false);
-    step.set_disabled(true);
+    REQUIRE(&step.set_disabled(true) == &step);
     REQUIRE(step.is_disabled() == true);
 
     // (There are no disable_unable types anymore)

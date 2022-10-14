@@ -159,13 +159,14 @@ bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index
     return result;
 }
 
-void Step::set_disabled(bool disable)
+Step& Step::set_disabled(bool disable)
 {
     is_disabled_ = disable;
     set_time_of_last_modification(Clock::now());
+    return *this;
 }
 
-void Step::set_indentation_level(short level)
+Step& Step::set_indentation_level(short level)
 {
     if (level < 0)
         throw Error(cat("Cannot set negative indentation level (", level, ')'));
@@ -177,42 +178,67 @@ void Step::set_indentation_level(short level)
     }
 
     indentation_level_ = level;
+    return *this;
 }
 
-void Step::set_label(const std::string& label)
+Step& Step::set_label(const std::string& label)
 {
     label_ = gul14::trim(label);
     set_time_of_last_modification(Clock::now());
+    return *this;
 }
 
-void Step::set_script(const std::string& script)
+Step& Step::set_running(bool is_running)
+{
+    is_running_ = is_running;
+    return *this;
+}
+
+Step& Step::set_script(const std::string& script)
 {
     script_ = script;
     set_time_of_last_modification(Clock::now());
+    return *this;
 }
 
-void Step::set_timeout(std::chrono::milliseconds timeout)
+Step& Step::set_time_of_last_execution(TimePoint t)
+{
+    time_of_last_execution_ = t;
+    return *this;
+}
+
+Step& Step::set_time_of_last_modification(TimePoint t)
+{
+    time_of_last_modification_ = t;
+    return *this;
+}
+
+Step& Step::set_timeout(std::chrono::milliseconds timeout)
 {
     if (timeout < 0s)
         timeout_ = 0s;
     else
         timeout_ = timeout;
+    return *this;
 }
 
-void Step::set_type(Type type)
+Step& Step::set_type(Type type)
 {
     type_ = type;
     set_time_of_last_modification(Clock::now());
+    return *this;
 }
 
-void Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
+Step& Step::set_used_context_variable_names(const VariableNames& used_context_variable_names)
 {
     used_context_variable_names_ = used_context_variable_names;
+    return *this;
 }
 
-void Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
+Step& Step::set_used_context_variable_names(VariableNames&& used_context_variable_names)
 {
     used_context_variable_names_ = std::move(used_context_variable_names);
+    return *this;
 }
 
 
