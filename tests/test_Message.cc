@@ -99,7 +99,7 @@ TEST_CASE("Message: set_index()", "[Message]")
 {
     Message msg;
 
-    msg.set_index(42);
+    REQUIRE(&msg.set_index(42) == &msg);
     REQUIRE(msg.get_index() == 42);
 
     msg.set_index(0);
@@ -110,7 +110,7 @@ TEST_CASE("Message: set_text()", "[Message]")
 {
     Message msg;
 
-    msg.set_text("Test");
+    REQUIRE(&msg.set_text("Test") == &msg);
     REQUIRE(msg.get_text() == "Test");
 
     msg.set_text("");
@@ -122,7 +122,7 @@ TEST_CASE("Message: set_timestamp()", "[Message]")
     const auto t0 = Clock::now();
 
     Message msg;
-    msg.set_timestamp(t0);
+    REQUIRE(&msg.set_timestamp(t0) == &msg);
     REQUIRE(msg.get_timestamp() == t0);
 
     msg.set_timestamp(TimePoint{});
@@ -133,7 +133,7 @@ TEST_CASE("Message: set_type()", "[Message]")
 {
     Message msg;
 
-    msg.set_type(Message::Type::step_started);
+    REQUIRE(&msg.set_type(Message::Type::step_started) == &msg);
     REQUIRE(msg.get_type() == Message::Type::step_started);
 
     msg.set_type(Message::Type::log_error);
@@ -144,10 +144,10 @@ TEST_CASE("Message: Dump to stream", "[Message]")
 {
     Message msg;
 
-    msg.set_type(Message::Type::step_started);
-    msg.set_timestamp(TimePoint{});
-    msg.set_text("Beware of the foxes");
-    msg.set_index(32);
+    msg.set_type(Message::Type::step_started)
+       .set_timestamp(TimePoint{})
+       .set_text("Beware of the foxes")
+       .set_index(32);
 
     std::stringstream ss{ };
     ss << msg;
