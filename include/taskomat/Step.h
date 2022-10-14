@@ -232,6 +232,9 @@ public:
     /**
      * Set the label.
      * This call also updates the time of last modification to the current system time.
+     *
+     * Labels must not start or end with whitespace; existing whitespace is
+     * silently removed.
      */
     void set_label(const std::string& label);
 
