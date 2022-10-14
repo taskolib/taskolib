@@ -109,16 +109,16 @@ public:
     TimePoint get_timestamp() const { return timestamp_; };
 
     /// Set the associated index.
-    void set_index(IndexType index) { index_ = index; }
+    Message& set_index(IndexType index) { index_ = index; return *this; }
 
     /// Set the message text.
-    void set_text(const std::string& text) { text_ = text; }
+    Message& set_text(const std::string& text) { text_ = text; return *this; }
 
     /// Set the timestamp.
-    void set_timestamp(TimePoint timestamp) { timestamp_ = timestamp; };
+    Message& set_timestamp(TimePoint timestamp) { timestamp_ = timestamp; return *this; };
 
     /// Set the message type.
-    void set_type(Type type) noexcept { type_ = type; }
+    Message& set_type(Type type) noexcept { type_ = type; return *this; }
 
     friend std::ostream& operator<<(std::ostream& stream, Type const& t) {
         stream << Message::type_description_[static_cast<int>(t)];
