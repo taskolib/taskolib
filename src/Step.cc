@@ -132,7 +132,7 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
         if (!protected_result.valid())
         {
             sol::error err = protected_result;
-            throw Error(cat("Script execution error: ", err.what()));
+            throw ErrorAtIndex(cat("Script execution error: ", err.what()), index);
         }
 
         copy_used_variables_from_lua_to_context(lua, context);
@@ -149,7 +149,7 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
         send_message(comm, Message::Type::step_stopped_with_error, msg,
             Clock::now(), index);
 
-        throw Error(msg);
+        throw ErrorAtIndex(msg, index);
     }
 
     send_message(comm, Message::Type::step_stopped,
