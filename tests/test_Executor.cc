@@ -357,7 +357,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
         s.set_function("testfun", &lua_testfun);
     };
 
-    Sequence seq{ };
+    Sequence seq{ "Test" };
     Step step{ Step::type_action };
     step.set_script("a = testfun()");
 

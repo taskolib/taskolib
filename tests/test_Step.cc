@@ -22,9 +22,12 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <stdexcept>
 #include <type_traits>
+
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
+
 #include "taskomat/exceptions.h"
 #include "taskomat/Step.h"
 
@@ -299,7 +302,7 @@ TEST_CASE("execute(): Boolean return value from simple scripts", "[Step]")
     }
 }
 
-TEST_CASE("execute(): Exceptions", "[Step]")
+TEST_CASE("execute(): Lua exceptions", "[Step]")
 {
     Context context;
     Step step;
@@ -312,8 +315,50 @@ TEST_CASE("execute(): Exceptions", "[Step]")
 
     SECTION("Runtime error")
     {
-        step.set_script("b = nil; b()");
+        step.set_script("function boom(); b = nil; b(); end; boom()");
         REQUIRE_THROWS_AS(step.execute(context), Error);
+    }
+
+    SECTION("Runtime error, caught by pcall()")
+    {
+        step.set_script("function boom(); b = nil; b(); end; pcall(boom)");
+        REQUIRE_NOTHROW(step.execute(context));
+    }
+}
+
+TEST_CASE("execute(): C++ exceptions", "[Step]")
+{
+    Context context;
+
+    Step step;
+    step.set_used_context_variable_names(VariableNames{ "a" });
+
+    context.variables["a"] = 0LL;
+    context.lua_init_function =
+        [](sol::state& sol)
+        {
+            sol["throw_exception"] = []() { throw std::logic_error("Test"); };
+        };
+
+    SECTION("C++ exception thrown at script runtime")
+    {
+        step.set_script("throw_exception(); a = 42");
+
+        // A C++ exception bubbles through the Lua execution callstack, but must be caught
+        // by Step::execute() and reported as a task::Error.
+        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE(std::get<long long>(context.variables["a"]) == 0);
+    }
+
+    SECTION("C++ exceptions are not caught by pcall()")
+    {
+        step.set_script("pcall(throw_exception); a = 42");
+
+        // A C++ exception bubbles through the Lua execution callstack and cannot be
+        // caught by pcall(). It must, however, be caught by Step::execute() and reported
+        // as a task::Error.
+        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 }
 
