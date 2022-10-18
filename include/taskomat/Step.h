@@ -98,11 +98,11 @@ public:
      *          language, or false otherwise (even in the case that the script returns no
      *          value at all).
      *
-     * \exception Error is thrown if the script cannot be started, if there is a LUA error
-     *            during execution, if a timeout is encountered, or if termination has
-     *            been requested via the communication channel. When the Lua script
-     *            explicitly terminates by a call to the custom Lua function
-     *            \a terminate_sequence() it is set to not running and throws.
+     * \exception Error or ErrorAtIndex is thrown if the script cannot be started, if
+     *            there is a Lua error during execution, if a timeout is encountered, or
+     *            if termination has been requested via the communication channel. If the
+     *            Lua script explicitly terminates by a call to the custom Lua function
+     *            \a terminate_sequence(), the step is set to not running and throws.
      */
     bool execute(Context& context, CommChannel* comm_channel, StepIndex index);
 
@@ -124,10 +124,11 @@ public:
      *          language, or false otherwise (even in the case that the script returns no
      *          value at all).
      *
-     * \exception Error is thrown if the script cannot be started or if it raises an error
-     *            during execution. When the Lua script explicitly terminates by a call to
-     *            the custom Lua function \a terminate_sequence() it is set to not running
-     *            and throws.
+     * \exception Error or ErrorAtIndex is thrown if the script cannot be started or if
+     *            it raises an error during execution (for ErrorAtIndex, the index is
+     *            assumed as zero). If the Lua script explicitly terminates by a call to
+     *            the custom Lua function \a terminate_sequence(), the step is set to not
+     *            running and throws.
      */
     bool execute(Context& context)
     {
