@@ -36,7 +36,7 @@
 
 #include "taskomat/CommChannel.h"
 #include "taskomat/Context.h"
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 #include "taskomat/Step.h"
 
 namespace task {

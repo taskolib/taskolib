@@ -29,7 +29,7 @@
 #include <gul14/trim.h>
 
 #include "internals.h"
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
 

@@ -25,7 +25,7 @@
 #include <thread>
 #include <type_traits>
 #include <gul14/catch.h>
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 #include "taskomat/Message.h"
 #include "taskomat/LockedQueue.h"
 

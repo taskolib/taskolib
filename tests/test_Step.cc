@@ -25,7 +25,7 @@
 #include <type_traits>
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 #include "taskomat/Step.h"
 
 using namespace std::literals;

@@ -26,7 +26,7 @@
 #include "internals.h"
 #include "lua_details.h"
 #include "taskomat/CommChannel.h"
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 
 using gul14::cat;
 

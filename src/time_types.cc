@@ -27,7 +27,7 @@
 #include <sstream>
 #include <time.h>
 
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 #include "taskomat/time_types.h"
 
 namespace task {

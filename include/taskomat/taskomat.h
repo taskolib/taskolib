@@ -26,7 +26,7 @@
 #define TASKOMAT_TASKOMAT_H_
 
 #include "taskomat/Context.h"
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 #include "taskomat/Executor.h"
 #include "taskomat/Sequence.h"
 #include "taskomat/Step.h"
