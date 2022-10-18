@@ -1,10 +1,11 @@
 /**
- * \file   Error.h
+ * \file   exceptions.h
  * \author Lars Froehlich
  * \date   Created on July 4, 2017
- * \brief  Definition of the Error exception class.
+ * \brief  Definitions of the Error, ErrorAtIndex exception classes and of the StepIndex
+ *         type.
  *
- * \copyright Copyright 2017-2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2017-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,12 +23,17 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_ERROR_H_
-#define TASKOMAT_ERROR_H_
+#ifndef TASKOMAT_EXCEPTIONS_H_
+#define TASKOMAT_EXCEPTIONS_H_
 
+#include <cstdint>
 #include <stdexcept>
+#include <string>
 
 namespace task {
+
+/// A type for storing the index of a Step in a Sequence.
+using StepIndex = std::uint16_t;
 
 /**
  * A generic exception class carrying a message string.
@@ -55,6 +61,46 @@ class Error : public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;
+};
+
+/**
+ * An exception class storing the index of the step in which an error occurred, in
+ * addition to the error message.
+ *
+ * \code
+ * try
+ * {
+ *     throw task::ErrorAtIndex("An error has occurred", 42);
+ * }
+ * catch (const task::ErrorAtIndex& e)
+ * {
+ *     std::cerr << e.what() << " in step " << e.get_index() << "\n";
+ * }
+ * \endcode
+ *
+ * \note
+ * task::ErrorAtIndex inherits from std::runtime_error. It can therefore be caught by
+ * `catch (const std::exception&)`, `catch (const std::runtime_error&)`,
+ * `catch (const task::Error&)`, and `catch (const task::ErrorAtIndex&)`.
+ */
+class ErrorAtIndex : public Error
+{
+public:
+    ErrorAtIndex(const std::string& msg, StepIndex index)
+        : Error(msg)
+        , index_(index)
+    {}
+
+    ErrorAtIndex(const char* msg, StepIndex index)
+        : Error(msg)
+        , index_(index)
+    {}
+
+    /// Return the associated step index.
+    StepIndex get_index() const noexcept { return index_; }
+
+private:
+    StepIndex index_ = 0;
 };
 
 } // namespace task

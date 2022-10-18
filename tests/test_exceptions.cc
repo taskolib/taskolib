@@ -1,10 +1,10 @@
 /**
- * \file   test_Error.cc
+ * \file   test_exceptions.cc
  * \author Lars Froehlich
  * \date   Created on December 10, 2021
- * \brief  Test suite for the Error class.
+ * \brief  Test suite for the Error and ErrorAtIndex exception classes.
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,17 +24,17 @@
 
 #include <string>
 #include <gul14/catch.h>
-#include "taskomat/Error.h"
+#include "taskomat/exceptions.h"
 
 using namespace std::literals;
 using namespace task;
 
-TEST_CASE("Error: Constructor", "[Error]")
+TEST_CASE("Error: Constructor", "[exceptions]")
 {
     Error e("Test");
 }
 
-TEST_CASE("Error: Copy constructor", "[Error]")
+TEST_CASE("Error: Copy constructor", "[exceptions]")
 {
     Error e("Test");
     Error e2(e);
@@ -42,7 +42,7 @@ TEST_CASE("Error: Copy constructor", "[Error]")
     REQUIRE(e.what() == std::string(e2.what()));
 }
 
-TEST_CASE("Error: Copy assignment", "[Error]")
+TEST_CASE("Error: Copy assignment", "[exceptions]")
 {
     Error e("Test");
     Error e2("Test2");
@@ -50,4 +50,29 @@ TEST_CASE("Error: Copy assignment", "[Error]")
     e2 = e;
 
     REQUIRE(e2.what() == "Test"s);
+}
+
+TEST_CASE("ErrorAtIndex: Constructor", "[exceptions]")
+{
+    ErrorAtIndex e("Test", 0);
+}
+
+TEST_CASE("ErrorAtIndex: Copy constructor", "[exceptions]")
+{
+    ErrorAtIndex e("Test", 42);
+    ErrorAtIndex e2(e);
+
+    REQUIRE(e.what() == std::string(e2.what()));
+    REQUIRE(e.get_index() == e2.get_index());
+}
+
+TEST_CASE("ErrorAtIndex: Copy assignment", "[exceptions]")
+{
+    ErrorAtIndex e("Test", 1);
+    ErrorAtIndex e2("Test2", 2);
+
+    e2 = e;
+
+    REQUIRE(e2.what() == "Test"s);
+    REQUIRE(e2.get_index() == 1);
 }

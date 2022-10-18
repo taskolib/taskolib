@@ -26,10 +26,10 @@
 #include <gul14/finalizer.h>
 #include <gul14/trim.h>
 
-#include "sol/sol.hpp"
-#include "taskomat/Error.h"
-#include "taskomat/Step.h"
 #include "lua_details.h"
+#include "sol/sol.hpp"
+#include "taskomat/exceptions.h"
+#include "taskomat/Step.h"
 
 using namespace std::literals;
 using gul14::cat;
