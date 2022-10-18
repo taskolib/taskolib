@@ -104,7 +104,7 @@ public:
      *            explicitly terminates by a call to the custom Lua function
      *            \a terminate_sequence() it is set to not running and throws.
      */
-    bool execute(Context& context, CommChannel* comm_channel, Message::IndexType index);
+    bool execute(Context& context, CommChannel* comm_channel, StepIndex index);
 
     /**
      * Execute the step script within the given context (without messaging).

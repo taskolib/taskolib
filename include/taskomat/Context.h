@@ -49,7 +49,7 @@ using VariableValue = std::variant<long long, double, std::string>;
  * An output function accepts a string and a CommChannel* as parameters.
  * The latter may be null to indicate that there is no associated communication channel.
  */
-using OutputCallback = std::function<void(const std::string&, Message::IndexType, CommChannel*)>;
+using OutputCallback = std::function<void(const std::string&, StepIndex, CommChannel*)>;
 
 /**
  * A context stores information that influences the execution of steps and sequences,

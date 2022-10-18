@@ -35,7 +35,7 @@ using namespace std::literals;
 
 TEST_CASE("Message: Check IndexType", "[Message]")
 {
-    REQUIRE(std::is_same_v<Message::IndexType, Sequence::SizeType> == true);
+    REQUIRE(std::is_same_v<StepIndex, Sequence::SizeType> == true);
 }
 
 TEST_CASE("Message: Constructors", "[Message]")
@@ -43,7 +43,7 @@ TEST_CASE("Message: Constructors", "[Message]")
     static_assert(std::is_default_constructible_v<Message>,
         "Message is default constructible");
     static_assert(std::is_constructible_v<Message, Message::Type, std::string, TimePoint,
-                                          Message::IndexType>,
+                                          StepIndex>,
         "Message can be constructed with init values");
 
     const TimePoint t0 = Clock::now();

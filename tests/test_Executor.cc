@@ -254,7 +254,7 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
 
     Context context;
     context.print_function =
-        [&output](const std::string& str, Message::IndexType, CommChannel*)
+        [&output](const std::string& str, StepIndex, CommChannel*)
         {
             output += str;
         };

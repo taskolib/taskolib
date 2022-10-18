@@ -123,12 +123,12 @@ CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
     return *opt_comm_channel_ptr;
 }
 
-Message::IndexType get_step_idx_from_registry(lua_State* lua_state)
+StepIndex get_step_idx_from_registry(lua_State* lua_state)
 {
     sol::state_view lua(lua_state);
     const auto registry = lua.registry();
 
-    sol::optional<Message::IndexType> opt_step_idx = registry[step_index_key];
+    sol::optional<StepIndex> opt_step_idx = registry[step_index_key];
     if (not opt_step_idx.has_value())
         throw Error(cat(step_index_key, " not found in LUA registry"));
 
@@ -184,7 +184,7 @@ void install_custom_commands(sol::state& lua, const Context& context)
 }
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
-    std::chrono::milliseconds timeout, Message::IndexType step_idx, CommChannel* comm_channel)
+    std::chrono::milliseconds timeout, StepIndex step_idx, CommChannel* comm_channel)
 {
     auto registry = lua.registry();
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
@@ -212,7 +212,7 @@ void open_safe_library_subset(sol::state& lua)
 }
 
 std::function<void(sol::this_state, sol::variadic_args)>
-make_print_fct(std::function<void(const std::string&, Message::IndexType, CommChannel*)> print_fct)
+make_print_fct(std::function<void(const std::string&, StepIndex, CommChannel*)> print_fct)
 {
     return
         [print_fct = std::move(print_fct)](sol::this_state sol, sol::variadic_args va)

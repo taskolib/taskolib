@@ -26,9 +26,12 @@
 #define TASKOMAT_COMMCHANNEL_H_
 
 #include <atomic>
+
 #include <gul14/string_view.h>
+
 #include "taskomat/LockedQueue.h"
 #include "taskomat/Message.h"
+#include "taskomat/StepIndex.h"
 
 namespace task {
 
@@ -64,7 +67,7 @@ struct CommChannel
  */
 inline
 void send_message(CommChannel* comm_channel, Message::Type type, gul14::string_view text,
-                  TimePoint timestamp, Message::IndexType index)
+                  TimePoint timestamp, StepIndex index)
 {
     if (comm_channel == nullptr)
         return;

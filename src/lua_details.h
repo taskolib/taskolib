@@ -57,7 +57,7 @@ CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state);
  *
  * \exception Error is thrown if the appropriate registry key is not found.
  */
-Message::IndexType get_step_idx_from_registry(lua_State* lua_state);
+StepIndex get_step_idx_from_registry(lua_State* lua_state);
 
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
 // plus a duration dt. In case of overflow, the maximum representable time point is
@@ -87,12 +87,12 @@ void install_custom_commands(sol::state& lua, const Context& context);
 // script is being executed. If one of both occurs, the script terminates with an error
 // message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
-    std::chrono::milliseconds timeout, Message::IndexType step_idx,
+    std::chrono::milliseconds timeout, StepIndex step_idx,
     CommChannel* comm_channel);
 
 /// Create a print() function for LUA that wraps a print callback from the Context.
 std::function<void(sol::this_state, sol::variadic_args)>
-make_print_fct(std::function<void(const std::string&, Message::IndexType, CommChannel*)> print_fct);
+make_print_fct(std::function<void(const std::string&, StepIndex, CommChannel*)> print_fct);
 
 // Open a safe subset of the LUA standard libraries in the given LUA state.
 //
