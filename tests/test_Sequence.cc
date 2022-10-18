@@ -3436,4 +3436,5 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     auto msg = queue.back();
     REQUIRE(msg.get_type() == Message::Type::sequence_stopped);
     REQUIRE(msg.get_text() == "Sequence explicitly terminated");
+    REQUIRE(msg.get_index() == 2);
 }

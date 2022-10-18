@@ -313,15 +313,30 @@ void Sequence::execute(Context& context, CommChannel* comm)
     send_message(comm, Message::Type::sequence_started, "Sequence started",
                 Clock::now(), 0);
 
+    bool exception_thrown = false;
+    std::string exception_message;
+    StepIndex exception_index = 0;
+
     try
     {
         check_syntax();
         execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
     }
+    catch (const ErrorAtIndex& e)
+    {
+        exception_thrown = true;
+        exception_message = e.what();
+        exception_index = e.get_index();
+    }
     catch (const std::exception& e)
     {
-        gul14::string_view msg_in{ e.what() };
-        std::string msg_out;
+        exception_thrown = true;
+        exception_message = e.what();
+    }
+
+    if (exception_thrown)
+    {
+        gul14::string_view msg_in{ exception_message };
 
         if (gul14::contains(msg_in, abort_marker))
         {
@@ -332,21 +347,21 @@ void Sequence::execute(Context& context, CommChannel* comm)
             if (msg_in.empty())
             {
                 send_message(comm, Message::Type::sequence_stopped,
-                        "Sequence explicitly terminated", Clock::now(), 0);
+                        "Sequence explicitly terminated", Clock::now(), exception_index);
                 return; // silently return to the caller
             }
-            msg_out = cat("Sequence aborted: ", msg_in);
+            exception_message = cat("Sequence aborted: ", msg_in);
         }
         else
         {
-            msg_out = cat("Sequence stopped with error: ", msg_in);
+            exception_message = cat("Sequence stopped with error: ", msg_in);
         }
 
-        send_message(comm, Message::Type::sequence_stopped_with_error, msg_out,
-                     Clock::now(), 0);
-        set_error_message(msg_out);
+        send_message(comm, Message::Type::sequence_stopped_with_error, exception_message,
+                     Clock::now(), exception_index);
+        set_error_message(exception_message);
 
-        throw Error(std::move(msg_out));
+        throw Error(exception_message);
     }
 
     send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
