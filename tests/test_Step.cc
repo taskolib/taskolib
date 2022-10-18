@@ -337,22 +337,33 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
     context.lua_init_function =
         [](sol::state& sol)
         {
-            sol["throw_exception"] = []() { throw std::logic_error("Test"); };
+            sol["throw_logic_error"] = []() { throw std::logic_error("Test"); };
+            sol["throw_weird_exception"] = []() { struct Weird{}; throw Weird{}; };
         };
 
-    SECTION("C++ exception thrown at script runtime")
+    SECTION("C++ standard exception thrown at script runtime")
     {
-        step.set_script("throw_exception(); a = 42");
+        step.set_script("throw_logic_error(); a = 42");
 
         // A C++ exception bubbles through the Lua execution callstack, but must be caught
-        // by Step::execute() and reported as a task::Error.
+        // by Sol2, returned as a protected_function_result, and reported as a task::Error.
+        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE(std::get<long long>(context.variables["a"]) == 0);
+    }
+
+    SECTION("Nonstandard C++ exception thrown at script runtime")
+    {
+        step.set_script("throw_weird_exception(); a = 42");
+
+        // A C++ exception bubbles through the Lua execution callstack, but must be caught
+        // by Sol2, returned as a protected_function_result, and reported as a task::Error.
         REQUIRE_THROWS_AS(step.execute(context), Error);
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 
     SECTION("C++ exceptions are not caught by pcall()")
     {
-        step.set_script("pcall(throw_exception); a = 42");
+        step.set_script("pcall(throw_logic_error); a = 42");
 
         // A C++ exception bubbles through the Lua execution callstack and cannot be
         // caught by pcall(). It must, however, be caught by Step::execute() and reported
