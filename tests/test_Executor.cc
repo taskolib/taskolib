@@ -123,6 +123,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
 {
     Context context;
+    context.log_error_function = nullptr;
 
     Step step(Step::type_action);
     step.set_script("not valid LUA");
@@ -280,6 +281,8 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     "[Executor]")
 {
     Context ctx;
+    ctx.log_error_function = nullptr;
+
     Sequence seq{ "test_sequence" };
 
     Step step_while{Step::type_while};
@@ -351,7 +354,8 @@ auto lua_testfun(sol::this_state s) -> sol::object
 
 TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
 {
-    Context ctx{ };
+    Context ctx;
+    ctx.log_error_function = nullptr;
 
     ctx.lua_init_function = [](sol::state& s) {
         s.set_function("testfun", &lua_testfun);
