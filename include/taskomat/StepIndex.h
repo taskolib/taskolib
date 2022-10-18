@@ -1,8 +1,8 @@
 /**
- * \file   console.cc
+ * \file   StepIndex.h
  * \author Lars Froehlich
- * \date   Created on June 22, 2022
- * \brief  Implementation of several functions for console output.
+ * \date   Created on October 18, 2022
+ * \brief  Declaration of the StepIndex type.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -22,29 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <iostream>
-#include "taskomat/console.h"
+#ifndef TASKOMAT_STEPINDEX_H_
+#define TASKOMAT_STEPINDEX_H_
 
 namespace task {
 
-void print_to_stdout(const std::string& str, StepIndex, CommChannel*)
-{
-    std::cout << str;
-}
-
-void print_info_to_stdout(const std::string& str, StepIndex, CommChannel*)
-{
-    std::cout << "INFO: " << str << "\n";
-}
-
-void print_warning_to_stdout(const std::string& str, StepIndex, CommChannel*)
-{
-    std::cout << "WARNING: " << str << "\n";
-}
-
-void print_error_to_stdout(const std::string& str, StepIndex, CommChannel*)
-{
-    std::cout << "ERROR: " << str << "\n";
-}
+/// A type for storing the index of a Step in a Sequence.
+using StepIndex = std::uint16_t;
 
 } // namespace task
+
+#endif

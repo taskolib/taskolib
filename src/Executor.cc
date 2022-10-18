@@ -34,22 +34,22 @@ namespace task {
 
 namespace {
 
-void print_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
+void print_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
 }
 
-void log_info_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
+void log_info_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_info, text, Clock::now(), idx);
 }
 
-void log_warning_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
+void log_warning_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), idx);
 }
 
-void log_error_to_message_queue(const std::string& text, Message::IndexType idx, CommChannel* comm_channel)
+void log_error_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_error, text, Clock::now(), idx);
 }

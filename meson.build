@@ -42,6 +42,7 @@ install_headers(files(
         'include/taskomat/SequenceManager.h',
         'include/taskomat/serialize_sequence.h',
         'include/taskomat/Step.h',
+        'include/taskomat/StepIndex.h',
         'include/taskomat/taskomat.h',
         'include/taskomat/time_types.h',
         'include/taskomat/VariableName.h',

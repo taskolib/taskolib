@@ -98,7 +98,7 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
     }
 }
 
-bool Step::execute(Context& context, CommChannel* comm, Message::IndexType index)
+bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 {
     const auto now = Clock::now();
 

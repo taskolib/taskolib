@@ -2,8 +2,7 @@
  * \file   exceptions.h
  * \author Lars Froehlich
  * \date   Created on July 4, 2017
- * \brief  Definitions of the Error, ErrorAtIndex exception classes and of the StepIndex
- *         type.
+ * \brief  Definitions of the Error and ErrorAtIndex exception classes.
  *
  * \copyright Copyright 2017-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -30,10 +29,9 @@
 #include <stdexcept>
 #include <string>
 
-namespace task {
+#include "taskomat/StepIndex.h"
 
-/// A type for storing the index of a Step in a Sequence.
-using StepIndex = std::uint16_t;
+namespace task {
 
 /**
  * A generic exception class carrying a message string.

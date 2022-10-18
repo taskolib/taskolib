@@ -38,6 +38,7 @@
 #include "taskomat/Context.h"
 #include "taskomat/exceptions.h"
 #include "taskomat/Step.h"
+#include "taskomat/StepIndex.h"
 
 namespace task {
 
@@ -72,7 +73,7 @@ class Sequence
 {
 public:
     /// Alias for step type.
-    using SizeType = std::uint16_t;
+    using SizeType = StepIndex;
     /// Alias for a vector iterator.
     using Iterator = std::vector<Step>::iterator;
     /// Alias for a constant vector iterator.

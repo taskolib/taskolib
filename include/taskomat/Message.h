@@ -32,6 +32,7 @@
 
 #include <gul14/escape.h>
 
+#include "taskomat/StepIndex.h"
 #include "taskomat/time_types.h"
 
 namespace task {
@@ -43,9 +44,6 @@ namespace task {
 class Message
 {
 public:
-    /// Type for the associated index (for convenience, same as Sequence::SizeType)
-    using IndexType = std::uint16_t;
-
     /// The type of this message.
     enum class Type
     {
@@ -84,7 +82,7 @@ public:
     Message() = default;
 
     /// Construct an initialized message from the given parameters.
-    Message(Type type, std::string text, TimePoint timestamp, IndexType index)
+    Message(Type type, std::string text, TimePoint timestamp, StepIndex index)
         : text_{ std::move(text) }
         , timestamp_{ timestamp }
         , type_{ type }
@@ -92,7 +90,7 @@ public:
     {}
 
     /// Return the associated index.
-    IndexType get_index() const noexcept { return index_; }
+    StepIndex get_index() const noexcept { return index_; }
 
     /**
      * Return the message text.
@@ -109,7 +107,7 @@ public:
     TimePoint get_timestamp() const { return timestamp_; };
 
     /// Set the associated index.
-    Message& set_index(IndexType index) { index_ = index; return *this; }
+    Message& set_index(StepIndex index) { index_ = index; return *this; }
 
     /// Set the message text.
     Message& set_text(const std::string& text) { text_ = text; return *this; }
@@ -142,7 +140,7 @@ private:
     std::string text_;
     TimePoint timestamp_{};
     Type type_{ Type::output };
-    IndexType index_{ 0 };
+    StepIndex index_{ 0 };
 };
 
 } // namespace task
