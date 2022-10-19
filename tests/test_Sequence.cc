@@ -28,16 +28,6 @@
 using namespace task;
 using namespace std::literals;
 
-TEST_CASE("Sequence: Construct empty sequence", "[Sequence]")
-{
-    Sequence seq;
-    REQUIRE(seq.empty());
-    REQUIRE(seq.size() == 0);
-
-    static_assert(std::is_default_constructible<Sequence>::value,
-        "Sequence is_default_constructible");
-}
-
 TEST_CASE("Sequence: Constructor without descriptive name", "[Sequence]")
 {
     REQUIRE_THROWS_AS(Sequence(""), Error);
@@ -51,7 +41,7 @@ TEST_CASE("Sequence: Constructor with too long descriptive name", "[Sequence]")
 
 TEST_CASE("Sequence: assign()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_action});
@@ -80,7 +70,7 @@ TEST_CASE("Sequence: assign()", "[Sequence]")
 
 TEST_CASE("Sequence: empty()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     REQUIRE(seq.empty());
     seq.push_back(Step{});
     REQUIRE(seq.empty() == false);
@@ -88,7 +78,7 @@ TEST_CASE("Sequence: empty()", "[Sequence]")
 
 TEST_CASE("Sequence: erase()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_while});
     seq.push_back(Step{Step::type_action});
@@ -161,7 +151,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
 
 TEST_CASE("Sequence: get_error_message()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     REQUIRE(seq.get_error_message() == "");
 
     seq.set_error_message("Test");
@@ -170,7 +160,7 @@ TEST_CASE("Sequence: get_error_message()", "[Sequence]")
 
 TEST_CASE("Sequence: insert()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_action});
 
@@ -224,7 +214,7 @@ TEST_CASE("Sequence: is_running()", "[Sequence]")
     Step step1{ Step::type_action };
     step1.set_script("a = 10");
 
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(step1);
 
     REQUIRE(not seq.is_running());
@@ -248,7 +238,7 @@ TEST_CASE("Sequence: modify()", "[Sequence]")
     ori_step.set_script("a = 1");
     ori_step.set_time_of_last_execution(Clock::now());
 
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(Step{ Step::type_if });
     seq.push_back(ori_step);
     seq.push_back(Step{ Step::type_end });
@@ -309,7 +299,7 @@ TEST_CASE("Sequence: modify()", "[Sequence]")
 
 TEST_CASE("Sequence: pop_back()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(Step{});
     seq.push_back(Step{});
     REQUIRE(seq.empty() == false);
@@ -329,7 +319,7 @@ TEST_CASE("Sequence: pop_back()", "[Sequence]")
 
 TEST_CASE("Sequence: push_back()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
 
     SECTION("append lvalue Step")
     {
@@ -357,7 +347,7 @@ TEST_CASE("Sequence: push_back()", "[Sequence]")
 
 TEST_CASE("Sequence: set_error_message()", "[Sequence]")
 {
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
 
     seq.set_error_message("Test");
     REQUIRE(seq.get_error_message() == "Test");
@@ -376,7 +366,7 @@ TEST_CASE("Sequence: set_running()", "[Sequence]")
     step2.set_label("conditional");
     step2.set_script("return true");
 
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
     seq.push_back(step1);
 
     seq.set_running(true);
@@ -1189,7 +1179,7 @@ TEST_CASE("execute(): if-else sequence", "[Sequence]")
 
     step_if_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_action_if);
     sequence.push_back(step_else);
@@ -1258,7 +1248,7 @@ TEST_CASE("execute(): if-elseif sequence", "[Sequence]")
 
     step_if_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_if_action);
     sequence.push_back(step_elseif);
@@ -1346,7 +1336,7 @@ TEST_CASE("execute(): if-elseif-else sequence", "[Sequence]")
 
     step_if_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_if_action);
     sequence.push_back(step_elseif);
@@ -1436,7 +1426,7 @@ TEST_CASE("execute(): if-elseif-elseif sequence", "[Sequence]")
 
     step_if_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_if_action);
     sequence.push_back(step_elseif1);
@@ -1546,7 +1536,7 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
 
     step_if_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_if_action);
     sequence.push_back(step_elseif1);
@@ -1634,7 +1624,7 @@ TEST_CASE("execute(): if-elseif-else-end sequence with empty blocks", "[Sequence
 
     step_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_elseif1);
     sequence.push_back(step_elseif2);
@@ -1722,7 +1712,7 @@ TEST_CASE("execute(): faulty if-else-elseif sequence", "[Sequence]")
 
     step_if_end.set_label("if: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_if);
     sequence.push_back(step_if_action);
     sequence.push_back(step_if_else);
@@ -1768,7 +1758,7 @@ TEST_CASE("execute(): while sequence", "[Sequence]")
 
     step_while_end.set_label("while: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_while);
     sequence.push_back(step_while_action);
     sequence.push_back(step_while_end);
@@ -1806,7 +1796,7 @@ TEST_CASE("execute(): empty while sequence", "[Sequence]")
 
     step_end.set_label("while: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_while);
     sequence.push_back(step_end);
 
@@ -1857,7 +1847,7 @@ TEST_CASE("execute(): try sequence with success", "[Sequence]")
 
     step_try_end.set_label("try: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_try);
     sequence.push_back(step_try_action);
     sequence.push_back(step_try_catch);
@@ -1914,7 +1904,7 @@ TEST_CASE("execute(): try sequence with fault", "[Sequence]")
 
     step_try_end.set_label("try: end");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_try);
     sequence.push_back(step_try_action1);
     sequence.push_back(step_try_action2);
@@ -2001,7 +1991,7 @@ TEST_CASE("execute(): complex try sequence with nested fault condition",
 
     step_10.set_label("try [end]");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_00);
     sequence.push_back(step_01);
     sequence.push_back(step_02);
@@ -2071,7 +2061,7 @@ TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
 
     step_06.set_label("try [end]");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_00);
     sequence.push_back(step_01);
     sequence.push_back(step_02);
@@ -2165,7 +2155,7 @@ TEST_CASE("execute(): complex try sequence with fault", "[Sequence]")
 
     step_11.set_label("try [end]");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_00);
     sequence.push_back(step_01);
     sequence.push_back(step_02);
@@ -2392,7 +2382,7 @@ TEST_CASE("execute(): complex sequence", "[Sequence]")
 
     step_31.set_label("while [end]");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     // 32 steps
     sequence.push_back(step_00);
 
@@ -2633,7 +2623,7 @@ TEST_CASE("execute(): complex sequence with misplaced if", "[Sequence]")
 
     Step step_31{Step::type_end};
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     // 32 steps
     sequence.push_back(step_00);
 
@@ -2701,7 +2691,7 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     step2.set_used_context_variable_names(VariableNames{ "a" });
     step2.set_script("a = a + 2");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step1));
     sequence.push_back(std::move(step2));
 
@@ -2805,7 +2795,7 @@ TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
     step_post.set_used_context_variable_names(VariableNames{"a", "b"});
     step_post.set_script("b = 1");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_pre); // a = 1
     sequence.push_back(step_if); // IF a == 1
     sequence.push_back(step_if_action); // a = 2
@@ -2854,7 +2844,7 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
     step2.set_used_context_variable_names(VariableNames{"a"});
     step2.set_script("a = a + 1");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step1);
     sequence.push_back(step2);
     sequence.push_back(step2);
@@ -2954,7 +2944,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
 
     SECTION("Second step disabled")
     {
-        Sequence sequence;
+        Sequence sequence{ "test_sequence" };
         sequence.push_back(step_pre); // a = 1
         sequence.push_back(copy_and_disable(step_if)); // IF a == 1
         sequence.push_back(step_if_action); // a = 2
@@ -2981,7 +2971,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
 
     SECTION("Third step disabled")
     {
-        Sequence sequence;
+        Sequence sequence{ "test_sequence" };
         sequence.push_back(step_pre); // a = 1
         sequence.push_back(step_if); // IF a == 1
         sequence.push_back(copy_and_disable(step_if_action)); // a = 2
@@ -3008,7 +2998,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
 
     SECTION("Fourth step disabled")
     {
-        Sequence sequence;
+        Sequence sequence{ "test_sequence" };
         sequence.push_back(step_pre); // a = 1
         sequence.push_back(step_if); // IF a == 1
         sequence.push_back(step_if_action); // a = 2
@@ -3092,7 +3082,7 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
     step_post.set_used_context_variable_names(VariableNames{"a", "b"});
     step_post.set_script("b = 1");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(step_pre); // a = 1
     sequence.push_back(step_if); // IF a == 1
     sequence.push_back(step_if_action); // a = 2
@@ -3204,7 +3194,7 @@ TEST_CASE("execute(): disable 'invariant' (complex)", "[Sequence]")
     // 10    END
     // 11    ACTION
 
-    Sequence s{ };
+    Sequence s{ "test_sequence" };
     s.push_back(Step{ Step::type_action });
     s.push_back(Step{ Step::type_if });
     s.push_back(Step{ Step::type_action });
@@ -3314,7 +3304,7 @@ TEST_CASE("execute(): Disable + re-enable action inside while loop", "[Sequence]
     //  1   ACTION
     //  2 END
 
-    Sequence s{ };
+    Sequence s{ "test_sequence" };
     s.push_back(Step{ Step::type_while });
     s.push_back(Step{ Step::type_action });
     s.push_back(Step{ Step::type_end });
@@ -3343,7 +3333,7 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     auto& queue = comm.queue_;
 
     Context ctx;
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
 
     Step step_while{Step::type_while};
     Step step_increment{Step::type_action};

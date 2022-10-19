@@ -63,7 +63,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     Step step(Step::type_action);
     step.set_script("sleep(0.02)");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
     REQUIRE(sequence.get_error_message() == "");
 
@@ -126,7 +126,7 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     Step step(Step::type_action);
     step.set_script("not valid LUA");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
     REQUIRE(sequence.get_error_message() == "");
 
@@ -164,7 +164,7 @@ TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
     Step step(Step::type_action);
     step.set_script("sleep(2)");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
 
     Executor executor;
@@ -214,7 +214,7 @@ TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
         )");
     Step step_catch{ Step::type_catch };
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step_while));  // while
     sequence.push_back(std::move(step_try));    //   try
     sequence.push_back(std::move(step_action)); //     action: infinite loop
@@ -266,7 +266,7 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
     Step step( Step::type_action );
     step.set_script("print('Mary had', 3, 'little lambs.')");
 
-    Sequence sequence;
+    Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
 
     Executor executor;
@@ -283,7 +283,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     "[Executor]")
 {
     Context ctx;
-    Sequence seq;
+    Sequence seq{ "test_sequence" };
 
     Step step_while{Step::type_while};
     Step step_increment{Step::type_action};

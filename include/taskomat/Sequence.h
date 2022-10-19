@@ -88,7 +88,7 @@ public:
      * \exception Error is thrown if the label is empty or if its length exceeds
      *            max_label_length characters.
      */
-    explicit Sequence(gul14::string_view label = "anonymous");
+    explicit Sequence(gul14::string_view label);
 
     /**
      * Assign a Step to the sequence entry at the given position.
