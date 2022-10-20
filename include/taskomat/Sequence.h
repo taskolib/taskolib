@@ -83,7 +83,7 @@ public:
      * Construct a Sequence with a descriptive name.
      * The label should describe the function of the sequence clearly and concisely.
      *
-     * \param label [IN] descriptive and clear label.
+     * \param label descriptive and expressive label.
      *
      * \exception Error is thrown if the label is empty or if its length exceeds
      *            max_label_length characters.
@@ -280,6 +280,20 @@ public:
      * @returns a descriptive name for the sequence.
      */
     const std::string& get_label() const noexcept { return label_; }
+
+    /**
+     * Inject or modify with a new label. The label should not be empty.
+     *
+     * \param new_label descriptive and expressive label.
+     *
+     * \exception Error is thrown if the label is empty or if its length exceeds
+     *            max_label_length characters.
+     */
+    void set_label(gul14::string_view new_label)
+    {
+        check_label(new_label);
+        label_.assign(new_label.data(), new_label.size());
+    }
 
     /**
      * Insert the given \a Step before of the constant iterator into Sequence.

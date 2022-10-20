@@ -48,6 +48,16 @@ TEST_CASE("Sequence: Construct an empty Sequence", "[Sequence]")
     REQUIRE(s.cbegin() == s.cend());
 }
 
+TEST_CASE("Sequence: get and set sequence label", "[Sequence]")
+{
+    Sequence s{ "test_sequence" };
+    REQUIRE(s.get_label() == "test_sequence");
+    s.set_label("modified_test_sequence");
+    REQUIRE(s.get_label() == "modified_test_sequence");
+    REQUIRE_THROWS_AS(s.set_label(std::string(Sequence::max_label_length + 1, 'a'))
+        , Error);
+}
+
 TEST_CASE("Sequence: assign()", "[Sequence]")
 {
     Sequence seq{ "test_sequence" };
