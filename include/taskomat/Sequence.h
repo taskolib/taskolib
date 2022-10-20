@@ -289,11 +289,7 @@ public:
      * \exception Error is thrown if the label is empty or if its length exceeds
      *            max_label_length characters.
      */
-    void set_label(gul14::string_view new_label)
-    {
-        check_label(new_label);
-        label_.assign(new_label.data(), new_label.size());
-    }
+    void set_label(gul14::string_view new_label);
 
     /**
      * Insert the given \a Step before of the constant iterator into Sequence.

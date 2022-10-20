@@ -65,6 +65,12 @@ Sequence::Sequence(gul14::string_view label)
     label_.assign(label.data(), label.size());
 }
 
+void Sequence::set_label(gul14::string_view new_label)
+{
+    check_label(new_label);
+    label_.assign(new_label.data(), new_label.size());
+}
+
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
 {
     throw_if_running();
