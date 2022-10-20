@@ -39,6 +39,15 @@ TEST_CASE("Sequence: Constructor with too long descriptive name", "[Sequence]")
     REQUIRE_NOTHROW(Sequence(std::string(Sequence::max_label_length, 'c')));
 }
 
+TEST_CASE("Sequence: Construct an empty Sequence", "[Sequence]")
+{
+    Sequence s{ "test_sequence" };
+    REQUIRE(s.size() == 0);
+    REQUIRE(s.empty());
+    REQUIRE(s.begin() == s.end());
+    REQUIRE(s.cbegin() == s.cend());
+}
+
 TEST_CASE("Sequence: assign()", "[Sequence]")
 {
     Sequence seq{ "test_sequence" };
