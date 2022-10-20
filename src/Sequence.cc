@@ -61,7 +61,7 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 
 Sequence::Sequence(gul14::string_view label)
 {
-    set_label(label);git co
+    set_label(label);
 }
 
 void Sequence::set_label(gul14::string_view new_label)
