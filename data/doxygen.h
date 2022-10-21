@@ -11,7 +11,7 @@
  * for executing them in the current thread or in a parallel one, as well as serialization
  * support for saving and loading them.
  *
- * \section Creating a sequence and running it in the current thread
+ * \section run_sequence_in_current_thread Create a sequence and run it in the current thread
  *
  * The C++ classes for modeling sequences and steps are \ref task::Sequence "Sequence" and
  * \ref task::Step "Step". A sequence acts like a container for steps and can be executed
@@ -47,11 +47,11 @@
  * sequence.execute(context);
  * \endcode
  *
- * \section Running a sequence in a parallel thread
+ * \section run_sequence_parallel Run a sequence in a parallel thread
  *
- * Taskolib can start a sequence in a parallel thread via an \ref task::Executor Executor
- * object. The main thread should frequently call \ref task::Executor::update update() on
- * this object to get information about the status of the execution. No other
+ * Taskolib can start a sequence in a parallel thread via an \ref task::Executor "Executor"
+ * object. The main thread should frequently call \ref task::Executor::update "update()"
+ * on this object to get information about the status of the execution. No other
  * synchronization is necessary.
  *
  * \code {.cpp}
