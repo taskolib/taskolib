@@ -71,10 +71,13 @@ namespace task {
 class Sequence
 {
 public:
-    /// Abbreviation for steps.
+    /// Alias for step type.
     using SizeType = std::uint16_t;
+    /// Alias for a vector iterator.
     using Iterator = std::vector<Step>::iterator;
+    /// Alias for a constant vector iterator.
     using ConstIterator = std::vector<Step>::const_iterator;
+    /// Alias for a constant reverse vector iterator.
     using ConstReverseIterator = std::vector<Step>::const_reverse_iterator;
 
     /// Max number of bytes of a Sequence label.
