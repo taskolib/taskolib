@@ -30,19 +30,20 @@ using namespace std::literals;
 
 TEST_CASE("Sequence: Constructor without descriptive name", "[Sequence]")
 {
-    REQUIRE_THROWS_AS(Sequence(""), Error);
+    REQUIRE_THROWS_AS(Sequence{ "" }, Error);
 }
 
 TEST_CASE("Sequence: Constructor with too long descriptive name", "[Sequence]")
 {
     // label is to many characters -> throws Error
-    REQUIRE_THROWS_AS(Sequence(std::string(Sequence::max_label_length + 1, 'c')), Error);
+    REQUIRE_THROWS_AS(Sequence{ std::string(Sequence::max_label_length + 1, 'c') },
+        Error);
     // empty label -> throws Error
-    REQUIRE_THROWS_AS(Sequence(""), Error);
+    REQUIRE_THROWS_AS(Sequence{ "" } , Error);
     // minimum label length with one character
-    REQUIRE_NOTHROW(Sequence("S"));
+    REQUIRE_NOTHROW(Sequence{ "S" });
     // label length with all characters filled
-    REQUIRE_NOTHROW(Sequence(std::string(Sequence::max_label_length, 'c')));
+    REQUIRE_NOTHROW(Sequence{ std::string(Sequence::max_label_length, 'c') });
 }
 
 TEST_CASE("Sequence: Construct an empty Sequence", "[Sequence]")
