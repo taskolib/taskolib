@@ -360,11 +360,11 @@ Variables</h2></td></tr>
 <p>Deserialize <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> from file path. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>to load <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> and all included <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> 's </td></tr>
+    <tr><td class="paramname">path</td><td>a directory from which the sequence should be loaded </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>deserialized <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the deserialized <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> object. </dd></dl>
 
 <p class="reference">References <a class="el" href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">deserialize_step()</a>, and <a class="el" href="classtask_1_1Sequence.html#a5b281658b4349ca8c63a8a287ebd0420">task::Sequence::push_back()</a>.</p>
 
@@ -391,10 +391,20 @@ Variables</h2></td></tr>
 <p>Extracts and creates from <em>path</em> a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> and returns it. </p>
 <p>The file path must be a Lua script and should have the extension 'lua'.</p>
 <p>It will throw an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> exception if an I/O error occurs on the external file path or the file does not exist.</p>
-<p>To deserialize a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> it must consist with following minimum properties: /code &ndash; type: action <em>or</em> if <em>or</em> ... &ndash; label: &lt; <em>label</em> <em>description</em> &gt; /endcode</p>
-<p>Optional are the following properties: /code &ndash; use context variable names: [ <em>variable1</em>, ... ] &ndash; time of last modification: Y-m-d H:M:S &ndash; time of last execution: Y-m-d H:M:S &ndash; timeout: [infinity|&lt; <em>timeout</em> <em>in</em> <em>milliseconds</em> &gt;] /endcode</p>
-<p>Here is one example of a stored <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> <em>step_001_while.lua</em> : /code &ndash; type: while &ndash; label: Is increment lower then 10? &ndash; use context variable names: [incr] &ndash; time of last modification: 2022-06-13 16:30:32 &ndash; time of last execution: 2022-06-13 16:55:21 &ndash; timeout: 60000 return incr &lt; 10 /end code</p>
-<p>The label is explicitly escaped on storing and unescaped on loading.</p>
+<p>To deserialize a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> it must consist with following minimum properties: </p><div class="fragment"><div class="line">-- type: action \a or if \a or ...</div>
+<div class="line">-- label: &lt; \a label \a description &gt;</div>
+</div><!-- fragment --><p>Optional are the following properties: </p><div class="fragment"><div class="line">-- use context variable names: [ \a variable1, ... ]</div>
+<div class="line">-- time of last modification: %Y-%m-%d %H:%M:%S</div>
+<div class="line">-- time of last execution: %Y-%m-%d %H:%M:%S</div>
+<div class="line">-- timeout: [infinity|&lt; \a timeout \a in \a milliseconds &gt;]</div>
+</div><!-- fragment --><p>Here is one example of a stored <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> <em>step_001_while.lua</em> : </p><div class="fragment"><div class="line">-- type: <span class="keywordflow">while</span></div>
+<div class="line">-- label: Is increment lower then 10?</div>
+<div class="line">-- use context variable names: [incr]</div>
+<div class="line">-- time of last modification: 2022-06-13 16:30:32</div>
+<div class="line">-- time of last execution: 2022-06-13 16:55:21</div>
+<div class="line">-- timeout: 60000</div>
+<div class="line"><span class="keywordflow">return</span> incr &lt; 10</div>
+</div><!-- fragment --><p>The label is explicitly escaped on storing and unescaped on loading.</p>
 <dl class="section note"><dt>Note</dt><dd><code>'&ndash;'</code> is a Lua comment and interpreted with special keywords to fill the <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> properties. </dd>
 <dd>
 for time interpretation see <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> </dd>
@@ -404,11 +414,11 @@ if <code>&gt;time of last modification</code> is not provided in the file it is 
 the collection of context variable names can also be an empty list, ie. <code></code>[] .</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>file path to load the <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> </td></tr>
+    <tr><td class="paramname">path</td><td>the path to a file from which the step should be loaded </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>fresh create <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the deserialized <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> object. </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">deserialize_sequence()</a>.</p>
 
@@ -842,7 +852,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>passed input stream </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#aee945ef7a60605fe4bbb79f54f4d93d0">hash_djb2a()</a>, <a class="el" href="classtask_1_1Step.html#a702cae0145cf680197a6b80a9c2cae19">task::Step::set_script()</a>, and <a class="el" href="classtask_1_1Step.html#abfa74b353350ca9bd9f292a7a59e3d03">task::Step::set_time_of_last_modification()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#aee945ef7a60605fe4bbb79f54f4d93d0">hash_djb2a()</a>, <a class="el" href="classtask_1_1Step.html#aaa01eaf139e91add89f808f2883855e4">task::Step::set_script()</a>, and <a class="el" href="classtask_1_1Step.html#a277e32b2aaa43d487a37629b09e8062e">task::Step::set_time_of_last_modification()</a>.</p>
 
 </div>
 </div>
@@ -1170,11 +1180,23 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Serialize <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> to the file system. </p>
 <p>It pushes the <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> properties to the stream:</p>
-<p>/code &ndash; type: {action, if, elseif, else, while, try, catch, end} &ndash; label: &lt; <em>label</em> <em>description</em> &gt; &ndash; use context variable names: [ <em>variable1</em>, ... ] &ndash; time of last modification: Y-m-d H:M:S &ndash; time of last execution: Y-m-d H:M:S &ndash; timeout: [infinity|&lt; <em>time</em> <em>in</em> <em>milliseconds</em> &gt;] &lt; <em>Lua</em> <em>script</em> &gt; /end code</p>
-<p>The <em>Lua</em> <em>script</em> can be omitted for type <em>try</em>, <em>catch</em>, and <em>end</em> as it has no meaning for execution. See Step::execution for more information. The list of context variable names can also be empty.</p>
+<div class="fragment"><div class="line">-- type: {action, <span class="keywordflow">if</span>, elseif, <span class="keywordflow">else</span>, <span class="keywordflow">while</span>, <span class="keywordflow">try</span>, <span class="keywordflow">catch</span>, end}</div>
+<div class="line">-- label: &lt; \a label \a description &gt;</div>
+<div class="line">-- use context variable names: [ \a variable1, ... ]</div>
+<div class="line">-- time of last modification: %Y-%m-%d %H:%M:%S</div>
+<div class="line">-- time of last execution: %Y-%m-%d %H:%M:%S</div>
+<div class="line">-- timeout: [infinity|&lt; \a time \a in \a milliseconds &gt;]</div>
+<div class="line">&lt; \a Lua \a script &gt;</div>
+</div><!-- fragment --><p>The <em>Lua</em> <em>script</em> can be omitted for type <em>try</em>, <em>catch</em>, and <em>end</em> as it has no meaning for execution. See Step::execution for more information. The list of context variable names can also be empty.</p>
 <p>Here is one example of a stored <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> <code>step_001_action.lua</code>:</p>
-<p>/code &ndash; type: action &ndash; label: Increment a &ndash; use context variable names: [a] &ndash; time of last modification: 2022-06-13 16:30:32 &ndash; time of last execution: 2022-06-13 16:55:21 &ndash; timeout: infinity a = a + 1 /end code</p>
-<p>The label is explicitly escaped on storing and unescaped on loading.</p>
+<div class="fragment"><div class="line">-- type: action</div>
+<div class="line">-- label: Increment a</div>
+<div class="line">-- use context variable names: [a]</div>
+<div class="line">-- time of last modification: 2022-06-13 16:30:32</div>
+<div class="line">-- time of last execution: 2022-06-13 16:55:21</div>
+<div class="line">-- timeout: infinity</div>
+<div class="line">a = a + 1</div>
+</div><!-- fragment --><p>The label is explicitly escaped on storing and unescaped on loading.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">step</td><td>step to serialize </td></tr>
@@ -1300,7 +1322,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 <div class="ttc" id="anamespacetask_html_a82e309aedbfe18de6803e1479fc4853d"><div class="ttname"><a href="namespacetask.html#a82e309aedbfe18de6803e1479fc4853d">task::send_message</a></div><div class="ttdeci">void send_message(CommChannel *comm_channel, Message::Type type, gul14::string_view text, TimePoint timestamp, Message::IndexType index)</div><div class="ttdoc">Enqueue a message in the given communication channel.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:66</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 30 2022 14:10:37 for Taskolib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 21 2022 15:26:04 for Taskolib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
