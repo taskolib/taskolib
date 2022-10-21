@@ -7,9 +7,15 @@
  * sequence of steps which are executed in order or through control flow statements. The
  * behavior of each step is defined in the LUA scripting language.
  *
- * The C++ classes for modeling sequences and steps are, unsurprisingly,
- * \ref task::Sequence "Sequence" and \ref task::Step "Step". A sequence acts like a
- * container for steps and can be executed in the current thread with the member function
+ * The library provides the main modeling classes for sequences and steps, functionality
+ * for executing them in the current thread or in a parallel one, as well as serialization
+ * support for saving and loading them.
+ *
+ * \section Creating a sequence and running it in the current thread
+ *
+ * The C++ classes for modeling sequences and steps are \ref task::Sequence "Sequence" and
+ * \ref task::Step "Step". A sequence acts like a container for steps and can be executed
+ * in the current thread with the member function
  * \ref task::Sequence::execute "Sequence::execute()":
  *
  * \code {.cpp}
@@ -17,35 +23,67 @@
  *
  * using namespace task;
  *
- * // Create some steps
- * Step step1{ Step::type_action };
- * step1.set_script("a = 42");
+ * Sequence create_sequence()
+ * {
+ *     // Create some steps
+ *     Step step1{ Step::type_action };
+ *     step1.set_script("a = 42");
  *
- * Step step2{ Step::type_action };
- * step2.set_script("b = 13");
+ *     Step step2{ Step::type_action };
+ *     step2.set_script("print('Mary had a little lamb.')");
  *
- * // Assemble the steps into a sequence
- * Sequence sequence;
- * sequence.push_back(step1);
- * sequence.push_back(step2);
+ *     // Assemble the steps into a sequence
+ *     Sequence sequence{ "An example sequence" };
+ *     sequence.push_back(step1);
+ *     sequence.push_back(step2);
+ *
+ *     return sequence;
+ * }
+ *
+ * Sequence sequence = create_sequence();
+ * Context context; // A context may contain additional information for the sequence
  *
  * // Run the sequence
- * sequence.execute();
+ * sequence.execute(context);
  * \endcode
  *
- * \section usage Usage
+ * \section Running a sequence in a parallel thread
  *
- * All functions and classes are declared in the namespace \ref task. To use the library,
- * include the single header file \link taskomat/taskomat.h \endlink and link your code
- * against both this library and the General Utility Library (-ltaskomat -lgul14).
+ * Taskolib can start a sequence in a parallel thread via an \ref task::Executor Executor
+ * object. The main thread should frequently call \ref task::Executor::update update() on
+ * this object to get information about the status of the execution. No other
+ * synchronization is necessary.
+ *
+ * \code {.cpp}
+ * #include <taskomat/taskomat.h>
+ *
+ * using namespace task;
+ *
+ * Executor ex;
+ * Sequence sequence = create_sequence(); // get a Sequence from somewhere
+ * Context context;
+ *
+ * // Start executing a copy of the sequence in a separate thread
+ * ex.run_asynchronously(sequence, context);
+ *
+ * // Periodically call update() to bring our local copy of the sequence in sync with the
+ * // other thread. Once the sequence has finished, update() returns false and the thread
+ * // is joined automatically.
+ * while (ex.update(sequence))
+ *     sleep(0.1s);
+ * \endcode
+ *
+ * \section usage Usage Notes
+ *
+ * Taskolib requires at least C++17. All functions and classes are declared in the
+ * namespace \ref task. To use the library, include the single header file
+ * \link taskomat/taskomat.h \endlink and link your code against both this library and
+ * the General Utility Library (-ltaskomat -lgul14).
  *
  * The evolving design goals of the library are documented in a series of
  * \ref design_documents.
  *
- * \note
- * Taskolib requires at least C++17.
- *
- * \authors Lars Froehlich, Olaf Hensler, Ulf Fini Jastrow, Marcus Walla (for third-party
+ * \authors Lars Fröhlich, Olaf Hensler, Ulf Fini Jastrow, Marcus Walla (for third-party
  *          code see \ref copyright)
  *
  * \copyright
