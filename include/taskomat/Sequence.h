@@ -86,6 +86,7 @@ public:
     /**
      * Construct a Sequence with a descriptive name.
      * The label should describe the function of the sequence clearly and concisely.
+     * Leading and trailing whitespaces will be removed.
      *
      * \param label descriptive and expressive label.
      *
@@ -287,6 +288,7 @@ public:
 
     /**
      * Inject or modify with a new label. The label should not be empty.
+     * Leading and trailing whitespaces will be removed.
      *
      * \param new_label descriptive and expressive label.
      *
@@ -483,8 +485,14 @@ private:
     bool is_running_{false};
 
 
-    /// Check that the given description is valid. If not then throws a task::Error.
-    void check_label(gul14::string_view label);
+    /**
+     * Check that the given description is valid. If not then throws a task::Error. It
+     * will at first remove leading and trailing whitespaces.
+     *
+     * \param label checking label
+     * \return the checked label
+     */
+    std::string trim_and_check_label(gul14::string_view label);
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is

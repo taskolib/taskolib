@@ -28,22 +28,54 @@
 using namespace task;
 using namespace std::literals;
 
-TEST_CASE("Sequence: Constructor without descriptive name", "[Sequence]")
+TEST_CASE("Sequence: Constructor without descriptive label", "[Sequence]")
 {
     REQUIRE_THROWS_AS(Sequence{ "" }, Error);
+    REQUIRE_THROWS_AS(Sequence{ " \t\v\n\r\f" }, Error);
 }
 
-TEST_CASE("Sequence: Constructor with too long descriptive name", "[Sequence]")
+TEST_CASE("Sequence: Constructor with descriptive label", "[Sequence]")
 {
     // label is to many characters -> throws Error
     REQUIRE_THROWS_AS(Sequence{ std::string(Sequence::max_label_length + 1, 'c') },
         Error);
-    // empty label -> throws Error
-    REQUIRE_THROWS_AS(Sequence{ "" } , Error);
     // minimum label length with one character
     REQUIRE_NOTHROW(Sequence{ "S" });
     // label length with all characters filled
     REQUIRE_NOTHROW(Sequence{ std::string(Sequence::max_label_length, 'c') });
+}
+
+TEST_CASE("Sequence: Constructor with get label", "[Sequence]")
+{
+    SECTION("label with leading blanks")
+    {
+        Sequence seq{ " test_sequence" };
+        REQUIRE(seq.get_label() == "test_sequence" );
+    }
+
+    SECTION("label with trailing blanks")
+    {
+        Sequence seq{ "test_sequence " };
+        REQUIRE(seq.get_label() == "test_sequence" );
+    }
+
+    SECTION("label with leading tab")
+    {
+        Sequence seq{ "\ttest_sequence" };
+        REQUIRE(seq.get_label() == "test_sequence" );
+    }
+
+    SECTION("label with trailing tab")
+    {
+        Sequence seq{ "test_sequence\t" };
+        REQUIRE(seq.get_label() == "test_sequence" );
+    }
+
+    SECTION("label surrounded with multiple whitespaces")
+    {
+        Sequence seq{ " \t\r\n\v\ftest_sequence \r\t\v\f\n" };
+        REQUIRE(seq.get_label() == "test_sequence" );
+    }
 }
 
 TEST_CASE("Sequence: Construct an empty Sequence", "[Sequence]")
