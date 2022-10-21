@@ -47,7 +47,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  * Serialize Step to the file system. It pushes the Step properties to the
  * stream:
  *
- * /code
+ * \code
  * -- type: {action, if, elseif, else, while, try, catch, end}
  * -- label: < \a label \a description >
  * -- use context variable names: [ \a variable1, ... ]
@@ -55,7 +55,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  * -- time of last execution: %Y-%m-%d %H:%M:%S
  * -- timeout: [infinity|< \a time \a in \a milliseconds >]
  * < \a Lua \a script >
- * /end code
+ * \endcode
  *
  * The \a Lua \a script can be omitted for type \a try, \a catch, and \a end as it has no
  * meaning for execution. See Step::execution for more information. The list of context
@@ -63,7 +63,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  *
  * Here is one example of a stored Step `step_001_action.lua`:
  *
- * /code
+ * \code
  * -- type: action
  * -- label: Increment a
  * -- use context variable names: [a]
@@ -71,7 +71,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  * -- time of last execution: 2022-06-13 16:55:21
  * -- timeout: infinity
  * a = a + 1
- * /end code
+ * \endcode
  *
  * The label is explicitly escaped on storing and unescaped on loading.
  *

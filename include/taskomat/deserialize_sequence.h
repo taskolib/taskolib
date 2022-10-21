@@ -37,9 +37,9 @@ namespace task {
  *
  * No checking of any stream failure is done and should be performed by the caller.
  *
- * @param stream input stream
- * @param step Step to be deserialized.
- * @return passed input stream
+ * \param stream input stream
+ * \param step Step to be deserialized.
+ * \return passed input stream
  */
 std::istream& operator>>(std::istream& stream, Step& step);
 
@@ -51,21 +51,21 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * the file does not exist.
  *
  * To deserialize a Step it must consist with following minimum properties:
- * /code
+ * \code
  * -- type: action \a or if \a or ...
  * -- label: < \a label \a description >
- * /endcode
+ * \endcode
  *
  * Optional are the following properties:
- * /code
+ * \code
  * -- use context variable names: [ \a variable1, ... ]
  * -- time of last modification: %Y-%m-%d %H:%M:%S
  * -- time of last execution: %Y-%m-%d %H:%M:%S
  * -- timeout: [infinity|< \a timeout \a in \a milliseconds >]
- * /endcode
+ * \endcode
  *
  * Here is one example of a stored Step \a step_001_while.lua :
- * /code
+ * \code
  * -- type: while
  * -- label: Is increment lower then 10?
  * -- use context variable names: [incr]
@@ -73,7 +73,7 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * -- time of last execution: 2022-06-13 16:55:21
  * -- timeout: 60000
  * return incr < 10
- * /end code
+ * \endcode
  *
  * The label is explicitly escaped on storing and unescaped on loading.
  *
@@ -84,16 +84,16 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * the time on loading the step.
  * \note the collection of context variable names can also be an empty list, ie. \c [] .
  *
- * @param path file path to load the Step
- * @return fresh create Step
+ * \param path  the path to a file from which the step should be loaded
+ * \returns the deserialized Step object.
  */
 Step deserialize_step(const std::filesystem::path& path);
 
 /**
  * Deserialize Sequence from file path.
  *
- * @param path to load Sequence and all included Step 's
- * @return deserialized Sequence
+ * \param path  a directory from which the sequence should be loaded
+ * \returns the deserialized Sequence object.
  */
 Sequence deserialize_sequence(const std::filesystem::path& path);
 
