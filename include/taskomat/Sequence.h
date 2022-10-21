@@ -77,6 +77,7 @@ public:
     using ConstIterator = std::vector<Step>::const_iterator;
     using ConstReverseIterator = std::vector<Step>::const_reverse_iterator;
 
+    /// Max number of bytes of a Sequence label.
     static constexpr std::size_t max_label_length = 128;
 
     /**
@@ -86,7 +87,7 @@ public:
      * \param label descriptive and expressive label.
      *
      * \exception Error is thrown if the label is empty or if its length exceeds
-     *            max_label_length characters.
+     *            max_label_length bytes.
      */
     explicit Sequence(gul14::string_view label);
 
@@ -287,7 +288,7 @@ public:
      * \param new_label descriptive and expressive label.
      *
      * \exception Error is thrown if the label is empty or if its length exceeds
-     *            max_label_length characters.
+     *            max_label_length bytes.
      */
     void set_label(gul14::string_view new_label);
 
