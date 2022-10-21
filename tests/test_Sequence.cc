@@ -62,8 +62,8 @@ TEST_CASE("Sequence: get and set sequence label", "[Sequence]")
     s.set_label("modified_test_sequence");
     REQUIRE(s.get_label() == "modified_test_sequence");
 
-    REQUIRE_THROWS_AS(s.set_label(std::string(Sequence::max_label_length + 1, 'a'))
-        , Error);
+    REQUIRE_THROWS_AS(s.set_label(std::string(Sequence::max_label_length + 1, 'a')),
+        Error);
     REQUIRE_THROWS_AS(s.set_label(""), Error);
     REQUIRE_NOTHROW(s.set_label(std::string(Sequence::max_label_length, 'c')));
 }
