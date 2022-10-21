@@ -94,7 +94,7 @@ void Sequence::check_label(gul14::string_view label)
     if (label.size() > max_label_length)
     {
         throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
-                        " characters)"));
+                        " bytes)"));
     }
 }
 
