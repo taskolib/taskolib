@@ -71,24 +71,29 @@ namespace task {
 class Sequence
 {
 public:
-    /// Abbreviation for steps.
+    /// Alias for step type.
     using SizeType = std::uint16_t;
+    /// Alias for a vector iterator.
     using Iterator = std::vector<Step>::iterator;
+    /// Alias for a constant vector iterator.
     using ConstIterator = std::vector<Step>::const_iterator;
+    /// Alias for a constant reverse vector iterator.
     using ConstReverseIterator = std::vector<Step>::const_reverse_iterator;
 
+    /// Max number of bytes of a Sequence label.
     static constexpr std::size_t max_label_length = 128;
 
     /**
      * Construct a Sequence with a descriptive name.
      * The label should describe the function of the sequence clearly and concisely.
+     * The label must not be empty. Leading and trailing whitespaces will be removed.
      *
-     * \param label [IN] descriptive and clear label.
+     * \param label descriptive and expressive label.
      *
      * \exception Error is thrown if the label is empty or if its length exceeds
-     *            max_label_length characters.
+     *            max_label_length bytes.
      */
-    explicit Sequence(gul14::string_view label = "anonymous");
+    explicit Sequence(gul14::string_view label);
 
     /**
      * Assign a Step to the sequence entry at the given position.
@@ -282,6 +287,17 @@ public:
     const std::string& get_label() const noexcept { return label_; }
 
     /**
+     * Inject or modify with a new label. The label must not be empty.
+     * Leading and trailing whitespaces will be removed.
+     *
+     * \param new_label descriptive and expressive label.
+     *
+     * \exception Error is thrown if the label is empty or if its length exceeds
+     *            max_label_length bytes.
+     */
+    void set_label(gul14::string_view new_label);
+
+    /**
      * Insert the given \a Step before of the constant iterator into Sequence.
      *
      * When the size increase the capacity a reallocation is performed that invalidates
@@ -469,8 +485,14 @@ private:
     bool is_running_{false};
 
 
-    /// Check that the given description is valid. If not then throws a task::Error.
-    void check_label(gul14::string_view label);
+    /**
+     * Check that the given description is valid. If not then throws a task::Error. It
+     * will at first remove leading and trailing whitespaces.
+     *
+     * \param label checking label
+     * \return the checked label
+     */
+    std::string trim_and_check_label(gul14::string_view label);
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is

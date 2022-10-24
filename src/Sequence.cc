@@ -26,6 +26,7 @@
 #include <gul14/SmallVector.h>
 #include <gul14/string_view.h>
 #include <gul14/substring_checks.h>
+#include <gul14/trim.h>
 
 #include "internals.h"
 #include "taskomat/Error.h"
@@ -61,8 +62,12 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 
 Sequence::Sequence(gul14::string_view label)
 {
-    check_label(label);
-    label_.assign(label.data(), label.size());
+    set_label(label);
+}
+
+void Sequence::set_label(gul14::string_view new_label)
+{
+    label_= trim_and_check_label(new_label);
 }
 
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
@@ -81,16 +86,20 @@ void Sequence::assign(Sequence::ConstIterator iter, Step&& step)
     enforce_invariants();
 }
 
-void Sequence::check_label(gul14::string_view label)
+std::string Sequence::trim_and_check_label(gul14::string_view label)
 {
-    if (label.empty())
+    auto converted_label = gul14::trim(label);
+
+    if (converted_label.empty())
         throw Error("Sequence label may not be empty");
 
-    if (label.size() > max_label_length)
+    if (converted_label.size() > max_label_length)
     {
-        throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
-                        " characters)"));
+        throw Error(cat("Label \"", converted_label, "\" is too long (>", max_label_length,
+                    " bytes)"));
     }
+
+    return converted_label;
 }
 
 void Sequence::check_syntax() const
