@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -53,7 +54,7 @@ namespace task {
  *
  * -# push_back(): add a new Step at the end
  * -# pop_back(): remove a Step from the end
- * -# insert(): insert a Step or a range of steps
+ * -# insert(): insert a Step at an arbitrary position
  * -# assign(): assign a new Step to an existing element
  * -# erase(): remove a Step or a range of steps
  * -# modify(): modify a Step inside the sequence via a function or function object
@@ -298,27 +299,28 @@ public:
     void set_label(gul14::string_view new_label);
 
     /**
-     * Insert the given \a Step before of the constant iterator into Sequence.
+     * Insert the given Step into the sequence just before the specified iterator.
      *
-     * When the size increase the capacity a reallocation is performed that invalidates
-     * all iterators. One can check with has_valid_iterators().
+     * This can trigger a reallocation that invalidates all iterators.
      *
-     * @param iter constant \a Step iterator in the Sequence
-     * @param step the added \a Step
-     * @return inserted \a Step
+     * \param iter  an iterator indicating the position before which the new step should
+     *              be inserted
+     * \param step  the Step to be inserted
+     * \returns an iterator to the newly inserted Step
+     * \exception Error is thrown if the Sequence has no capacity for additional entries.
      */
     ConstIterator insert(ConstIterator iter, const Step& step);
 
     /**
-     * Insert the given \a Step rvalue reference before of the constant iterator into
-     * Sequence.
+     * Insert the given Step into the sequence just before the specified iterator.
      *
-     * When the size increase the capacity a reallocation is performed that invalidates
-     * all iterators. One can check with has_valid_iterators().
+     * This can trigger a reallocation that invalidates all iterators.
      *
-     * @param iter constant \a Step iterator in the Sequence
-     * @param step the added \a Step
-     * @return inserted \a Step
+     * \param iter  an iterator indicating the position before which the new step should
+     *              be inserted
+     * \param step  the Step to be inserted by moving
+     * \returns an iterator to the newly inserted Step
+     * \exception Error is thrown if the Sequence has no capacity for additional entries.
      */
     ConstIterator insert(ConstIterator iter, Step&& step);
 
@@ -328,6 +330,9 @@ public:
      * @return true on executing otherwise false.
      */
     bool is_running() const noexcept { return is_running_; }
+
+    /// Return the maximum number of steps that a sequence can hold.
+    static SizeType max_size() noexcept { return std::numeric_limits<StepIndex>::max(); }
 
     /**
      * Modify a step inside the sequence.
@@ -417,16 +422,18 @@ public:
     void pop_back();
 
     /**
-     * Attach \a Step reference to the end of the sequence.
+     * Add a Step to the end of the sequence.
      *
-     * @param step [IN] \a Step
+     * \param step  the Step to be appended to the sequence
+     * \exception Error is thrown if the Sequence has no capacity for additional entries.
      */
     void push_back(const Step& step);
 
     /**
-     * Attach \a Step rvalue reference to the end of the sequence.
+     * Add a Step to the end of the sequence.
      *
-     * @param step [MOVE] \a Step
+     * \param step  the Step to be appended to the sequence by moving
+     * \exception Error is thrown if the Sequence has no capacity for additional entries.
      */
     void push_back(Step&& step);
 
@@ -670,6 +677,9 @@ private:
      * This function does not throw exceptions except for, possibly, std::bad_alloc.
      */
     void indent();
+
+    /// Throw an Error if no further steps can be inserted into the sequence.
+    void throw_if_full() const;
 
     /// When the sequence is executed it rejects with an Error exception.
     void throw_if_running() const;

@@ -134,7 +134,7 @@ bool Executor::update(Sequence& sequence)
         const gul14::optional<StepIndex> step_idx = msg.get_index();
 
         const auto modify_step =
-            [&sequence,step_idx](auto fct)
+            [&sequence, step_idx](auto fct)
             {
                 if (!step_idx)
                     throw Error("Missing step index");

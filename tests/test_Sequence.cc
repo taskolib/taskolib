@@ -293,6 +293,11 @@ TEST_CASE("Sequence: is_running()", "[Sequence]")
     REQUIRE(seq.is_running() == false);
 }
 
+TEST_CASE("Sequence: max_size()", "[Sequence]")
+{
+    REQUIRE(Sequence::max_size() > 60'000);
+}
+
 TEST_CASE("Sequence: modify()", "[Sequence]")
 {
     Step ori_step{ Step::type_action };
