@@ -288,17 +288,6 @@ public:
     const std::string& get_label() const noexcept { return label_; }
 
     /**
-     * Inject or modify with a new label. The label must not be empty.
-     * Leading and trailing whitespaces will be removed.
-     *
-     * \param new_label descriptive and expressive label.
-     *
-     * \exception Error is thrown if the label is empty or if its length exceeds
-     *            max_label_length bytes.
-     */
-    void set_label(gul14::string_view new_label);
-
-    /**
      * Insert the given Step into the sequence just before the specified iterator.
      *
      * This can trigger a reallocation that invalidates all iterators.
@@ -466,6 +455,19 @@ public:
     void set_error_message(gul14::string_view msg);
 
     /**
+     * Set the sequence label.
+     *
+     * Leading and trailing whitespace is trimmed, and the resulting label must not be
+     * empty.
+     *
+     * \param label  descriptive and expressive label.
+     *
+     * \exception Error is thrown if the label is empty or if its length exceeds
+     *            max_label_length bytes.
+     */
+    void set_label(gul14::string_view label);
+
+    /**
      * Set the sequence into the state "is running" (true) or "is not running" (false).
      *
      * \note
@@ -491,15 +493,6 @@ private:
     std::vector<Step> steps_;
     bool is_running_{false};
 
-
-    /**
-     * Check that the given description is valid. If not then throws a task::Error. It
-     * will at first remove leading and trailing whitespaces.
-     *
-     * \param label checking label
-     * \return the checked label
-     */
-    std::string trim_and_check_label(gul14::string_view label);
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is
