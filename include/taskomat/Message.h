@@ -128,7 +128,7 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, Message const& mess) {
         stream << "Message{ ";
 
-        if (mess.index_)
+        if (mess.index_.has_value())
             stream << *(mess.index_) << ": ";
 
         stream

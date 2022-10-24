@@ -612,6 +612,8 @@ void Sequence::indent()
 Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, const Step& step)
 {
     throw_if_running();
+    throw_if_full();
+
     auto return_iter = steps_.insert(iter, step);
     enforce_invariants();
     return return_iter;
@@ -620,6 +622,8 @@ Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, const Ste
 Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, Step&& step)
 {
     throw_if_running();
+    throw_if_full();
+
     auto return_iter = steps_.insert(iter, std::move(step));
     enforce_invariants();
     return return_iter;
@@ -636,6 +640,7 @@ void Sequence::pop_back()
 void Sequence::push_back(const Step& step)
 {
     throw_if_running();
+    throw_if_full();
     steps_.push_back(step);
     enforce_invariants();
 }
@@ -643,6 +648,7 @@ void Sequence::push_back(const Step& step)
 void Sequence::push_back(Step&& step)
 {
     throw_if_running();
+    throw_if_full();
     steps_.push_back(step);
     enforce_invariants();
 }
@@ -650,6 +656,12 @@ void Sequence::push_back(Step&& step)
 void Sequence::set_error_message(gul14::string_view msg)
 {
     error_message_.assign(msg.data(), msg.size());
+}
+
+void Sequence::throw_if_full() const
+{
+    if (steps_.size() == max_size())
+        throw Error(cat("Reached maximum sequence size (", max_size(), " steps)"));
 }
 
 void Sequence::throw_if_running() const
