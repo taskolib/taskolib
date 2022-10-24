@@ -66,11 +66,6 @@ Sequence::Sequence(gul14::string_view label)
     set_label(label);
 }
 
-void Sequence::set_label(gul14::string_view new_label)
-{
-    label_= trim_and_check_label(new_label);
-}
-
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
 {
     throw_if_running();
@@ -85,22 +80,6 @@ void Sequence::assign(Sequence::ConstIterator iter, Step&& step)
     auto it = steps_.begin() + (iter - steps_.cbegin());
     *it = std::move(step);
     enforce_invariants();
-}
-
-std::string Sequence::trim_and_check_label(gul14::string_view label)
-{
-    auto converted_label = gul14::trim(label);
-
-    if (converted_label.empty())
-        throw Error("Sequence label may not be empty");
-
-    if (converted_label.size() > max_label_length)
-    {
-        throw Error(cat("Label \"", converted_label, "\" is too long (>", max_label_length,
-                    " bytes)"));
-    }
-
-    return converted_label;
 }
 
 void Sequence::check_syntax() const
@@ -656,6 +635,22 @@ void Sequence::push_back(Step&& step)
 void Sequence::set_error_message(gul14::string_view msg)
 {
     error_message_.assign(msg.data(), msg.size());
+}
+
+void Sequence::set_label(gul14::string_view label)
+{
+    label = gul14::trim_sv(label);
+
+    if (label.empty())
+        throw Error("Sequence label may not be empty");
+
+    if (label.size() > max_label_length)
+    {
+        throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
+                        " bytes)"));
+    }
+
+    label_.assign(label.begin(), label.end());
 }
 
 void Sequence::throw_if_full() const
