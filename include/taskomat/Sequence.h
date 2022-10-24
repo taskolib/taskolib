@@ -86,7 +86,7 @@ public:
     /**
      * Construct a Sequence with a descriptive name.
      * The label should describe the function of the sequence clearly and concisely.
-     * Leading and trailing whitespaces will be removed.
+     * The label must not be empty. Leading and trailing whitespaces will be removed.
      *
      * \param label descriptive and expressive label.
      *
@@ -287,7 +287,7 @@ public:
     const std::string& get_label() const noexcept { return label_; }
 
     /**
-     * Inject or modify with a new label. The label should not be empty.
+     * Inject or modify with a new label. The label must not be empty.
      * Leading and trailing whitespaces will be removed.
      *
      * \param new_label descriptive and expressive label.
