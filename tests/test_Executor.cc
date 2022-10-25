@@ -135,14 +135,10 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     Executor executor;
     executor.run_asynchronously(sequence, context);
 
-    // Error message must have been cleared
-    REQUIRE(sequence.get_error_message() == "");
-
-    // As long as the thread is running, update() and is_busy() must return true,
-    // and the sequence must signalize is_running().
-    REQUIRE(executor.is_busy() == true);
-    REQUIRE(executor.update(sequence) == true);
+    // The sequence must signalize is_running() == true and an empty error message at
+    // least until the first call to is_busy() or update().
     REQUIRE(sequence.is_running() == true);
+    REQUIRE(sequence.get_error_message() == "");
 
     // Process messages as long as the thread is running
     while (executor.update(sequence))
