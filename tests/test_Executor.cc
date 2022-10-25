@@ -124,7 +124,7 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     Context context;
 
     Step step(Step::type_action);
-    step.set_script("not valid LUA");
+    step.set_script("sleep(0.5)\nnot valid LUA");
 
     Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
