@@ -25,13 +25,11 @@
 #ifndef TASKOMAT_MESSAGE_H_
 #define TASKOMAT_MESSAGE_H_
 
-#include <cstdint>
 #include <memory>
 #include <ostream>
 #include <string>
 
 #include <gul14/escape.h>
-#include <gul14/optional.h>
 
 #include "taskomat/StepIndex.h"
 #include "taskomat/time_types.h"
@@ -84,7 +82,7 @@ public:
 
     /// Construct an initialized message from the given parameters.
     Message(Type type, std::string text, TimePoint timestamp,
-            gul14::optional<StepIndex> index)
+            OptionalStepIndex index)
         : text_{ std::move(text) }
         , timestamp_{ timestamp }
         , type_{ type }
@@ -92,7 +90,7 @@ public:
     {}
 
     /// Return the associated optional step index.
-    gul14::optional<StepIndex> get_index() const { return index_; }
+    OptionalStepIndex get_index() const { return index_; }
 
     /**
      * Return the message text.
@@ -109,7 +107,7 @@ public:
     TimePoint get_timestamp() const { return timestamp_; };
 
     /// Set the associated index.
-    Message& set_index(gul14::optional<StepIndex> index) { index_ = index; return *this; }
+    Message& set_index(OptionalStepIndex index) { index_ = index; return *this; }
 
     /// Set the message text.
     Message& set_text(const std::string& text) { text_ = text; return *this; }
@@ -146,7 +144,7 @@ private:
     std::string text_;
     TimePoint timestamp_{};
     Type type_{ Type::output };
-    gul14::optional<StepIndex> index_;
+    OptionalStepIndex index_;
 };
 
 } // namespace task

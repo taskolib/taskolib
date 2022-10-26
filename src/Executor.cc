@@ -34,25 +34,25 @@ namespace task {
 
 namespace {
 
-void print_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+void print_to_message_queue(const std::string& text, OptionalStepIndex idx,
                             CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
 }
 
-void log_info_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+void log_info_to_message_queue(const std::string& text, OptionalStepIndex idx,
                                CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_info, text, Clock::now(), idx);
 }
 
-void log_warning_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+void log_warning_to_message_queue(const std::string& text, OptionalStepIndex idx,
                                   CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), idx);
 }
 
-void log_error_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+void log_error_to_message_queue(const std::string& text, OptionalStepIndex idx,
                                 CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_error, text, Clock::now(), idx);
@@ -131,7 +131,7 @@ bool Executor::update(Sequence& sequence)
     while (const auto opt_msg = comm_channel_->queue_.try_pop())
     {
         const Message& msg = *opt_msg;
-        const gul14::optional<StepIndex> step_idx = msg.get_index();
+        const OptionalStepIndex step_idx = msg.get_index();
 
         const auto modify_step =
             [&sequence, step_idx](auto fct)
