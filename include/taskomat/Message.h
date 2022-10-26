@@ -25,6 +25,7 @@
 #ifndef TASKOMAT_MESSAGE_H_
 #define TASKOMAT_MESSAGE_H_
 
+#include <array>
 #include <memory>
 #include <ostream>
 #include <string>
