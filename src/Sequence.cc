@@ -23,6 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/join_split.h>
+#include <gul14/optional.h>
 #include <gul14/SmallVector.h>
 #include <gul14/string_view.h>
 #include <gul14/substring_checks.h>
@@ -315,7 +316,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     bool exception_thrown = false;
     std::string exception_message;
-    StepIndex exception_index = 0;
+    gul14::optional<StepIndex> maybe_exception_index;
 
     try
     {
@@ -326,7 +327,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
     {
         exception_thrown = true;
         exception_message = e.what();
-        exception_index = e.get_index();
+        maybe_exception_index = e.get_index();
     }
     catch (const std::exception& e)
     {
@@ -347,7 +348,8 @@ void Sequence::execute(Context& context, CommChannel* comm)
             if (msg_in.empty())
             {
                 send_message(comm, Message::Type::sequence_stopped,
-                        "Sequence explicitly terminated", Clock::now(), exception_index);
+                             "Sequence explicitly terminated", Clock::now(),
+                             maybe_exception_index);
                 return; // silently return to the caller
             }
             exception_message = cat("Sequence aborted: ", msg_in);
@@ -358,14 +360,14 @@ void Sequence::execute(Context& context, CommChannel* comm)
         }
 
         send_message(comm, Message::Type::sequence_stopped_with_error, exception_message,
-                     Clock::now(), exception_index);
+                     Clock::now(), maybe_exception_index);
         set_error_message(exception_message);
 
         throw Error(exception_message);
     }
 
     send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
-                 Clock::now(), 0);
+                 Clock::now(), gul14::nullopt);
 }
 
 Sequence::Iterator

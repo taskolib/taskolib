@@ -66,13 +66,15 @@ TEST_CASE("send_message() across threads", "[CommChannel][send_message]")
         REQUIRE(msg.get_type() == Message::Type::step_started);
         REQUIRE(msg.get_text() == "start");
         REQUIRE(msg.get_timestamp() == timestamp + std::chrono::seconds{ i });
-        REQUIRE(msg.get_index() == i);
+        REQUIRE(msg.get_index().has_value());
+        REQUIRE(*(msg.get_index()) == i);
 
         msg = comm.queue_.pop();
         REQUIRE(msg.get_type() == Message::Type::step_stopped);
         REQUIRE(msg.get_text() == "stop");
         REQUIRE(msg.get_timestamp() == timestamp + std::chrono::seconds{ i + 1 });
-        REQUIRE(msg.get_index() == i);
+        REQUIRE(msg.get_index().has_value());
+        REQUIRE(*(msg.get_index()) == i);
     }
 
     sender.join();
