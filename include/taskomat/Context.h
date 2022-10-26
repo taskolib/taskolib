@@ -30,10 +30,13 @@
 #include <unordered_map>
 #include <variant>
 
+#include <gul14/optional.h>
+
 #include "sol/sol.hpp"
 #include "taskomat/CommChannel.h"
 #include "taskomat/console.h"
 #include "taskomat/Message.h"
+#include "taskomat/StepIndex.h"
 #include "taskomat/VariableName.h"
 
 namespace task {
@@ -46,10 +49,12 @@ namespace task {
 using VariableValue = std::variant<long long, double, std::string>;
 
 /**
- * An output function accepts a string and a CommChannel* as parameters.
- * The latter may be null to indicate that there is no associated communication channel.
+ * An output function accepts a string, an optional step index, and a CommChannel* as
+ * parameters. The latter may be null to indicate that there is no associated
+ * communication channel.
  */
-using OutputCallback = std::function<void(const std::string&, StepIndex, CommChannel*)>;
+using OutputCallback =
+    std::function<void(const std::string&, gul14::optional<StepIndex>, CommChannel*)>;
 
 /**
  * A context stores information that influences the execution of steps and sequences,

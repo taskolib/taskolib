@@ -692,7 +692,8 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t0);
     REQUIRE(msg.get_timestamp() - t0 < 1s);
-    REQUIRE(msg.get_index() == 42);
+    REQUIRE(msg.get_index().has_value());
+    REQUIRE(*(msg.get_index()) == 42);
 
     const auto t1 = msg.get_timestamp();
 
@@ -702,7 +703,8 @@ TEST_CASE("execute(): Messages", "[Step]")
     REQUIRE(msg.get_text() != "");
     REQUIRE(msg.get_timestamp() >= t1);
     REQUIRE(msg.get_timestamp() - t1 < 1s);
-    REQUIRE(msg.get_index() == 42);
+    REQUIRE(msg.get_index().has_value());
+    REQUIRE(*(msg.get_index()) == 42);
 }
 
 TEST_CASE("execute(): print function", "[Step]")
@@ -711,7 +713,7 @@ TEST_CASE("execute(): print function", "[Step]")
 
     Context context;
     context.print_function =
-        [&output](const std::string& str, StepIndex, CommChannel*)
+        [&output](const std::string& str, gul14::optional<StepIndex>, CommChannel*)
         {
             output += str;
         };

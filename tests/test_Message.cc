@@ -25,8 +25,10 @@
 #include <sstream>
 #include <thread>
 #include <type_traits>
+
 #include <gul14/catch.h>
 #include <gul14/trim.h>
+
 #include "taskomat/Message.h"
 #include "taskomat/Sequence.h"
 
@@ -54,16 +56,18 @@ TEST_CASE("Message: Constructors", "[Message]")
     REQUIRE(b.get_type() == Message::Type::log_error);
     REQUIRE(b.get_text() == "Test");
     REQUIRE(b.get_timestamp() == t0);
-    REQUIRE(b.get_index() == 42);
+    REQUIRE(b.get_index().has_value());
+    REQUIRE(*(b.get_index()) == 42);
 }
 
 TEST_CASE("Message: get_index()", "[Message]")
 {
     Message msg;
-    REQUIRE(msg.get_index() == 0);
+    REQUIRE(msg.get_index().has_value() == false);
 
     msg.set_index(42);
-    REQUIRE(msg.get_index() == 42);
+    REQUIRE(msg.get_index().has_value());
+    REQUIRE(*(msg.get_index()) == 42);
 }
 
 TEST_CASE("Message: get_text()", "[Message]")
@@ -100,10 +104,15 @@ TEST_CASE("Message: set_index()", "[Message]")
     Message msg;
 
     REQUIRE(&msg.set_index(42) == &msg);
-    REQUIRE(msg.get_index() == 42);
+    REQUIRE(msg.get_index().has_value() == true);
+    REQUIRE(*(msg.get_index()) == 42);
 
     msg.set_index(0);
-    REQUIRE(msg.get_index() == 0);
+    REQUIRE(msg.get_index().has_value() == true);
+    REQUIRE(*(msg.get_index()) == 0);
+
+    msg.set_index(gul14::nullopt);
+    REQUIRE(msg.get_index().has_value() == false);
 }
 
 TEST_CASE("Message: set_text()", "[Message]")

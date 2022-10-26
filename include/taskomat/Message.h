@@ -31,6 +31,7 @@
 #include <string>
 
 #include <gul14/escape.h>
+#include <gul14/optional.h>
 
 #include "taskomat/StepIndex.h"
 #include "taskomat/time_types.h"
@@ -82,15 +83,16 @@ public:
     Message() = default;
 
     /// Construct an initialized message from the given parameters.
-    Message(Type type, std::string text, TimePoint timestamp, StepIndex index)
+    Message(Type type, std::string text, TimePoint timestamp,
+            gul14::optional<StepIndex> index)
         : text_{ std::move(text) }
         , timestamp_{ timestamp }
         , type_{ type }
         , index_{ index }
     {}
 
-    /// Return the associated index.
-    StepIndex get_index() const noexcept { return index_; }
+    /// Return the associated optional step index.
+    gul14::optional<StepIndex> get_index() const { return index_; }
 
     /**
      * Return the message text.
@@ -107,7 +109,7 @@ public:
     TimePoint get_timestamp() const { return timestamp_; };
 
     /// Set the associated index.
-    Message& set_index(StepIndex index) { index_ = index; return *this; }
+    Message& set_index(gul14::optional<StepIndex> index) { index_ = index; return *this; }
 
     /// Set the message text.
     Message& set_text(const std::string& text) { text_ = text; return *this; }
@@ -124,15 +126,19 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& stream, Message const& mess) {
-        stream << "Message{ "
-            << mess.index_
-            << ": "
+        stream << "Message{ ";
+
+        if (mess.index_)
+            stream << *(mess.index_) << ": ";
+
+        stream
             << mess.type_
             << " \""
             << gul14::escape(mess.text_)
             << "\" "
             << to_string(mess.timestamp_)
             << " }\n";
+
         return stream;
     };
 
@@ -140,7 +146,7 @@ private:
     std::string text_;
     TimePoint timestamp_{};
     Type type_{ Type::output };
-    StepIndex index_{ 0 };
+    gul14::optional<StepIndex> index_;
 };
 
 } // namespace task

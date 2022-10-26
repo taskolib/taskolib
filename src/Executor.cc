@@ -34,22 +34,26 @@ namespace task {
 
 namespace {
 
-void print_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
+void print_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+                            CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
 }
 
-void log_info_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
+void log_info_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+                               CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_info, text, Clock::now(), idx);
 }
 
-void log_warning_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
+void log_warning_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+                                  CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), idx);
 }
 
-void log_error_to_message_queue(const std::string& text, StepIndex idx, CommChannel* comm_channel)
+void log_error_to_message_queue(const std::string& text, gul14::optional<StepIndex> idx,
+                                CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::log_error, text, Clock::now(), idx);
 }
@@ -127,10 +131,19 @@ bool Executor::update(Sequence& sequence)
     while (const auto opt_msg = comm_channel_->queue_.try_pop())
     {
         const Message& msg = *opt_msg;
-        const auto step_idx = msg.get_index();
-        const auto step_it = sequence.begin() + step_idx;
+        const gul14::optional<StepIndex> step_idx = msg.get_index();
 
-        const bool was_running = sequence.is_running();
+        const auto modify_step =
+            [&sequence,step_idx](auto fct)
+            {
+                if (!step_idx)
+                    throw Error("Missing step index");
+
+                const bool was_running = sequence.is_running();
+                sequence.set_running(false); // temporarily allow modification
+                sequence.modify(sequence.begin() + *step_idx, fct);
+                sequence.set_running(was_running);
+            };
 
         switch (msg.get_type())
         {
@@ -162,22 +175,17 @@ bool Executor::update(Sequence& sequence)
                 context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::step_started:
-            sequence.set_running(false); // temporarily allow modification
-            sequence.modify(step_it, [ts = msg.get_timestamp()](Step& s) {
-                s.set_running(true);
-                s.set_time_of_last_execution(ts);
-            });
-            sequence.set_running(was_running);
+            modify_step([ts = msg.get_timestamp()](Step& s)
+                {
+                    s.set_running(true);
+                    s.set_time_of_last_execution(ts);
+                });
             break;
         case Message::Type::step_stopped:
-            sequence.set_running(false); // temporarily allow modification
-            sequence.modify(step_it, [](Step& s) { s.set_running(false); });
-            sequence.set_running(was_running);
+            modify_step([](Step& s) { s.set_running(false); });
             break;
         case Message::Type::step_stopped_with_error:
-            sequence.set_running(false); // temporarily allow modification
-            sequence.modify(step_it, [](Step& s) { s.set_running(false); });
-            sequence.set_running(was_running);
+            modify_step([](Step& s) { s.set_running(false); });
             if (context_.log_error_function)
                 context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;

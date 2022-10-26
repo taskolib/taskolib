@@ -27,6 +27,7 @@
 
 #include <atomic>
 
+#include <gul14/optional.h>
 #include <gul14/string_view.h>
 
 #include "taskomat/LockedQueue.h"
@@ -56,7 +57,7 @@ struct CommChannel
  * \param type       Message type (see Message::Type)
  * \param text       Message text
  * \param timestamp  Timestamp of the message
- * \param index      Index (of a Step in its parent Sequence)
+ * \param index      An optional index (of a Step in its parent Sequence)
  *
  * \code
  * send_message(comm_channel, type, text, timestamp, index);
@@ -67,7 +68,7 @@ struct CommChannel
  */
 inline
 void send_message(CommChannel* comm_channel, Message::Type type, gul14::string_view text,
-                  TimePoint timestamp, StepIndex index)
+                  TimePoint timestamp, gul14::optional<StepIndex> index)
 {
     if (comm_channel == nullptr)
         return;
