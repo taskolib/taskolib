@@ -30,8 +30,6 @@
 #include <unordered_map>
 #include <variant>
 
-#include <gul14/optional.h>
-
 #include "sol/sol.hpp"
 #include "taskomat/CommChannel.h"
 #include "taskomat/console.h"
@@ -54,7 +52,7 @@ using VariableValue = std::variant<long long, double, std::string>;
  * communication channel.
  */
 using OutputCallback =
-    std::function<void(const std::string&, gul14::optional<StepIndex>, CommChannel*)>;
+    std::function<void(const std::string&, OptionalStepIndex, CommChannel*)>;
 
 /**
  * A context stores information that influences the execution of steps and sequences,

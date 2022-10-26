@@ -713,7 +713,7 @@ TEST_CASE("execute(): print function", "[Step]")
 
     Context context;
     context.print_function =
-        [&output](const std::string& str, gul14::optional<StepIndex>, CommChannel*)
+        [&output](const std::string& str, OptionalStepIndex, CommChannel*)
         {
             output += str;
         };

@@ -23,7 +23,6 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/join_split.h>
-#include <gul14/optional.h>
 #include <gul14/SmallVector.h>
 #include <gul14/string_view.h>
 #include <gul14/substring_checks.h>
@@ -295,7 +294,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     bool exception_thrown = false;
     std::string exception_message;
-    gul14::optional<StepIndex> maybe_exception_index;
+    OptionalStepIndex maybe_exception_index;
 
     try
     {
