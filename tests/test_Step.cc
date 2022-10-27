@@ -33,6 +33,7 @@
 
 using namespace std::literals;
 using namespace task;
+using namespace Catch::Matchers;
 
 TEST_CASE("Step: Default constructor", "[Step]")
 {
@@ -315,8 +316,19 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
 
     SECTION("Runtime error")
     {
-        step.set_script("function boom(); b = nil; b(); end; boom()");
-        REQUIRE_THROWS_AS(step.execute(context), Error);
+        step.set_script("function boom(); error('pippo', 0); end; boom()");
+        try
+        {
+            step.execute(context); // Must throw
+            FAIL("No exception thrown by Lua error()");
+        }
+        catch(const Error& e)
+        {
+            REQUIRE_THAT(e.what(), StartsWith("Script execution error: pippo"));
+            // Lua adds a stack trace after this output. This is a somewhat brittle test,
+            // but since we have control over our Lua version, we are sure to spot it if
+            // the output format changes.
+        }
     }
 
     SECTION("Runtime error, caught by pcall()")
