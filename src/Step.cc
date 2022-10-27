@@ -119,10 +119,11 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
         context.lua_init_function(lua);
 
     install_timeout_and_termination_request_hook(lua, now, get_timeout(), index, comm);
-
     copy_used_variables_from_context_to_lua(context, lua);
 
     auto result_or_error = execute_lua_script_safely(lua, get_script());
+
+    copy_used_variables_from_lua_to_context(lua, context);
     bool result_bool = false;
 
     if (std::holds_alternative<sol::object>(result_or_error))
@@ -158,8 +159,6 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
                      index);
         throw ErrorAtIndex(msg, index);
     }
-
-    copy_used_variables_from_lua_to_context(lua, context);
 
     send_message(comm, Message::Type::step_stopped,
         requires_bool_return_value(get_type())
