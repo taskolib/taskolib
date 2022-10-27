@@ -563,7 +563,7 @@ TEST_CASE("execute(): Immediate termination", "[Step]")
 
     REQUIRE_THROWS_AS(step.execute(context, &comm, 0), Error);
     REQUIRE(comm.immediate_termination_requested_);
-    REQUIRE(std::get<long long>(context.variables["a"]) == 0LL);
+    REQUIRE(std::get<long long>(context.variables["a"]) == -1LL);
 }
 
 TEST_CASE("execute(): Setting 'last executed' timestamp", "[Step]")
