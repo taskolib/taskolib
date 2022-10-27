@@ -122,25 +122,32 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 
     copy_used_variables_from_context_to_lua(context, lua);
 
-    auto protected_result = lua.safe_script(get_script(), sol::script_pass_on_error);
+    bool result = false;
 
-    if (!protected_result.valid())
-    {
-        sol::error err = protected_result;
+    try {
+        auto protected_result = lua.safe_script(get_script(), sol::script_default_on_error);
+        if (!protected_result.valid()) {
+            sol::error err = protected_result;
+            throw ErrorAtIndex(cat("Script execution error: ", err.what()), index);
+        }
 
-        auto msg = cat("Script execution error: ", err.what());
-
-        send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
-                     index);
-
+        copy_used_variables_from_lua_to_context(lua, context);
+        sol::optional<bool> opt_result = protected_result;
+        if (opt_result)
+            result = *opt_result;
+    }
+    catch (const std::exception& e) {
+        std::string msg = cat("Script execution error: ", e.what());
+        send_message(comm, Message::Type::step_stopped_with_error, msg,
+            Clock::now(), index);
         throw ErrorAtIndex(msg, index);
     }
-
-    copy_used_variables_from_lua_to_context(lua, context);
-
-    sol::optional<bool> opt_result = protected_result;
-
-    const bool result = opt_result.value_or(false);
+    catch (...) {
+        std::string msg{ "Script execution raised unknown exception" };
+        send_message(comm, Message::Type::step_stopped_with_error, msg,
+            Clock::now(), index);
+        throw ErrorAtIndex(msg, index);
+    }
 
     send_message(comm, Message::Type::step_stopped,
         cat("Step finished (logical result: ", result ? "true" : "false", ')'),

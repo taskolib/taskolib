@@ -316,7 +316,7 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
 
     SECTION("Runtime error")
     {
-        step.set_script("function boom(); error('pippo', 0); end; boom()");
+        step.set_script("function boom(); error('pip' .. 'po', 0); end; boom()");
         try
         {
             step.execute(context); // Must throw
@@ -324,7 +324,8 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
         }
         catch(const Error& e)
         {
-            REQUIRE_THAT(e.what(), StartsWith("Script execution error: pippo"));
+            REQUIRE_THAT(e.what(), Contains("Script execution error"));
+            REQUIRE_THAT(e.what(), Contains("pippo"));
             // Lua adds a stack trace after this output. This is a somewhat brittle test,
             // but since we have control over our Lua version, we are sure to spot it if
             // the output format changes.
@@ -349,7 +350,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
     context.lua_init_function =
         [](sol::state& sol)
         {
-            sol["throw_logic_error"] = []() { throw std::logic_error("Test"); };
+            sol["throw_logic_error"] = []() { throw std::logic_error("unlogisch"); };
             sol["throw_weird_exception"] = []() { struct Weird{}; throw Weird{}; };
         };
 
@@ -359,7 +360,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
 
         // A C++ exception bubbles through the Lua execution callstack, but must be caught
         // by Sol2, returned as a protected_function_result, and reported as a task::Error.
-        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 
@@ -369,7 +370,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
 
         // A C++ exception bubbles through the Lua execution callstack, but must be caught
         // by Sol2, returned as a protected_function_result, and reported as a task::Error.
-        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 
@@ -380,7 +381,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
         // A C++ exception bubbles through the Lua execution callstack and cannot be
         // caught by pcall(). It must, however, be caught by Step::execute() and reported
         // as a task::Error.
-        REQUIRE_THROWS_AS(step.execute(context), Error);
+        REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 }
