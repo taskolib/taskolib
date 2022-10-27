@@ -25,7 +25,7 @@
 #include <gul14/catch.h>
 #include <sstream>
 
-#include "taskomat/time_types.h"
+#include "taskolib/time_types.h"
 
 TEST_CASE("TimePoint: Dump to stream", "[TimePoint]")
 {

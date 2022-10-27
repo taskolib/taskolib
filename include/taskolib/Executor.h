@@ -22,14 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_EXECUTOR_H_
-#define TASKOMAT_EXECUTOR_H_
+#ifndef TASKOLIB_EXECUTOR_H_
+#define TASKOLIB_EXECUTOR_H_
 
 #include <future>
 #include <memory>
-#include "taskomat/CommChannel.h"
-#include "taskomat/Context.h"
-#include "taskomat/Sequence.h"
+#include "taskolib/CommChannel.h"
+#include "taskolib/Context.h"
+#include "taskolib/Sequence.h"
 
 namespace task {
 

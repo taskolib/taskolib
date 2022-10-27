@@ -1,5 +1,5 @@
 /**
- * \file   taskomat.h
+ * \file   taskolib.h
  * \author Lars Froehlich
  * \date   Created on November 26, 2021
  * \brief  Main include file for Taskolib.
@@ -22,17 +22,17 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_TASKOMAT_H_
-#define TASKOMAT_TASKOMAT_H_
+#ifndef TASKOLIB_TASKOLIB_H_
+#define TASKOLIB_TASKOLIB_H_
 
-#include "taskomat/Context.h"
-#include "taskomat/exceptions.h"
-#include "taskomat/Executor.h"
-#include "taskomat/Sequence.h"
-#include "taskomat/Step.h"
-#include "taskomat/Taskomat.h"
-#include "taskomat/time_types.h"
-#include "taskomat/VariableName.h"
+#include "taskolib/Context.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/Executor.h"
+#include "taskolib/Sequence.h"
+#include "taskolib/SequenceManager.h"
+#include "taskolib/Step.h"
+#include "taskolib/time_types.h"
+#include "taskolib/VariableName.h"
 
 /// Namespace task contains all Taskolib functions and classes.
 namespace task { }

@@ -24,7 +24,7 @@
 
 #include <gul14/cat.h>
 #include "sol/sol.hpp"
-#include "taskomat/Executor.h"
+#include "taskolib/Executor.h"
 #include "lua_details.h"
 
 using gul14::cat;

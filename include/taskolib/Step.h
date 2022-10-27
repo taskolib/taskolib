@@ -22,16 +22,16 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_STEP_H_
-#define TASKOMAT_STEP_H_
+#ifndef TASKOLIB_STEP_H_
+#define TASKOLIB_STEP_H_
 
 #include <chrono>
 #include <set>
 #include <string>
-#include "taskomat/CommChannel.h"
-#include "taskomat/Context.h"
-#include "taskomat/time_types.h"
-#include "taskomat/VariableName.h"
+#include "taskolib/CommChannel.h"
+#include "taskolib/Context.h"
+#include "taskolib/time_types.h"
+#include "taskolib/VariableName.h"
 
 namespace task {
 

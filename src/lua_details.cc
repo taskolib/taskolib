@@ -25,23 +25,23 @@
 #include <gul14/gul.h>
 #include "internals.h"
 #include "lua_details.h"
-#include "taskomat/CommChannel.h"
-#include "taskomat/exceptions.h"
+#include "taskolib/CommChannel.h"
+#include "taskolib/exceptions.h"
 
 using gul14::cat;
 
 namespace {
 
 static const char step_index_key[] =
-    "TASKOMAT_STP_INDEX";
+    "TASKOLIB_STP_INDEX";
 static const char step_timeout_ms_since_epoch_key[] =
-    "TASKOMAT_STP_TO_MS";
+    "TASKOLIB_STP_TO_MS";
 static const char step_timeout_s_key[] =
-    "TASKOMAT_STP_TO_S";
+    "TASKOLIB_STP_TO_S";
 static const char comm_channel_key[] =
-    "TASKOMAT_COMM_CH";
+    "TASKOLIB_COMM_CH";
 static const char abort_error_message_key[] =
-    "TASKOMAT_AB_END";
+    "TASKOLIB_AB_END";
 
 } // anonymous namespace
 

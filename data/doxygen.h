@@ -19,7 +19,7 @@
  * \ref task::Sequence::execute "Sequence::execute()":
  *
  * \code {.cpp}
- * #include <taskomat/taskomat.h>
+ * #include <taskolib/taskolib.h>
  *
  * using namespace task;
  *
@@ -55,7 +55,7 @@
  * synchronization is necessary.
  *
  * \code {.cpp}
- * #include <taskomat/taskomat.h>
+ * #include <taskolib/taskolib.h>
  *
  * using namespace task;
  *
@@ -77,8 +77,8 @@
  *
  * Taskolib requires at least C++17. All functions and classes are declared in the
  * namespace \ref task. To use the library, include the single header file
- * \link taskomat/taskomat.h \endlink and link your code against both this library and
- * the General Utility Library (-ltaskomat -lgul14).
+ * \link taskolib/taskolib.h \endlink and link your code against both this library and
+ * the General Utility Library (-ltaskolib -lgul14).
  *
  * The evolving design goals of the library are documented in a series of
  * \ref design_documents.

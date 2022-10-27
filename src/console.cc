@@ -23,7 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <iostream>
-#include "taskomat/console.h"
+#include "taskolib/console.h"
 
 namespace task {
 

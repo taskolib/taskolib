@@ -22,13 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_DESERIALIZE_H_
-#define TASKOMAT_DESERIALIZE_H_
+#ifndef TASKOLIB_DESERIALIZE_H_
+#define TASKOLIB_DESERIALIZE_H_
 
 #include <filesystem>
 #include <iostream>
-#include "taskomat/Step.h"
-#include "taskomat/Sequence.h"
+#include "taskolib/Step.h"
+#include "taskolib/Sequence.h"
 
 namespace task {
 

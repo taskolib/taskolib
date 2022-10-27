@@ -25,7 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include <gul14/gul.h>
-#include "taskomat/serialize_sequence.h"
+#include "taskolib/serialize_sequence.h"
 
 namespace task {
 
@@ -91,8 +91,8 @@ void check_stream(std::ostream& stream)
 
 std::ostream& operator<<(std::ostream& stream, const Step& step)
 {
-    // TODO: need to fetch taskomat, lua, and sol2 version
-    //stream << "-- Taskomat version: " << TASKOMAT_VERSION_STRING << ", Lua version: "
+    // TODO: need to fetch taskolib, lua, and sol2 version
+    //stream << "-- Taskolib version: " << TASKOLIB_VERSION_STRING << ", Lua version: "
     //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
 
     stream << "-- type: " << to_string(step.get_type()) << '\n';

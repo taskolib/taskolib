@@ -26,9 +26,9 @@
 #include <gul14/catch.h>
 #include <gul14/trim.h>
 
-#include "taskomat/Message.h"
-#include "taskomat/time_types.h"
-#include "taskomat/format.h"
+#include "taskolib/Message.h"
+#include "taskolib/time_types.h"
+#include "taskolib/format.h"
 
 using namespace task;
 

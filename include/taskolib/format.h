@@ -22,14 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_FORMAT_H_
-#define TASKOMAT_FORMAT_H_
+#ifndef TASKOLIB_FORMAT_H_
+#define TASKOLIB_FORMAT_H_
 
 #include <fmt/format.h>
 #include <sstream>
 
-#include "taskomat/time_types.h"
-#include "taskomat/Message.h"
+#include "taskolib/time_types.h"
+#include "taskolib/Message.h"
 
 template<> struct fmt::formatter<task::TimePoint> {
     constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {

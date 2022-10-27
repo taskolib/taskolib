@@ -25,8 +25,8 @@
 #include <array>
 #include <gul14/catch.h>
 #include <gul14/join_split.h>
-#include "taskomat/exceptions.h"
-#include "taskomat/VariableName.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/VariableName.h"
 
 using namespace std::literals;
 using namespace task;

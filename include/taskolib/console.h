@@ -22,13 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_CONSOLE_H_
-#define TASKOMAT_CONSOLE_H_
+#ifndef TASKOLIB_CONSOLE_H_
+#define TASKOLIB_CONSOLE_H_
 
 #include <string>
 
-#include "taskomat/StepIndex.h"
-#include "taskomat/Message.h"
+#include "taskolib/StepIndex.h"
+#include "taskolib/Message.h"
 
 namespace task {
 

@@ -26,8 +26,8 @@
 #include <utility>
 #include <algorithm>
 #include <fstream>
-#include "taskomat/SequenceManager.h"
-#include "taskomat/serialize_sequence.h"
+#include "taskolib/SequenceManager.h"
+#include "taskolib/serialize_sequence.h"
 
 using namespace task;
 

@@ -22,16 +22,16 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_COMMCHANNEL_H_
-#define TASKOMAT_COMMCHANNEL_H_
+#ifndef TASKOLIB_COMMCHANNEL_H_
+#define TASKOLIB_COMMCHANNEL_H_
 
 #include <atomic>
 
 #include <gul14/string_view.h>
 
-#include "taskomat/LockedQueue.h"
-#include "taskomat/Message.h"
-#include "taskomat/StepIndex.h"
+#include "taskolib/LockedQueue.h"
+#include "taskolib/Message.h"
+#include "taskolib/StepIndex.h"
 
 namespace task {
 

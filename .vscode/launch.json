@@ -8,7 +8,7 @@
             "name": "(gdb) Debug Test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/builddir/taskomat_test",
+            "program": "${workspaceFolder}/builddir/taskolib_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

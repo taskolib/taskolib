@@ -1,5 +1,5 @@
 project(
-    'taskomat',
+    'taskolib',
     ['cpp'],
     version : run_command([
             find_program('cat'),
@@ -18,7 +18,7 @@ project(
     meson_version : '>=0.49'
 )
 
-pkg_config_name = 'libtaskomat'
+pkg_config_name = 'taskolib'
 
 # Keep this version number up to date...
 sol_version = '3.3.0'
@@ -28,30 +28,30 @@ sol_version = '3.3.0'
 
 # Headers to be installed under ${prefix}/include/
 install_headers(files(
-        'include/taskomat/CommChannel.h',
-        'include/taskomat/console.h',
-        'include/taskomat/Context.h',
-        'include/taskomat/deserialize_sequence.h',
-        'include/taskomat/exceptions.h',
-        'include/taskomat/Executor.h',
-        'include/taskomat/format.h',
-        'include/taskomat/hash_string.h',
-        'include/taskomat/LockedQueue.h',
-        'include/taskomat/Message.h',
-        'include/taskomat/Sequence.h',
-        'include/taskomat/SequenceManager.h',
-        'include/taskomat/serialize_sequence.h',
-        'include/taskomat/Step.h',
-        'include/taskomat/StepIndex.h',
-        'include/taskomat/taskomat.h',
-        'include/taskomat/time_types.h',
-        'include/taskomat/VariableName.h',
+        'include/taskolib/CommChannel.h',
+        'include/taskolib/console.h',
+        'include/taskolib/Context.h',
+        'include/taskolib/deserialize_sequence.h',
+        'include/taskolib/exceptions.h',
+        'include/taskolib/Executor.h',
+        'include/taskolib/format.h',
+        'include/taskolib/hash_string.h',
+        'include/taskolib/LockedQueue.h',
+        'include/taskolib/Message.h',
+        'include/taskolib/Sequence.h',
+        'include/taskolib/SequenceManager.h',
+        'include/taskolib/serialize_sequence.h',
+        'include/taskolib/Step.h',
+        'include/taskolib/StepIndex.h',
+        'include/taskolib/taskolib.h',
+        'include/taskolib/time_types.h',
+        'include/taskolib/VariableName.h',
     ),
-    subdir: 'taskomat',
+    subdir: 'taskolib',
 )
 
-install_subdir('include/taskomat/sol/sol',
-    install_dir: get_option('prefix') / get_option('includedir') / 'taskomat' / 'sol' + sol_version,
+install_subdir('include/taskolib/sol/sol',
+    install_dir: get_option('prefix') / get_option('includedir') / 'taskolib' / 'sol' + sol_version,
 )
 
 # Sources
@@ -119,20 +119,20 @@ add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
 # Generate the static LUA library
 # It can be used via lua_dep
-lua_inc = include_directories('include/taskomat/lua') # used by src/lua
+lua_inc = include_directories('include/taskolib/lua') # used by src/lua
 subdir('src/lua')
 
 install_headers(files(
-        'include/taskomat/lua/lauxlib.h',
-        'include/taskomat/lua/lua.h',
-        'include/taskomat/lua/luaconf.h',
-        'include/taskomat/lua/lualib.h',
+        'include/taskolib/lua/lauxlib.h',
+        'include/taskolib/lua/lua.h',
+        'include/taskolib/lua/luaconf.h',
+        'include/taskolib/lua/lualib.h',
     ),
-    subdir: 'taskomat' / 'lua' + lua_version)
+    subdir: 'taskolib' / 'lua' + lua_version)
 
 
 ## Build library
-inc = [ include_directories('include', 'include/taskomat/sol', 'src') ]
+inc = [ include_directories('include', 'include/taskolib/sol', 'src') ]
 
 gul_dep = dependency('libgul14')
 
@@ -159,15 +159,15 @@ lib = both_libraries(meson.project_name(),
 pkg = import('pkgconfig')
 pkg.generate(lib,
     name : pkg_config_name,
-    description : 'Taskomat Library',
+    description : 'Taskolib',
     version : libno,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
     requires : [ 'libgul14' ],
-    subdirs : [ '', 'taskomat' / 'sol' + sol_version, 'taskomat' / 'lua' + lua_version, ],
+    subdirs : [ '', 'taskolib' / 'sol' + sol_version, 'taskolib' / 'lua' + lua_version, ],
 )
 
-taskomat_dep = declare_dependency(
+taskolib_dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
     dependencies : [ deps, gul_dep, ],
@@ -180,7 +180,7 @@ taskomat_dep = declare_dependency(
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : taskomat_dep,
+        dependencies : taskolib_dep,
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
@@ -191,7 +191,7 @@ if fmt_dep.found()
     test('format',
         executable(meson.project_name() + '_format_test',
             [ 'tests/test_format.cc', 'tests/test_main.cc', ],
-            dependencies : [ taskomat_dep, dependency('fmt'), ],
+            dependencies : [ taskolib_dep, dependency('fmt'), ],
         ),
         timeout : 10,
     )
@@ -202,7 +202,7 @@ endif
 
 executable('execute_step',
     files(['examples/execute_step.cc']),
-    dependencies : taskomat_dep
+    dependencies : taskolib_dep
 )
 
 ## Include experimental sources for lua/sol. All of the buiild executable will start with

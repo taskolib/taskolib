@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_MESSAGE_H_
-#define TASKOMAT_MESSAGE_H_
+#ifndef TASKOLIB_MESSAGE_H_
+#define TASKOLIB_MESSAGE_H_
 
 #include <array>
 #include <memory>
@@ -32,8 +32,8 @@
 
 #include <gul14/escape.h>
 
-#include "taskomat/StepIndex.h"
-#include "taskomat/time_types.h"
+#include "taskolib/StepIndex.h"
+#include "taskolib/time_types.h"
 
 namespace task {
 

@@ -25,8 +25,8 @@
 #include <algorithm>
 #include <cctype>
 #include <gul14/cat.h>
-#include "taskomat/exceptions.h"
-#include "taskomat/VariableName.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/VariableName.h"
 
 using gul14::cat;
 

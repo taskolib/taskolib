@@ -31,8 +31,8 @@
 #include <ctime>
 #include <set>
 #include <gul14/gul.h>
-#include "taskomat/hash_string.h"
-#include "taskomat/deserialize_sequence.h"
+#include "taskolib/hash_string.h"
+#include "taskolib/deserialize_sequence.h"
 
 namespace task {
 
