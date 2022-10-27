@@ -47,6 +47,13 @@ namespace task {
 using VariableValue = std::variant<long long, double, std::string>;
 
 /**
+ * Associative table that holds Lua variable names and their value.
+ *
+ * The keys are of type \a VariableName and the values \a VariableValue.
+ */
+using VariableTable = std::unordered_map<VariableName, VariableValue>;
+
+/**
  * An output function accepts a string, an optional step index, and a CommChannel* as
  * parameters. The latter may be null to indicate that there is no associated
  * communication channel.
@@ -65,7 +72,7 @@ using OutputCallback =
 struct Context
 {
     /// A list of variables that can be im-/exported into steps.
-    std::unordered_map<VariableName, VariableValue> variables;
+    VariableTable variables;
 
     /// An initialization function that is called on a LUA state before a step is executed.
     std::function<void(sol::state&)> lua_init_function;

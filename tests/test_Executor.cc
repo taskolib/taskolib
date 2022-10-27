@@ -277,6 +277,33 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
     REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
 }
 
+TEST_CASE("Executor: Access context after run", "[Executor]")
+{
+    Context ctx;
+    ctx.variables["a"] = VariableValue{ 1LL };
+
+    Sequence seq{ "a Seq" };
+    seq.push_back(Step{ Step::type_while  }.set_script("return a % 10 ~= 0"));
+    seq.push_back(Step{ Step::type_action }.set_script("a = a + 1"));
+    seq.push_back(Step{ Step::type_end });
+    seq.push_back(Step{ Step::type_action }.set_script("a = a + 1"));
+
+    for (auto s = seq.begin(); s != seq.end(); ++s)
+        seq.modify(s, [](Step& step) { step.set_used_context_variable_names(VariableNames{ "a" }); });
+
+    // Execute directly
+    seq.execute(ctx, nullptr);
+    REQUIRE(std::get<long long>(ctx.variables["a"] ) == 11LL );
+
+    // Execute async
+    Executor executor{ };
+    executor.run_asynchronously(seq, ctx);
+    while (executor.update(seq))
+        gul14::sleep(5ms);
+    auto vars = executor.get_context_variables();
+    REQUIRE(std::get<long long>(vars["a"]) == 21LL);
+}
+
 TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     "[Executor]")
 {
