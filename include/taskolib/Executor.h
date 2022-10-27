@@ -156,6 +156,18 @@ public:
      */
     bool update(Sequence& sequence);
 
+    /**
+     * Retrieve the variables stored in the context.
+     *
+     * After a sequence has run the context variables can be retrieved
+     * for inspection. Note that the variables are only updated after the
+     * Sequence has stopped.
+     * Use this only after update() returns false (is_busy() == false).
+     *
+     * \returns the context variable mapping.
+     */
+    VariableTable get_context_variables() { return context_.variables; }
+
 private:
     /**
      * Communications channel between the main thread and the executing thread.
@@ -168,15 +180,13 @@ private:
 
     /**
      * A future holding the results of the execution thread.
-     *
-     * At the moment, there are no results (hence void), but the future is still useful
-     * to detect when the execution has finished.
      */
-    std::future<void> future_;
+    std::future<Context> future_;
 
     /**
      * A local copy of the context that was used to start the last sequence.
      * Its output callbacks are used to produce "console" and logging output.
+     * After the Sequence finished it contains the processed context.
      */
     Context context_;
 
@@ -184,7 +194,7 @@ private:
      * This is the function running in the execution thread: It calls Sequence::execute()
      * and silently swallows all exceptions.
      */
-    static void execute_sequence(Sequence sequence, Context context,
+    static Context execute_sequence(Sequence sequence, Context context,
                                  std::shared_ptr<CommChannel> comm_channel) noexcept;
 };
 
