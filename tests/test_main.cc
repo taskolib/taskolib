@@ -2,9 +2,9 @@
  * \file   test_main.cc
  * \author Lars Froehlich
  * \date   Created on November 26, 2019
- * \brief  Test suite for the Taskomat Library
+ * \brief  Test suite for Taskolib
  *
- * \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published

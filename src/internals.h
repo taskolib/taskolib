@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_INTERNALS_H_
-#define TASKOMAT_INTERNALS_H_
+#ifndef TASKOLIB_INTERNALS_H_
+#define TASKOLIB_INTERNALS_H_
 
 #include <gul14/string_view.h>
 

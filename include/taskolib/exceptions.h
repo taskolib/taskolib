@@ -22,22 +22,22 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_EXCEPTIONS_H_
-#define TASKOMAT_EXCEPTIONS_H_
+#ifndef TASKOLIB_EXCEPTIONS_H_
+#define TASKOLIB_EXCEPTIONS_H_
 
 #include <cstdint>
 #include <stdexcept>
 #include <string>
 
-#include "taskomat/StepIndex.h"
+#include "taskolib/StepIndex.h"
 
 namespace task {
 
 /**
  * A generic exception class carrying a message string.
  *
- * The Error class is used as the standard exception by many functions throughout the
- * Taskomat library. It can be used directly or inherited from.
+ * The Error class is used as the standard exception by many functions throughout
+ * Taskolib. It can be used directly or inherited from.
  *
  * \code
  * try

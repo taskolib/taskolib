@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_SEQUENCE_H_
-#define TASKOMAT_SEQUENCE_H_
+#ifndef TASKOLIB_SEQUENCE_H_
+#define TASKOLIB_SEQUENCE_H_
 
 #include <algorithm>
 #include <filesystem>
@@ -35,11 +35,11 @@
 #include <gul14/finalizer.h>
 #include <gul14/string_view.h>
 
-#include "taskomat/CommChannel.h"
-#include "taskomat/Context.h"
-#include "taskomat/exceptions.h"
-#include "taskomat/Step.h"
-#include "taskomat/StepIndex.h"
+#include "taskolib/CommChannel.h"
+#include "taskolib/Context.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/Step.h"
+#include "taskolib/StepIndex.h"
 
 namespace task {
 

@@ -22,14 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_SEQUENCEMANAGER_H_
-#define TASKOMAT_SEQUENCEMANAGER_H_
+#ifndef TASKOLIB_SEQUENCEMANAGER_H_
+#define TASKOLIB_SEQUENCEMANAGER_H_
 
 #include <vector>
 #include <filesystem>
 #include <string>
 #include <gul14/string_view.h>
-#include "taskomat/Sequence.h"
+#include "taskolib/Sequence.h"
 
 namespace task {
 

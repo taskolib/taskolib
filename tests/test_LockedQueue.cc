@@ -25,9 +25,9 @@
 #include <thread>
 #include <type_traits>
 #include <gul14/catch.h>
-#include "taskomat/exceptions.h"
-#include "taskomat/Message.h"
-#include "taskomat/LockedQueue.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/Message.h"
+#include "taskolib/LockedQueue.h"
 
 using namespace task;
 

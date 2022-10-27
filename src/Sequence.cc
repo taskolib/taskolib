@@ -29,9 +29,9 @@
 #include <gul14/trim.h>
 
 #include "internals.h"
-#include "taskomat/exceptions.h"
-#include "taskomat/Sequence.h"
-#include "taskomat/Step.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/Sequence.h"
+#include "taskolib/Step.h"
 
 using gul14::cat;
 

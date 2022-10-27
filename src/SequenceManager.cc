@@ -23,8 +23,8 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <algorithm>
-#include "taskomat/SequenceManager.h"
-#include "taskomat/deserialize_sequence.h"
+#include "taskolib/SequenceManager.h"
+#include "taskolib/deserialize_sequence.h"
 
 namespace task {
 

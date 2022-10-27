@@ -23,7 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
-#include "taskomat/Sequence.h"
+#include "taskolib/Sequence.h"
 
 using namespace task;
 using namespace std::literals;

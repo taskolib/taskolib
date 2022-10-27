@@ -1,8 +1,8 @@
 /**
- * \file   time_types.h
+ * \file   StepIndex.h
  * \author Lars Froehlich
- * \date   Created on April 8, 2022
- * \brief  Declaration of time-related types.
+ * \date   Created on October 18, 2022
+ * \brief  Declaration of the StepIndex type.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -22,19 +22,19 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_TIME_TYPES_H_
-#define TASKOMAT_TIME_TYPES_H_
+#ifndef TASKOLIB_STEPINDEX_H_
+#define TASKOLIB_STEPINDEX_H_
 
-#include <chrono>
-#include <string>
+#include <cstdint>
+#include <gul14/optional.h>
 
 namespace task {
 
-using Clock = std::chrono::system_clock;
-using TimePoint = std::chrono::time_point<Clock>;
+/// A type for storing the index of a Step in a Sequence.
+using StepIndex = std::uint16_t;
 
-std::string to_string(task::TimePoint t);
-std::time_t timegm(const std::tm& t);
+/// An optional step index (gul14::optional<StepIndex>).
+using OptionalStepIndex = gul14::optional<StepIndex>;
 
 } // namespace task
 

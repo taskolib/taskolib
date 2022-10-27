@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_CONTEXT_H_
-#define TASKOMAT_CONTEXT_H_
+#ifndef TASKOLIB_CONTEXT_H_
+#define TASKOLIB_CONTEXT_H_
 
 #include <functional>
 #include <string>
@@ -31,11 +31,11 @@
 #include <variant>
 
 #include "sol/sol.hpp"
-#include "taskomat/CommChannel.h"
-#include "taskomat/console.h"
-#include "taskomat/Message.h"
-#include "taskomat/StepIndex.h"
-#include "taskomat/VariableName.h"
+#include "taskolib/CommChannel.h"
+#include "taskolib/console.h"
+#include "taskolib/Message.h"
+#include "taskolib/StepIndex.h"
+#include "taskolib/VariableName.h"
 
 namespace task {
 

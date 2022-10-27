@@ -28,8 +28,8 @@
 
 #include "lua_details.h"
 #include "sol/sol.hpp"
-#include "taskomat/exceptions.h"
-#include "taskomat/Step.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/Step.h"
 
 using namespace std::literals;
 using gul14::cat;

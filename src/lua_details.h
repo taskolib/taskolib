@@ -22,15 +22,15 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_LUA_DETAILS_H_
-#define TASKOMAT_LUA_DETAILS_H_
+#ifndef TASKOLIB_LUA_DETAILS_H_
+#define TASKOLIB_LUA_DETAILS_H_
 
 #include <chrono>
 #include <functional>
 #include <string>
 #include "sol/sol.hpp"
-#include "taskomat/CommChannel.h"
-#include "taskomat/Context.h"
+#include "taskolib/CommChannel.h"
+#include "taskolib/Context.h"
 
 namespace task {
 

@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOMAT_LOCKEDQUEUE_H_
-#define TASKOMAT_LOCKEDQUEUE_H_
+#ifndef TASKOLIB_LOCKEDQUEUE_H_
+#define TASKOLIB_LOCKEDQUEUE_H_
 
 #include <condition_variable>
 #include <mutex>

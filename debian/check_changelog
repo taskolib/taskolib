@@ -27,7 +27,7 @@ LIKELY=`head -1 debian/changelog | grep $LIBNO`
 # if LIBNO and version in debian/changelog differs
 # add changelog entry
 if [ -z "$LIKELY" ] ; then
-FIRSTLINE="libtaskomat-$LIBNO ($VERSION) unstable; urgency=low"
+FIRSTLINE="taskolib-$LIBNO ($VERSION) unstable; urgency=low"
 MAINTAINER=`grep Maintainer debian/control | sed -e "s/Maintainer: //g"`
 DATE=`date --rfc-822`
 

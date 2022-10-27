@@ -8,7 +8,7 @@
  *
  * Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
  *
- * Adaptations for libtaskomat: L. Froehlich, U. Jastrow, M. Walla, 2022.
+ * Adaptations for taskolib: L. Froehlich, U. Jastrow, M. Walla, 2022.
  *
  * MIT license
  *
@@ -32,8 +32,8 @@
 
 // SPDX-License-Identifier: MIT
 
-#ifndef TASKOMAT_CASE_STRING_H_
-#define TASKOMAT_CASE_STRING_H_
+#ifndef TASKOLIB_CASE_STRING_H_
+#define TASKOLIB_CASE_STRING_H_
 
 #include <gul14/string_view.h>
 

@@ -24,7 +24,7 @@
 
 #include <string>
 #include <gul14/catch.h>
-#include "taskomat/exceptions.h"
+#include "taskolib/exceptions.h"
 
 using namespace std::literals;
 using namespace task;

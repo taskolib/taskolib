@@ -29,8 +29,8 @@
 #include <gul14/catch.h>
 #include <gul14/trim.h>
 
-#include "taskomat/Message.h"
-#include "taskomat/Sequence.h"
+#include "taskolib/Message.h"
+#include "taskolib/Sequence.h"
 
 using namespace task;
 using namespace std::literals;

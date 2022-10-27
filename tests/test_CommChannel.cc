@@ -25,7 +25,7 @@
 #include <thread>
 #include <type_traits>
 #include <gul14/catch.h>
-#include "taskomat/CommChannel.h"
+#include "taskolib/CommChannel.h"
 
 using namespace task;
 using namespace std::literals;
