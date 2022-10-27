@@ -21,7 +21,7 @@ project(
 pkg_config_name = 'libtaskomat'
 
 # Keep this version number up to date...
-sol_version = '3.2.3'
+sol_version = '3.3.0'
 
 
 ## File lists
