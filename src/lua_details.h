@@ -28,6 +28,8 @@
 #include <chrono>
 #include <functional>
 #include <string>
+#include <variant>
+
 #include "sol/sol.hpp"
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
@@ -43,6 +45,17 @@ void check_immediate_termination_request(lua_State* lua_state);
 
 // Check if the step timeout has expired and raise a LUA error if that is the case.
 void check_script_timeout(lua_State* lua_state);
+
+/**
+ * Execute a Lua script safely, intercepting all possible exceptions that may occur during
+ * its execution.
+ *
+ * This function returns a variant: If the Lua script finishes without error, it contains
+ * a sol::object representing the return value of the script. If a Lua error or C++
+ * exception occurs, the variant contains a string with an error message.
+ */
+std::variant<sol::object, std::string>
+execute_lua_script_safely(sol::state& lua, sol::string_view script);
 
 /**
  * Retrieve a pointer to the used CommChannel from the LUA registry.

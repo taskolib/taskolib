@@ -358,8 +358,8 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
     {
         step.set_script("throw_logic_error(); a = 42");
 
-        // A C++ exception bubbles through the Lua execution callstack, but must be caught
-        // by Sol2, returned as a protected_function_result, and reported as a task::Error.
+        // Like a genuine Lua exception, a C++ exception must be reported as a
+        // task::ErrorAtIndex.
         REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
@@ -368,21 +368,16 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
     {
         step.set_script("throw_weird_exception(); a = 42");
 
-        // A C++ exception bubbles through the Lua execution callstack, but must be caught
-        // by Sol2, returned as a protected_function_result, and reported as a task::Error.
         REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 
-    SECTION("C++ exceptions are not caught by pcall()")
+    SECTION("C++ exceptions are correctly caught by pcall()")
     {
         step.set_script("pcall(throw_logic_error); a = 42");
 
-        // A C++ exception bubbles through the Lua execution callstack and cannot be
-        // caught by pcall(). It must, however, be caught by Step::execute() and reported
-        // as a task::Error.
-        REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
-        REQUIRE(std::get<long long>(context.variables["a"]) == 0);
+        REQUIRE_NOTHROW(step.execute(context));
+        REQUIRE(std::get<long long>(context.variables["a"]) == 42LL);
     }
 }
 
