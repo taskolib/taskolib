@@ -34,8 +34,8 @@ the build system, or the command line options of your compiler.
 // properly handles exceptions.
 #define SOL_USING_CXX_LUA 1
 
-// Tell Sol3 that our custom LUA build can safely propagate exceptions
-#define SOL_EXCEPTIONS_SAFE_PROPAGATION 1
+// Enable a trampoline for C/C++ functions injected into Lua (among other things)
+#define SOL_PROPAGATE_EXCEPTIONS 0
 
 // Tell Sol3 to make several checks so that we can actually differentiate integers from
 // floating-point numbers.
