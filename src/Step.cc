@@ -122,38 +122,34 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 
     copy_used_variables_from_context_to_lua(context, lua);
 
-    bool result = false;
+    const auto result_or_error = execute_lua_script_safely(lua, get_script());
 
-    try {
-        auto protected_result = lua.safe_script(get_script(), sol::script_default_on_error);
-        if (!protected_result.valid()) {
-            sol::error err = protected_result;
-            throw ErrorAtIndex(cat("Script execution error: ", err.what()), index);
-        }
-
-        copy_used_variables_from_lua_to_context(lua, context);
-        sol::optional<bool> opt_result = protected_result;
-        if (opt_result)
-            result = *opt_result;
-    }
-    catch (const std::exception& e) {
-        std::string msg = cat("Script execution error: ", e.what());
-        send_message(comm, Message::Type::step_stopped_with_error, msg,
-            Clock::now(), index);
+    if (std::holds_alternative<std::string>(result_or_error))
+    {
+        const auto msg = std::get<std::string>(result_or_error);
+        send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
+                     index);
         throw ErrorAtIndex(msg, index);
     }
-    catch (...) {
-        std::string msg{ "Script execution raised unknown exception" };
-        send_message(comm, Message::Type::step_stopped_with_error, msg,
-            Clock::now(), index);
-        throw ErrorAtIndex(msg, index);
-    }
+
+    const auto result_obj = std::get<sol::object>(result_or_error);
+
+    const bool result_bool = [](const sol::object& obj) -> bool
+        {
+            if (obj == sol::nil)          return false;
+            else if (obj.is<bool>())      return obj.as<bool>();
+            else if (obj.is<long long>()) return obj.as<long long>() != 0LL;
+            else if (obj.is<double>())    return obj.as<double>() != 0.0;
+            else                          return true;
+        }(result_obj);
+
+    copy_used_variables_from_lua_to_context(lua, context);
 
     send_message(comm, Message::Type::step_stopped,
-        cat("Step finished (logical result: ", result ? "true" : "false", ')'),
+        cat("Step finished (logical result: ", result_bool ? "true" : "false", ')'),
         Clock::now(), index);
 
-    return result;
+    return result_bool;
 }
 
 Step& Step::set_disabled(bool disable)

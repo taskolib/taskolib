@@ -273,32 +273,47 @@ TEST_CASE("execute(): Boolean return value from simple scripts", "[Step]")
     Context context;
     Step step;
 
-    SECTION("Empty step returns false")
-    {
+    SECTION("Empty step returns false") {
         REQUIRE(step.execute(context) == false);
     }
 
-    SECTION("'return true' returns true")
-    {
+    SECTION("'return true' returns true") {
         step.set_script("return true");
         REQUIRE(step.execute(context) == true);
     }
 
-    SECTION("'return false' returns false")
-    {
+    SECTION("'return false' returns false") {
         step.set_script("return true");
         REQUIRE(step.execute(context) == true);
     }
 
-    SECTION("'return nil' returns false")
-    {
+    SECTION("'return nil' returns false") {
         step.set_script("return nil");
         REQUIRE(step.execute(context) == false);
     }
 
-    SECTION("'return 42' returns true")
-    {
-        step.set_script("return true");
+    SECTION("'return 42' returns true") {
+        step.set_script("return 42");
+        REQUIRE(step.execute(context) == true);
+    }
+
+    SECTION("'return 0' returns false") {
+        step.set_script("return 0");
+        REQUIRE(step.execute(context) == false);
+    }
+
+    SECTION("'return 0.1' returns true") {
+        step.set_script("return 0.1");
+        REQUIRE(step.execute(context) == true);
+    }
+
+    SECTION("'return 0.0' returns false") {
+        step.set_script("return 0.0");
+        REQUIRE(step.execute(context) == false);
+    }
+
+    SECTION("\"return 'false'\" returns true (sic!)") {
+        step.set_script("return 'false'");
         REQUIRE(step.execute(context) == true);
     }
 }
@@ -372,7 +387,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
         REQUIRE(std::get<long long>(context.variables["a"]) == 0);
     }
 
-    SECTION("C++ exceptions are correctly caught by pcall()")
+    SECTION("C++ exceptions are converted to Lua errors and caught by pcall()")
     {
         step.set_script("pcall(throw_logic_error); a = 42");
 
