@@ -109,10 +109,10 @@ TEST_CASE("execute_lua_script_safely(): Lua exceptions", "[lua_details]")
     SECTION("Runtime error")
     {
         auto result_or_error = execute_lua_script_safely(
-            lua, "function boom(); error('pippo', 0); end; boom()");
+            lua, "function boom(); error('mindful' .. 'ness', 0); end; boom()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE_THAT(*msg, StartsWith("Script execution error: pippo"));
+        REQUIRE_THAT(*msg, StartsWith("Script execution error: mindfulness"));
         // Lua adds a stack trace after this output. This is a somewhat brittle test,
         // but since we have control over our Lua version, we are sure to spot it if
         // the output format changes.
@@ -133,7 +133,7 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
     sol::state lua;
     open_safe_library_subset(lua); // for error() and pcall()
 
-    lua["throw_logic_error"] = []() { throw std::logic_error("pippo"); };
+    lua["throw_logic_error"] = []() { throw std::logic_error("red rabbit"); };
     lua["throw_weird_exception"] = []() { struct Weird{}; throw Weird{}; };
 
     SECTION("C++ standard exception are reported as errors with error message")
@@ -142,7 +142,7 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
             lua, "throw_logic_error()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE_THAT(*msg, Contains("pippo"));
+        REQUIRE_THAT(*msg, Contains("red rabbit"));
     }
 
     SECTION("Nonstandard C++ exceptions are reported as errors")
