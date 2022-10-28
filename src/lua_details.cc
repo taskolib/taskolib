@@ -111,6 +111,31 @@ void check_script_timeout(lua_State* lua_state)
     }
 }
 
+std::variant<sol::object, std::string>
+execute_lua_script_safely(sol::state& lua, sol::string_view script)
+{
+    try
+    {
+        auto protected_result = lua.safe_script(script, sol::script_pass_on_error);
+
+        if (!protected_result.valid())
+        {
+            sol::error err = protected_result;
+            return cat("Script execution error: ", err.what());
+        }
+
+        return static_cast<sol::object>(protected_result);
+    }
+    catch(const std::exception& e)
+    {
+        return cat("Script execution error: ", e.what());
+    }
+    catch(...)
+    {
+        return std::string{ "Unknown C++ exception" };
+    }
+}
+
 CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
 {
     sol::state_view lua(lua_state);

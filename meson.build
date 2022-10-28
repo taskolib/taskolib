@@ -77,6 +77,7 @@ test_src = files(
     'tests/test_Executor.cc',
     #'tests/test_format.cc' needs fmt{} library
     'tests/test_LockedQueue.cc',
+    'tests/test_lua_details.cc',
     'tests/test_main.cc',
     'tests/test_Message.cc',
     'tests/test_Sequence.cc',
