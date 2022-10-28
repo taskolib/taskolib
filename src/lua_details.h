@@ -34,6 +34,10 @@
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
 
+// Check that the lua lib has been build with the expected types
+static_assert(std::is_same<LUA_NUMBER, double>::value, "Unexpected Lua-internal floating point type");
+static_assert(std::is_same<LUA_INTEGER, long long>::value, "Unexpected Lua-internal integer type");
+
 namespace task {
 
 // Abort the execution of the script by raising a LUA error with the given error message.
