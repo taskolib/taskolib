@@ -122,31 +122,49 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 
     copy_used_variables_from_context_to_lua(context, lua);
 
-    const auto result_or_error = execute_lua_script_safely(lua, get_script());
+    auto result_or_error = execute_lua_script_safely(lua, get_script());
+    bool result_bool = false;
+
+    if (std::holds_alternative<sol::object>(result_or_error))
+    {
+        const auto& obj = std::get<sol::object>(result_or_error);
+
+        if (requires_bool_return_value(get_type()))
+        {
+            if (obj.is<bool>())
+            {
+                result_bool = obj.as<bool>();
+            }
+            else
+            {
+                result_or_error = cat("A script in a ", to_string(get_type()),
+                    " step must return a boolean value (true or false).");
+            }
+        }
+        else
+        {
+            if (obj != sol::nil)
+            {
+                result_or_error = cat("A script in a ", to_string(get_type()),
+                    " step may not return any value.");
+            }
+        }
+    }
 
     if (std::holds_alternative<std::string>(result_or_error))
     {
-        const auto msg = std::get<std::string>(result_or_error);
+        const auto& msg = std::get<std::string>(result_or_error);
         send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
                      index);
         throw ErrorAtIndex(msg, index);
     }
 
-    const auto result_obj = std::get<sol::object>(result_or_error);
-
-    const bool result_bool = [](const sol::object& obj) -> bool
-        {
-            if (obj == sol::nil)          return false;
-            else if (obj.is<bool>())      return obj.as<bool>();
-            else if (obj.is<long long>()) return obj.as<long long>() != 0LL;
-            else if (obj.is<double>())    return obj.as<double>() != 0.0;
-            else                          return true;
-        }(result_obj);
-
     copy_used_variables_from_lua_to_context(lua, context);
 
     send_message(comm, Message::Type::step_stopped,
-        cat("Step finished (logical result: ", result_bool ? "true" : "false", ')'),
+        requires_bool_return_value(get_type())
+            ? cat("Step finished (logical result: ", result_bool ? "true" : "false", ')')
+            : "Step finished"s,
         Clock::now(), index);
 
     return result_bool;
@@ -254,6 +272,26 @@ std::string to_string(Step::Type type)
     }
 
     return "unknown";
+}
+
+bool requires_bool_return_value(Step::Type step_type) noexcept
+{
+    switch (step_type)
+    {
+        case Step::type_action:
+        case Step::type_catch:
+        case Step::type_else:
+        case Step::type_end:
+        case Step::type_try:
+            return false;
+        case Step::type_elseif:
+        case Step::type_if:
+        case Step::type_while:
+            return true;
+    }
+
+    // Never reached as long as the above switch statement covers all cases
+    return false;
 }
 
 } // namespace task

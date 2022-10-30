@@ -268,53 +268,108 @@ TEST_CASE("Step: set_used_context_variable_names()", "[Step]")
     REQUIRE(step.get_used_context_variable_names() == VariableNames{ "a", "b52" });
 }
 
-TEST_CASE("execute(): Boolean return value from simple scripts", "[Step]")
+TEST_CASE("execute(): Return value handling in scripts requiring a bool result", "[Step]")
 {
     Context context;
-    Step step;
 
-    SECTION("Empty step returns false") {
-        REQUIRE(step.execute(context) == false);
+    std::vector<Step::Type> types{ Step::type_elseif, Step::type_if, Step::type_while };
+
+    for (auto type : types)
+    {
+        CAPTURE(to_string(type));
+        Step step{ type };
+
+        SECTION("Empty step throws") {
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("'return true' returns true") {
+            step.set_script("return true");
+            REQUIRE(step.execute(context) == true);
+        }
+
+        SECTION("'return false' returns false") {
+            step.set_script("return false");
+            REQUIRE(step.execute(context) == false);
+        }
+
+        SECTION("'return nil' throws") {
+            step.set_script("return nil");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("'return 42' throws") {
+            step.set_script("return 42");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("'return 0' throws") {
+            step.set_script("return 0");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("'return 0.1' throws") {
+            step.set_script("return 0.1");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("'return 0.0' throws") {
+            step.set_script("return 0.0");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("\"return 'false'\" throws") {
+            step.set_script("return 'false'");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
     }
+}
 
-    SECTION("'return true' returns true") {
-        step.set_script("return true");
-        REQUIRE(step.execute(context) == true);
-    }
+TEST_CASE("execute(): Return value handling in scripts requiring no result", "[Step]")
+{
+    Context context;
 
-    SECTION("'return false' returns false") {
-        step.set_script("return true");
-        REQUIRE(step.execute(context) == true);
-    }
+    std::vector<Step::Type> types{ Step::type_action, Step::type_catch, Step::type_else,
+        Step::type_end, Step::type_try };
 
-    SECTION("'return nil' returns false") {
-        step.set_script("return nil");
-        REQUIRE(step.execute(context) == false);
-    }
+    for (auto type : types)
+    {
+        CAPTURE(to_string(type));
+        Step step{ type };
 
-    SECTION("'return 42' returns true") {
-        step.set_script("return 42");
-        REQUIRE(step.execute(context) == true);
-    }
+        SECTION("A step without return statement is OK") {
+            REQUIRE_NOTHROW(step.execute(context));
+        }
 
-    SECTION("'return 0' returns false") {
-        step.set_script("return 0");
-        REQUIRE(step.execute(context) == false);
-    }
+        SECTION("A step returning nil is OK") {
+            step.set_script("return nil");
+            REQUIRE_NOTHROW(step.execute(context));
+        }
 
-    SECTION("'return 0.1' returns true") {
-        step.set_script("return 0.1");
-        REQUIRE(step.execute(context) == true);
-    }
+        SECTION("'return true' throws") {
+            step.set_script("return true");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
 
-    SECTION("'return 0.0' returns false") {
-        step.set_script("return 0.0");
-        REQUIRE(step.execute(context) == false);
-    }
+        SECTION("'return false' throws") {
+            step.set_script("return false");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
 
-    SECTION("\"return 'false'\" returns true (sic!)") {
-        step.set_script("return 'false'");
-        REQUIRE(step.execute(context) == true);
+        SECTION("'return 0' throws") {
+            step.set_script("return 0");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("'return 0.0' throws") {
+            step.set_script("return 0.0");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
+
+        SECTION("\"return 'black cow'\" throws") {
+            step.set_script("return 'black cow'");
+            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        }
     }
 }
 
@@ -403,8 +458,8 @@ TEST_CASE("execute(): Sandboxing", "[Step]")
 
     SECTION("ipairs() is available")
     {
-        step.set_script("a = {42, 43, 44}; for k,v in ipairs(a) do end; return true");
-        REQUIRE(step.execute(context) == true);
+        step.set_script("a = {42, 43, 44}; for k,v in ipairs(a) do end");
+        REQUIRE_NOTHROW(step.execute(context));
     }
 
     SECTION("require() is not available")
@@ -527,7 +582,7 @@ TEST_CASE("execute(): Setting 'last executed' timestamp", "[Step]")
 TEST_CASE("execute(): Importing variables from a context", "[Step]")
 {
     Context context;
-    Step step;
+    Step step{ Step::type_if };
 
     SECTION("Importing nothing")
     {
@@ -644,7 +699,7 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
 TEST_CASE("execute(): Running a step with multiple import and exports", "[Step]")
 {
     Context context;
-    Step step;
+    Step step{ Step::type_if };
 
     step.set_used_context_variable_names(
         VariableNames{ "str", "num_repetitions", "separator", "result" });
