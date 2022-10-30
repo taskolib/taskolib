@@ -82,6 +82,11 @@ public:
      * 5. Selected variables are exported from the runtime environment back into the
      *    context.
      *
+     * Certain step types (IF, ELSEIF, WHILE) require the script to return a boolean
+     * value. Not returning a value or returning a different type is considered an error.
+     * Conversely, the other step types (ACTION etc.) do not allow returning values from
+     * the script, with the exception of nil.
+     *
      * \param context       The context to be used for executing the step
      * \param comm_channel  Pointer to a communication channel; If this is null, messaging
      *                      is disabled and there is no way to stop the execution.
@@ -94,15 +99,15 @@ public:
      *                        been stopped due to an error condition
      * \param index         Index of the step in its parent Sequence.
      *
-     * \returns true if the script returns a value that evaluates as true in the scripting
-     *          language, or false otherwise (even in the case that the script returns no
-     *          value at all).
+     * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
+     *         function returns the return value of the script. For other step types
+     *         (ACTION etc.), it returns false.
      *
      * \exception Error or ErrorAtIndex is thrown if the script cannot be started, if
-     *            there is a Lua error during execution, if a timeout is encountered, or
-     *            if termination has been requested via the communication channel. If the
-     *            Lua script explicitly terminates by a call to the custom Lua function
-     *            \a terminate_sequence(), the step is set to not running and throws.
+     *            there is a Lua error during execution, if the script has an
+     *            inappropriate return value for the step type (see above), if a timeout
+     *            is encountered, or if termination has been requested via the
+     *            communication channel or explicitly by the script.
      */
     bool execute(Context& context, CommChannel* comm_channel, StepIndex index);
 
@@ -118,17 +123,22 @@ public:
      * 5. Selected variables are exported from the runtime environment back into the
      *    context.
      *
-     * \param context  The context to be used for executing the step
+     * Certain step types (IF, ELSEIF, WHILE) require the script to return a boolean
+     * value. Not returning a value or returning a different type is considered an error.
+     * Conversely, the other step types (ACTION etc.) do not allow returning values from
+     * the script, with the exception of nil.
      *
-     * \returns true if the script returns a value that evaluates as true in the scripting
-     *          language, or false otherwise (even in the case that the script returns no
-     *          value at all).
+     * \param context       The context to be used for executing the step
      *
-     * \exception Error or ErrorAtIndex is thrown if the script cannot be started or if
-     *            it raises an error during execution (for ErrorAtIndex, the index is
-     *            assumed as zero). If the Lua script explicitly terminates by a call to
-     *            the custom Lua function \a terminate_sequence(), the step is set to not
-     *            running and throws.
+     * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
+     *         function returns the return value of the script. For other step types
+     *         (ACTION etc.), it returns false.
+     *
+     * \exception Error or ErrorAtIndex is thrown if the script cannot be started, if
+     *            there is a Lua error during execution, if the script has an
+     *            inappropriate return value for the step type (see above), if a timeout
+     *            is encountered, or if termination has been requested explicitly by the
+     *            script.
      */
     bool execute(Context& context)
     {
@@ -309,6 +319,9 @@ private:
 
 /// Return a lower-case name for a step type ("action", "if", "end").
 std::string to_string(Step::Type type);
+
+/// Determine if a certain step type requires a boolean return value from the script.
+bool requires_bool_return_value(Step::Type step_type) noexcept;
 
 } // namespace task
 
