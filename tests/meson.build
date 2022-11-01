@@ -50,6 +50,9 @@ foreach header_to_check : public_headers
     if header_to_check.startswith('include/') and header_to_check.endswith('.h')
         header_to_check = header_to_check.substring(8)
         header_name = header_to_check.split('.h')[0]
+        if not fmt_dep.found() and header_name.endswith('/format')
+            continue
+        endif
 
         header_conf = configuration_data()
         header_conf.set('HEADER_TO_INCLUDE', header_to_check)
