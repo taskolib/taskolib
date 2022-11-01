@@ -27,26 +27,27 @@ sol_version = '3.3.0'
 ## File lists
 
 # Headers to be installed under ${prefix}/include/
-install_headers(files(
-        'include/taskolib/CommChannel.h',
-        'include/taskolib/console.h',
-        'include/taskolib/Context.h',
-        'include/taskolib/deserialize_sequence.h',
-        'include/taskolib/exceptions.h',
-        'include/taskolib/Executor.h',
-        'include/taskolib/format.h',
-        'include/taskolib/hash_string.h',
-        'include/taskolib/LockedQueue.h',
-        'include/taskolib/Message.h',
-        'include/taskolib/Sequence.h',
-        'include/taskolib/SequenceManager.h',
-        'include/taskolib/serialize_sequence.h',
-        'include/taskolib/Step.h',
-        'include/taskolib/StepIndex.h',
-        'include/taskolib/taskolib.h',
-        'include/taskolib/time_types.h',
-        'include/taskolib/VariableName.h',
-    ),
+public_headers = [
+   'include/taskolib/CommChannel.h',
+   'include/taskolib/console.h',
+   'include/taskolib/Context.h',
+   'include/taskolib/deserialize_sequence.h',
+   'include/taskolib/exceptions.h',
+   'include/taskolib/Executor.h',
+   'include/taskolib/format.h',
+   'include/taskolib/hash_string.h',
+   'include/taskolib/LockedQueue.h',
+   'include/taskolib/Message.h',
+   'include/taskolib/Sequence.h',
+   'include/taskolib/SequenceManager.h',
+   'include/taskolib/serialize_sequence.h',
+   'include/taskolib/Step.h',
+   'include/taskolib/StepIndex.h',
+   'include/taskolib/taskolib.h',
+   'include/taskolib/time_types.h',
+   'include/taskolib/VariableName.h',
+]
+install_headers(files(public_headers),
     subdir: 'taskolib',
 )
 
