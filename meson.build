@@ -69,25 +69,6 @@ sources = files(
     'src/VariableName.cc',
 )
 
-# Test sources
-test_src = files(
-    'tests/test_CommChannel.cc',
-    'tests/test_Context.cc',
-    'tests/test_exceptions.cc',
-    'tests/test_Executor.cc',
-    #'tests/test_format.cc' needs fmt{} library
-    'tests/test_LockedQueue.cc',
-    'tests/test_lua_details.cc',
-    'tests/test_main.cc',
-    'tests/test_Message.cc',
-    'tests/test_Sequence.cc',
-    'tests/test_SequenceManager.cc',
-    'tests/test_serialize_sequence.cc',
-    'tests/test_Step.cc',
-    'tests/test_time_types.cc',
-    'tests/test_VariableName.cc',
-)
-
 
 ## Determine the version number
 
@@ -174,30 +155,7 @@ taskolib_dep = declare_dependency(
     dependencies : [ deps, gul_dep, ],
 )
 
-## Tests
-
-# The tests are executed in the build dir to avoid pollution of the git repository with
-# the test executable's output files
-test('all',
-    executable(meson.project_name() + '_test',
-        test_src,
-        dependencies : taskolib_dep,
-    ),
-    workdir : meson.current_build_dir(),
-    timeout : 10,
-)
-
-fmt_dep = dependency('fmt', required : false)
-if fmt_dep.found()
-    test('format',
-        executable(meson.project_name() + '_format_test',
-            [ 'tests/test_format.cc', 'tests/test_main.cc', ],
-            dependencies : [ taskolib_dep, dependency('fmt'), ],
-        ),
-        timeout : 10,
-    )
-endif
-
+subdir('tests')
 
 ## Examples
 
