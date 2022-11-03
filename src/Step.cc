@@ -62,9 +62,12 @@ void Step::copy_used_variables_from_context_to_lua(const Context& context, sol::
                 using T = std::decay_t<decltype(value)>;
 
                 if constexpr (std::is_same_v<T, double> or std::is_same_v<T, long long> or
-                              std::is_same_v<T, std::string>)
+                              std::is_same_v<T, std::string> or std::is_same_v<T, bool>)
                 {
                     lua[varname_str] = value;
+                }
+                else if constexpr (std::is_same_v<T, sol::lua_nil_t>) {
+                    lua[varname_str] = sol::lua_nil_t{ };
                 }
                 else
                 {
@@ -93,6 +96,12 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
                 break;
             case sol::type::string:
                 context.variables[varname] = VariableValue{ var.as<std::string>() };
+                break;
+            case sol::type::boolean:
+                context.variables[varname] = VariableValue{ var.as<bool>() };
+                break;
+            case sol::type::lua_nil:
+                context.variables.erase(varname);
                 break;
             default:
                 break;

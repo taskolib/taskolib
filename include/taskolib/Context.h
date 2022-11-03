@@ -44,7 +44,7 @@ namespace task {
  *
  * Names are associated with these values via a map in the Context type.
  */
-using VariableValue = std::variant<long long, double, std::string>;
+using VariableValue = std::variant<long long, double, std::string, bool>;
 
 /**
  * Associative table that holds Lua variable names and their value.
