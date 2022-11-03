@@ -1147,6 +1147,69 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
     REQUIRE(context.variables["a"] == VariableValue{ 0LL } );
 }
 
+TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]")
+{
+    Context ctx;
+    ctx.variables["a"] = VariableValue{ 0LL };
+    Sequence seq("Simple sequence");
+
+    SECTION("Dont manipulate context variable") {
+        Step s1;
+        s1.set_script("a = 2");
+
+        seq.push_back(s1);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 0LL } );
+    }
+    SECTION("Manipulate context variable") {
+        Step s1;
+        s1.set_script("a = 2");
+        s1.set_used_context_variable_names(VariableNames{"a"});
+
+        seq.push_back(s1);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 2LL } );
+    }
+    SECTION("Hand context variable over (not)") {
+        Step s1;
+        s1.set_script("a = 2");
+        s1.set_used_context_variable_names(VariableNames{"a"});
+        Step s2;
+        s2.set_script("if a then a = a + 2 end");
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 2LL } );
+    }
+    SECTION("Hand context variable over") {
+        Step s1;
+        s1.set_script("a = 2");
+        s1.set_used_context_variable_names(VariableNames{"a"});
+        Step s2;
+        s2.set_script("if a then a = a + 2 end");
+        s2.set_used_context_variable_names(VariableNames{"a"});
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 4LL } );
+    }
+    SECTION("Hand variable over context without initial value") {
+        Step s1;
+        s1.set_script("a = 2; b = 3"); // semicolon for the C people, Lua ignores it
+        s1.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s2;
+        s2.set_script("if b then a = a + 2 end");
+        s2.set_used_context_variable_names(VariableNames{"a", "b"});
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 4LL } );
+    }
+}
+
 TEST_CASE("execute(): complex sequence with prohibited LUA function", "[Sequence]")
 {
     Context context;
