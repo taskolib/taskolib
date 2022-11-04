@@ -1,0 +1,36 @@
+name: Doxygen update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - include/**/*.h
+      - tools/make-doc.py
+      - data/*
+  workflow_dispatch:
+
+jobs:
+  doxyrun:
+    name: Create Docu
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Doxygen
+        run: |
+          sudo apt install doxygen graphviz
+
+      - name: Call generator
+        run: |
+          ./tools/make-doc.py
+
+      - name: Publish Docu
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: "docs/html"
+          target-folder: "docs"
+          clean: true
+          commit-message: "[ci] Regenerate Doxygen docs"
+          git-config-name: GitHub Actions
