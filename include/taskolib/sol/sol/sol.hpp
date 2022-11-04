@@ -14538,7 +14538,10 @@ namespace sol { namespace stack {
 
 #if SOL_IS_ON(SOL_COMPILER_GCC)
 #pragma GCC diagnostic push
+// TASKOLIB modification:
+#if !SOL_IS_ON(SOL_COMPILER_CLANG)
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #endif
 
 	namespace stack_detail {
@@ -17291,7 +17294,10 @@ namespace sol {
 
 #if SOL_IS_ON(SOL_COMPILER_GCC)
 #pragma GCC diagnostic push
+// TASKOLIB modification:
+#if !SOL_IS_ON(SOL_COMPILER_CLANG)
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #endif
 
 		template <typename T>
