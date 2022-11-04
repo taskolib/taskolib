@@ -45,6 +45,8 @@ lua_lib = static_library(
     include_directories : lua_inc,
 )
 
+# The generated static LUA library
+# can be used via lua_dep
 lua_dep = declare_dependency(
     link_with : lua_lib,
     include_directories : lua_inc,

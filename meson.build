@@ -25,25 +25,6 @@ sol_version = '3.3.0'
 lua_version = '5.4.3'
 
 
-## File lists
-
-subdir('include')
-
-# Sources
-sources = files(
-    'src/console.cc',
-    'src/deserialize_sequence.cc',
-    'src/Executor.cc',
-    'src/internals.cc',
-    'src/lua_details.cc',
-    'src/Sequence.cc',
-    'src/SequenceManager.cc',
-    'src/serialize_sequence.cc',
-    'src/Step.cc',
-    'src/time_types.cc',
-    'src/VariableName.cc',
-)
-
 
 ## Determine the version number
 
@@ -74,12 +55,12 @@ libno_full = '.'.join(libno_parts)
 ## https://stackoverflow.com/questions/52516165/cannot-use-the-c-stdfilesystem-library-with-meson-build
 add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
-# Generate the static LUA library
-# It can be used via lua_dep
-subdir('src/lua')
-
 
 ## Build library
+subdir('include')
+subdir('src')
+subdir('src/lua')
+
 inc = [ include_directories('include', 'include/taskolib/sol', 'src') ]
 
 gul_dep = dependency('libgul14', fallback : ['libgul14', 'libgul_dep'])
