@@ -5,6 +5,7 @@ test_src = files(
     'test_exceptions.cc',
     'test_Executor.cc',
     #'tests/test_format.cc' needs fmt{} library
+    'test_internals.cc',
     'test_LockedQueue.cc',
     'test_main.cc',
     'test_Message.cc',
