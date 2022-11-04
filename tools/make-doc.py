@@ -5,7 +5,7 @@
 #  \author Lars Froehlich
 #  \date   Created on 26 July 2021
 #
-#  \copyright Copyright 2021 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+#  \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as published
@@ -26,6 +26,11 @@ import re
 import stat
 import subprocess
 import sys
+
+from pathlib import Path
+
+script_file = Path(sys.argv[0]).resolve()
+os.chdir(script_file.parent.parent)
 
 file = open('LIBNO', mode='r')
 entire_file = file.read()

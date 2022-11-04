@@ -41,10 +41,10 @@ up the build directory). These are the most often used variants:
 
 Building the Documentation
 --------------------------
-This library carries documentation embedded in the source code. Run the following command
-from the library root directory to generate HTML documentation:
+This library carries documentation embedded in the source code. Run the following tool
+to generate HTML documentation:
 
-      ./make-doc.py
+      ./tools/make-doc.py
 
 This runs the open-source tool Doxygen and generates a web page in the directory
 docs/html.
