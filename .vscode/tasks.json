@@ -17,7 +17,7 @@
         },
         {
             "type": "meson",
-            "target": "taskolib_test",
+            "target": "tests/taskolib_test",
             "mode": "run",
             "group":{
                 "kind": "test",
