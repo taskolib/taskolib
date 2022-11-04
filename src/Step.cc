@@ -26,6 +26,7 @@
 #include <gul14/finalizer.h>
 #include <gul14/trim.h>
 
+#include "internals.h"
 #include "lua_details.h"
 #include "sol/sol.hpp"
 #include "taskolib/exceptions.h"
@@ -154,10 +155,13 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 
     if (std::holds_alternative<std::string>(result_or_error))
     {
-        const auto& msg = std::get<std::string>(result_or_error);
-        send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
-                     index);
-        throw ErrorAtIndex(msg, index);
+        const std::string& raw_msg = std::get<std::string>(result_or_error);
+        std::string laundered_msg = raw_msg;
+        remove_abort_markers_from_error_message(laundered_msg);
+
+        send_message(comm, Message::Type::step_stopped_with_error, laundered_msg,
+                     Clock::now(), index);
+        throw ErrorAtIndex(raw_msg, index);
     }
 
     send_message(comm, Message::Type::step_stopped,
