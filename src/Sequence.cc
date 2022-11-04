@@ -315,26 +315,20 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     if (exception_thrown)
     {
-        gul14::string_view msg_in{ exception_message };
+        const auto cause = remove_abort_markers_from_error_message(exception_message);
 
-        if (gul14::contains(msg_in, abort_marker))
+        switch (cause)
         {
-            auto tokens = gul14::split<gul14::SmallVector<gul14::string_view, 3>>(
-                msg_in, abort_marker);
-            if (tokens.size() >= 2)
-                msg_in = tokens[1];
-            if (msg_in.empty())
-            {
-                send_message(comm, Message::Type::sequence_stopped,
-                             "Sequence explicitly terminated", Clock::now(),
-                             maybe_exception_index);
-                return; // silently return to the caller
-            }
-            exception_message = cat("Sequence aborted: ", msg_in);
-        }
-        else
-        {
-            exception_message = cat("Sequence stopped with error: ", msg_in);
+        case ErrorCause::terminated_by_script:
+            send_message(comm, Message::Type::sequence_stopped, exception_message,
+                         Clock::now(), maybe_exception_index);
+            return; // silently return to the caller
+        case ErrorCause::aborted:
+            exception_message = "Sequence aborted: " + exception_message;
+            break;
+        case ErrorCause::uncaught_error:
+            exception_message = "Sequence stopped with error: " + exception_message;
+            break;
         }
 
         send_message(comm, Message::Type::sequence_stopped_with_error, exception_message,
