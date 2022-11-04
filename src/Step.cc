@@ -37,7 +37,7 @@ using gul14::cat;
 namespace {
 
 template <typename>
-inline constexpr bool always_false_v = false;
+[[maybe_unused]] inline constexpr bool always_false_v = false;
 
 } // anonymous namespace
 
