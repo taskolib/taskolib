@@ -631,10 +631,13 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
 
     SECTION("No exported variables")
     {
+        // Variable 'b' is not touched (imported into any Step), so if it holds
+        // a char const* it will not be converted to std::string.
         context.variables["b"] = "Test";
         step.execute(context);
         REQUIRE(context.variables.size() == 1);
-        REQUIRE(std::get<std::string>(context.variables["b"]) == "Test");
+        // REQUIRE(std::get<std::string>(context.variables["b"]) == "Test"s);
+        REQUIRE(std::get<char const*>(context.variables["b"]) == "Test"s);
     }
 
     SECTION("Exporting an integer")

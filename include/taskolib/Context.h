@@ -42,9 +42,14 @@ namespace task {
 /**
  * A VariableValue is a variant over several data types (long long, double, std::string).
  *
+ * The char pointer will be converted to a std::string when the variable is imported
+ * into a Step by copying the contents. That can be a long time after assignment.
+ * Be careful with the lifetime of the pointed to string; it must outlife the Context.
+ * Normally you should prefer to hand over std::string.
+ *
  * Names are associated with these values via a map in the Context type.
  */
-using VariableValue = std::variant<long long, double, std::string, bool>;
+using VariableValue = std::variant<long long, double, std::string, char const*, bool>;
 
 /**
  * Associative table that holds Lua variable names and their value.

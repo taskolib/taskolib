@@ -80,6 +80,6 @@ TEST_CASE("Check context variable assignment", "[Context]")
     Context c;
     c.variables["b"] = "BooleanTest";
     REQUIRE(std::holds_alternative<bool>(c.variables["b"]) == false);
-    REQUIRE(std::holds_alternative<std::string>(c.variables["b"]) == true);
-    REQUIRE(std::get<std::string>(c.variables["b"]) == "BooleanTest");
+    REQUIRE(std::holds_alternative<std::string>(c.variables["b"]) == false);
+    REQUIRE(std::get<char const*>(c.variables["b"]) == "BooleanTest"s);
 }
