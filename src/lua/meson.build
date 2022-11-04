@@ -1,6 +1,3 @@
-# We could pull this out of lua.h, but this is simpler:
-lua_version = '5.4.3'
-
 # Source files for our LUA library compiled as C++
 lua_sources = files(
     'lapi.cc',

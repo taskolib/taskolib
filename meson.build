@@ -22,38 +22,12 @@ pkg_config_name = 'taskolib'
 
 # Keep this version number up to date...
 sol_version = '3.3.0'
+lua_version = '5.4.3'
 
 
 ## File lists
 
-# Headers to be installed under ${prefix}/include/
-public_headers = [
-   'include/taskolib/CommChannel.h',
-   'include/taskolib/console.h',
-   'include/taskolib/Context.h',
-   'include/taskolib/deserialize_sequence.h',
-   'include/taskolib/exceptions.h',
-   'include/taskolib/Executor.h',
-   'include/taskolib/format.h',
-   'include/taskolib/hash_string.h',
-   'include/taskolib/LockedQueue.h',
-   'include/taskolib/Message.h',
-   'include/taskolib/Sequence.h',
-   'include/taskolib/SequenceManager.h',
-   'include/taskolib/serialize_sequence.h',
-   'include/taskolib/Step.h',
-   'include/taskolib/StepIndex.h',
-   'include/taskolib/taskolib.h',
-   'include/taskolib/time_types.h',
-   'include/taskolib/VariableName.h',
-]
-install_headers(files(public_headers),
-    subdir: 'taskolib',
-)
-
-install_subdir('include/taskolib/sol/sol',
-    install_dir: get_option('prefix') / get_option('includedir') / 'taskolib' / 'sol' + sol_version,
-)
+subdir('include')
 
 # Sources
 sources = files(
@@ -102,16 +76,7 @@ add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
 # Generate the static LUA library
 # It can be used via lua_dep
-lua_inc = include_directories('include/taskolib/lua') # used by src/lua
 subdir('src/lua')
-
-install_headers(files(
-        'include/taskolib/lua/lauxlib.h',
-        'include/taskolib/lua/lua.h',
-        'include/taskolib/lua/luaconf.h',
-        'include/taskolib/lua/lualib.h',
-    ),
-    subdir: 'taskolib' / 'lua' + lua_version)
 
 
 ## Build library
