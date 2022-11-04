@@ -199,13 +199,8 @@ void install_custom_commands(sol::state& lua, const Context& context)
     auto globals = lua.globals();
     globals["print"] = make_print_fct(context.print_function);
     globals["sleep"] = sleep_fct;
-
-    // throw exception with special message 'TERMINATE_SEQUENCE' to exit the sequence
-    globals["terminate_sequence"] = [&lua]
-    {
-        // TODO Possible set here a predefined error string, for example "user abort"
-        abort_script_with_error(lua.lua_state(), "");
-    };
+    globals["terminate_sequence"] =
+        [](sol::this_state lua){ abort_script_with_error(lua, ""); };
 }
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
