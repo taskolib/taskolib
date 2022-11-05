@@ -1,0 +1,5 @@
+<map id="task::ErrorAtIndex" name="task::ErrorAtIndex">
+<area shape="rect" id="node1" title="An exception class storing the index of the step in which an error occurred, in addition to the error..." alt="" coords="5,256,144,363"/>
+<area shape="rect" id="node2" href="$classtask_1_1Error.html" title="A generic exception class carrying a message string." alt="" coords="30,131,119,208"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,144,83"/>
+</map>

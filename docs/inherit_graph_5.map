@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,104,32"/>
-<area shape="rect" id="node2" href="$classtask_1_1Error.html" title="A generic exception class carrying a message string." alt="" coords="152,5,235,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,144,32"/>
+<area shape="rect" id="node2" href="$classtask_1_1Error.html" title="A generic exception class carrying a message string." alt="" coords="192,5,281,32"/>
+<area shape="rect" id="node3" href="$classtask_1_1ErrorAtIndex.html" title="An exception class storing the index of the step in which an error occurred, in addition to the error..." alt="" coords="329,5,468,32"/>
 </map>
