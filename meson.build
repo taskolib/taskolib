@@ -63,7 +63,7 @@ subdir('src/lua')
 
 inc = [ include_directories('include', 'include/taskolib/sol', 'src') ]
 
-gul_dep = dependency('libgul14', fallback : ['libgul14', 'libgul_dep'])
+gul_dep = dependency('libgul14', version : '> 2.6', fallback : ['libgul14', 'libgul_dep'])
 
 deps = [
     dependency('threads'),
