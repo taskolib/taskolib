@@ -22,6 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <gul14/cat.h>
 #include <gul14/join_split.h>
 #include <gul14/SmallVector.h>
 
@@ -31,28 +32,33 @@ namespace task {
 
 const gul14::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
 
-ErrorCause remove_abort_markers_from_error_message(std::string& msg)
+std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message)
 {
     const auto tokens = gul14::split<gul14::SmallVector<gul14::string_view, 3>>(
-        msg, abort_marker);
+        error_message, abort_marker);
 
-    if (tokens.size() >= 3) // The real error message is between the first 2 abort markers
-        msg.assign(tokens[1].begin(), tokens[1].end());
-    else
-        msg = gul14::join(tokens, "");
+    std::string msg;
 
-    if (tokens.size() > 1) // There was at least one abort marker
+    switch (tokens.size())
     {
-        if (msg.empty())
-        {
-            msg = "Script called terminate_sequence()";
-            return ErrorCause::terminated_by_script;
-        }
-
-        return ErrorCause::aborted;
+    case 0: // impossible
+    case 1: // no marker
+        msg = std::string(error_message);
+        return std::make_pair(msg, ErrorCause::uncaught_error);
+    case 2: // one marker
+        msg = gul14::cat(tokens[0], tokens[1]);
+        break;
+    case 3: // The real error message is between the first 2 abort markers.
+    default:
+        msg = std::string(tokens[1]);
     }
 
-    return ErrorCause::uncaught_error;
+    if (msg.empty()) {
+        msg = "Script called terminate_sequence()";
+        return std::make_pair(msg, ErrorCause::terminated_by_script);
+    }
+
+    return std::make_pair(msg, ErrorCause::aborted);
 }
 
 } // namespace task
