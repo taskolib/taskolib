@@ -28,17 +28,15 @@ jobs:
         fi
       shell: bash
 
-    - name: "Retrieve Meson from cache"
-      id: cache-meson
-      uses: actions/cache@v3
+    - name: Fetch meson version 0.63.0 for building
+      uses: robinraju/release-downloader@v1.6
       with:
-        path: meson-0.63.0
-        key: meson-0.63.0
+        repository: "mesonbuild/meson"
+        tag: "0.63.0"
+        fileName: "*.tar.gz"
 
-    - name: "Download Meson"
-      if: steps.cache-meson.outputs.cache-hit != 'true'
+    - name: Unpack meson tar ball and remove downloaded file
       run: |
-        wget https://github.com/mesonbuild/meson/releases/download/0.63.0/meson-0.63.0.tar.gz
         tar -xzf meson-0.63.0.tar.gz
         rm meson-0.63.0.tar.gz
 
