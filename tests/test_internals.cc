@@ -31,62 +31,95 @@ using gul14::cat;
 using namespace task;
 using namespace Catch::Matchers;
 
-TEST_CASE("remove_abort_markers_from_error_message()", "[internals]")
+TEST_CASE("remove_abort_markers()", "[internals]")
 {
-    std::string msg;
-
     SECTION("Empty message")
     {
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::uncaught_error);
+        auto [msg, cause] = remove_abort_markers("");
+        REQUIRE(cause == ErrorCause::uncaught_error);
         REQUIRE(msg.empty());
     }
 
     SECTION("Normal error message")
     {
-        msg = "This is an error message";
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::uncaught_error);
+        auto [msg, cause] = remove_abort_markers("This is an error message");
+        REQUIRE(cause == ErrorCause::uncaught_error);
         REQUIRE(msg == "This is an error message");
     }
 
     SECTION("Script termination (abort marker(s) without message)")
     {
-        msg = std::string(abort_marker);
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::terminated_by_script);
-        REQUIRE(msg == "Script called terminate_sequence()");
+        SECTION("Single marker")
+        {
+            auto [msg, cause] = remove_abort_markers(abort_marker);
+            REQUIRE(cause == ErrorCause::terminated_by_script);
+            REQUIRE(msg == "Script called terminate_sequence()");
+        }
 
-        msg = gul14::cat(abort_marker, abort_marker);
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::terminated_by_script);
-        REQUIRE(msg == "Script called terminate_sequence()");
+        SECTION("Two markers")
+        {
+            auto [msg, cause] = remove_abort_markers(gul14::cat(abort_marker, abort_marker));
+            REQUIRE(cause == ErrorCause::terminated_by_script);
+            REQUIRE(msg == "Script called terminate_sequence()");
+        }
 
-        msg = gul14::cat("lorem ipsum", abort_marker, abort_marker, "dolor sit");
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::terminated_by_script);
-        REQUIRE(msg == "Script called terminate_sequence()");
+        SECTION("Two markers surrounded by text")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                gul14::cat("lorem ipsum", abort_marker, abort_marker, "dolor sit"));
+            REQUIRE(cause == ErrorCause::terminated_by_script);
+            REQUIRE(msg == "Script called terminate_sequence()");
+        }
 
-        msg = gul14::cat("lorem ipsum", abort_marker, abort_marker, "dolor sit", abort_marker, "amet");
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::terminated_by_script);
-        REQUIRE(msg == "Script called terminate_sequence()");
+        SECTION("Three markers surrounded by text")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                gul14::cat("lorem ipsum", abort_marker, abort_marker, "dolor sit", abort_marker, "amet"));
+            REQUIRE(cause == ErrorCause::terminated_by_script);
+            REQUIRE(msg == "Script called terminate_sequence()");
+        }
     }
 
     SECTION("Abort with error message")
     {
-        msg = cat(abort_marker, "hydrogen", abort_marker);
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::aborted);
-        REQUIRE(msg == "hydrogen");
+        SECTION("Two markers")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                cat(abort_marker, "hydrogen", abort_marker));
+            REQUIRE(cause == ErrorCause::aborted);
+            REQUIRE(msg == "hydrogen");
+        }
 
-        msg = cat(abort_marker, "helium");
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::aborted);
-        REQUIRE(msg == "helium");
+        SECTION("One marker at string start")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                cat(abort_marker, "helium"));
+            REQUIRE(cause == ErrorCause::aborted);
+            REQUIRE(msg == "helium");
+        }
 
-        msg = cat("lithium", abort_marker);
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::aborted);
-        REQUIRE(msg == "lithium");
+        SECTION("One marker at string end")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                cat("lithium", abort_marker));
+            REQUIRE(cause == ErrorCause::aborted);
+            REQUIRE(msg == "lithium");
+        }
 
-        msg = cat("beryll", abort_marker, "ium");
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::aborted);
-        REQUIRE(msg == "beryllium");
+        SECTION("One marker embedded in string")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                cat("beryll", abort_marker, "ium"));
+            REQUIRE(cause == ErrorCause::aborted);
+            REQUIRE(msg == "beryllium");
+        }
 
-        msg = cat("waste of ", abort_marker, "boron", abort_marker, " sucks");
-        REQUIRE(remove_abort_markers_from_error_message(msg) == ErrorCause::aborted);
-        REQUIRE(msg == "boron");
+        SECTION("Two markers embedded in string")
+        {
+            auto [msg, cause] = remove_abort_markers(
+                cat("waste of ", abort_marker, "boron", abort_marker, " sucks"));
+            REQUIRE(cause == ErrorCause::aborted);
+            REQUIRE(msg == "boron");
+        }
     }
 }

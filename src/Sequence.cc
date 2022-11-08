@@ -315,31 +315,31 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     if (exception_thrown)
     {
-        const auto cause = remove_abort_markers_from_error_message(exception_message);
+        auto [msg, cause] = remove_abort_markers(exception_message);
 
         switch (cause)
         {
         case ErrorCause::terminated_by_script:
-            send_message(comm, Message::Type::sequence_stopped, exception_message,
-                         Clock::now(), maybe_exception_index);
+            send_message(comm, Message::Type::sequence_stopped, msg, Clock::now(),
+                         maybe_exception_index);
             return; // silently return to the caller
         case ErrorCause::aborted:
-            exception_message = "Sequence aborted: " + exception_message;
+            msg = "Sequence aborted: " + msg;
             break;
         case ErrorCause::uncaught_error:
-            exception_message = "Sequence stopped with error: " + exception_message;
+            msg = "Sequence stopped with error: " + msg;
             break;
         }
 
-        send_message(comm, Message::Type::sequence_stopped_with_error, exception_message,
-                     Clock::now(), maybe_exception_index);
-        set_error_message(exception_message);
+        send_message(comm, Message::Type::sequence_stopped_with_error, msg, Clock::now(),
+                     maybe_exception_index);
+        set_error_message(msg);
 
-        throw Error(exception_message);
+        throw Error(msg);
     }
 
-    send_message(comm, Message::Type::sequence_stopped, "Sequence finished",
-                 Clock::now(), gul14::nullopt);
+    send_message(comm, Message::Type::sequence_stopped, "Sequence finished", Clock::now(),
+                 gul14::nullopt);
 }
 
 Sequence::Iterator

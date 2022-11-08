@@ -26,6 +26,8 @@
 #define TASKOLIB_INTERNALS_H_
 
 #include <string>
+#include <utility>
+
 #include <gul14/string_view.h>
 
 namespace task {
@@ -41,20 +43,25 @@ enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
 /**
  * Remove abort markers from the given error message and determine the cause of the error.
  *
- * All abort markers are removed from the given error message. If no marker was present,
- * the message describes a "normal" error and ErrorCause::uncaught_error is returned.
+ * If at least two abort markers are present, the message is truncated to the text between
+ * the first two of these markers. Otherwise, all markers are simply removed.
  *
- * If the message contains at least two abort markers and there is no message enclosed
- * between the first two of them, this is considered an explicit termination request by
- * the running script. The error message is set to a corresponding explanation ("Script
- * called terminate_sequence()") and ErrorCause::terminated_by_script is returned.
+ * The cause of the error is determined as follows:
+ * - If no marker was present, the message describes a "normal" error and
+ *   ErrorCause::uncaught_error is returned.
+ * - If the message contains one or more abort markers, it describes an abort request for
+ *   the sequence. There are two different types of abort requests:
+ *   - If there is an error message, this is considered an abort request (either by the
+ *     user or by timeouts) and ErrorCause::aborted is returned.
+ *   - If the error message is empty, this is considered an explicit termination request
+ *     by the running script. The error message is set to a corresponding explanation
+ *     ("Script called terminate_sequence()") and ErrorCause::terminated_by_script is
+ *     returned.
  *
- * If the error message contains at least one abort marker and an error message, it is
- * considered an abort request (either by the user or by timeouts) and ErrorCause::aborted
- * is returned. If there are at least two abort markers, the error message is set to the
- * text enclosed by the first two of them.
+ * \returns a pair consisting of the (possibly) modified error message and of an
+ *          ErrorCause.
  */
-ErrorCause remove_abort_markers_from_error_message(std::string& msg);
+std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message);
 
 } // namespace task
 
