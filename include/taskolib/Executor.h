@@ -179,9 +179,11 @@ private:
     std::shared_ptr<CommChannel> comm_channel_;
 
     /**
-     * A future holding the results of the execution thread.
+     * A future for the result of the execution thread.
+     * Once the thread has joined, it contains the context variables from the executed
+     * sequence.
      */
-    std::future<Context> future_;
+    std::future<VariableTable> future_;
 
     /**
      * A local copy of the context that was used to start the last sequence.
@@ -194,8 +196,8 @@ private:
      * This is the function running in the execution thread: It calls Sequence::execute()
      * and silently swallows all exceptions.
      */
-    static Context execute_sequence(Sequence sequence, Context context,
-                                 std::shared_ptr<CommChannel> comm_channel) noexcept;
+    static VariableTable execute_sequence(Sequence sequence, Context context,
+        std::shared_ptr<CommChannel> comm_channel) noexcept;
 };
 
 } // namespace task

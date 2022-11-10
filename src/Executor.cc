@@ -72,12 +72,12 @@ void Executor::cancel()
         return;
 
     comm_channel_->immediate_termination_requested_ = true;
-    context_ = future_.get(); // Wait for thread to join
+    context_.variables = future_.get(); // Wait for thread to join
     comm_channel_->immediate_termination_requested_ = false;
 }
 
-Context Executor::execute_sequence(Sequence sequence, Context context,
-                                std::shared_ptr<CommChannel> comm) noexcept
+VariableTable Executor::execute_sequence(Sequence sequence, Context context,
+                                         std::shared_ptr<CommChannel> comm) noexcept
 {
     try
     {
@@ -88,7 +88,7 @@ Context Executor::execute_sequence(Sequence sequence, Context context,
         // Silently ignore any thrown exception - the sequence already takes care of
         // sending the appropriate messages.
     }
-    return context;
+    return context.variables;
 }
 
 bool Executor::is_busy()
@@ -101,7 +101,7 @@ bool Executor::is_busy()
     if (status == std::future_status::timeout)
         return true;
 
-    context_ = future_.get();
+    context_.variables = future_.get();
     return false;
 }
 
