@@ -271,10 +271,23 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
 
     executor.run_asynchronously(sequence, context);
 
-    while (executor.update(sequence))
-        gul14::sleep(5ms);
+    SECTION("Regularly calling update()")
+    {
+        while (executor.update(sequence))
+            gul14::sleep(5ms);
 
-    REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
+        REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
+    }
+
+    SECTION("Regularly calling busy() and update() only at the end")
+    {
+        while (executor.is_busy())
+            gul14::sleep(5ms);
+        executor.update(sequence);
+
+        // Causes a test failure with a buggy implementation of is_busy()
+        REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
+    }
 }
 
 TEST_CASE("Executor: Access context after run", "[Executor]")
