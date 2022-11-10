@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
   </td>
  </tr>
@@ -133,18 +133,18 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a241fff5906dc92ebfec331414a0ddbbb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structtask_1_1Context.html">Context</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a241fff5906dc92ebfec331414a0ddbbb">execute_sequence</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context, std::shared_ptr&lt; <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> &gt; comm_channel) noexcept</td></tr>
-<tr class="memdesc:a241fff5906dc92ebfec331414a0ddbbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the function running in the execution thread: It calls <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">Sequence::execute()</a> and silently swallows all exceptions.  <a href="classtask_1_1Executor.html#a241fff5906dc92ebfec331414a0ddbbb">More...</a><br /></td></tr>
-<tr class="separator:a241fff5906dc92ebfec331414a0ddbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e890bb0e3606312adfd33aaf440daaa"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a3e890bb0e3606312adfd33aaf440daaa">execute_sequence</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context, std::shared_ptr&lt; <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> &gt; comm_channel) noexcept</td></tr>
+<tr class="memdesc:a3e890bb0e3606312adfd33aaf440daaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the function running in the execution thread: It calls <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">Sequence::execute()</a> and silently swallows all exceptions.  <a href="classtask_1_1Executor.html#a3e890bb0e3606312adfd33aaf440daaa">More...</a><br /></td></tr>
+<tr class="separator:a3e890bb0e3606312adfd33aaf440daaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ae96af23950e042e68d841a2d88561de0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a></td></tr>
 <tr class="memdesc:ae96af23950e042e68d841a2d88561de0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communications channel between the main thread and the executing thread.  <a href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">More...</a><br /></td></tr>
 <tr class="separator:ae96af23950e042e68d841a2d88561de0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2baad2a220ff70d8f302fac588654fa"><td class="memItemLeft" align="right" valign="top">std::future&lt; <a class="el" href="structtask_1_1Context.html">Context</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#aa2baad2a220ff70d8f302fac588654fa">future_</a></td></tr>
-<tr class="memdesc:aa2baad2a220ff70d8f302fac588654fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">A future holding the results of the execution thread.  <a href="classtask_1_1Executor.html#aa2baad2a220ff70d8f302fac588654fa">More...</a><br /></td></tr>
-<tr class="separator:aa2baad2a220ff70d8f302fac588654fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e2657ff7a68e4a53d316a90ee8a16de"><td class="memItemLeft" align="right" valign="top">std::future&lt; <a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a></td></tr>
+<tr class="memdesc:a0e2657ff7a68e4a53d316a90ee8a16de"><td class="mdescLeft">&#160;</td><td class="mdescRight">A future for the result of the execution thread.  <a href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">More...</a><br /></td></tr>
+<tr class="separator:a0e2657ff7a68e4a53d316a90ee8a16de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12f02c8900453c77349f5966c436f562"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1Context.html">Context</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a></td></tr>
 <tr class="memdesc:a12f02c8900453c77349f5966c436f562"><td class="mdescLeft">&#160;</td><td class="mdescRight">A local copy of the context that was used to start the last sequence.  <a href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">More...</a><br /></td></tr>
 <tr class="separator:a12f02c8900453c77349f5966c436f562"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -267,14 +267,14 @@ Private Attributes</h2></td></tr>
 <p>Terminate a running sequence. </p>
 <p>If a sequence is running in a separate thread, this call sends a termination request and waits for the thread to shut down. If no sequence is currently running, the call has no effect. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a>, <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, and <a class="el" href="classtask_1_1Executor.html#aa2baad2a220ff70d8f302fac588654fa">future_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a>, <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, and <a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">task::Context::variables</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a304eb22bf94cf143ee675c6f74a2c490">~Executor()</a>.</p>
 
 </div>
 </div>
-<a id="a241fff5906dc92ebfec331414a0ddbbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a241fff5906dc92ebfec331414a0ddbbb">&#9670;&nbsp;</a></span>execute_sequence()</h2>
+<a id="a3e890bb0e3606312adfd33aaf440daaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e890bb0e3606312adfd33aaf440daaa">&#9670;&nbsp;</a></span>execute_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,7 +283,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtask_1_1Context.html">Context</a> task::Executor::execute_sequence </td>
+          <td class="memname"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a> task::Executor::execute_sequence </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td>
           <td class="paramname"><em>sequence</em>, </td>
@@ -368,7 +368,7 @@ Private Attributes</h2></td></tr>
 <p>Determine if the executor is currently running a sequence in a separate thread. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if a sequence is being executed or false otherwise. </dd></dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, and <a class="el" href="classtask_1_1Executor.html#aa2baad2a220ff70d8f302fac588654fa">future_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, and <a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">task::Context::variables</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update()</a>.</p>
 
@@ -468,7 +468,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a>, <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a241fff5906dc92ebfec331414a0ddbbb">execute_sequence()</a>, <a class="el" href="classtask_1_1Executor.html#aa2baad2a220ff70d8f302fac588654fa">future_</a>, <a class="el" href="structtask_1_1Context.html#a8c5c2cc1d1078d95a0cd5307ea488079">task::Context::log_error_function</a>, <a class="el" href="structtask_1_1Context.html#a4c37bfb946bd7a46ca0cb66270dc18f5">task::Context::log_info_function</a>, <a class="el" href="structtask_1_1Context.html#a8b48a3a862f9550b7e1fc42359861ce2">task::Context::log_warning_function</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, <a class="el" href="classtask_1_1Sequence.html#ada24904eacc08bb160c98b5c5207b467">task::Sequence::set_error_message()</a>, and <a class="el" href="classtask_1_1Sequence.html#a3b15c91fc7449b5c5af7fa4882902c94">task::Sequence::set_running()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a>, <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a3e890bb0e3606312adfd33aaf440daaa">execute_sequence()</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, <a class="el" href="structtask_1_1Context.html#a8c5c2cc1d1078d95a0cd5307ea488079">task::Context::log_error_function</a>, <a class="el" href="structtask_1_1Context.html#a4c37bfb946bd7a46ca0cb66270dc18f5">task::Context::log_info_function</a>, <a class="el" href="structtask_1_1Context.html#a8b48a3a862f9550b7e1fc42359861ce2">task::Context::log_warning_function</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, <a class="el" href="classtask_1_1Sequence.html#ada24904eacc08bb160c98b5c5207b467">task::Sequence::set_error_message()</a>, and <a class="el" href="classtask_1_1Sequence.html#a3b15c91fc7449b5c5af7fa4882902c94">task::Sequence::set_running()</a>.</p>
 
 </div>
 </div>
@@ -556,8 +556,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa2baad2a220ff70d8f302fac588654fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2baad2a220ff70d8f302fac588654fa">&#9670;&nbsp;</a></span>future_</h2>
+<a id="a0e2657ff7a68e4a53d316a90ee8a16de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e2657ff7a68e4a53d316a90ee8a16de">&#9670;&nbsp;</a></span>future_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -566,7 +566,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::future&lt;<a class="el" href="structtask_1_1Context.html">Context</a>&gt; task::Executor::future_</td>
+          <td class="memname">std::future&lt;<a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a>&gt; task::Executor::future_</td>
         </tr>
       </table>
   </td>
@@ -576,7 +576,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>A future holding the results of the execution thread. </p>
+<p>A future for the result of the execution thread. </p>
+<p>Once the thread has joined, it contains the context variables from the executed sequence. </p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy()</a>, and <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously()</a>.</p>
 
@@ -589,7 +590,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 5 2022 15:25:31 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Nov 10 2022 13:14:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

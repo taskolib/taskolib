@@ -1,6 +1,7 @@
 <map id="internals.h" name="internals.h">
-<area shape="rect" id="node1" title="Declaration of internal constants." alt="" coords="137,5,227,32"/>
-<area shape="rect" id="node2" href="$internals_8cc.html" title="Definition of internal constants." alt="" coords="5,80,103,107"/>
+<area shape="rect" id="node1" title="Declaration of internal constants and functions." alt="" coords="202,5,293,32"/>
+<area shape="rect" id="node2" href="$internals_8cc.html" title="Definition of internal constants and functions." alt="" coords="5,80,103,107"/>
 <area shape="rect" id="node3" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="127,80,237,107"/>
 <area shape="rect" id="node4" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="261,80,364,107"/>
+<area shape="rect" id="node5" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="389,80,458,107"/>
 </map>

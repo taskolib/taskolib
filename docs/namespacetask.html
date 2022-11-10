@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
   </td>
  </tr>
@@ -43,6 +43,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -112,6 +113,14 @@ Typedefs</h2></td></tr>
 <tr class="memitem:acc0d5ac00c79dac8125ed175e9d6ae5c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> = std::chrono::time_point&lt; <a class="el" href="namespacetask.html#acce2a15aa7c38168b416d75758c752ff">Clock</a> &gt;</td></tr>
 <tr class="separator:acc0d5ac00c79dac8125ed175e9d6ae5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ab7ac2691887079331ac27d8acbe0f8d2"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> { <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">terminated_by_script</a>
+, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>
+, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>
+ }</td></tr>
+<tr class="separator:ab7ac2691887079331ac27d8acbe0f8d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a5cced3774f9abf086f0d2992d2a8064f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">send_message</a> (<a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a> type, gul14::string_view text, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> timestamp, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index)</td></tr>
@@ -163,6 +172,9 @@ Functions</h2></td></tr>
 <tr class="separator:a77a3adfb97957bfee85dbc4a0a5ea371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8a13e460561c228be4437ac6e92a4f8"><td class="memItemLeft" align="right" valign="top">std::time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa8a13e460561c228be4437ac6e92a4f8">timegm</a> (const std::tm &amp;t)</td></tr>
 <tr class="separator:aa8a13e460561c228be4437ac6e92a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfba3503e0ced28341fcfe37f25eb244"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers</a> (gul14::string_view error_message)</td></tr>
+<tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
+<tr class="separator:adfba3503e0ced28341fcfe37f25eb244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error</a> (lua_State *lua_state, const std::string &amp;msg)</td></tr>
 <tr class="separator:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0420458f3b22f97c90b2a4a14d68b03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request</a> (lua_State *lua_state)</td></tr>
@@ -328,6 +340,34 @@ Variables</h2></td></tr>
 
 <p>A VariableValue is a variant over several data types (long long, double, std::string). </p>
 <p>Names are associated with these values via a map in the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> type. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ab7ac2691887079331ac27d8acbe0f8d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7ac2691887079331ac27d8acbe0f8d2">&#9670;&nbsp;</a></span>ErrorCause</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">task::ErrorCause</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2"></a>terminated_by_script&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4"></a>aborted&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4"></a>uncaught_error&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 </div>
 </div>
@@ -1130,6 +1170,40 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
+<a id="adfba3503e0ced28341fcfe37f25eb244"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfba3503e0ced28341fcfe37f25eb244">&#9670;&nbsp;</a></span>remove_abort_markers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; std::string, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> &gt; task::remove_abort_markers </td>
+          <td>(</td>
+          <td class="paramtype">gul14::string_view&#160;</td>
+          <td class="paramname"><em>error_message</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove abort markers from the given error message and determine the cause of the error. </p>
+<p>If at least two abort markers are present, the message is truncated to the text between the first two of these markers. Otherwise, all markers are simply removed.</p>
+<p>The cause of the error is determined as follows:</p><ul>
+<li>If no marker was present, the message describes a "normal" error and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">ErrorCause::uncaught_error</a> is returned.</li>
+<li>If the message contains one or more abort markers, it describes an abort request for the sequence. There are two different types of abort requests:<ul>
+<li>If there is an error message, this is considered an abort request (either by the user or by timeouts) and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">ErrorCause::aborted</a> is returned.</li>
+<li>If the error message is empty, this is considered an explicit termination request by the running script. The error message is set to a corresponding explanation ("Script called terminate_sequence()") and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">ErrorCause::terminated_by_script</a> is returned.</li>
+</ul>
+</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd>a pair consisting of the (possibly) modified error message and of an ErrorCause. </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+
+</div>
+</div>
 <a id="a94406da649401007df03cb8eead6ae6e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94406da649401007df03cb8eead6ae6e">&#9670;&nbsp;</a></span>requires_bool_return_value()</h2>
 
@@ -1445,14 +1519,14 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence anywhere in an error message signals that the execution of a script should be stopped. </p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Sequence.html#a6eae0848dfaa6e444117bc4a6e24d6ac">task::Sequence::execute_try_block()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="classtask_1_1Sequence.html#a6eae0848dfaa6e444117bc4a6e24d6ac">task::Sequence::execute_try_block()</a>, and <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 5 2022 15:25:31 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Nov 10 2022 13:14:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
