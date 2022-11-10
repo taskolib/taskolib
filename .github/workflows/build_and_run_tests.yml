@@ -1,21 +1,38 @@
-name: "Build and run tests on Linux platform"
+# build_and_run_tests.yml
 
+name: Build and run tests (Linux)
+
+# Controls when the action will run. Here when we enter 'git push'
 on:
-  workflow_call:
-    inputs:
-      platform:
-        required: true
-        type: string
+  push:
+    branches: main
+    path-ignore:
+      - README.md
+      - .vscode
+      - data
+      - debian
+      # TODO path to be ignored in future release: - @anchor_playground playground
 
+  pull_request:
+    branches: main
+    path-ignore:
+      - README.md
+      - .vscode
+      - data
+      - debian
+      # TODO path to be ignored in future release: - *anchor_playground
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-and-run-tests:
+  build-and-run-tests-on-ubuntu-20.04:
     runs-on: ${{ inputs.platform }}
     steps:
     - run: |
         echo "Job triggered by ${{ github.event_name }} event, running on ${{ runner.os }}."
         echo "Branch ${{ github.ref }} on repository ${{ github.repository }}"
 
-    - name: "Check out repository code"
+    - name: Check out repository code
       uses: actions/checkout@v3
 
     - name: Install Ninja
@@ -26,7 +43,6 @@ jobs:
           echo "Do not know how to install Ninja on platform ${{ inputs.platform }}"
           false
         fi
-      shell: bash
 
     - name: Fetch meson version 0.63.0 for building
       uses: robinraju/release-downloader@v1.6
@@ -40,17 +56,19 @@ jobs:
         tar -xzf meson-0.63.0.tar.gz
         rm meson-0.63.0.tar.gz
 
-    - name: "Create symbolic link for Meson"
+    - name: Create symbolic link for Meson
       run: |
         ln -s meson-0.63.0/meson.py .
 
-    - name: "Configure build directories"
+    - name: Configure build directories
       run: |
         ./meson.py --buildtype=release build.release
         ./meson.py --buildtype=debug build.asan -Db_sanitize=address
 
-    - name: "Build and run release tests"
+    - name: Build and run release tests
       run: ./meson.py test -C build.release
 
-    - name: "Build and run ASAN tests"
+    - name: Build and run ASAN tests
       run: ./meson.py test -C build.asan
+  with:
+    platforms: ubuntu-20.04
