@@ -1,6 +1,6 @@
 # build_and_run_tests.yml
 
-name: Build and run tests (Linux)
+name: Build and test run
 
 # Controls when the action will run. Here when we enter 'git push'
 on:
@@ -11,8 +11,7 @@ on:
       - .vscode
       - data
       - debian
-      # TODO path to be ignored in future release: - @anchor_playground playground
-
+      # TODO path to be ignored in future release: - @anchor_playground playground  pull_request:
   pull_request:
     branches: main
     path-ignore:
@@ -20,55 +19,47 @@ on:
       - .vscode
       - data
       - debian
-      # TODO path to be ignored in future release: - *anchor_playground
+      # TODO path to be ignored in future release: - @anchor_playground playground
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-and-run-tests-on-ubuntu-20.04:
-    runs-on: ${{ inputs.platform }}
+  buildntest:
+    name: Build and Tests
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-22.04 ]
+    runs-on: ${{ matrix.os }}
     steps:
     - run: |
         echo "Job triggered by ${{ github.event_name }} event, running on ${{ runner.os }}."
         echo "Branch ${{ github.ref }} on repository ${{ github.repository }}"
-
     - name: Check out repository code
       uses: actions/checkout@v3
 
     - name: Install Ninja
       run: |
-        if [[ "${{ inputs.platform }}" == ubuntu-latest ]]; then
-          sudo apt install ninja-build
-        else
-          echo "Do not know how to install Ninja on platform ${{ inputs.platform }}"
-          false
-        fi
-
-    - name: Fetch meson version 0.63.0 for building
+        sudo apt install ninja-build
+    - name: Fetch meson version for building
       uses: robinraju/release-downloader@v1.6
       with:
         repository: "mesonbuild/meson"
-        tag: "0.63.0"
+        tag: "0.53.2"
         fileName: "*.tar.gz"
 
     - name: Unpack meson tar ball and remove downloaded file
       run: |
-        tar -xzf meson-0.63.0.tar.gz
-        rm meson-0.63.0.tar.gz
-
+        tar -xzf meson-*.tar.gz
+        rm meson-*.tar.gz
     - name: Create symbolic link for Meson
       run: |
-        ln -s meson-0.63.0/meson.py .
-
+        ln -s meson-*/meson.py .
     - name: Configure build directories
       run: |
         ./meson.py --buildtype=release build.release
         ./meson.py --buildtype=debug build.asan -Db_sanitize=address
-
     - name: Build and run release tests
       run: ./meson.py test -C build.release
 
     - name: Build and run ASAN tests
       run: ./meson.py test -C build.asan
-  with:
-    platforms: ubuntu-20.04
