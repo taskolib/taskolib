@@ -7,6 +7,7 @@ test_src = files(
     #'tests/test_format.cc' needs fmt{} library
     'test_internals.cc',
     'test_LockedQueue.cc',
+    'test_lua_details.cc',
     'test_main.cc',
     'test_Message.cc',
     'test_Sequence.cc',
