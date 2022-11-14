@@ -109,7 +109,7 @@ TEST_CASE("execute_lua_script_safely(): Lua exceptions", "[lua_details]")
         // weird output and decide if we need to pre-process it for our users.
     }
 
-    SECTION("Runtime error")
+    SECTION("Runtime error with message")
     {
         auto result_or_error = execute_lua_script_safely(
             lua, "function boom(); error('mindful' .. 'ness', 0); end; boom()");
@@ -119,6 +119,15 @@ TEST_CASE("execute_lua_script_safely(): Lua exceptions", "[lua_details]")
         // Lua adds a stack trace after this output. This is a somewhat brittle test,
         // but since we have control over our Lua version, we are sure to spot it if
         // the output format changes.
+    }
+
+    SECTION("Runtime error without message")
+    {
+        auto result_or_error = execute_lua_script_safely(
+            lua, "function boom(); error('', 0); end; boom()");
+        auto* msg = std::get_if<std::string>(&result_or_error);
+        REQUIRE(msg != nullptr);
+        REQUIRE_THAT(*msg, not Contains("Unknown C++ exception"));
     }
 
     SECTION("Runtime error, caught by pcall()")
@@ -136,16 +145,26 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
     sol::state lua;
     open_safe_library_subset(lua); // for error() and pcall()
 
-    lua["throw_logic_error"] = []() { throw std::logic_error("red rabbit"); };
+    lua["throw_logic_error_with_msg"] = []() { throw std::logic_error("red rabbit"); };
+    lua["throw_logic_error_without_msg"] = []() { throw std::logic_error(""); };
     lua["throw_weird_exception"] = []() { struct Weird{}; throw Weird{}; };
 
-    SECTION("C++ standard exception are reported as errors with error message")
+    SECTION("C++ standard exception with message")
     {
         auto result_or_error = execute_lua_script_safely(
-            lua, "throw_logic_error()");
+            lua, "throw_logic_error_with_msg()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
         REQUIRE_THAT(*msg, StartsWith("red rabbit"));
+    }
+
+    SECTION("C++ standard exception without message")
+    {
+        auto result_or_error = execute_lua_script_safely(
+            lua, "throw_logic_error_without_msg()");
+        auto* msg = std::get_if<std::string>(&result_or_error);
+        REQUIRE(msg != nullptr);
+        REQUIRE_THAT(*msg, not Contains("Unknown C++ exception"));
     }
 
     SECTION("Nonstandard C++ exceptions are reported as errors")
