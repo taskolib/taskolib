@@ -103,7 +103,10 @@ TEST_CASE("execute_lua_script_safely(): Lua exceptions", "[lua_details]")
         auto result_or_error = execute_lua_script_safely(lua, "not a lua program");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE(*msg != "");
+        REQUIRE(*msg == "1: unexpected symbol near 'not'");
+        // This test is somewhat brittle against changes of Lua syntax error messages.
+        // This is intentional: We should realize early if a new Lua version introduces
+        // weird output and decide if we need to pre-process it for our users.
     }
 
     SECTION("Runtime error")
@@ -112,7 +115,7 @@ TEST_CASE("execute_lua_script_safely(): Lua exceptions", "[lua_details]")
             lua, "function boom(); error('mindful' .. 'ness', 0); end; boom()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE_THAT(*msg, StartsWith("Script execution error: mindfulness"));
+        REQUIRE_THAT(*msg, StartsWith("mindfulness"));
         // Lua adds a stack trace after this output. This is a somewhat brittle test,
         // but since we have control over our Lua version, we are sure to spot it if
         // the output format changes.
@@ -142,7 +145,7 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
             lua, "throw_logic_error()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE_THAT(*msg, Contains("red rabbit"));
+        REQUIRE_THAT(*msg, StartsWith("red rabbit"));
     }
 
     SECTION("Nonstandard C++ exceptions are reported as errors")
@@ -151,7 +154,7 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
             lua, "throw_weird_exception()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE(*msg != "");
+        REQUIRE(*msg == "Unknown C++ exception");
     }
 
     SECTION("Standard C++ exceptions are converted to Lua errors and caught by pcall()")

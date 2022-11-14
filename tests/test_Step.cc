@@ -394,8 +394,7 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
         }
         catch(const Error& e)
         {
-            REQUIRE_THAT(e.what(), Contains("Script execution error"));
-            REQUIRE_THAT(e.what(), Contains("pippo"));
+            REQUIRE_THAT(e.what(), StartsWith("pippo"));
             // Lua adds a stack trace after this output. This is a somewhat brittle test,
             // but since we have control over our Lua version, we are sure to spot it if
             // the output format changes.
