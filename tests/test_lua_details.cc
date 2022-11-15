@@ -22,10 +22,23 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <limits>
+
 #include <gul14/catch.h>
 
 #include "../src/lua_details.h"
 
+using namespace std::chrono;
 using namespace std::literals;
 using namespace task;
 
+TEST_CASE("get_ms_since_epoch()", "[lua_details]")
+{
+    const auto now = Clock::now();
+
+    REQUIRE(get_ms_since_epoch(TimePoint{}, 100ms) == 100);
+    REQUIRE(get_ms_since_epoch(now, 100ms)
+            == round<milliseconds>((now + 100ms).time_since_epoch()).count());
+    REQUIRE(get_ms_since_epoch(now, milliseconds::max())
+            == std::numeric_limits<long long>::max());
+}
