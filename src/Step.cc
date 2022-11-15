@@ -99,18 +99,8 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
     }
 }
 
-bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
+bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index)
 {
-    const auto now = Clock::now();
-
-    const auto set_is_running_to_false_after_execution =
-        gul14::finally([this]() { set_running(false); });
-
-    set_running(true);
-    set_time_of_last_execution(now);
-
-    send_message(comm, Message::Type::step_started, "Step started", now, index);
-
     sol::state lua;
 
     open_safe_library_subset(lua);
@@ -119,57 +109,70 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
     if (context.lua_init_function)
         context.lua_init_function(lua);
 
-    install_timeout_and_termination_request_hook(lua, now, get_timeout(), index, comm);
+    install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
+                                                 comm);
     copy_used_variables_from_context_to_lua(context, lua);
 
-    auto result_or_error = execute_lua_script_safely(lua, get_script());
+    const auto result_or_error = execute_lua_script_safely(lua, get_script());
 
     copy_used_variables_from_lua_to_context(lua, context);
-    bool result_bool = false;
-
-    if (std::holds_alternative<sol::object>(result_or_error))
-    {
-        const auto& obj = std::get<sol::object>(result_or_error);
-
-        if (requires_bool_return_value(get_type()))
-        {
-            if (obj.is<bool>())
-            {
-                result_bool = obj.as<bool>();
-            }
-            else
-            {
-                result_or_error = cat("A script in a ", to_string(get_type()),
-                    " step must return a boolean value (true or false).");
-            }
-        }
-        else
-        {
-            if (obj != sol::nil)
-            {
-                result_or_error = cat("A script in a ", to_string(get_type()),
-                    " step may not return any value.");
-            }
-        }
-    }
 
     if (std::holds_alternative<std::string>(result_or_error))
-    {
-        const auto& raw_msg = std::get<std::string>(result_or_error);
-        auto [msg, _] = remove_abort_markers(raw_msg);
+        throw ErrorAtIndex(std::get<std::string>(result_or_error), index);
 
+    const auto& obj = std::get<sol::object>(result_or_error);
+
+    if (requires_bool_return_value(get_type()))
+    {
+        if (not obj.is<bool>())
+        {
+            throw ErrorAtIndex(cat("A script in a ", to_string(get_type()),
+                " step must return a boolean value (true or false)."), index);
+        }
+
+        return obj.as<bool>();
+    }
+    else
+    {
+        if (obj != sol::nil)
+        {
+            throw ErrorAtIndex(cat("A script in a ", to_string(get_type()),
+                " step may not return any value."), index);
+        }
+
+        return false;
+    }
+}
+
+bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
+{
+    const auto now = Clock::now();
+    const auto set_is_running_to_false_after_execution =
+        gul14::finally([this]() { set_running(false); });
+
+    set_time_of_last_execution(now);
+    set_running(true);
+    send_message(comm, Message::Type::step_started, "Step started", now, index);
+
+    try
+    {
+        const bool result = execute_impl(context, comm, index);
+
+        send_message(comm, Message::Type::step_stopped,
+            requires_bool_return_value(get_type())
+                ? cat("Step finished (logical result: ", result ? "true" : "false", ')')
+                : "Step finished"s,
+            Clock::now(), index);
+
+        return result;
+    }
+    catch(const ErrorAtIndex& e)
+    {
+        auto [msg, _] = remove_abort_markers(e.what());
         send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
                      index);
-        throw ErrorAtIndex(raw_msg, index);
+        throw;
     }
-
-    send_message(comm, Message::Type::step_stopped,
-        requires_bool_return_value(get_type())
-            ? cat("Step finished (logical result: ", result_bool ? "true" : "false", ')')
-            : "Step finished"s,
-        Clock::now(), index);
-
-    return result_bool;
 }
 
 Step& Step::set_disabled(bool disable)
