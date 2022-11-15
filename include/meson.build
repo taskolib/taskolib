@@ -5,6 +5,7 @@ public_headers = [
    'taskolib/Context.h',
    'taskolib/deserialize_sequence.h',
    'taskolib/exceptions.h',
+   'taskolib/execute_lua_script.h',
    'taskolib/Executor.h',
    'taskolib/format.h',
    'taskolib/hash_string.h',

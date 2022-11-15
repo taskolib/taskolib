@@ -51,20 +51,6 @@ void check_immediate_termination_request(lua_State* lua_state);
 void check_script_timeout(lua_State* lua_state);
 
 /**
- * Execute a Lua script safely, intercepting all possible exceptions that may occur during
- * its execution.
- *
- * This function returns a variant: If the Lua script finishes without error, it contains
- * a sol::object representing the return value of the script. If a Lua error or C++
- * exception occurs, the variant contains a string with an error message. The error
- * message is pre-processed to a certain degree: Unhelpful parts like the chunk name of
- * the script (`[string "..."]:`) are removed, and a few known special messages are
- * replaced by more readable explanations.
- */
-std::variant<sol::object, std::string>
-execute_lua_script_safely(sol::state& lua, sol::string_view script);
-
-/**
  * Retrieve a pointer to the used CommChannel from the LUA registry.
  * The pointer can be null to indicate that no CommChannel is used.
  *
