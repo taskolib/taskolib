@@ -422,8 +422,6 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
     Executor executor{ };
     executor.run_asynchronously(seq, ctx);
 
-    REQUIRE(executor.is_busy() == true);
-    REQUIRE(executor.update(seq) == true);
     REQUIRE(seq.is_running() == true);
 
     while (executor.update(seq))
