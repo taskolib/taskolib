@@ -127,7 +127,8 @@ TEST_CASE("execute_lua_script_safely(): Lua exceptions", "[lua_details]")
             lua, "function boom(); error('', 0); end; boom()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE_THAT(*msg, not Contains("Unknown C++ exception"));
+        REQUIRE_THAT(*msg, not Contains("Unknown"));
+        REQUIRE_THAT(*msg, not Contains("exception"));
     }
 
     SECTION("Runtime error, caught by pcall()")
@@ -164,7 +165,8 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
             lua, "throw_logic_error_without_msg()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE_THAT(*msg, not Contains("Unknown C++ exception"));
+        REQUIRE_THAT(*msg, not Contains("Unknown"));
+        REQUIRE_THAT(*msg, not Contains("exception"));
     }
 
     SECTION("Nonstandard C++ exceptions are reported as errors")
@@ -173,7 +175,7 @@ TEST_CASE("execute_lua_script_safely(): C++ exceptions", "[Step]")
             lua, "throw_weird_exception()");
         auto* msg = std::get_if<std::string>(&result_or_error);
         REQUIRE(msg != nullptr);
-        REQUIRE(*msg == "Unknown C++ exception");
+        REQUIRE(*msg == "Unknown exception");
     }
 
     SECTION("Standard C++ exceptions are converted to Lua errors and caught by pcall()")

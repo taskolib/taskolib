@@ -130,7 +130,7 @@ execute_lua_script_safely(sol::state& lua, sol::string_view script)
             if (msg.empty() ||
                 msg == "lua: error: stack index 1, expected string, received function")
             {
-                return "Unknown C++ exception";
+                return "Unknown exception";
             }
 
             return gul14::replace(msg, chunk_prefix, "");
