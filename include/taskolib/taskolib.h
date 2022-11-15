@@ -27,6 +27,7 @@
 
 #include "taskolib/Context.h"
 #include "taskolib/exceptions.h"
+#include "taskolib/execute_lua_script.h"
 #include "taskolib/Executor.h"
 #include "taskolib/Sequence.h"
 #include "taskolib/SequenceManager.h"
