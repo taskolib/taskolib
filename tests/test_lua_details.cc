@@ -39,6 +39,10 @@ TEST_CASE("get_ms_since_epoch()", "[lua_details]")
     REQUIRE(get_ms_since_epoch(TimePoint{}, 100ms) == 100);
     REQUIRE(get_ms_since_epoch(now, 100ms)
             == round<milliseconds>((now + 100ms).time_since_epoch()).count());
-    REQUIRE(get_ms_since_epoch(now, milliseconds::max())
-            == std::numeric_limits<long long>::max());
+
+    if constexpr (milliseconds::max().count() >= std::numeric_limits<long long>::max())
+    {
+        REQUIRE(get_ms_since_epoch(now, milliseconds::max())
+                == std::numeric_limits<long long>::max());
+    }
 }
