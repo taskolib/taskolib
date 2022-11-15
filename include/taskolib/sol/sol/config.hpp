@@ -44,8 +44,10 @@ the build system, or the command line options of your compiler.
 // Do not produce console output on certain errors
 #define SOL_PRINT_ERRORS 0
 
-// Enable maximum amount of safety checks
-// #define SOL_ALL_SAFETIES_ON 1
+// Enable maximum amount of safety checks (for instance, this enables somewhat meaningful
+// error messages if strange C++ exceptions that are not derived from std::exception are
+// thrown during Lua script execution)
+#define SOL_ALL_SAFETIES_ON 1
 
 // end of sol/config.hpp
 
