@@ -22,7 +22,10 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <limits>
+
 #include <gul14/gul.h>
+
 #include "internals.h"
 #include "lua_details.h"
 #include "taskolib/CommChannel.h"
@@ -139,6 +142,11 @@ long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
 {
     using std::chrono::milliseconds;
     using std::chrono::round;
+
+    static_assert(std::numeric_limits<long long>::max()
+                  >= std::numeric_limits<TimePoint::rep>::max());
+    static_assert(std::numeric_limits<long long>::max()
+                  >= std::numeric_limits<milliseconds::rep>::max());
 
     const long long t0_ms = round<milliseconds>(t0.time_since_epoch()).count();
     const long long max_dt = std::numeric_limits<long long>::max() - t0_ms;
