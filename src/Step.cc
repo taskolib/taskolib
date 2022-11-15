@@ -112,14 +112,13 @@ bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index)
 
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
                                                  comm);
+
     copy_used_variables_from_context_to_lua(context, lua);
-
     const auto result_or_error = execute_lua_script(lua, get_script());
-
     copy_used_variables_from_lua_to_context(lua, context);
 
     if (std::holds_alternative<std::string>(result_or_error))
-        throw ErrorAtIndex(std::get<std::string>(result_or_error), index);
+        throw Error(std::get<std::string>(result_or_error));
 
     const auto& obj = std::get<sol::object>(result_or_error);
 
@@ -127,8 +126,8 @@ bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index)
     {
         if (not obj.is<bool>())
         {
-            throw ErrorAtIndex(cat("A script in a ", to_string(get_type()),
-                " step must return a boolean value (true or false)."), index);
+            throw Error(cat("A script in a ", to_string(get_type()),
+                " step must return a boolean value (true or false)."));
         }
 
         return obj.as<bool>();
@@ -137,8 +136,8 @@ bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index)
     {
         if (obj != sol::nil)
         {
-            throw ErrorAtIndex(cat("A script in a ", to_string(get_type()),
-                " step may not return any value."), index);
+            throw Error(cat("A script in a ", to_string(get_type()),
+                " step may not return any value."));
         }
 
         return false;
@@ -167,12 +166,12 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 
         return result;
     }
-    catch(const ErrorAtIndex& e)
+    catch(const std::exception& e)
     {
         auto [msg, _] = remove_abort_markers(e.what());
         send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
                      index);
-        throw;
+        throw ErrorAtIndex(e.what(), index);
     }
 }
 

@@ -316,7 +316,10 @@ private:
      */
     void copy_used_variables_from_lua_to_context(const sol::state& lua, Context& context);
 
-    /// Execute the Lua script, throwing an exception if anything goes wrong.
+    /**
+     * Execute the Lua script, throwing an exception if anything goes wrong.
+     * \see execute(Context&, CommChannel*, StepIndex)
+     */
     bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index);
 };
 
