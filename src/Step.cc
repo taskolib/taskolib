@@ -30,6 +30,7 @@
 #include "lua_details.h"
 #include "sol/sol.hpp"
 #include "taskolib/exceptions.h"
+#include "taskolib/execute_lua_script.h"
 #include "taskolib/Step.h"
 
 using namespace std::literals;
@@ -113,7 +114,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index)
                                                  comm);
     copy_used_variables_from_context_to_lua(context, lua);
 
-    const auto result_or_error = execute_lua_script_safely(lua, get_script());
+    const auto result_or_error = execute_lua_script(lua, get_script());
 
     copy_used_variables_from_lua_to_context(lua, context);
 
