@@ -66,48 +66,50 @@ $(function() {
 <code>#include &quot;<a class="el" href="lua__details_8h_source.html">lua_details.h</a>&quot;</code><br />
 <code>#include &quot;sol/sol.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8h_source.html">taskolib/exceptions.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="execute__lua__script_8h_source.html">taskolib/execute_lua_script.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Step_8h_source.html">taskolib/Step.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Step.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="Step_8cc__incl.png" border="0" usemap="#aStep_8cc" alt=""/></div>
 <map name="aStep_8cc" id="aStep_8cc">
-<area shape="rect" title="Implementation of the Step class." alt="" coords="627,5,696,32"/>
-<area shape="rect" title=" " alt="" coords="159,80,254,107"/>
-<area shape="rect" title=" " alt="" coords="279,80,404,107"/>
-<area shape="rect" title=" " alt="" coords="428,80,529,107"/>
-<area shape="rect" href="internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="372,229,463,256"/>
-<area shape="rect" href="lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="1254,80,1359,107"/>
-<area shape="rect" title=" " alt="" coords="1645,229,1737,256"/>
-<area shape="rect" href="exceptions_8h.html" title="Definitions of the Error and ErrorAtIndex exception classes." alt="" coords="1695,304,1855,331"/>
-<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="554,80,673,107"/>
-<area shape="rect" title=" " alt="" coords="843,453,901,480"/>
-<area shape="rect" title=" " alt="" coords="303,304,363,331"/>
-<area shape="rect" title=" " alt="" coords="535,304,683,331"/>
-<area shape="rect" title=" " alt="" coords="23,453,89,480"/>
-<area shape="rect" title=" " alt="" coords="1450,304,1537,331"/>
-<area shape="rect" title=" " alt="" coords="1450,229,1518,256"/>
-<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct and of the send_message() function." alt="" coords="725,229,910,256"/>
-<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1182,155,1322,181"/>
-<area shape="rect" title=" " alt="" coords="1184,304,1251,331"/>
-<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="984,304,1160,331"/>
-<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="724,304,871,331"/>
-<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="1497,379,1652,405"/>
-<area shape="rect" title=" " alt="" coords="1229,379,1371,405"/>
-<area shape="rect" title=" " alt="" coords="960,379,1024,405"/>
-<area shape="rect" title=" " alt="" coords="1429,453,1555,480"/>
-<area shape="rect" title=" " alt="" coords="1049,379,1205,405"/>
-<area shape="rect" title=" " alt="" coords="432,379,488,405"/>
-<area shape="rect" title=" " alt="" coords="512,379,589,405"/>
-<area shape="rect" title=" " alt="" coords="614,379,690,405"/>
-<area shape="rect" title=" " alt="" coords="715,379,835,405"/>
-<area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="93,379,256,405"/>
-<area shape="rect" title=" " alt="" coords="1705,453,1772,480"/>
-<area shape="rect" title=" " alt="" coords="1149,229,1273,256"/>
-<area shape="rect" href="console_8h.html" title="Declaration of several functions for console output." alt="" coords="985,229,1124,256"/>
-<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="519,229,700,256"/>
-<area shape="rect" title=" " alt="" coords="1778,379,1865,405"/>
-<area shape="rect" title=" " alt="" coords="68,155,111,181"/>
+<area shape="rect" title="Implementation of the Step class." alt="" coords="429,5,498,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,100,107"/>
+<area shape="rect" title=" " alt="" coords="125,80,250,107"/>
+<area shape="rect" title=" " alt="" coords="274,80,375,107"/>
+<area shape="rect" href="internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="2138,244,2229,271"/>
+<area shape="rect" href="lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="864,80,969,107"/>
+<area shape="rect" title=" " alt="" coords="451,244,543,271"/>
+<area shape="rect" href="exceptions_8h.html" title="Definitions of the Error and ErrorAtIndex exception classes." alt="" coords="369,319,529,345"/>
+<area shape="rect" href="execute__lua__script_8h.html" title="Declaration of execute_lua_script()." alt="" coords="551,155,706,196"/>
+<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="1892,80,2011,107"/>
+<area shape="rect" title=" " alt="" coords="1181,468,1239,495"/>
+<area shape="rect" title=" " alt="" coords="2235,319,2295,345"/>
+<area shape="rect" title=" " alt="" coords="1696,319,1844,345"/>
+<area shape="rect" title=" " alt="" coords="2231,468,2298,495"/>
+<area shape="rect" title=" " alt="" coords="1576,319,1663,345"/>
+<area shape="rect" title=" " alt="" coords="619,244,687,271"/>
+<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct and of the send_message() function." alt="" coords="1077,244,1263,271"/>
+<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="944,162,1084,189"/>
+<area shape="rect" title=" " alt="" coords="1485,319,1551,345"/>
+<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="1078,319,1254,345"/>
+<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="1314,319,1461,345"/>
+<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="669,393,823,420"/>
+<area shape="rect" title=" " alt="" coords="1268,393,1411,420"/>
+<area shape="rect" title=" " alt="" coords="999,393,1063,420"/>
+<area shape="rect" title=" " alt="" coords="791,468,917,495"/>
+<area shape="rect" title=" " alt="" coords="1088,393,1244,420"/>
+<area shape="rect" title=" " alt="" coords="1731,393,1787,420"/>
+<area shape="rect" title=" " alt="" coords="1811,393,1889,420"/>
+<area shape="rect" title=" " alt="" coords="1487,393,1563,420"/>
+<area shape="rect" title=" " alt="" coords="1587,393,1707,420"/>
+<area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="2014,393,2177,420"/>
+<area shape="rect" title=" " alt="" coords="571,468,638,495"/>
+<area shape="rect" title=" " alt="" coords="1339,244,1463,271"/>
+<area shape="rect" href="console_8h.html" title="Declaration of several functions for console output." alt="" coords="813,244,951,271"/>
+<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1679,244,1861,271"/>
+<area shape="rect" title=" " alt="" coords="405,393,492,420"/>
+<area shape="rect" title=" " alt="" coords="2065,162,2107,189"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -129,7 +131,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 15 2022 09:24:47 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Nov 16 2022 10:09:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

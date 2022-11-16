@@ -147,6 +147,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a828883faf4abd4c06e63c0989abed8ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">deserialize_sequence</a> (const std::filesystem::path &amp;path)</td></tr>
 <tr class="memdesc:a828883faf4abd4c06e63c0989abed8ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> from file path.  <a href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">More...</a><br /></td></tr>
 <tr class="separator:a828883faf4abd4c06e63c0989abed8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35d53ce03d32e28bba0d984385941d53"><td class="memItemLeft" align="right" valign="top">std::variant&lt; sol::object, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">execute_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
+<tr class="memdesc:a35d53ce03d32e28bba0d984385941d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution.  <a href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">More...</a><br /></td></tr>
+<tr class="separator:a35d53ce03d32e28bba0d984385941d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee945ef7a60605fe4bbb79f54f4d93d0"><td class="memItemLeft" align="right" valign="top">constexpr unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aee945ef7a60605fe4bbb79f54f4d93d0">hash_djb2a</a> (gul14::string_view sv)</td></tr>
 <tr class="memdesc:aee945ef7a60605fe4bbb79f54f4d93d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapt switch statement with stringify items: <a href="https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/">https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/</a> Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer.  <a href="namespacetask.html#aee945ef7a60605fe4bbb79f54f4d93d0">More...</a><br /></td></tr>
 <tr class="separator:aee945ef7a60605fe4bbb79f54f4d93d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,9 +184,6 @@ Functions</h2></td></tr>
 <tr class="separator:ab0420458f3b22f97c90b2a4a14d68b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a641a9ed8df01060d4121c81bc7adf8c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout</a> (lua_State *lua_state)</td></tr>
 <tr class="separator:a641a9ed8df01060d4121c81bc7adf8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad33bda4cdf11639db7cf9c051520b12e"><td class="memItemLeft" align="right" valign="top">std::variant&lt; sol::object, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ad33bda4cdf11639db7cf9c051520b12e">execute_lua_script_safely</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
-<tr class="memdesc:ad33bda4cdf11639db7cf9c051520b12e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution.  <a href="namespacetask.html#ad33bda4cdf11639db7cf9c051520b12e">More...</a><br /></td></tr>
-<tr class="separator:ad33bda4cdf11639db7cf9c051520b12e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the LUA registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
 <tr class="separator:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -531,14 +531,14 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
-<a id="ad33bda4cdf11639db7cf9c051520b12e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad33bda4cdf11639db7cf9c051520b12e">&#9670;&nbsp;</a></span>execute_lua_script_safely()</h2>
+<a id="a35d53ce03d32e28bba0d984385941d53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35d53ce03d32e28bba0d984385941d53">&#9670;&nbsp;</a></span>execute_lua_script()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::variant&lt; sol::object, std::string &gt; task::execute_lua_script_safely </td>
+          <td class="memname">std::variant&lt; sol::object, std::string &gt; task::execute_lua_script </td>
           <td>(</td>
           <td class="paramtype">sol::state &amp;&#160;</td>
           <td class="paramname"><em>lua</em>, </td>
@@ -560,7 +560,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 <p>Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution. </p>
 <p>This function returns a variant: If the Lua script finishes without error, it contains a sol::object representing the return value of the script. If a Lua error or C++ exception occurs, the variant contains a string with an error message. The error message is pre-processed to a certain degree: Unhelpful parts like the chunk name of the script (<code>[string "..."]:</code>) are removed, and a few known special messages are replaced by more readable explanations. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -776,7 +776,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- fragment --> 
 <p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct()</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -826,7 +826,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#a6aee4dc6d28e84c77d228dc8be7b5039">get_ms_since_epoch()</a>, and <a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -870,7 +870,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -1230,7 +1230,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Determine if a certain step type requires a boolean return value from the script. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -1482,7 +1482,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Return a lower-case name for a step type ("action", "if", "end"). </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -1526,7 +1526,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 15 2022 09:24:47 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Nov 16 2022 10:09:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

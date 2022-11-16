@@ -169,6 +169,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">copy_used_variables_from_lua_to_context</a> (const sol::state &amp;lua, <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context)</td></tr>
 <tr class="memdesc:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the variables listed in used_context_variable_names_ from a LUA state into the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">More...</a><br /></td></tr>
 <tr class="separator:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd2262a000a7653988a77d523425bccb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">execute_impl</a> (<a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel, <a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a> index)</td></tr>
+<tr class="memdesc:abd2262a000a7653988a77d523425bccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the Lua script, throwing an exception if anything goes wrong.  <a href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">More...</a><br /></td></tr>
+<tr class="separator:abd2262a000a7653988a77d523425bccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -443,9 +446,56 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#ad33bda4cdf11639db7cf9c051520b12e">task::execute_lua_script_safely()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands()</a>, <a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">task::install_timeout_and_termination_request_hook()</a>, <a class="el" href="structtask_1_1Context.html#a6daf071ee10242c41b1f0072af0aa7f0">task::Context::lua_init_function</a>, <a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">task::open_safe_library_subset()</a>, <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, <a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, and <a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a30a764d478514186f6f0f1f5679b0cb1">execute()</a>.</p>
+
+</div>
+</div>
+<a id="abd2262a000a7653988a77d523425bccb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd2262a000a7653988a77d523425bccb">&#9670;&nbsp;</a></span>execute_impl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task::Step::execute_impl </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtask_1_1Context.html">Context</a> &amp;&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
+          <td class="paramname"><em>comm_channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Execute the Lua script, throwing an exception if anything goes wrong. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101" title="Execute the step script within the given context, sending status information to a message queue.">execute(Context&amp;, CommChannel*, StepIndex)</a> </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">task::execute_lua_script()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands()</a>, <a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">task::install_timeout_and_termination_request_hook()</a>, <a class="el" href="structtask_1_1Context.html#a6daf071ee10242c41b1f0072af0aa7f0">task::Context::lua_init_function</a>, <a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">task::open_safe_library_subset()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
 </div>
 </div>
@@ -1319,7 +1369,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 15 2022 09:24:47 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Nov 16 2022 10:09:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
