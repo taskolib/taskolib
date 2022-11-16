@@ -90,7 +90,7 @@ void check_script_timeout(lua_State* lua_state)
 
     const auto registry = lua.registry();
 
-    sol::optional<long long> timeout_ms = registry[step_timeout_ms_since_epoch_key];
+    sol::optional<LuaInteger> timeout_ms = registry[step_timeout_ms_since_epoch_key];
 
     if (not timeout_ms.has_value())
     {
@@ -102,7 +102,7 @@ void check_script_timeout(lua_State* lua_state)
         using std::chrono::milliseconds;
         using std::chrono::round;
 
-        const long long now_ms =
+        const LuaInteger now_ms =
             round<milliseconds>(Clock::now().time_since_epoch()).count();
 
         if (now_ms > *timeout_ms)
@@ -138,24 +138,24 @@ StepIndex get_step_idx_from_registry(lua_State* lua_state)
     return *opt_step_idx;
 }
 
-long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
+LuaInteger get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
 {
     using std::chrono::milliseconds;
     using std::chrono::round;
 
-    static_assert(std::numeric_limits<long long>::max()
+    static_assert(std::numeric_limits<LuaInteger>::max()
                   >= std::numeric_limits<TimePoint::rep>::max());
-    static_assert(std::numeric_limits<long long>::max()
+    static_assert(std::numeric_limits<LuaInteger>::max()
                   >= std::numeric_limits<milliseconds::rep>::max());
 
-    const long long t0_ms = round<milliseconds>(t0.time_since_epoch()).count();
-    const long long max_dt = std::numeric_limits<long long>::max() - t0_ms;
-    const long long dt_ms = dt.count();
+    const LuaInteger t0_ms = round<milliseconds>(t0.time_since_epoch()).count();
+    const LuaInteger max_dt = std::numeric_limits<LuaInteger>::max() - t0_ms;
+    const LuaInteger dt_ms = dt.count();
 
     if (dt_ms < max_dt)
         return t0_ms + dt_ms;
     else
-        return std::numeric_limits<long long>::max();
+        return std::numeric_limits<LuaInteger>::max();
 }
 
 void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*)

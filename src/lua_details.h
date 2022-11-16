@@ -34,11 +34,11 @@
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
 
-// Check that the lua lib has been build with the expected types
-static_assert(std::is_same<LUA_NUMBER, double>::value, "Unexpected Lua-internal floating point type");
-static_assert(std::is_same<LUA_INTEGER, long long>::value, "Unexpected Lua-internal integer type");
-
 namespace task {
+
+// Check that the lua lib has been build with the expected types
+static_assert(std::is_same<LuaFloat, double>::value, "Unexpected Lua-internal floating point type");
+static_assert(std::is_same<LuaInteger, long long>::value, "Unexpected Lua-internal integer type");
 
 // Abort the execution of the script by raising a LUA error with the given error message.
 void abort_script_with_error(lua_State* lua_state, const std::string& msg);
@@ -68,7 +68,7 @@ StepIndex get_step_idx_from_registry(lua_State* lua_state);
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
 // plus a duration dt. In case of overflow, the maximum representable time point is
 // returned.
-long long get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt);
+LuaInteger get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt);
 
 // A LUA hook that stops the execution of the script by raising a LUA error.
 // This hook reinstalls itself so that it is called immediately if the execution should

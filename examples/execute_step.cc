@@ -12,17 +12,17 @@ int main()
 
     // Create a context and store values for "a" and "b" in it
     Context context;
-    context.variables["a"] = 42LL;
-    context.variables["b"] = -41.5;
+    context.variables["a"] = LuaInteger{ 42 };
+    context.variables["b"] = LuaFloat{ -41.5 };
 
     // Execute the step with the context
     step.execute(context);
 
     // Retrieve variables from the context with std::get()
     std::cout << "According to LUA, the sum of "
-              << std::get<long long>(context.variables["a"])
-              << " and " << std::get<double>(context.variables["b"]) << " is "
-              << std::get<double>(context.variables["sum"]) << ".\n";
+              << std::get<LuaInteger>(context.variables["a"])
+              << " and " << std::get<LuaFloat>(context.variables["b"]) << " is "
+              << std::get<LuaFloat>(context.variables["sum"]) << ".\n";
 
     return 0;
 }
