@@ -61,8 +61,8 @@ void Step::copy_used_variables_from_context_to_lua(const Context& context, sol::
             {
                 using T = std::decay_t<decltype(value)>;
 
-                if constexpr (std::is_same_v<T, double> or std::is_same_v<T, long long> or
-                              std::is_same_v<T, std::string> or std::is_same_v<T, bool>)
+                if constexpr (std::is_same_v<T, LuaFloat> or std::is_same_v<T, LuaInteger> or
+                              std::is_same_v<T, LuaString> or std::is_same_v<T, LuaBool>)
                 {
                     lua[varname_str] = value;
                 }
@@ -89,16 +89,16 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
         {
             case sol::type::number:
                 // For this check to work, SOL_SAFE_NUMERICS needs to be set to 1
-                if (var.is<long long>())
-                    context.variables[varname] = VariableValue{ var.as<long long>() };
+                if (var.is<LuaInteger>())
+                    context.variables[varname] = VariableValue{ var.as<LuaInteger>() };
                 else
-                    context.variables[varname] = VariableValue{ var.as<double>() };
+                    context.variables[varname] = VariableValue{ var.as<LuaFloat>() };
                 break;
             case sol::type::string:
-                context.variables[varname] = VariableValue{ var.as<std::string>() };
+                context.variables[varname] = VariableValue{ var.as<LuaString>() };
                 break;
             case sol::type::boolean:
-                context.variables[varname] = VariableValue{ var.as<bool>() };
+                context.variables[varname] = VariableValue{ var.as<LuaBool>() };
                 break;
             case sol::type::lua_nil:
                 context.variables.erase(varname);

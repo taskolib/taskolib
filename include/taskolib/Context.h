@@ -40,7 +40,17 @@
 namespace task {
 
 /**
- * A VariableValue is a variant over several data types Lua can understand (long long, double, std::string, bool).
+ * Lua uses certain types to interface with C++.
+ *
+ * If these types are used the data comes from or shall go to the Lua engine.
+ */
+using LuaInteger = LUA_INTEGER;
+using LuaFloat = LUA_NUMBER;
+using LuaString = std::string;
+using LuaBool = bool;
+
+/**
+ * A VariableValue is a variant over several data types Lua can understand.
  *
  * Variable names are associated with these values via a map in the Context class.
  *
@@ -48,7 +58,7 @@ namespace task {
  * Do not use a char* to pass the string, it might be converted to bool instead
  * of the expected std::string. The conversion depends on the used compiler (version).
  */
-using VariableValue = std::variant<long long, double, std::string, bool>;
+using VariableValue = std::variant<LuaInteger, LuaFloat, LuaString, LuaBool>;
 
 /**
  * Associative table that holds Lua variable names and their value.
