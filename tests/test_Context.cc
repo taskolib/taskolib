@@ -78,6 +78,9 @@ TEST_CASE("Context: Move assignment", "[Context]")
 TEST_CASE("Check context variable assignment", "[Context]")
 {
     Context c;
+    // Never assign a char* like this: c.variables["b"] = "BooleanTest";
+    // Some compilers fill this into the bool alternative!
+    // See PR #33 for details.
     c.variables["b"] = "BooleanTest"s; // assigns std::string
     REQUIRE(std::holds_alternative<bool>(c.variables["b"]) == false);
     REQUIRE(std::holds_alternative<std::string>(c.variables["b"]) == true);
