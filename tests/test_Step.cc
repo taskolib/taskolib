@@ -631,13 +631,10 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
 
     SECTION("No exported variables")
     {
-        // Variable 'b' is not touched (imported into any Step), so if it holds
-        // a char const* it will not be converted to std::string.
-        context.variables["b"] = "Test";
+        context.variables["b"] = "Test"s;
         step.execute(context);
         REQUIRE(context.variables.size() == 1);
-        // REQUIRE(std::get<std::string>(context.variables["b"]) == "Test"s);
-        REQUIRE(std::get<char const*>(context.variables["b"]) == "Test"s);
+        REQUIRE(std::get<std::string>(context.variables["b"]) == "Test");
     }
 
     SECTION("Exporting an integer")
@@ -723,7 +720,7 @@ TEST_CASE("execute(): Running a step with multiple import and exports", "[Step]"
 
     SECTION("num_repetitions < 0 returns false")
     {
-        context.variables["str"] = "Test";
+        context.variables["str"] = "Test"s;
         context.variables["num_repetitions"] = -1LL;
         REQUIRE(step.execute(context) == false);
         REQUIRE(context.variables.size() == 2);
@@ -733,7 +730,7 @@ TEST_CASE("execute(): Running a step with multiple import and exports", "[Step]"
 
     SECTION("num_repetitions == 0 returns empty string")
     {
-        context.variables["str"] = "Test";
+        context.variables["str"] = "Test"s;
         context.variables["num_repetitions"] = 0LL;
         REQUIRE(step.execute(context) == true);
         REQUIRE(context.variables.size() == 3);
@@ -744,9 +741,9 @@ TEST_CASE("execute(): Running a step with multiple import and exports", "[Step]"
 
     SECTION("num_repetitions == 2 with separator")
     {
-        context.variables["str"] = "Test";
+        context.variables["str"] = "Test"s;
         context.variables["num_repetitions"] = 2LL;
-        context.variables["separator"] = "|";
+        context.variables["separator"] = "|"s;
         REQUIRE(step.execute(context) == true);
         REQUIRE(context.variables.size() == 4);
         REQUIRE(std::get<std::string>(context.variables["str"]) == "Test");

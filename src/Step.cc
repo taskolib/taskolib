@@ -66,12 +66,7 @@ void Step::copy_used_variables_from_context_to_lua(const Context& context, sol::
                 {
                     lua[varname_str] = value;
                 }
-                else if constexpr (std::is_same_v<T, char const*>)
-                {
-                    lua[varname_str] = std::string{ value };
-                }
-                else if constexpr (std::is_same_v<T, sol::lua_nil_t>)
-                {
+                else if constexpr (std::is_same_v<T, sol::lua_nil_t>) {
                     lua[varname_str] = sol::lua_nil_t{ };
                 }
                 else
