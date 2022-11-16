@@ -40,11 +40,15 @@
 namespace task {
 
 /**
- * A VariableValue is a variant over several data types (long long, double, std::string).
+ * A VariableValue is a variant over several data types Lua can understand (long long, double, std::string, bool).
  *
- * Names are associated with these values via a map in the Context type.
+ * Variable names are associated with these values via a map in the Context class.
+ *
+ * Be careful when assigning a string to a VariableValue:
+ * Do not use a char* to pass the string, it might be converted to bool instead
+ * of the expected std::string. The conversion depends on the used compiler (version).
  */
-using VariableValue = std::variant<long long, double, std::string>;
+using VariableValue = std::variant<long long, double, std::string, bool>;
 
 /**
  * Associative table that holds Lua variable names and their value.
@@ -71,7 +75,7 @@ using OutputCallback =
  */
 struct Context
 {
-    /// A list of variables that can be im-/exported into steps.
+    /// A map of variables (names and values) that can be im-/exported into steps.
     VariableTable variables;
 
     /// An initialization function that is called on a LUA state before a step is executed.

@@ -1147,6 +1147,130 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
     REQUIRE(context.variables["a"] == VariableValue{ 0LL } );
 }
 
+TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]")
+{
+    Context ctx;
+    ctx.variables["a"] = VariableValue{ 0LL };
+    Sequence seq("Simple sequence");
+
+    SECTION("Dont manipulate context variable") {
+        Step s1;
+        s1.set_script("a = 2");
+
+        seq.push_back(s1);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 0LL } );
+    }
+    SECTION("Manipulate context variable") {
+        Step s1;
+        s1.set_script("a = 2");
+        s1.set_used_context_variable_names(VariableNames{"a"});
+
+        seq.push_back(s1);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 2LL } );
+    }
+    SECTION("Hand context variable over (not)") {
+        Step s1;
+        s1.set_script("a = 2");
+        s1.set_used_context_variable_names(VariableNames{"a"});
+        Step s2;
+        s2.set_script("if a then a = a + 2 end");
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 2LL } );
+    }
+    SECTION("Hand context variable over") {
+        Step s1;
+        s1.set_script("a = 2");
+        s1.set_used_context_variable_names(VariableNames{"a"});
+        Step s2;
+        s2.set_script("if a then a = a + 2 end");
+        s2.set_used_context_variable_names(VariableNames{"a"});
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 4LL } );
+    }
+    SECTION("Hand variable over context without initial value") {
+        Step s1;
+        s1.set_script("a = 2; b = 3"); // semicolon for the C people, Lua ignores it
+        s1.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s2;
+        s2.set_script("if b then a = a + 2 end");
+        s2.set_used_context_variable_names(VariableNames{"a", "b"});
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.variables["a"] == VariableValue{ 4LL } );
+    }
+    SECTION("Hand bool variable over context without initial value") {
+        Step s1;
+        s1.set_script("a = 2; b = true"); // semicolon for the C people, Lua ignores it
+        s1.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s2;
+        s2.set_script("if b then a = a + 2 end");
+        s2.set_used_context_variable_names(VariableNames{"a", "b"});
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.execute(ctx, nullptr);
+        CAPTURE(std::get<long long>(ctx.variables["a"]));
+        REQUIRE(ctx.variables["a"] == VariableValue{ 4LL } );
+    }
+    SECTION("Hand nil variable over context without initial value") {
+        Step s1;
+        s1.set_script("a = 2; b = true"); // semicolon for the C people, Lua ignores it
+        s1.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s2;
+        s2.set_script("if b then a = a + 2 end; b = nil");
+        s2.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s3;
+        s3.set_script("if b then a = a + 2 end");
+        s3.set_used_context_variable_names(VariableNames{"a", "b"});
+
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.push_back(s3);
+        seq.execute(ctx, nullptr);
+        CAPTURE(std::get<long long>(ctx.variables["a"]));
+        REQUIRE(ctx.variables["a"] == VariableValue{ 4LL } );
+        REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
+    }
+    SECTION("Check nil is really non-existing") {
+        Step s1;
+        s1.set_script("b = 0"); // create variable b
+        s1.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s2;
+        // In Lua _G is the global table, that contains all 'root' variables
+        // (and functions, as all functions are just variables with closures).
+        // The following explicitly checks if variable `b` is really present/absent
+        // in/of the global table.
+        // This check is of course superstitious, Lua should handle it that way anyhow.
+        // It shows nicely the analogy of our ctx.variables table and Lua's _G table.
+        s2.set_script("for k, _ in pairs(_G) do if k == 'b' then a = a + 1 end end");
+        s2.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s3;
+        s3.set_script("b = nil"); // remove variable b
+        s3.set_used_context_variable_names(VariableNames{"a", "b"});
+        Step s4;
+        s4.set_script("for k, _ in pairs(_G) do if k == 'b' then a = a + 1 end end");
+        s4.set_used_context_variable_names(VariableNames{"a", "b"});
+        seq.push_back(s1);
+        seq.push_back(s2);
+        seq.push_back(s3);
+        seq.push_back(s4);
+        seq.execute(ctx, nullptr);
+        CAPTURE(std::get<long long>(ctx.variables["a"]));
+        REQUIRE(ctx.variables["a"] == VariableValue{ 1LL } );
+        REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
+    }
+}
+
 TEST_CASE("execute(): complex sequence with prohibited LUA function", "[Sequence]")
 {
     Context context;
