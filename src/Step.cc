@@ -115,8 +115,8 @@ bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index,
     open_safe_library_subset(lua);
     install_custom_commands(lua, context);
 
-    if (context.lua_init_function)
-        context.lua_init_function(lua);
+    if (context.lua_step_setup)
+        context.lua_step_setup(lua);
 
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
                                                  comm);

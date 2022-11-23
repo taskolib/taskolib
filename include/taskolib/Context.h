@@ -101,7 +101,7 @@ struct Context
     VariableTable variables;
 
     /// An initialization function that is called on a LUA state before a step is executed.
-    std::function<void(sol::state&)> lua_init_function;
+    std::function<void(sol::state&)> lua_step_setup;
 
     /// A callback that is invoked every time the script uses print().
     OutputCallback print_function = print_to_stdout;

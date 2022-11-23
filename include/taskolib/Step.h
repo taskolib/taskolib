@@ -74,7 +74,7 @@ public:
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
-     * 2. The lua_init_function from the context is run if it is defined (non-null).
+     * 2. The lua_step_setup from the context is run if it is defined (non-null).
      * 3. Selected variables are imported from the context into the runtime environment.
      * 4. The script from the step is loaded into the runtime environment and executed.
      * 5. Selected variables are exported from the runtime environment back into the
@@ -121,7 +121,7 @@ public:
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
-     * 2. The lua_init_function from the context is run if it is defined (non-null).
+     * 2. The lua_step_setup from the context is run if it is defined (non-null).
      * 3. Selected variables are imported from the context into the runtime environment.
      * 4. The script from the step is loaded into the runtime environment and executed.
      * 5. Selected variables are exported from the runtime environment back into the
