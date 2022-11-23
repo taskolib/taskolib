@@ -282,6 +282,11 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator first
     return return_iter;
 }
 
+void Sequence::set_step_setup_script(std::string step_setup)
+{
+    step_setup_ = step_setup;
+}
+
 void Sequence::execute(Context& context, CommChannel* comm)
 {
     const auto clear_is_running_at_function_exit =
@@ -361,7 +366,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (begin->execute(context, comm, begin - steps_.begin()))
+    if (begin->execute(context, comm, begin - steps_.begin(), step_setup_))
     {
         execute_sequence_impl(begin + 1, block_end, context, comm);
 
@@ -418,7 +423,7 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
                 break;
 
             case Step::type_action:
-                step->execute(context, comm, step - steps_.begin());
+                step->execute(context, comm, step - steps_.begin(), step_setup_);
                 ++step;
                 break;
 
@@ -467,7 +472,7 @@ Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (begin->execute(context, comm, begin - steps_.begin()))
+    while (begin->execute(context, comm, begin - steps_.begin(), step_setup_))
         execute_sequence_impl(begin + 1, block_end, context, comm);
 
     return block_end + 1;

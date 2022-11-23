@@ -69,6 +69,21 @@ namespace task {
  * // insert an action step at index 1
  * seq.insert(seq.begin() + 1, Step{Step::type_action});
  * \endcode
+ *
+ * \section Step setup script
+ *
+ * Each step can have a setup script that is executed before the intrinsic script is
+ * called (invoked with Step::set_script(const std::string&)). You can call it with
+ * set_step_setup_script(std::string).
+ * The defined variables and functions in the setup are exported in each step and you can
+ * access them in the script. Changing the previous defined variables and/or functions
+ * with a new definition from the setup is somehow isolated in the step itself and has no
+ * effect on other steps.
+ * The setup is only executed for Step types ACTION, IF, ELSEIF, or WHILE.
+ *
+ * \note The script is not validated and checked with a proper form. If a scripting error
+ * occurs during execution it will fail in the sequence and throw the appropriated Error
+ * exception.
  */
 class Sequence
 {
@@ -238,6 +253,15 @@ public:
      * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
      */
     ConstIterator erase(ConstIterator first, ConstIterator last);
+
+    /**
+     * It is guaranteed that each step in the sequence can have a setup script that is
+     * executed before the step executes its script. However it is only relevant of the
+     * following Step types: ACTION, IF, ELSEIF, and WHILE.
+     *
+     * \param step_setup
+     */
+    void set_step_setup_script(std::string step_setup);
 
     /**
      * Execute the sequence within a given context.
@@ -490,6 +514,7 @@ private:
     std::string indentation_error_;
 
     std::string label_;
+    std::string step_setup_;
     std::vector<Step> steps_;
     bool is_running_{false};
 
