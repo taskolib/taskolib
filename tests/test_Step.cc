@@ -416,7 +416,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
     step.set_used_context_variable_names(VariableNames{ "a" });
 
     context.variables["a"] = VarInteger{ 0 };
-    context.lua_init_function =
+    context.lua_step_setup =
         [](sol::state& sol)
         {
             sol["throw_logic_error"] = []() { throw std::logic_error("unlogisch"); };
@@ -544,7 +544,7 @@ TEST_CASE("execute(): Immediate termination", "[Step]")
     Step step;
     CommChannel comm;
 
-    context.lua_init_function =
+    context.lua_step_setup =
         [&comm](sol::state& sol)
         {
             sol["request_termination"] =
@@ -800,14 +800,14 @@ TEST_CASE("execute(): LUA initialization function", "[Step]")
 
     SECTION("Missing init function does not throw")
     {
-        context.lua_init_function = nullptr;
+        context.lua_step_setup = nullptr;
         REQUIRE_NOTHROW(step.execute(context));
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == 42);
     }
 
     SECTION("Init function injecting a variable")
     {
-        context.lua_init_function = [](sol::state& s) { s["b"] = VarInteger{ 13 }; };
+        context.lua_step_setup = [](sol::state& s) { s["b"] = VarInteger{ 13 }; };
         REQUIRE_NOTHROW(step.execute(context));
         REQUIRE(std::get<VarInteger>(context.variables["b"]) == 13);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == 42);
@@ -815,7 +815,7 @@ TEST_CASE("execute(): LUA initialization function", "[Step]")
 
     SECTION("Init function injecting a function")
     {
-        context.lua_init_function =
+        context.lua_step_setup =
             [](sol::state& s)
             {
                 s["f"] = [](VarInteger n) { return n + 1; };
