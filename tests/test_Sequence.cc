@@ -3566,3 +3566,91 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     REQUIRE(msg.get_index().has_value());
     REQUIRE(*(msg.get_index()) == 2);
 }
+
+TEST_CASE("Sequence: Add step setup with variable", "[Sequence]")
+{
+    Context ctx;
+    ctx.variables["a"] = VariableValue{ "" };
+    ctx.variables["b"] = VariableValue{ "" };
+
+    Step step_action_1{Step::type_action};
+    step_action_1.set_script("a = preface .. 'Bob'");
+    step_action_1.set_used_context_variable_names({VariableName{"a"}});
+
+    Step step_action_2{Step::type_action};
+    step_action_2.set_script("b = a .. ' and ' .. preface .. 'Marvin!'");
+    step_action_2.set_used_context_variable_names({VariableName{"a"}, VariableName{"b"}});
+
+    Sequence seq{ "test_sequence" };
+    seq.set_step_setup_script("preface = 'Alice calls '");
+    seq.push_back(step_action_1);
+    seq.push_back(step_action_2);
+
+    seq.execute(ctx, nullptr);
+
+    REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob");
+    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice calls Marvin!");
+}
+
+TEST_CASE("Sequence: Add step setup with function", "[Sequence]")
+{
+    Context ctx;
+    ctx.variables["a"] = VariableValue{ "" };
+    ctx.variables["b"] = VariableValue{ "" };
+
+    Step step_action_1{Step::type_action};
+    step_action_1.set_script("a = preface('Bob!')");
+    step_action_1.set_used_context_variable_names({VariableName{"a"}});
+
+    Step step_action_2{Step::type_action};
+    step_action_2.set_script("b = preface('Charlie') .. ' and ' .. preface('Eve!')");
+    step_action_2.set_used_context_variable_names({VariableName{"b"}});
+
+    Sequence seq{ "test_sequence" };
+    seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
+    seq.push_back(step_action_1);
+    seq.push_back(step_action_2);
+
+    seq.execute(ctx, nullptr);
+
+    REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
+    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and Alice calls Eve!");
+}
+
+TEST_CASE("Sequence: Add step setup with isolated function modification", "[Sequence]")
+{
+    Context ctx;
+    ctx.variables["a"] = VariableValue{ "" };
+    ctx.variables["b"] = VariableValue{ "" };
+    ctx.variables["c"] = VariableValue{ "" };
+    ctx.variables["d"] = VariableValue{ "" };
+
+    Step step_action_1{Step::type_action};
+    step_action_1.set_script("a = preface('Bob!')");
+    step_action_1.set_used_context_variable_names({VariableName{"a"}});
+
+    Step step_action_2{Step::type_action};
+    step_action_2.set_script(R"(
+                             b = preface('Charlie!')
+                             function preface(name) return 'Bob calls ' .. name end
+                             c = preface('Marvin!')
+                             )");
+    step_action_2.set_used_context_variable_names({VariableName{"b"}, VariableName{"c"}});
+
+    Step step_action_3{Step::type_action};
+    step_action_3.set_script("d = preface('Eve!')");
+    step_action_3.set_used_context_variable_names({VariableName{"d"}});
+
+    Sequence seq{ "test_sequence" };
+    seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
+    seq.push_back(step_action_1);
+    seq.push_back(step_action_2);
+    seq.push_back(step_action_3);
+
+    seq.execute(ctx, nullptr);
+
+    REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
+    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie!");
+    REQUIRE(std::get<std::string>(ctx.variables["c"]) == "Bob calls Marvin!");
+    REQUIRE(std::get<std::string>(ctx.variables["d"]) == "Alice calls Eve!");
+}

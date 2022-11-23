@@ -96,6 +96,9 @@ public:
      *                      - A message of type step_stopped_with_error when the step has
      *                        been stopped due to an error condition
      * \param index         Index of the step in its parent Sequence.
+     * \param step_setup    Guarantees the execution of the setup script before the
+     *                      intrinsic script is executed. Per default it is set to an
+     *                      empty script.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -106,8 +109,11 @@ public:
      *            inappropriate return value for the step type (see above), if a timeout
      *            is encountered, or if termination has been requested via the
      *            communication channel or explicitly by the script.
+     *
+     * \see For more information about step setup scripts see at Sequence.
      */
-    bool execute(Context& context, CommChannel* comm_channel, StepIndex index);
+    bool execute(Context& context, CommChannel* comm_channel, StepIndex index,
+        std::string step_setup = "");
 
     /**
      * Execute the step script within the given context (without messaging).
@@ -127,6 +133,9 @@ public:
      * the script, with the exception of nil.
      *
      * \param context       The context to be used for executing the step
+     * \param step_setup    Guarantees the execution of the setup script before the
+     *                      intrinsic script is executed. Per default it is set to an
+     *                      empty script.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -137,10 +146,12 @@ public:
      *            inappropriate return value for the step type (see above), if a timeout
      *            is encountered, or if termination has been requested explicitly by the
      *            script.
+     *
+     * \see For more information about step setup scripts see at Sequence.
      */
-    bool execute(Context& context)
+    bool execute(Context& context, std::string step_setup = "")
     {
-        return execute(context, nullptr, 0);
+        return execute(context, nullptr, 0, step_setup);
     }
 
     /**
@@ -300,6 +311,18 @@ private:
     bool is_disabled_{ false };
 
     /**
+     * Checks if the step can execute a setup script before the appended intrinsic script.
+     *
+     * \return true allow to execute the setup script
+     * \return false refuse on executing the setup script
+     */
+    bool allow_step_setup() const
+    {
+        return get_type() == type_action or get_type() == type_if
+            or get_type() == type_elseif or get_type() == type_while;
+    }
+
+    /**
      * Copy the variables listed in used_context_variable_names_ from the given Context
      * into a LUA state.
      */
@@ -313,9 +336,10 @@ private:
 
     /**
      * Execute the Lua script, throwing an exception if anything goes wrong.
-     * \see execute(Context&, CommChannel*, StepIndex)
+     * \see execute(Context&, CommChannel*, StepIndex, std::string&)
      */
-    bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index);
+    bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index,
+        std::string step_setup);
 };
 
 /// Return a lower-case name for a step type ("action", "if", "end").
