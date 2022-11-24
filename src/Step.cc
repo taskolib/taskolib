@@ -108,7 +108,7 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
 }
 
 bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index,
-    std::string step_setup)
+    std::string& step_setup)
 {
     sol::state lua;
 

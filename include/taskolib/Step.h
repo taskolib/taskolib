@@ -74,7 +74,8 @@ public:
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
-     * 2. The lua_step_setup from the context is run if it is defined (non-null).
+     * 2a. The lua_step_setup from the context is run if it is defined (non-null).
+     * 2b. The step setup script given as a parameter is run.
      * 3. Selected variables are imported from the context into the runtime environment.
      * 4. The script from the step is loaded into the runtime environment and executed.
      * 5. Selected variables are exported from the runtime environment back into the
@@ -96,9 +97,8 @@ public:
      *                      - A message of type step_stopped_with_error when the step has
      *                        been stopped due to an error condition
      * \param index         Index of the step in its parent Sequence.
-     * \param step_setup    Guarantees the execution of the setup script before the
-     *                      intrinsic script is executed. Per default it is set to an
-     *                      empty script.
+     * \param step_setup    A setup script that is executed just before the main script of
+     *                      the step.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -121,7 +121,8 @@ public:
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
-     * 2. The lua_step_setup from the context is run if it is defined (non-null).
+     * 2a. The lua_step_setup from the context is run if it is defined (non-null).
+     * 2b. The step setup script given as a parameter is run.
      * 3. Selected variables are imported from the context into the runtime environment.
      * 4. The script from the step is loaded into the runtime environment and executed.
      * 5. Selected variables are exported from the runtime environment back into the
@@ -133,9 +134,8 @@ public:
      * the script, with the exception of nil.
      *
      * \param context       The context to be used for executing the step
-     * \param step_setup    Guarantees the execution of the setup script before the
-     *                      intrinsic script is executed. Per default it is set to an
-     *                      empty script.
+     * \param step_setup    A setup script that is executed just before the main script of
+     *                      the step.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -339,7 +339,7 @@ private:
      * \see execute(Context&, CommChannel*, StepIndex, std::string&)
      */
     bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index,
-        std::string step_setup);
+        std::string& step_setup);
 };
 
 /// Return a lower-case name for a step type ("action", "if", "end").
