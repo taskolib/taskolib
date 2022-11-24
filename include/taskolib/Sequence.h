@@ -70,15 +70,17 @@ namespace task {
  * seq.insert(seq.begin() + 1, Step{Step::type_action});
  * \endcode
  *
- * \section Step setup script
+ * ## Step setup script #
  *
- * Each step can have a setup script that is executed before the intrinsic script is
- * called (invoked with Step::set_script(const std::string&)). You can call it with
- * set_step_setup_script(std::string).
- * The defined variables and functions in the setup are exported in each step and you can
- * access them in the script. Changing the previous defined variables and/or functions
- * with a new definition from the setup is somehow isolated in the step itself and has no
- * effect on other steps.
+ * The sequence contains a common setup script that is shared by all of its steps. It is
+ * called automatically before the execution of each step's script, just after executing
+ * the lua_step_setup function from the context. This step setup script can be set with
+ * set_step_setup_script(). It is typically used like a small library for defining common
+ * functions or constants.
+ *
+ * Global variables and functions defined in the setup script can be accessed in the
+ * script.
+ *
  * The setup is only executed for Step types ACTION, IF, ELSEIF, or WHILE.
  *
  * \note The script is not validated and checked with a proper form. If a scripting error
@@ -255,11 +257,16 @@ public:
     ConstIterator erase(ConstIterator first, ConstIterator last);
 
     /**
-     * It is guaranteed that each step in the sequence can have a setup script that is
-     * executed before the step executes its script. However it is only relevant of the
-     * following Step types: ACTION, IF, ELSEIF, and WHILE.
+     * The sequence contains a common setup script that is shared by all of its steps. It
+     * is called automatically before the execution of each step's script, just after
+     * executing the lua_step_setup function from the context. This step setup script can
+     * be set with set_step_setup_script(). It is typically used like a small library for
+     * defining common functions or constants.
      *
-     * \param step_setup
+     * However it is only relevant of the following Step types: ACTION, IF, ELSEIF, and WHILE.
+     *
+     * \param step_setup Step setup script executed before the execution of each Step's
+     *                   script.
      */
     void set_step_setup_script(std::string step_setup);
 
