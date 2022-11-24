@@ -26,6 +26,7 @@
 #include "taskolib/Sequence.h"
 
 using namespace task;
+using namespace task::StepVariable;
 using namespace std::literals;
 
 TEST_CASE("Sequence: Constructor without descriptive label", "[Sequence]")
@@ -1134,7 +1135,7 @@ TEST_CASE("execute(): simple sequence", "[Sequence]")
 TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
 {
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     Step step;
     step.set_used_context_variable_names(VariableNames{"a"});
@@ -1144,13 +1145,13 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(sequence.get_error_message() == "");
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 0);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 0);
 }
 
 TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]")
 {
     Context ctx;
-    ctx.variables["a"] = LuaInteger{ 0 };
+    ctx.variables["a"] = Integer{ 0 };
     Sequence seq("Simple sequence");
 
     SECTION("Dont manipulate context variable") {
@@ -1159,7 +1160,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.execute(ctx, nullptr);
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 0);
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 0);
     }
     SECTION("Manipulate context variable") {
         Step s1;
@@ -1168,7 +1169,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.execute(ctx, nullptr);
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 2);
     }
     SECTION("Hand context variable over (not)") {
         Step s1;
@@ -1180,7 +1181,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s1);
         seq.push_back(s2);
         seq.execute(ctx, nullptr);
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 2);
     }
     SECTION("Hand context variable over") {
         Step s1;
@@ -1193,7 +1194,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s1);
         seq.push_back(s2);
         seq.execute(ctx, nullptr);
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 4);
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 4);
     }
     SECTION("Hand variable over context without initial value") {
         Step s1;
@@ -1206,7 +1207,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s1);
         seq.push_back(s2);
         seq.execute(ctx, nullptr);
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 4);
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 4);
     }
     SECTION("Hand bool variable over context without initial value") {
         Step s1;
@@ -1219,8 +1220,8 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s1);
         seq.push_back(s2);
         seq.execute(ctx, nullptr);
-        CAPTURE(std::get<LuaInteger>(ctx.variables["a"]));
-        REQUIRE(ctx.variables["a"] == VariableValue{ LuaInteger{ 4 } }); // Another variant to check variables
+        CAPTURE(std::get<Integer>(ctx.variables["a"]));
+        REQUIRE(ctx.variables["a"] == VariableValue{ Integer{ 4 }}); // Another variant to check variables
     }
     SECTION("Hand nil variable over context without initial value") {
         Step s1;
@@ -1237,8 +1238,8 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s2);
         seq.push_back(s3);
         seq.execute(ctx, nullptr);
-        CAPTURE(std::get<LuaInteger>(ctx.variables["a"]));
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 4);
+        CAPTURE(std::get<Integer>(ctx.variables["a"]));
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 4);
         REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
     }
     SECTION("Check nil is really non-existing") {
@@ -1265,8 +1266,8 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s3);
         seq.push_back(s4);
         seq.execute(ctx, nullptr);
-        CAPTURE(std::get<LuaInteger>(ctx.variables["a"]));
-        REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 1);
+        CAPTURE(std::get<Integer>(ctx.variables["a"]));
+        REQUIRE(std::get<Integer>(ctx.variables["a"]) == 1);
         REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
     }
 }
@@ -1291,7 +1292,7 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
           "change", "[Sequence]")
 {
     Context context;
-    context.variables["a"] = LuaInteger{ 1 };
+    context.variables["a"] = Integer{ 1 };
 
     Step step_action1;
     step_action1.set_label("Action");
@@ -1309,13 +1310,13 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
 
     REQUIRE_THROWS(sequence.execute(context, nullptr));
     REQUIRE(sequence.get_error_message() != "");
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 1);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 1);
 }
 
 TEST_CASE("execute(): complex sequence with context change", "[Sequence]")
 {
     Context context;
-    context.variables["a"] = LuaInteger{ 1 };
+    context.variables["a"] = Integer{ 1 };
 
     Step step_action1;
     step_action1.set_label("Action1");
@@ -1328,7 +1329,7 @@ TEST_CASE("execute(): complex sequence with context change", "[Sequence]")
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(sequence.get_error_message() == "");
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
 }
 
 TEST_CASE("execute(): if-else sequence", "[Sequence]")
@@ -1382,19 +1383,19 @@ TEST_CASE("execute(): if-else sequence", "[Sequence]")
     SECTION("if-else sequence with if=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 1 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
     }
 
     SECTION("if-else sequence with if=false")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 2 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 3);
     }
 }
 
@@ -1449,28 +1450,28 @@ TEST_CASE("execute(): if-elseif sequence", "[Sequence]")
     SECTION("if-elseif sequence with if=elseif=false")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
+        context.variables["a"] = Integer{ 0 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 0);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 0);
     }
 
     SECTION("if-elseif sequence with if=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 1 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
     }
 
     SECTION("if-elseif sequence with elseif=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 2 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 3);
     }
 }
 
@@ -1539,28 +1540,28 @@ TEST_CASE("execute(): if-elseif-else sequence", "[Sequence]")
     SECTION("if-elseif-else sequence with if=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 1 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
     }
 
     SECTION("if-elseif-else sequence with elseif=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 2 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 3);
     }
 
     SECTION("if-elseif-else sequence with else=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 3 };
+        context.variables["a"] = Integer{ 3 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 4);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 4);
     }
 }
 
@@ -1629,37 +1630,37 @@ TEST_CASE("execute(): if-elseif-elseif sequence", "[Sequence]")
     SECTION("if-elseif-elseif sequence with if=elseif=elseif=false")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
+        context.variables["a"] = Integer{ 0 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 0);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 0);
     }
 
     SECTION("if-elseif-elseif sequence with if=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 1 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
     }
 
     SECTION("if-elseif-elseif sequence with elseif[1]=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 2 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 3);
     }
 
     SECTION("if-elseif-elseif sequence with elseif[2]=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 3 };
+        context.variables["a"] = Integer{ 3 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 4);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 4);
     }
 }
 
@@ -1741,37 +1742,37 @@ TEST_CASE("execute(): if-elseif-elseif-else sequence", "[Sequence]")
     SECTION("if-elseif-elseif sequence with if=elseif=elseif=false")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
+        context.variables["a"] = Integer{ 0 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 5);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 5);
     }
 
     SECTION("if-elseif-elseif sequence with if=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 1 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
     }
 
     SECTION("if-elseif-elseif sequence with elseif[1]=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 2 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 3);
     }
 
     SECTION("if-elseif-elseif sequence with elseif[2]=true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 3 };
+        context.variables["a"] = Integer{ 3 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 4);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 4);
     }
 }
 
@@ -1825,28 +1826,28 @@ TEST_CASE("execute(): if-elseif-else-end sequence with empty blocks", "[Sequence
     SECTION("IF condition true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 1 };
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 
     SECTION("First ELSEIF condition true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 2 };
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 
     SECTION("Second ELSEIF condition true")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 3 };
+        context.variables["a"] = Integer{ 3 };
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 
     SECTION("All conditions false, use ELSE branch")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 4 };
+        context.variables["a"] = Integer{ 4 };
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     }
 }
@@ -1913,7 +1914,7 @@ TEST_CASE("execute(): faulty if-else-elseif sequence", "[Sequence]")
     sequence.push_back(step_if_end);
 
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     REQUIRE(sequence.get_error_message() == "");
     REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
@@ -1957,10 +1958,10 @@ TEST_CASE("execute(): while sequence", "[Sequence]")
     SECTION("while sequence with while: a<10")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
+        context.variables["a"] = Integer{ 0 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 10);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 10);
     }
 }
 
@@ -1994,10 +1995,10 @@ TEST_CASE("execute(): empty while sequence", "[Sequence]")
     SECTION("while sequence with while: a<10")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
+        context.variables["a"] = Integer{ 0 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 10);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 10);
     }
 }
 
@@ -2046,10 +2047,10 @@ TEST_CASE("execute(): try sequence with success", "[Sequence]")
     sequence.push_back(step_try_end);
 
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 1);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 1);
 }
 
 TEST_CASE("execute(): try sequence with fault", "[Sequence]")
@@ -2104,10 +2105,10 @@ TEST_CASE("execute(): try sequence with fault", "[Sequence]")
     sequence.push_back(step_try_end);
 
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
 }
 
 TEST_CASE("execute(): complex try sequence with nested fault condition",
@@ -2196,10 +2197,10 @@ TEST_CASE("execute(): complex try sequence with nested fault condition",
     sequence.push_back(step_10);
 
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 3);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 3);
 }
 
 TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
@@ -2262,11 +2263,11 @@ TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
     sequence.push_back(step_06);
 
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
     REQUIRE(sequence.get_error_message() != "");
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
 }
 
 TEST_CASE("execute(): complex try sequence with fault", "[Sequence]")
@@ -2362,7 +2363,7 @@ TEST_CASE("execute(): complex try sequence with fault", "[Sequence]")
 
     Context context;
     REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
-    REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
+    REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
 }
 
 TEST_CASE("execute(): complex sequence", "[Sequence]")
@@ -2623,89 +2624,89 @@ TEST_CASE("execute(): complex sequence", "[Sequence]")
     {
         Context context;
         // a=0, b=0, c=0, d=0/1/2, e=1/2/3, f=0, g=2/1
-        context.variables["a"] = LuaInteger{ 0 };
-        context.variables["b"] = LuaInteger{ 0 };
-        context.variables["c"] = LuaInteger{ 0 };
-        context.variables["d"] = LuaInteger{ 0 };
-        context.variables["e"] = LuaInteger{ 1 };
-        context.variables["f"] = LuaInteger{ 1 };
-        context.variables["g"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 0 };
+        context.variables["b"] = Integer{ 0 };
+        context.variables["c"] = Integer{ 0 };
+        context.variables["d"] = Integer{ 0 };
+        context.variables["e"] = Integer{ 1 };
+        context.variables["f"] = Integer{ 1 };
+        context.variables["g"] = Integer{ 1 };
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
 
         // a=10, b=1, c=1, d=0/2/3, e=1/3/4, f=2, g=1/2
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 10);
-        REQUIRE(std::get<LuaInteger>(context.variables["b"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["c"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["d"]) == 0);
-        REQUIRE(std::get<LuaInteger>(context.variables["e"]) == 1); // not touched
-        REQUIRE(std::get<LuaInteger>(context.variables["f"]) == 1); // not touched
-        REQUIRE(std::get<LuaInteger>(context.variables["g"]) == 1); // not touched
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 10);
+        REQUIRE(std::get<Integer>(context.variables["b"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["c"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["d"]) == 0);
+        REQUIRE(std::get<Integer>(context.variables["e"]) == 1); // not touched
+        REQUIRE(std::get<Integer>(context.variables["f"]) == 1); // not touched
+        REQUIRE(std::get<Integer>(context.variables["g"]) == 1); // not touched
     }
 
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 1->3, e: 1->2, f: 1->1, "
             "g: 1->1")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
-        context.variables["b"] = LuaInteger{ 0 };
-        context.variables["c"] = LuaInteger{ 0 };
-        context.variables["d"] = LuaInteger{ 1 };
-        context.variables["e"] = LuaInteger{ 1 };
-        context.variables["f"] = LuaInteger{ 1 };
-        context.variables["g"] = LuaInteger{ 1 };
+        context.variables["a"] = Integer{ 0 };
+        context.variables["b"] = Integer{ 0 };
+        context.variables["c"] = Integer{ 0 };
+        context.variables["d"] = Integer{ 1 };
+        context.variables["e"] = Integer{ 1 };
+        context.variables["f"] = Integer{ 1 };
+        context.variables["g"] = Integer{ 1 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 10);
-        REQUIRE(std::get<LuaInteger>(context.variables["b"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["c"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["d"]) == 3);
-        REQUIRE(std::get<LuaInteger>(context.variables["e"]) == 2);
-        REQUIRE(std::get<LuaInteger>(context.variables["f"]) == 1); // not touched
-        REQUIRE(std::get<LuaInteger>(context.variables["g"]) == 1); // not touched
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 10);
+        REQUIRE(std::get<Integer>(context.variables["b"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["c"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["d"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["e"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["f"]) == 1); // not touched
+        REQUIRE(std::get<Integer>(context.variables["g"]) == 1); // not touched
     }
 
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 2->3, e: 5->5, f: 2->2, "
             "g: 3->3")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
-        context.variables["b"] = LuaInteger{ 0 };
-        context.variables["c"] = LuaInteger{ 1 };
-        context.variables["d"] = LuaInteger{ 2 };
-        context.variables["e"] = LuaInteger{ 5 };
-        context.variables["f"] = LuaInteger{ 3 };
-        context.variables["g"] = LuaInteger{ 2 };
+        context.variables["a"] = Integer{ 0 };
+        context.variables["b"] = Integer{ 0 };
+        context.variables["c"] = Integer{ 1 };
+        context.variables["d"] = Integer{ 2 };
+        context.variables["e"] = Integer{ 5 };
+        context.variables["f"] = Integer{ 3 };
+        context.variables["g"] = Integer{ 2 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 10);
-        REQUIRE(std::get<LuaInteger>(context.variables["b"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["c"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["d"]) == 3);
-        REQUIRE(std::get<LuaInteger>(context.variables["e"]) == 5); // not touched
-        REQUIRE(std::get<LuaInteger>(context.variables["f"]) == 3); // not touched
-        REQUIRE(std::get<LuaInteger>(context.variables["g"]) == 2); // not touched
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 10);
+        REQUIRE(std::get<Integer>(context.variables["b"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["c"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["d"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["e"]) == 5); // not touched
+        REQUIRE(std::get<Integer>(context.variables["f"]) == 3); // not touched
+        REQUIRE(std::get<Integer>(context.variables["g"]) == 2); // not touched
     }
 
     SECTION("complex sequence: a: 0->10, b: 0->1, c: 0->1, d: 1->3, e: 2->4, f: 3->2, "
             "g: 4->2")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 0 };
-        context.variables["b"] = LuaInteger{ 0 };
-        context.variables["c"] = LuaInteger{ 1 };
-        context.variables["d"] = LuaInteger{ 1 };
-        context.variables["e"] = LuaInteger{ 2 };
-        context.variables["f"] = LuaInteger{ 3 };
-        context.variables["g"] = LuaInteger{ 4 };
+        context.variables["a"] = Integer{ 0 };
+        context.variables["b"] = Integer{ 0 };
+        context.variables["c"] = Integer{ 1 };
+        context.variables["d"] = Integer{ 1 };
+        context.variables["e"] = Integer{ 2 };
+        context.variables["f"] = Integer{ 3 };
+        context.variables["g"] = Integer{ 4 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 10);
-        REQUIRE(std::get<LuaInteger>(context.variables["b"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["c"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["d"]) == 3);
-        REQUIRE(std::get<LuaInteger>(context.variables["e"]) == 3);
-        REQUIRE(std::get<LuaInteger>(context.variables["f"]) == 3); // not touched
-        REQUIRE(std::get<LuaInteger>(context.variables["g"]) == 4); // not touched
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 10);
+        REQUIRE(std::get<Integer>(context.variables["b"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["c"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["d"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["e"]) == 3);
+        REQUIRE(std::get<Integer>(context.variables["f"]) == 3); // not touched
+        REQUIRE(std::get<Integer>(context.variables["g"]) == 4); // not touched
     }
 }
 
@@ -2870,7 +2871,7 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     auto& queue = comm.queue_;
 
     Context context;
-    context.variables["a"] = LuaInteger{ 0 };
+    context.variables["a"] = Integer{ 0 };
 
     Step step1{ Step::type_action };
     step1.set_used_context_variable_names(VariableNames{ "a" });
@@ -2998,11 +2999,11 @@ TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
     SECTION("All steps enabled")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 5 };
+        context.variables["a"] = Integer{ 5 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 2);
-        REQUIRE(std::get<LuaInteger>(context.variables["b"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 2);
+        REQUIRE(std::get<Integer>(context.variables["b"]) == 1);
     }
 
     sequence.modify(sequence.begin() + 1, [](Step& s) {
@@ -3013,11 +3014,11 @@ TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
     SECTION("Second step disabled")
     {
         Context context;
-        context.variables["a"] = LuaInteger{ 5 };
+        context.variables["a"] = Integer{ 5 };
 
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 1);
-        REQUIRE(std::get<LuaInteger>(context.variables["b"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 1);
+        REQUIRE(std::get<Integer>(context.variables["b"]) == 1);
     }
 }
 
@@ -3045,7 +3046,7 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
     {
         Context context;
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 6);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 6);
     }
 
     sequence.modify(sequence.begin() + 1, [](Step& s) {
@@ -3056,7 +3057,7 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
     {
         Context context;
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 5);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 5);
     }
 
     sequence.modify(sequence.begin() + 2, [](Step& s) {
@@ -3067,7 +3068,7 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
     {
         Context context;
         REQUIRE_NOTHROW(sequence.execute(context, nullptr));
-        REQUIRE(std::get<LuaInteger>(context.variables["a"]) == 4);
+        REQUIRE(std::get<Integer>(context.variables["a"]) == 4);
     }
 }
 
@@ -3145,7 +3146,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         sequence.push_back(step_post); // b = 1
 
         Context context;
-        context.variables["a"] = LuaInteger{ 5 };
+        context.variables["a"] = Integer{ 5 };
 
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == true);
@@ -3172,7 +3173,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         sequence.push_back(step_post); // b = 1
 
         Context context;
-        context.variables["a"] = LuaInteger{ 5 };
+        context.variables["a"] = Integer{ 5 };
 
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
@@ -3199,7 +3200,7 @@ TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
         sequence.push_back(step_post); // b = 1
 
         Context context;
-        context.variables["a"] = LuaInteger{ 5 };
+        context.variables["a"] = Integer{ 5 };
 
         REQUIRE(sequence[0].is_disabled() == false);
         REQUIRE(sequence[1].is_disabled() == false);
@@ -3283,7 +3284,7 @@ TEST_CASE("execute(): disable 'invariant' (afterwards)", "[Sequence]")
     sequence.push_back(step_post); // b = 1
 
     Context context;
-    context.variables["a"] = LuaInteger{ 5 };
+    context.variables["a"] = Integer{ 5 };
 
     SECTION("Second step disabled")
     {
@@ -3543,7 +3544,7 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
 
     step_while_end.set_label("end loop");
 
-    ctx.variables["a"] = LuaInteger{ 0 };
+    ctx.variables["a"] = Integer{ 0 };
 
     seq.push_back(step_while);
     seq.push_back(step_increment);
@@ -3557,7 +3558,7 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     for (const auto& step : seq)
         REQUIRE(step.is_running() == false);
 
-    REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 4);
+    REQUIRE(std::get<Integer>(ctx.variables["a"]) == 4);
     REQUIRE(not queue.empty());
     REQUIRE(queue.size() == 26);
     auto msg = queue.back();

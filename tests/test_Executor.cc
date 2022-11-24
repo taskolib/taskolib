@@ -293,7 +293,7 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
 TEST_CASE("Executor: Access context after run", "[Executor]")
 {
     Context ctx;
-    ctx.variables["a"] = LuaInteger{ 1 };
+    ctx.variables["a"] = StepVariable::Integer{ 1 };
 
     Sequence seq{ "a Seq" };
     seq.push_back(Step{ Step::type_while  }.set_script("return a % 10 ~= 0"));
@@ -306,7 +306,7 @@ TEST_CASE("Executor: Access context after run", "[Executor]")
 
     // Execute directly
     seq.execute(ctx, nullptr);
-    REQUIRE(std::get<LuaInteger>(ctx.variables["a"]) == 11 );
+    REQUIRE(std::get<StepVariable::Integer>(ctx.variables["a"]) == 11 );
 
     // Execute async
     Executor executor{ };
@@ -314,7 +314,7 @@ TEST_CASE("Executor: Access context after run", "[Executor]")
     while (executor.update(seq))
         gul14::sleep(5ms);
     auto vars = executor.get_context_variables();
-    REQUIRE(std::get<LuaInteger>(vars["a"]) == 21);
+    REQUIRE(std::get<StepVariable::Integer>(vars["a"]) == 21);
 }
 
 TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
@@ -348,7 +348,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
 
     step_while_end.set_label("end loop");
 
-    ctx.variables["a"] = LuaInteger{ 0 };
+    ctx.variables["a"] = StepVariable::Integer{ 0 };
 
     seq.push_back(step_while);
     seq.push_back(step_increment);
