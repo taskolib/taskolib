@@ -82,8 +82,8 @@ TEST_CASE("Check context variable assignment", "[Context]")
     // Some compilers fill this into the bool alternative!
     // See PR #33 for details.
     c.variables["b"] = "BooleanTest"s; // assigns std::string
-    // or: c.variables["b"] = LuaString{ "BooleanTest"s };
-    REQUIRE(std::holds_alternative<LuaBool>(c.variables["b"]) == false);
-    REQUIRE(std::holds_alternative<LuaString>(c.variables["b"]) == true);
-    REQUIRE(std::get<LuaString>(c.variables["b"]) == "BooleanTest");
+    // or: c.variables["b"] = StepVariable::String{ "BooleanTest"s };
+    REQUIRE(std::holds_alternative<StepVariable::Bool>(c.variables["b"]) == false);
+    REQUIRE(std::holds_alternative<StepVariable::String>(c.variables["b"]) == true);
+    REQUIRE(std::get<StepVariable::String>(c.variables["b"]) == "BooleanTest");
 }

@@ -61,18 +61,16 @@ void Step::copy_used_variables_from_context_to_lua(const Context& context, sol::
             {
                 using T = std::decay_t<decltype(value)>;
 
-                if constexpr (std::is_same_v<T, LuaFloat> or std::is_same_v<T, LuaInteger> or
-                              std::is_same_v<T, LuaString> or std::is_same_v<T, LuaBool>)
-                {
-                    lua[varname_str] = value;
-                }
-                else if constexpr (std::is_same_v<T, sol::lua_nil_t>) {
-                    lua[varname_str] = sol::lua_nil_t{ };
-                }
+                if constexpr (std::is_same_v<T, StepVariable::Integer>)
+                    lua[varname_str] = LuaInteger{ value };
+                else if constexpr (std::is_same_v<T, StepVariable::Float>)
+                    lua[varname_str] = LuaFloat{ value };
+                else if constexpr (std::is_same_v<T, StepVariable::String>)
+                    lua[varname_str] = LuaString{ value };
+                else if constexpr (std::is_same_v<T, StepVariable::Bool>)
+                    lua[varname_str] = LuaBool{ value };
                 else
-                {
                     static_assert(always_false_v<T>, "Unhandled type in variable import");
-                }
             },
             it->second);
     }
@@ -90,15 +88,15 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
             case sol::type::number:
                 // For this check to work, SOL_SAFE_NUMERICS needs to be set to 1
                 if (var.is<LuaInteger>())
-                    context.variables[varname] = VariableValue{ var.as<LuaInteger>() };
+                    context.variables[varname] = StepVariable::Integer{ var.as<LuaInteger>() };
                 else
-                    context.variables[varname] = VariableValue{ var.as<LuaFloat>() };
+                    context.variables[varname] = StepVariable::Float{ var.as<LuaFloat>() };
                 break;
             case sol::type::string:
-                context.variables[varname] = VariableValue{ var.as<LuaString>() };
+                context.variables[varname] = StepVariable::String{ var.as<LuaString>() };
                 break;
             case sol::type::boolean:
-                context.variables[varname] = VariableValue{ var.as<LuaBool>() };
+                context.variables[varname] = StepVariable::Bool{ var.as<LuaBool>() };
                 break;
             case sol::type::lua_nil:
                 context.variables.erase(varname);
