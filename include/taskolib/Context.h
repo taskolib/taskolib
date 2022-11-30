@@ -49,24 +49,13 @@ using LuaFloat = LUA_NUMBER; ///< The floating point type used by the Lua interp
 using LuaString = std::string; ///< The string type used by the Lua interpreter
 using LuaBool = bool; ///< The boolean type used by the Lua interpreter
 
-namespace StepVariable {
-    /**
-     * The types available to forward variables from one Step to the next.
-     */
-    using Integer = long long; ///< Storage type for integral numbers
-    using Float = double; ///< Storage type for floatingpoint number
-    using String = std::string; ///< Storage type for strings
-    using Bool = bool; ///< Storage type for booleans
-
-    /**
-     * One value holding any storage type
-     */
-    using Value = std::variant<
-        StepVariable::Integer,
-        StepVariable::Float,
-        StepVariable::String,
-        StepVariable::Bool>;
-}
+/**
+ * The types available to forward variables from one Step to the next.
+ */
+using VarInteger = long long; ///< Storage type for integral numbers
+using VarFloat = double; ///< Storage type for floatingpoint number
+using VarString = std::string; ///< Storage type for strings
+using VarBool = bool; ///< Storage type for booleans
 
 /**
  * A VariableValue is a variant over all Variable types.
@@ -77,7 +66,11 @@ namespace StepVariable {
  * Do not use a char* to pass the string, it might be converted to bool instead
  * of the expected std::string. The conversion depends on the used compiler (version).
  */
-using VariableValue = StepVariable::Value;
+using VariableValue = std::variant<
+    VarInteger,
+    VarFloat,
+    VarString,
+    VarBool>;
 
 /**
  * Associative table that holds Lua variable names and their value.
