@@ -100,8 +100,10 @@ struct Context
     /// A map of variables (names and values) that can be im-/exported into steps.
     VariableTable variables;
 
+    std::string step_setup = "";
+
     /// An initialization function that is called on a LUA state before a step is executed.
-    std::function<void(sol::state&)> lua_step_setup;
+    std::function<void(sol::state&)> step_setup_function;
 
     /// A callback that is invoked every time the script uses print().
     OutputCallback print_function = print_to_stdout;

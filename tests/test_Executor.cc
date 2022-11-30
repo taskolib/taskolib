@@ -371,7 +371,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
     Context ctx;
     ctx.log_error_function = nullptr;
 
-    ctx.lua_step_setup = [](sol::state& s) {
+    ctx.step_setup_function = [](sol::state& s) {
         s.set_function("testfun", &lua_testfun);
     };
 

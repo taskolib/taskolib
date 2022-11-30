@@ -74,11 +74,11 @@ public:
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
-     * 2a. The lua_step_setup from the context is run if it is defined (non-null).
-     * 2b. The step setup script given as a parameter is run.
-     * 3. Selected variables are imported from the context into the runtime environment.
-     * 4. The script from the step is loaded into the runtime environment and executed.
-     * 5. Selected variables are exported from the runtime environment back into the
+     * 2. The step_setup_function from the context is run if it is defined (non-null).
+     * 3. The step setup script given as a parameter is run.
+     * 4. Selected variables are imported from the context into the runtime environment.
+     * 5. The script from the step is loaded into the runtime environment and executed.
+     * 6. Selected variables are exported from the runtime environment back into the
      *    context.
      *
      * Certain step types (IF, ELSEIF, WHILE) require the script to return a boolean
@@ -97,8 +97,6 @@ public:
      *                      - A message of type step_stopped_with_error when the step has
      *                        been stopped due to an error condition
      * \param index         Index of the step in its parent Sequence.
-     * \param step_setup    A setup script that is executed just before the main script of
-     *                      the step.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -112,8 +110,7 @@ public:
      *
      * \see For more information about step setup scripts see at Sequence.
      */
-    bool execute(Context& context, CommChannel* comm_channel, StepIndex index,
-        std::string step_setup = "");
+    bool execute(Context& context, CommChannel* comm_channel, StepIndex index);
 
     /**
      * Execute the step script within the given context (without messaging).
@@ -121,11 +118,11 @@ public:
      * This function performs the following steps:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
-     * 2a. The lua_step_setup from the context is run if it is defined (non-null).
-     * 2b. The step setup script given as a parameter is run.
-     * 3. Selected variables are imported from the context into the runtime environment.
-     * 4. The script from the step is loaded into the runtime environment and executed.
-     * 5. Selected variables are exported from the runtime environment back into the
+     * 2. The step_setup_function from the context is run if it is defined (non-null).
+     * 3. The step setup script given as a parameter is run.
+     * 4. Selected variables are imported from the context into the runtime environment.
+     * 5. The script from the step is loaded into the runtime environment and executed.
+     * 6. Selected variables are exported from the runtime environment back into the
      *    context.
      *
      * Certain step types (IF, ELSEIF, WHILE) require the script to return a boolean
@@ -134,8 +131,6 @@ public:
      * the script, with the exception of nil.
      *
      * \param context       The context to be used for executing the step
-     * \param step_setup    A setup script that is executed just before the main script of
-     *                      the step.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -149,10 +144,17 @@ public:
      *
      * \see For more information about step setup scripts see at Sequence.
      */
-    bool execute(Context& context, std::string step_setup = "")
+    bool execute(Context& context)
     {
-        return execute(context, nullptr, 0, step_setup);
+        return execute(context, nullptr, 0);
     }
+
+    /**
+     * Request if a script is executed.
+     *
+     * \return true for executing a script otherwise false.
+     */
+    bool executes_script();
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -311,18 +313,6 @@ private:
     bool is_disabled_{ false };
 
     /**
-     * Checks if the step can execute a setup script before the appended intrinsic script.
-     *
-     * \return true allow to execute the setup script
-     * \return false refuse on executing the setup script
-     */
-    bool allow_step_setup() const
-    {
-        return get_type() == type_action or get_type() == type_if
-            or get_type() == type_elseif or get_type() == type_while;
-    }
-
-    /**
      * Copy the variables listed in used_context_variable_names_ from the given Context
      * into a LUA state.
      */
@@ -336,10 +326,9 @@ private:
 
     /**
      * Execute the Lua script, throwing an exception if anything goes wrong.
-     * \see execute(Context&, CommChannel*, StepIndex, std::string&)
+     * \see execute(Context&, CommChannel*, StepIndex)
      */
-    bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index,
-        std::string& step_setup);
+    bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index);
 };
 
 /// Return a lower-case name for a step type ("action", "if", "end").
@@ -347,6 +336,17 @@ std::string to_string(Step::Type type);
 
 /// Determine if a certain step type requires a boolean return value from the script.
 bool requires_bool_return_value(Step::Type step_type) noexcept;
+
+/// Alias for a step type collection that executes a script.
+using ExecutionSteps = std::set<Step::Type>;
+
+/// Step types that execute a script.
+const ExecutionSteps execution_steps{
+    Step::type_action,
+    Step::type_if,
+    Step::type_elseif,
+    Step::type_while
+    };
 
 } // namespace task
 

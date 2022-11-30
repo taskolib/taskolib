@@ -3567,11 +3567,12 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     REQUIRE(*(msg.get_index()) == 2);
 }
 
-TEST_CASE("Sequence: Add step setup with variable", "[Sequence]")
+TEST_CASE("Sequence: add step setup with variable", "[Sequence]")
 {
     Context ctx;
     ctx.variables["a"] = VariableValue{ "" };
     ctx.variables["b"] = VariableValue{ "" };
+    ctx.step_setup = "preface = 'Alice calls '";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface .. 'Bob'");
@@ -3582,21 +3583,22 @@ TEST_CASE("Sequence: Add step setup with variable", "[Sequence]")
     step_action_2.set_used_context_variable_names({VariableName{"a"}, VariableName{"b"}});
 
     Sequence seq{ "test_sequence" };
-    seq.set_step_setup_script("preface = 'Alice calls '");
     seq.push_back(step_action_1);
     seq.push_back(step_action_2);
 
     seq.execute(ctx, nullptr);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob");
-    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice calls Marvin!");
+    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice"
+        " calls Marvin!");
 }
 
-TEST_CASE("Sequence: Add step setup with function", "[Sequence]")
+TEST_CASE("Sequence: add step setup with function", "[Sequence]")
 {
     Context ctx;
     ctx.variables["a"] = VariableValue{ "" };
     ctx.variables["b"] = VariableValue{ "" };
+    ctx.step_setup = "function preface(name) return 'Alice calls ' .. name end";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface('Bob!')");
@@ -3607,34 +3609,35 @@ TEST_CASE("Sequence: Add step setup with function", "[Sequence]")
     step_action_2.set_used_context_variable_names({VariableName{"b"}});
 
     Sequence seq{ "test_sequence" };
-    seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
     seq.push_back(step_action_1);
     seq.push_back(step_action_2);
 
     seq.execute(ctx, nullptr);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
-    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and Alice calls Eve!");
+    REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and"
+        " Alice calls Eve!");
 }
 
-TEST_CASE("Sequence: Add step setup with isolated function modification", "[Sequence]")
+TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequence]")
 {
     Context ctx;
     ctx.variables["a"] = VariableValue{ "" };
     ctx.variables["b"] = VariableValue{ "" };
     ctx.variables["c"] = VariableValue{ "" };
     ctx.variables["d"] = VariableValue{ "" };
+    ctx.step_setup = "function preface(name) return 'Alice calls ' .. name end";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface('Bob!')");
     step_action_1.set_used_context_variable_names({VariableName{"a"}});
 
     Step step_action_2{Step::type_action};
-    step_action_2.set_script(R"(
-                             b = preface('Charlie!')
-                             function preface(name) return 'Bob calls ' .. name end
-                             c = preface('Marvin!')
-                             )");
+    step_action_2.set_script(
+        R"(b = preface('Charlie!')
+           function preface(name) return 'Bob calls ' .. name end
+           c = preface('Marvin!')
+        )");
     step_action_2.set_used_context_variable_names({VariableName{"b"}, VariableName{"c"}});
 
     Step step_action_3{Step::type_action};
@@ -3642,7 +3645,6 @@ TEST_CASE("Sequence: Add step setup with isolated function modification", "[Sequ
     step_action_3.set_used_context_variable_names({VariableName{"d"}});
 
     Sequence seq{ "test_sequence" };
-    seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
     seq.push_back(step_action_1);
     seq.push_back(step_action_2);
     seq.push_back(step_action_3);
@@ -3653,4 +3655,92 @@ TEST_CASE("Sequence: Add step setup with isolated function modification", "[Sequ
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie!");
     REQUIRE(std::get<std::string>(ctx.variables["c"]) == "Bob calls Marvin!");
     REQUIRE(std::get<std::string>(ctx.variables["d"]) == "Alice calls Eve!");
+}
+
+TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence]")
+{
+    Context ctx;
+    ctx.step_setup =
+        R"(preface = 'Alice'
+           this line will fail
+        )";
+
+    Step step_action_1{Step::type_action};
+    step_action_1.set_script("a = preface .. ' and Bob'");
+    step_action_1.set_used_context_variable_names({VariableName{"a"}});
+
+    Sequence seq{ "test_sequence" };
+    seq.push_back(step_action_1);
+
+    try
+    {
+        seq.execute(ctx, nullptr);
+    }
+    catch(const Error& e)
+    {
+        REQUIRE_THAT(e.what(), Catch::Matchers::Contains("error: [setup] 2"));
+    }
+    catch(...)
+    {
+        FAIL("Must throw Error exception");
+    }
+}
+
+TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequence]")
+{
+    Context ctx;
+    ctx.step_setup = "preface = 'Alice'";
+
+    Step step_action_1{Step::type_action};
+    step_action_1.set_script(
+        R"(a = preface .. ' and Bob'
+           Oops this line will fail
+        )");
+    step_action_1.set_used_context_variable_names({VariableName{"a"}});
+
+    Sequence seq{ "test_sequence" };
+    seq.push_back(step_action_1);
+
+    try
+    {
+        seq.execute(ctx, nullptr);
+    }
+    catch(const Error& e)
+    {
+        REQUIRE_THAT(e.what(), Catch::Matchers::Contains("error: 2"));
+    }
+    catch(...)
+    {
+        FAIL("Must throw Error exception");
+    }
+}
+
+TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequence]")
+{
+    Context ctx;
+    ctx.step_setup = "preface = 'Alice'";
+
+    Step step_action_1{Step::type_action};
+    step_action_1.set_script(
+        R"(a = preface .. ' and Bob'
+           a = 1
+           And again this line will fail
+        )");
+    step_action_1.set_used_context_variable_names({VariableName{"a"}});
+
+    Sequence seq{ "test_sequence" };
+    seq.push_back(step_action_1);
+
+    try
+    {
+        seq.execute(ctx, nullptr);
+    }
+    catch(const Error& e)
+    {
+        REQUIRE_THAT(e.what(), Catch::Matchers::Contains("error: 3"));
+    }
+    catch(...)
+    {
+        FAIL("Must throw Error exception");
+    }
 }
