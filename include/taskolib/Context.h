@@ -44,10 +44,10 @@ namespace task {
  *
  * If these types are used the data comes from or shall go to the Lua engine.
  */
-using LuaInteger = LUA_INTEGER;
-using LuaFloat = LUA_NUMBER;
-using LuaString = std::string;
-using LuaBool = bool;
+using LuaInteger = LUA_INTEGER; ///< The integer type used by the Lua interpreter
+using LuaFloat = LUA_NUMBER; ///< The floating point type used by the Lua interpreter
+using LuaString = std::string; ///< The string type used by the Lua interpreter
+using LuaBool = bool; ///< The boolean type used by the Lua interpreter
 
 namespace StepVariable {
     /**
