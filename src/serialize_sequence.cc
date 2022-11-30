@@ -110,10 +110,10 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
         << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << '\n';
 
     stream << "-- timeout: ";
-    if ( step.get_timeout() == Step::infinite_timeout )
+    if (!isfinite(step.get_timeout()))
         stream << "infinite\n";
     else
-        stream << step.get_timeout().count() << '\n';
+        stream << static_cast<std::chrono::milliseconds>(step.get_timeout()).count() << '\n';
 
     stream << "-- disabled: " << std::boolalpha << step.is_disabled() << '\n';
 
