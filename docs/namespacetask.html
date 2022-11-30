@@ -91,10 +91,34 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a5929300d9562286d102c0e4b27ab91cc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5929300d9562286d102c0e4b27ab91cc">VariableValue</a> = std::variant&lt; long long, double, std::string, bool &gt;</td></tr>
-<tr class="memdesc:a5929300d9562286d102c0e4b27ab91cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">A VariableValue is a variant over several data types Lua can understand (long long, double, std::string, bool).  <a href="namespacetask.html#a5929300d9562286d102c0e4b27ab91cc">More...</a><br /></td></tr>
-<tr class="separator:a5929300d9562286d102c0e4b27ab91cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3e14e35aad905c621373efc1a722679"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a> = std::unordered_map&lt; <a class="el" href="classtask_1_1VariableName.html">VariableName</a>, <a class="el" href="namespacetask.html#a5929300d9562286d102c0e4b27ab91cc">VariableValue</a> &gt;</td></tr>
+<tr class="memitem:a62955aa8e428b13e9c51dab7a51e8c53"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">LuaInteger</a> = LUA_INTEGER</td></tr>
+<tr class="memdesc:a62955aa8e428b13e9c51dab7a51e8c53"><td class="mdescLeft">&#160;</td><td class="mdescRight">The integer type used by the Lua interpreter.  <a href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">More...</a><br /></td></tr>
+<tr class="separator:a62955aa8e428b13e9c51dab7a51e8c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73dacf5b480f8924abd785d512744160"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a73dacf5b480f8924abd785d512744160">LuaFloat</a> = LUA_NUMBER</td></tr>
+<tr class="memdesc:a73dacf5b480f8924abd785d512744160"><td class="mdescLeft">&#160;</td><td class="mdescRight">The floating point type used by the Lua interpreter.  <a href="namespacetask.html#a73dacf5b480f8924abd785d512744160">More...</a><br /></td></tr>
+<tr class="separator:a73dacf5b480f8924abd785d512744160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a217c89de792148ddd8a9fddeded8ca"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a3a217c89de792148ddd8a9fddeded8ca">LuaString</a> = std::string</td></tr>
+<tr class="memdesc:a3a217c89de792148ddd8a9fddeded8ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The string type used by the Lua interpreter.  <a href="namespacetask.html#a3a217c89de792148ddd8a9fddeded8ca">More...</a><br /></td></tr>
+<tr class="separator:a3a217c89de792148ddd8a9fddeded8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4aa6e6d734c71a09290c8ab6f022c00"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa4aa6e6d734c71a09290c8ab6f022c00">LuaBool</a> = bool</td></tr>
+<tr class="memdesc:aa4aa6e6d734c71a09290c8ab6f022c00"><td class="mdescLeft">&#160;</td><td class="mdescRight">The boolean type used by the Lua interpreter.  <a href="namespacetask.html#aa4aa6e6d734c71a09290c8ab6f022c00">More...</a><br /></td></tr>
+<tr class="separator:aa4aa6e6d734c71a09290c8ab6f022c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c0ea653470484507aa3b2c13653d041"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2c0ea653470484507aa3b2c13653d041">VarInteger</a> = long long</td></tr>
+<tr class="memdesc:a2c0ea653470484507aa3b2c13653d041"><td class="mdescLeft">&#160;</td><td class="mdescRight">Storage type for integral numbers.  <a href="namespacetask.html#a2c0ea653470484507aa3b2c13653d041">More...</a><br /></td></tr>
+<tr class="separator:a2c0ea653470484507aa3b2c13653d041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8160f3359f2bb3dbb295f56ff9afc506"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8160f3359f2bb3dbb295f56ff9afc506">VarFloat</a> = double</td></tr>
+<tr class="memdesc:a8160f3359f2bb3dbb295f56ff9afc506"><td class="mdescLeft">&#160;</td><td class="mdescRight">Storage type for floatingpoint number.  <a href="namespacetask.html#a8160f3359f2bb3dbb295f56ff9afc506">More...</a><br /></td></tr>
+<tr class="separator:a8160f3359f2bb3dbb295f56ff9afc506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add627207ee60df79ce810ad3c7374504"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#add627207ee60df79ce810ad3c7374504">VarString</a> = std::string</td></tr>
+<tr class="memdesc:add627207ee60df79ce810ad3c7374504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Storage type for strings.  <a href="namespacetask.html#add627207ee60df79ce810ad3c7374504">More...</a><br /></td></tr>
+<tr class="separator:add627207ee60df79ce810ad3c7374504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ca6480fad086009f3f7198c61dcbb6a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a3ca6480fad086009f3f7198c61dcbb6a">VarBool</a> = bool</td></tr>
+<tr class="memdesc:a3ca6480fad086009f3f7198c61dcbb6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Storage type for booleans.  <a href="namespacetask.html#a3ca6480fad086009f3f7198c61dcbb6a">More...</a><br /></td></tr>
+<tr class="separator:a3ca6480fad086009f3f7198c61dcbb6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7be6b98a8d9103df726ba42a507767d4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a7be6b98a8d9103df726ba42a507767d4">VariableValue</a> = std::variant&lt; <a class="el" href="namespacetask.html#a2c0ea653470484507aa3b2c13653d041">VarInteger</a>, <a class="el" href="namespacetask.html#a8160f3359f2bb3dbb295f56ff9afc506">VarFloat</a>, <a class="el" href="namespacetask.html#add627207ee60df79ce810ad3c7374504">VarString</a>, <a class="el" href="namespacetask.html#a3ca6480fad086009f3f7198c61dcbb6a">VarBool</a> &gt;</td></tr>
+<tr class="memdesc:a7be6b98a8d9103df726ba42a507767d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A VariableValue is a variant over all Variable types.  <a href="namespacetask.html#a7be6b98a8d9103df726ba42a507767d4">More...</a><br /></td></tr>
+<tr class="separator:a7be6b98a8d9103df726ba42a507767d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3e14e35aad905c621373efc1a722679"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a> = std::unordered_map&lt; <a class="el" href="classtask_1_1VariableName.html">VariableName</a>, <a class="el" href="namespacetask.html#a7be6b98a8d9103df726ba42a507767d4">VariableValue</a> &gt;</td></tr>
 <tr class="memdesc:af3e14e35aad905c621373efc1a722679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associative table that holds Lua variable names and their value.  <a href="namespacetask.html#af3e14e35aad905c621373efc1a722679">More...</a><br /></td></tr>
 <tr class="separator:af3e14e35aad905c621373efc1a722679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fbac3e17d0a96b17417a9eff8c9da93"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> = std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt;</td></tr>
@@ -190,8 +214,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a28744f8db2a3af128f5bb0f49550c6fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a28744f8db2a3af128f5bb0f49550c6fa">get_step_idx_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:a28744f8db2a3af128f5bb0f49550c6fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the LUA registry.  <a href="namespacetask.html#a28744f8db2a3af128f5bb0f49550c6fa">More...</a><br /></td></tr>
 <tr class="separator:a28744f8db2a3af128f5bb0f49550c6fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aee4dc6d28e84c77d228dc8be7b5039"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6aee4dc6d28e84c77d228dc8be7b5039">get_ms_since_epoch</a> (<a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> t0, std::chrono::milliseconds dt)</td></tr>
-<tr class="separator:a6aee4dc6d28e84c77d228dc8be7b5039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a528bc0c099e1da1ff73dae10b926128f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">LuaInteger</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a528bc0c099e1da1ff73dae10b926128f">get_ms_since_epoch</a> (<a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> t0, std::chrono::milliseconds dt)</td></tr>
+<tr class="separator:a528bc0c099e1da1ff73dae10b926128f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace524b550971d657d53d927af82ff984"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request</a> (lua_State *lua_state, lua_Debug *)</td></tr>
 <tr class="separator:ace524b550971d657d53d927af82ff984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">hook_abort_with_error</a> (lua_State *lua_state, lua_Debug *)</td></tr>
@@ -229,6 +253,70 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa4aa6e6d734c71a09290c8ab6f022c00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4aa6e6d734c71a09290c8ab6f022c00">&#9670;&nbsp;</a></span>LuaBool</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#aa4aa6e6d734c71a09290c8ab6f022c00">task::LuaBool</a> = typedef bool</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The boolean type used by the Lua interpreter. </p>
+
+</div>
+</div>
+<a id="a73dacf5b480f8924abd785d512744160"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73dacf5b480f8924abd785d512744160">&#9670;&nbsp;</a></span>LuaFloat</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a73dacf5b480f8924abd785d512744160">task::LuaFloat</a> = typedef LUA_NUMBER</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The floating point type used by the Lua interpreter. </p>
+
+</div>
+</div>
+<a id="a62955aa8e428b13e9c51dab7a51e8c53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62955aa8e428b13e9c51dab7a51e8c53">&#9670;&nbsp;</a></span>LuaInteger</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">task::LuaInteger</a> = typedef LUA_INTEGER</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The integer type used by the Lua interpreter. </p>
+
+</div>
+</div>
+<a id="a3a217c89de792148ddd8a9fddeded8ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a217c89de792148ddd8a9fddeded8ca">&#9670;&nbsp;</a></span>LuaString</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a3a217c89de792148ddd8a9fddeded8ca">task::LuaString</a> = typedef std::string</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The string type used by the Lua interpreter. </p>
 
 </div>
 </div>
@@ -295,6 +383,38 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3ca6480fad086009f3f7198c61dcbb6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ca6480fad086009f3f7198c61dcbb6a">&#9670;&nbsp;</a></span>VarBool</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a3ca6480fad086009f3f7198c61dcbb6a">task::VarBool</a> = typedef bool</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Storage type for booleans. </p>
+
+</div>
+</div>
+<a id="a8160f3359f2bb3dbb295f56ff9afc506"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8160f3359f2bb3dbb295f56ff9afc506">&#9670;&nbsp;</a></span>VarFloat</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a8160f3359f2bb3dbb295f56ff9afc506">task::VarFloat</a> = typedef double</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Storage type for floatingpoint number. </p>
+
+</div>
+</div>
 <a id="a94cb88831b94f9f5d3f4894307efef74"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94cb88831b94f9f5d3f4894307efef74">&#9670;&nbsp;</a></span>VariableNames</h2>
 
@@ -316,7 +436,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">task::VariableTable</a> = typedef std::unordered_map&lt;<a class="el" href="classtask_1_1VariableName.html">VariableName</a>, <a class="el" href="namespacetask.html#a5929300d9562286d102c0e4b27ab91cc">VariableValue</a>&gt;</td>
+          <td class="memname">using <a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">task::VariableTable</a> = typedef std::unordered_map&lt;<a class="el" href="classtask_1_1VariableName.html">VariableName</a>, <a class="el" href="namespacetask.html#a7be6b98a8d9103df726ba42a507767d4">VariableValue</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -326,21 +446,53 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5929300d9562286d102c0e4b27ab91cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5929300d9562286d102c0e4b27ab91cc">&#9670;&nbsp;</a></span>VariableValue</h2>
+<a id="a7be6b98a8d9103df726ba42a507767d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7be6b98a8d9103df726ba42a507767d4">&#9670;&nbsp;</a></span>VariableValue</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespacetask.html#a5929300d9562286d102c0e4b27ab91cc">task::VariableValue</a> = typedef std::variant&lt;long long, double, std::string, bool&gt;</td>
+          <td class="memname">using <a class="el" href="namespacetask.html#a7be6b98a8d9103df726ba42a507767d4">task::VariableValue</a> = typedef std::variant&lt; <a class="el" href="namespacetask.html#a2c0ea653470484507aa3b2c13653d041">VarInteger</a>, <a class="el" href="namespacetask.html#a8160f3359f2bb3dbb295f56ff9afc506">VarFloat</a>, <a class="el" href="namespacetask.html#add627207ee60df79ce810ad3c7374504">VarString</a>, <a class="el" href="namespacetask.html#a3ca6480fad086009f3f7198c61dcbb6a">VarBool</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A VariableValue is a variant over several data types Lua can understand (long long, double, std::string, bool). </p>
+<p>A VariableValue is a variant over all Variable types. </p>
 <p>Variable names are associated with these values via a map in the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> class.</p>
 <p>Be careful when assigning a string to a VariableValue: Do not use a char* to pass the string, it might be converted to bool instead of the expected std::string. The conversion depends on the used compiler (version). </p>
+
+</div>
+</div>
+<a id="a2c0ea653470484507aa3b2c13653d041"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c0ea653470484507aa3b2c13653d041">&#9670;&nbsp;</a></span>VarInteger</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a2c0ea653470484507aa3b2c13653d041">task::VarInteger</a> = typedef long long</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Storage type for integral numbers. </p>
+
+</div>
+</div>
+<a id="add627207ee60df79ce810ad3c7374504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add627207ee60df79ce810ad3c7374504">&#9670;&nbsp;</a></span>VarString</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#add627207ee60df79ce810ad3c7374504">task::VarString</a> = typedef std::string</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Storage type for strings. </p>
 
 </div>
 </div>
@@ -594,14 +746,14 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
-<a id="a6aee4dc6d28e84c77d228dc8be7b5039"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6aee4dc6d28e84c77d228dc8be7b5039">&#9670;&nbsp;</a></span>get_ms_since_epoch()</h2>
+<a id="a528bc0c099e1da1ff73dae10b926128f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a528bc0c099e1da1ff73dae10b926128f">&#9670;&nbsp;</a></span>get_ms_since_epoch()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long long task::get_ms_since_epoch </td>
+          <td class="memname"><a class="el" href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">LuaInteger</a> task::get_ms_since_epoch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a>&#160;</td>
           <td class="paramname"><em>t0</em>, </td>
@@ -825,7 +977,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="namespacetask.html#a6aee4dc6d28e84c77d228dc8be7b5039">get_ms_since_epoch()</a>, and <a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a528bc0c099e1da1ff73dae10b926128f">get_ms_since_epoch()</a>, and <a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
@@ -1527,7 +1679,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 16 2022 15:26:31 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Nov 30 2022 13:46:44 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
