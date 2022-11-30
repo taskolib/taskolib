@@ -28,9 +28,11 @@
 #include <chrono>
 #include <set>
 #include <string>
+
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
 #include "taskolib/time_types.h"
+#include "taskolib/Timeout.h"
 #include "taskolib/VariableName.h"
 
 namespace task {
@@ -55,10 +57,6 @@ public:
         type_action, type_if, type_else, type_elseif, type_end, type_while, type_try,
         type_catch
     };
-
-    /// A constant to use for "infinite" timeout durations
-    static constexpr std::chrono::milliseconds
-        infinite_timeout{ std::chrono::milliseconds::max() };
 
     /// Maximum allowed level of indentation (or nesting of steps)
     static constexpr short max_indentation_level{ 20 };
@@ -211,7 +209,7 @@ public:
     TimePoint get_time_of_last_modification() const { return time_of_last_modification_; }
 
     /// Return the timeout duration for executing the script.
-    std::chrono::milliseconds get_timeout() const { return timeout_; }
+    Timeout get_timeout() const { return timeout_; }
 
     /// Return the type of this step.
     Type get_type() const noexcept { return type_; }
@@ -276,11 +274,8 @@ public:
      */
     Step& set_time_of_last_modification(TimePoint t);
 
-    /**
-     * Set the timeout duration for executing the script.
-     * Negative values set the timeout to zero.
-     */
-    Step& set_timeout(std::chrono::milliseconds timeout);
+    /// Set the timeout duration for executing the script.
+    Step& set_timeout(Timeout timeout);
 
     /**
      * Set the type of this step.
@@ -298,7 +293,7 @@ private:
     VariableNames used_context_variable_names_;
     TimePoint time_of_last_modification_{ Clock::now() };
     TimePoint time_of_last_execution_;
-    std::chrono::milliseconds timeout_{ infinite_timeout };
+    Timeout timeout_;
     Type type_{ type_action };
     short indentation_level_{ 0 };
     bool is_running_{ false };

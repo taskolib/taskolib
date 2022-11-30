@@ -194,12 +194,14 @@ void extract_timeout(gul14::string_view extract, Step& step)
 
     auto timeout = gul14::trim(extract.substr(start_timeout));
     if ("infinite" == timeout)
-        step.set_timeout(Step::infinite_timeout);
+    {
+        step.set_timeout(Timeout::infinity());
+    }
     else
     {
         try
         {
-            step.set_timeout(std::chrono::milliseconds(std::stoull(timeout)));
+            step.set_timeout(Timeout{ std::chrono::milliseconds(std::stoull(timeout)) });
         }
         catch(...) // catch any exception from std::stoull (Step::set_timeout is nothrow).
         {

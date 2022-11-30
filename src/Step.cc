@@ -236,12 +236,9 @@ Step& Step::set_time_of_last_modification(TimePoint t)
     return *this;
 }
 
-Step& Step::set_timeout(std::chrono::milliseconds timeout)
+Step& Step::set_timeout(Timeout timeout)
 {
-    if (timeout < 0s)
-        timeout_ = 0s;
-    else
-        timeout_ = timeout;
+    timeout_ = timeout;
     return *this;
 }
 

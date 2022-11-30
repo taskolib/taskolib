@@ -94,13 +94,13 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
     SECTION("deserialize infinite timeout")
     {
-        step.set_timeout(Step::infinite_timeout);
+        step.set_timeout(Timeout::infinity());
         ss << step;
 
         Step deserialize;
         ss >> deserialize;
 
-        REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
+        REQUIRE(isfinite(deserialize.get_timeout()) == false);
     }
 
     SECTION("deserialize 1s timeout")
@@ -192,7 +192,7 @@ TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 
         REQUIRE(deserialize.get_type() == Step::type_while);
         REQUIRE(deserialize.get_label() == "This is a label");
-        REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
+        REQUIRE(isfinite(deserialize.get_timeout()) == false);
         REQUIRE(deserialize.get_used_context_variable_names().empty());
         REQUIRE(deserialize.get_used_context_variable_names().size() == 0);
         REQUIRE(deserialize.get_used_context_variable_names() == VariableNames({}));
@@ -303,7 +303,7 @@ TEST_CASE("serialize_sequence: deserialize with reseting Step", "[serialize_sequ
 
     REQUIRE(deserialize.get_type() == Step::type_action);
     REQUIRE(deserialize.get_label() == "This is a label");
-    REQUIRE(deserialize.get_timeout() == Step::infinite_timeout);
+    REQUIRE(isfinite(deserialize.get_timeout()) == false);
 }
 
 TEST_CASE("serialize_sequence: deserialize with two types", "[serialize_sequence]")

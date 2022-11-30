@@ -92,7 +92,7 @@ TEST_CASE("Step: get_time_of_last_modification()", "[Step]")
 TEST_CASE("Step: get_timeout()", "[Step]")
 {
     Step step;
-    REQUIRE(step.get_timeout() == Step::infinite_timeout);
+    REQUIRE(isfinite(step.get_timeout()) == false);
 
     step.set_timeout(42s);
     REQUIRE(step.get_timeout() == 42'000ms);
@@ -209,11 +209,11 @@ TEST_CASE("Step: set_timeout()", "[Step]")
     REQUIRE(&step.set_timeout(42s) == &step);
     REQUIRE(step.get_timeout() == 42s);
 
-    step.set_timeout(-2ms);
+    step.set_timeout(0ms);
     REQUIRE(step.get_timeout() == 0s);
 
-    step.set_timeout(Step::infinite_timeout);
-    REQUIRE(step.get_timeout() == Step::infinite_timeout);
+    step.set_timeout(Timeout::infinity());
+    REQUIRE(isfinite(step.get_timeout()) == false);
 }
 
 TEST_CASE("Step: set_type()", "[Step]")
