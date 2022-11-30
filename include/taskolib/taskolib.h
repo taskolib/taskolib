@@ -33,6 +33,7 @@
 #include "taskolib/SequenceManager.h"
 #include "taskolib/Step.h"
 #include "taskolib/time_types.h"
+#include "taskolib/Timeout.h"
 #include "taskolib/VariableName.h"
 
 /// Namespace task contains all Taskolib functions and classes.
