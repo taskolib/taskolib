@@ -46,6 +46,11 @@ template <typename>
 
 namespace task {
 
+bool Step::executes_script()
+{
+    return execution_steps.find(get_type()) != execution_steps.end();
+}
+
 void Step::copy_used_variables_from_context_to_lua(const Context& context, sol::state& lua)
 {
     VariableNames import_varnames = get_used_context_variable_names();
@@ -107,24 +112,29 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
     }
 }
 
-bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index,
-    std::string& step_setup)
+bool Step::execute_impl(Context& context, CommChannel* comm,
+    StepIndex index)
 {
     sol::state lua;
 
     open_safe_library_subset(lua);
     install_custom_commands(lua, context);
 
-    if (context.lua_step_setup)
-        context.lua_step_setup(lua);
+    if (context.step_setup_function)
+        context.step_setup_function(lua);
 
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
                                                  comm);
 
-    auto script = allow_step_setup() ? step_setup + '\n' + get_script() : get_script();
+    if (executes_script())
+    {
+        const auto result_or_error = execute_lua_script(lua, context.step_setup);
+        if (std::holds_alternative<std::string>(result_or_error))
+            throw Error(gul14::cat("[setup] ",std::get<std::string>(result_or_error)));
+    }
 
     copy_used_variables_from_context_to_lua(context, lua);
-    const auto result_or_error = execute_lua_script(lua, script);
+    const auto result_or_error = execute_lua_script(lua, get_script());
     copy_used_variables_from_lua_to_context(lua, context);
 
     if (std::holds_alternative<std::string>(result_or_error))
@@ -154,8 +164,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm, StepIndex index,
     }
 }
 
-bool Step::execute(Context& context, CommChannel* comm, StepIndex index,
-    std::string step_setup)
+bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
 {
     const auto now = Clock::now();
     const auto set_is_running_to_false_after_execution =
@@ -167,7 +176,7 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index,
 
     try
     {
-        const bool result = execute_impl(context, comm, index, step_setup);
+        const bool result = execute_impl(context, comm, index);
 
         send_message(comm, Message::Type::step_stopped,
             requires_bool_return_value(get_type())

@@ -74,8 +74,8 @@ namespace task {
  *
  * The sequence contains a common setup script that is shared by all of its steps. It is
  * called automatically before the execution of each step's script, just after executing
- * the lua_step_setup function from the context. This step setup script can be set with
- * set_step_setup_script(). It is typically used like a small library for defining common
+ * the step_setup_function function from the context. This step setup script can be set with
+ * Context::step_setup. It is typically used like a small library for defining common
  * functions or constants.
  *
  * Global variables and functions defined in the setup script can be accessed in the
@@ -257,20 +257,6 @@ public:
     ConstIterator erase(ConstIterator first, ConstIterator last);
 
     /**
-     * The sequence contains a common setup script that is shared by all of its steps. It
-     * is called automatically before the execution of each step's script, just after
-     * executing the lua_step_setup function from the context. This step setup script can
-     * be set with set_step_setup_script(). It is typically used like a small library for
-     * defining common functions or constants.
-     *
-     * However it is only relevant of the following Step types: ACTION, IF, ELSEIF, and WHILE.
-     *
-     * \param step_setup Step setup script executed before the execution of each Step's
-     *                   script.
-     */
-    void set_step_setup_script(std::string step_setup);
-
-    /**
      * Execute the sequence within a given context.
      *
      * This function first performs a syntax check and throws an Error exception if it
@@ -347,7 +333,7 @@ public:
     /**
      * Retrieve if the sequence is executed.
      *
-     * @return true on executing otherwise false.
+     * \return true on executing otherwise false.
      */
     bool is_running() const noexcept { return is_running_; }
 
@@ -520,9 +506,13 @@ private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
+    /// Sequence label.
     std::string label_;
-    std::string step_setup_;
+
+    /// Collection of steps.
     std::vector<Step> steps_;
+
+    /// Flag to validate if the sequence is running.
     bool is_running_{false};
 
 
