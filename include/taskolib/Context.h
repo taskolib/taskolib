@@ -94,12 +94,26 @@ using OutputCallback =
  * - An initialization function that is called on a LUA state before a step is executed.
  * - Several callbacks that are invoked when a script calls print() or when the engine
  *   produces log output.
+ *
+ * ## Step setup script #
+ *
+ * The sequence contains a common setup script named step_setup that is shared by all of
+ * its steps. It is called automatically before the execution of each step's script, just
+ * after executing the lua_step_setup. It is typically used like a small library for
+ * defining common functions or constants.
+ *
+ * Global variables and functions defined in the setup script can be accessed in the
+ * script.
+ *
+ * The setup is only executed for Step types ACTION, IF, ELSEIF, or WHILE. The member
+ * function Step::executes_script() allows to validate script execution..
  */
 struct Context
 {
     /// A map of variables (names and values) that can be im-/exported into steps.
     VariableTable variables;
 
+    /// Step setup script with common functions or constants like a small library.
     std::string step_setup = "";
 
     /// An initialization function that is called on a LUA state before a step is executed.

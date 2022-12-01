@@ -917,6 +917,18 @@ TEST_CASE("Step: set_disabled()", "[Step]")
     }
 }
 
+TEST_CASE("Step: executes_script()", "[Step]")
+{
+    REQUIRE(Step{Step::type_action}.executes_script());
+    REQUIRE(Step{Step::type_if}.executes_script());
+    REQUIRE(Step{Step::type_elseif}.executes_script());
+    REQUIRE(Step{Step::type_action}.executes_script());
+
+    REQUIRE_FALSE(Step{Step::type_else}.executes_script());
+    REQUIRE_FALSE(Step{Step::type_try}.executes_script());
+    REQUIRE_FALSE(Step{Step::type_catch}.executes_script());
+    REQUIRE_FALSE(Step{Step::type_end}.executes_script());
+}
 //
 // Unit tests for free functions
 //
