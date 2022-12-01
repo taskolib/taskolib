@@ -70,22 +70,10 @@ namespace task {
  * seq.insert(seq.begin() + 1, Step{Step::type_action});
  * \endcode
  *
- * ## Step setup script #
- *
- * The sequence contains a common setup script that is shared by all of its steps. It is
- * called automatically before the execution of each step's script, just after executing
- * the step_setup_function function from the context. This step setup script can be set with
- * Context::step_setup. It is typically used like a small library for defining common
- * functions or constants.
- *
  * Global variables and functions defined in the setup script can be accessed in the
  * script.
  *
  * The setup is only executed for Step types ACTION, IF, ELSEIF, or WHILE.
- *
- * \note The script is not validated and checked with a proper form. If a scripting error
- * occurs during execution it will fail in the sequence and throw the appropriated Error
- * exception.
  */
 class Sequence
 {
