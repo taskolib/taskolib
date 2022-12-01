@@ -126,7 +126,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
                                                  comm);
 
-    if (executes_script())
+    if (executes_script() and not context.step_setup.empty())
     {
         const auto result_or_error = execute_lua_script(lua, context.step_setup);
         if (std::holds_alternative<std::string>(result_or_error))
