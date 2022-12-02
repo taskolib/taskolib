@@ -500,7 +500,7 @@ private:
     /// Collection of steps.
     std::vector<Step> steps_;
 
-    /// Flag to validate if the sequence is running.
+    /// Flag to determine if the sequence is running.
     bool is_running_{false};
 
 

@@ -105,8 +105,8 @@ using OutputCallback =
  * Global variables and functions defined in the setup script can be accessed in the
  * script.
  *
- * The setup is only executed for Step types ACTION, IF, ELSEIF, or WHILE. The member
- * function Step::executes_script() allows to validate script execution..
+ * The setup script is only executed for step types for which Step::executes_script()
+ * returns true (ACTION, IF, ELSEIF, WHILE).
  */
 struct Context
 {
