@@ -362,7 +362,6 @@ std::istream& operator>>(std::istream& stream, Sequence& seq)
             }
             else if (has_step_setup_script)
             {
-                std::cout << sizeof("]]]]]") << std::endl;
                 if(tmp.find_last_of("]]]]]") != std::string::npos)
                 {
                     tmp.remove_suffix(std::string("]]]]]").size());
