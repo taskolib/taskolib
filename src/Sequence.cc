@@ -289,6 +289,8 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     is_running_ = true;
 
+    context.step_setup = step_setup_script_;
+
     send_message(comm, Message::Type::sequence_started, "Sequence started",
                 Clock::now(), 0);
 
@@ -623,6 +625,11 @@ void Sequence::push_back(Step&& step)
     throw_if_full();
     steps_.push_back(step);
     enforce_invariants();
+}
+
+void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
+{
+    step_setup_script_.assign(step_setup_script.data(), step_setup_script.size());
 }
 
 void Sequence::set_error_message(gul14::string_view msg)

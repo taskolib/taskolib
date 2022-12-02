@@ -43,14 +43,24 @@ static const auto temp_dir = "unit_test"s;
 // This is executed before main() is called
 static auto prepare_filesystem = []() { return std::filesystem::remove_all(temp_dir); }();
 
+// Helper that returns all Lua step entries of a directory (i.e. files or subdirs)
+std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path)
+{
+    std::vector<std::string> result;
+    for (const auto& entry: std::filesystem::directory_iterator{ path })
+        if (entry.path().extension() == ".lua")
+            result.push_back(entry.path().filename().string());
+    return result;
+}
+
 // Helper that returns all entries of a directory (i.e. files or subdirs)
-std::vector<std::string> collect_filenames(const std::filesystem::path& path) {
+std::vector<std::string> collect_filenames(const std::filesystem::path& path)
+{
     std::vector<std::string> result;
     for (const auto& entry: std::filesystem::directory_iterator{ path })
         result.push_back(entry.path().filename().string());
     return result;
 }
-
 
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
@@ -443,7 +453,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
         "step_10_action.lua"
     };
 
-    std::vector<std::string> actual = collect_filenames(temp_dir + "/sequence");
+    std::vector<std::string> actual = collect_lua_filenames(temp_dir + "/sequence");
     std::sort(actual.begin(), actual.end());
 
     REQUIRE(10 == actual.size());
@@ -563,4 +573,42 @@ TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]"
     REQUIRE(sequence.get_label().substr(2) == deserialize_seq.get_label().substr(2));
     // Control char shall be encoded as blank
     REQUIRE(deserialize_seq.get_label().substr(1, 1) == " ");
+}
+
+TEST_CASE("serialize_sequence: : simple step setup", "[serialize_sequence]")
+{
+    Step step_action{Step::type_action};
+    step_action.set_script("a = preface .. 'Bob'");
+
+    Sequence seq{ "test_sequence_with_simple_step_setup" };
+    seq.push_back(step_action);
+    seq.set_step_setup_script("preface = 'Alice calls '");
+
+    serialize_sequence(temp_dir, seq);
+
+    Sequence seq_deserialized = deserialize_sequence(temp_dir + "/test_sequence_with_simple_step_setup");
+
+    REQUIRE(seq_deserialized.get_step_setup_script() == "preface = 'Alice calls '");
+}
+
+TEST_CASE("serialize_sequence: : complex step setup", "[serialize_sequence]")
+{
+    auto step_setup_script =
+R"(
+a = 'Bob'
+        function test(name) return name .. ' with some funky stuff!'     end
+b = test('Alice') \b\b  c = 4)";
+
+    Step step_action{Step::type_action};
+    step_action.set_script("a = preface .. 'Bob'");
+
+    Sequence seq{ "test_sequence_with_complex_step_setup" };
+    seq.push_back(step_action);
+    seq.set_step_setup_script(step_setup_script);
+
+    serialize_sequence(temp_dir, seq);
+
+    Sequence seq_deserialized = deserialize_sequence(temp_dir + "/test_sequence_with_complex_step_setup");
+
+    REQUIRE(seq_deserialized.get_step_setup_script() == step_setup_script);
 }

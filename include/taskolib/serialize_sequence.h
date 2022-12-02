@@ -81,6 +81,17 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
 void serialize_step(const std::filesystem::path& path, const Step& step);
 
 /**
+ * Serialize parameters of Sequence to the output stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * @param stream to serialize the Step
+ * @param sequence to serialize
+ * @return passed output stream
+ */
+std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
+
+/**
  * Serialize Sequence with all of its Step 's as files.
  *
  * After serializing you will find the following structure:

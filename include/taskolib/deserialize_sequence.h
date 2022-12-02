@@ -90,6 +90,17 @@ std::istream& operator>>(std::istream& stream, Step& step);
 Step deserialize_step(const std::filesystem::path& path);
 
 /**
+ * Deserialize parameters of Sequence from the input stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * \param stream input stream
+ * \param step Sequence to be deserialized.
+ * \return passed input stream
+ */
+std::istream& operator>>(std::istream& stream, Sequence& seq);
+
+/**
  * Deserialize Sequence from file path.
  *
  * \param path  a directory from which the sequence should be loaded
