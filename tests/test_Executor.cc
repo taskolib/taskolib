@@ -82,9 +82,8 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     // Starting another sequence must fail because the first one is still running
     REQUIRE_THROWS_AS(executor.run_asynchronously(sequence, context), Error);
 
-    // As long as the thread is running, update() and is_busy() must return true,
-    // and the sequence must signalize is_running().
-    REQUIRE(executor.is_busy() == true);
+    // As long as the thread is running, update() must return true, and the sequence must
+    // signalize is_running().
     REQUIRE(executor.update(sequence) == true);
     REQUIRE(sequence.is_running() == true);
 
@@ -107,10 +106,9 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 
     REQUIRE(gul14::toc(t0) >= 0.02);
 
-    // Thread has now finished. As long as we do not start another one, update() and
-    // is_busy() keep returning false.
+    // Thread has now finished. As long as we do not start another one, update() keeps
+    // returning false.
     REQUIRE(executor.update(sequence) == false);
-    REQUIRE(executor.is_busy() == false);
 
     // Both the sequence and all of its steps must show is_running() == false.
     REQUIRE(sequence.is_running() == false);
@@ -146,10 +144,9 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     while (executor.update(sequence))
         gul14::sleep(5ms);
 
-    // Thread has now finished. As long as we do not start another one, update() and
-    // is_busy() keep returning false.
+    // Thread has now finished. As long as we do not start another one, update() keeps
+    // returning false.
     REQUIRE(executor.update(sequence) == false);
-    REQUIRE(executor.is_busy() == false);
 
     REQUIRE(sequence.get_error_message() != "");
 }
@@ -177,10 +174,9 @@ TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
     REQUIRE(gul14::toc(t0) >= 0.005);
     REQUIRE(gul14::toc(t0) < 0.2);
 
-    // Thread has now finished. As long as we do not start another one, update() and
-    // is_busy() keep returning false
+    // Thread has now finished. As long as we do not start another one, update() keeps
+    // returning false.
     REQUIRE(executor.update(sequence) == false);
-    REQUIRE(executor.is_busy() == false);
 
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
@@ -232,22 +228,15 @@ TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
     REQUIRE(gul14::toc(t0) >= 0.005);
     REQUIRE(gul14::toc(t0) < 0.2);
 
-    // Thread has now finished. As long as we do not start another one, update() and
-    // is_busy() keep returning false
+    // Thread has now finished. As long as we do not start another one, update() keeps
+    // returning false.
     REQUIRE(executor.update(sequence) == false);
-    REQUIRE(executor.is_busy() == false);
 
     for (const auto& step : sequence)
     {
         CAPTURE(step.get_type());
         REQUIRE(step.is_running() == false);
     }
-}
-
-TEST_CASE("Executor: is_busy() on newly constructed Executor", "[Executor]")
-{
-    Executor ex;
-    REQUIRE(ex.is_busy() == false);
 }
 
 TEST_CASE("Executor: Redirection of print() output", "[Executor]")
@@ -271,23 +260,10 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
 
     executor.run_asynchronously(sequence, context);
 
-    SECTION("Regularly calling update()")
-    {
-        while (executor.update(sequence))
-            gul14::sleep(5ms);
+    while (executor.update(sequence))
+        gul14::sleep(5ms);
 
-        REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
-    }
-
-    SECTION("Regularly calling busy() and update() only at the end")
-    {
-        while (executor.is_busy())
-            gul14::sleep(5ms);
-        executor.update(sequence);
-
-        // Causes a test failure with a buggy implementation of is_busy()
-        REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
-    }
+    REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
 }
 
 TEST_CASE("Executor: Access context after run", "[Executor]")
@@ -361,9 +337,8 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     // Start the sequence in a separate thread
     executor.run_asynchronously(seq, ctx);
 
-    // As long as the thread is running, update() and is_busy() must return true,
-    // and the sequence must signalize is_running().
-    REQUIRE(executor.is_busy() == true);
+    // As long as the thread is running, update() must return true, and the sequence must
+    // signalize is_running().
     REQUIRE(executor.update(seq) == true);
     REQUIRE(seq.is_running() == true);
 
@@ -371,10 +346,9 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     while (executor.update(seq))
         gul14::sleep(5ms);
 
-    // Thread has now finished. As long as we do not start another one, update() and
-    // is_busy() keep returning false.
+    // Thread has now finished. As long as we do not start another one, update() keeps
+    // returning false.
     REQUIRE(executor.update(seq) == false);
-    REQUIRE(executor.is_busy() == false);
 
     // Both the sequence and all of its steps must show is_running() == false.
     REQUIRE(seq.is_running() == false);
@@ -428,7 +402,6 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
         gul14::sleep(5ms);
 
     REQUIRE(executor.update(seq) == false);
-    REQUIRE(executor.is_busy() == false);
 
     REQUIRE(gul14::contains(seq.get_error_message(), "Rainbows"));
 }

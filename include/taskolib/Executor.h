@@ -125,13 +125,6 @@ public:
     void cancel();
 
     /**
-     * Determine if the executor is currently running a sequence in a separate thread.
-     *
-     * \returns true if a sequence is being executed or false otherwise.
-     */
-    bool is_busy();
-
-    /**
      * Start a copy of the given sequence in a separate thread.
      * The given sequence is updated in this thread whenever update() is called.
      *
@@ -198,6 +191,17 @@ private:
      */
     static VariableTable execute_sequence(Sequence sequence, Context context,
         std::shared_ptr<CommChannel> comm_channel) noexcept;
+
+    /**
+     * Determine if the executor is currently running a sequence in a separate thread.
+     *
+     * \returns true if a sequence is being executed or false otherwise.
+     *
+     * \note
+     * This function does not retrieve any messages from the message queue, but it does
+     * join the worker thread if it has finished its sequence.
+     */
+    bool is_busy();
 };
 
 } // namespace task
