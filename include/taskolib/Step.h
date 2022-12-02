@@ -150,13 +150,6 @@ public:
     }
 
     /**
-     * Request if a script is executed.
-     *
-     * \return true for executing a script otherwise false.
-     */
-    bool executes_script();
-
-    /**
      * Retrieve the names of the variables that should be im-/exported to and from the
      * context.
      *
@@ -331,12 +324,6 @@ private:
     bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index);
 };
 
-/// Return a lower-case name for a step type ("action", "if", "end").
-std::string to_string(Step::Type type);
-
-/// Determine if a certain step type requires a boolean return value from the script.
-bool requires_bool_return_value(Step::Type step_type) noexcept;
-
 /// Alias for a step type collection that executes a script.
 using ExecutionSteps = std::set<Step::Type>;
 
@@ -347,6 +334,20 @@ const ExecutionSteps execution_steps{
     Step::type_elseif,
     Step::type_while
     };
+
+/// Return a lower-case name for a step type ("action", "if", "end").
+std::string to_string(Step::Type type);
+
+/**
+ * Request if a script is executed.
+ *
+ * \param step_type step type to check
+ * \return true for executing a script otherwise false.
+ */
+bool executes_script(Step::Type step_type) noexcept;
+
+/// Determine if a certain step type requires a boolean return value from the script.
+bool requires_bool_return_value(Step::Type step_type) noexcept;
 
 } // namespace task
 

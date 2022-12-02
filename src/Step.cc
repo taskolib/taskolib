@@ -46,11 +46,6 @@ template <typename>
 
 namespace task {
 
-bool Step::executes_script()
-{
-    return execution_steps.find(get_type()) != execution_steps.end();
-}
-
 void Step::copy_used_variables_from_context_to_lua(const Context& context, sol::state& lua)
 {
     VariableNames import_varnames = get_used_context_variable_names();
@@ -126,7 +121,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
                                                  comm);
 
-    if (executes_script() and not context.step_setup.empty())
+    if (executes_script(get_type()) and not context.step_setup.empty())
     {
         const auto result_or_error = execute_lua_script(lua, context.step_setup);
         if (std::holds_alternative<std::string>(result_or_error))
@@ -274,7 +269,6 @@ Step& Step::set_used_context_variable_names(VariableNames&& used_context_variabl
     return *this;
 }
 
-
 //
 // Free functions
 //
@@ -294,6 +288,11 @@ std::string to_string(Step::Type type)
     }
 
     return "unknown";
+}
+
+bool executes_script(Step::Type step_type) noexcept
+{
+    return execution_steps.find(step_type) != execution_steps.end();
 }
 
 bool requires_bool_return_value(Step::Type step_type) noexcept
