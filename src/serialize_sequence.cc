@@ -32,7 +32,7 @@ namespace task {
 namespace {
 
 /// Remove Step from the file system.
-void remove_step_path(const std::filesystem::path& path)
+void remove_path(const std::filesystem::path& path)
 {
     try
     {
@@ -71,7 +71,7 @@ std::string escape_filename_characters(gul14::string_view str)
 
 /// Create the filename. Push the extra leading zero to the step numberings (ie. leading
 /// zeros) to order them alphabetically.
-std::string extract_filename(const int number, int max_digits, const Step& step)
+std::string extract_filename_step(const int number, int max_digits, const Step& step)
 {
     std::ostringstream ss;
     ss << "step_" << std::setw(max_digits) << std::setfill('0') << number << '_'
@@ -126,7 +126,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
 
 void serialize_step(const std::filesystem::path& path, const Step& step)
 {
-    remove_step_path(path);
+    remove_path(path);
 
     std::ofstream stream(path);
 
@@ -136,11 +136,35 @@ void serialize_step(const std::filesystem::path& path, const Step& step)
     stream << step; // RAII closes the stream (let the destructor do the job)
 }
 
-void serialize_sequence(const std::filesystem::path& path, const Sequence& sequence)
+std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
+{
+    stream << "step setup: [[[[[\n";
+    stream << sequence.get_step_setup_script();
+    stream << "]]]]]\n";
+
+    check_stream(stream);
+
+    return stream;
+}
+
+void serialize_sequence_impl(const std::filesystem::path& path, const Sequence& seq)
+{
+    remove_path(path);
+
+    std::ofstream stream(path);
+
+    if (not stream.is_open())
+        throw Error(gul14::cat("I/O error: unable to open file (", path.string(), ")"));
+
+    stream << seq; // RAII closes the stream (let the destructor do the job)
+
+}
+
+void serialize_sequence(const std::filesystem::path& path, const Sequence& seq)
 {
     unsigned int idx = 0;
-    const int max_digits = int( sequence.size() / 10 ) + 1;
-    auto seq_path = path / escape_filename_characters(sequence.get_label());
+    const int max_digits = int( seq.size() / 10 ) + 1;
+    auto seq_path = path / escape_filename_characters(seq.get_label());
     try
     {
         if (std::filesystem::exists(seq_path))
@@ -152,8 +176,11 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seque
         auto err = errno;
         throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
-    for(const auto& step: sequence)
-        serialize_step(seq_path / extract_filename(++idx, max_digits, step), step);
+
+    serialize_sequence_impl(seq_path / "sequence.txt", seq);
+
+    for(const auto& step: seq)
+        serialize_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 }
 
 } // namespace task

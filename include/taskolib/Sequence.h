@@ -254,6 +254,8 @@ public:
      *
      * During execute(), is_running() returns true to internal functions or LUA callbacks.
      *
+     * By executing the Context the step setup script is overwritten.
+     *
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function
      *                that is run before each step.
@@ -269,6 +271,13 @@ public:
      *            get_error_message().
      */
     void execute(Context& context, CommChannel* comm_channel);
+
+    /**
+     * Get the step setup script object.
+     *
+     * @return const std::string& step setup script.
+     */
+    const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
 
     /**
      * Return a string explaining why the sequence stopped prematurely.
@@ -448,6 +457,13 @@ public:
     ConstReverseIterator rend() const noexcept { return steps_.crend(); }
 
     /**
+     * Sets setup script.
+     *
+     * \param step_setup_script step setup script.
+     */
+    void set_step_setup_script(gul14::string_view step_setup_script);
+
+    /**
      * Set an error message for the sequence.
      *
      * \param msg  A string explaining why the sequence stopped prematurely; to signalize
@@ -496,6 +512,9 @@ private:
 
     /// Sequence label.
     std::string label_;
+
+    /// Step setup script.
+    std::string step_setup_script_;
 
     /// Collection of steps.
     std::vector<Step> steps_;

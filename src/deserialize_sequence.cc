@@ -337,6 +337,76 @@ Step deserialize_step(const std::filesystem::path& path)
     return step;
 }
 
+std::istream& operator>>(std::istream& stream, Sequence& seq)
+{
+    std::string line;
+    std::string step_setup_script{};
+    bool has_step_setup_script = false;
+    bool load_step_setup_script = false;
+
+    while(std::getline(stream, line, '\n'))
+    {
+        auto tmp = gul14::trim_sv(line);
+        if (not load_step_setup_script)
+        {
+            if (not has_step_setup_script and tmp.find_first_of("-- step setup: [[[[[") != std::string::npos)
+            {
+                tmp.remove_prefix(std::string("-- step setup [[[[[").size());
+
+                if (not tmp.empty())
+                    step_setup_script += tmp;
+
+                has_step_setup_script = true;
+
+                continue;
+            }
+            else if (has_step_setup_script)
+            {
+                std::cout << sizeof("]]]]]") << std::endl;
+                if(tmp.find_last_of("]]]]]") != std::string::npos)
+                {
+                    tmp.remove_suffix(std::string("]]]]]").size());
+
+                    if (not tmp.empty())
+                        step_setup_script += tmp;
+
+                    has_step_setup_script = false;
+                    load_step_setup_script = true;
+                }
+                else
+                {
+                    std::cout << '\'' << line << '\'' << std::endl;
+                    step_setup_script += line + '\n';
+                }
+
+                continue;
+            }
+        }
+    }
+
+    if (has_step_setup_script and not load_step_setup_script)
+        throw Error(gul14::cat("Sequence '", seq.get_label(), "' has a misconfigured "
+            "step setup script configuration"));
+
+    if (load_step_setup_script)
+        seq.set_step_setup_script(step_setup_script);
+
+    return stream;
+}
+
+void deserialize_sequence_impl(const std::filesystem::path& path, Sequence& seq)
+{
+    if (not std::filesystem::exists(path / "sequence.txt"))
+        return;
+
+    std::ifstream stream(path / "sequence.txt");
+
+    if (not stream.is_open())
+        throw Error(gul14::cat("I/O error: unable to open file '", path.string(), "'"));
+
+    stream >> seq; // RAII closes the stream (let the destructor do the job)
+}
+
 Sequence deserialize_sequence(const std::filesystem::path& path)
 {
     if (path.empty())
@@ -347,9 +417,11 @@ Sequence deserialize_sequence(const std::filesystem::path& path)
     auto label = unescape_filename_characters(path.filename().string());
     Sequence seq{label};
 
+    deserialize_sequence_impl(path, seq);
+
     std::vector<std::filesystem::path> steps;
     for (auto const& entry : std::filesystem::directory_iterator{path})
-        if (entry.is_regular_file())
+        if (entry.is_regular_file() and entry.path().extension() == ".lua")
             steps.push_back(entry.path());
 
     if (steps.empty())

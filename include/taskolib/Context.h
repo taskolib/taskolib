@@ -105,6 +105,9 @@ using OutputCallback =
  * Global variables and functions defined in the setup script can be accessed in the
  * script.
  *
+ * Be aware that step setup script is overwritten with the content of the sequence setup
+ * script during its execution.
+ *
  * The setup script is only executed for step types for which Step::executes_script()
  * returns true (ACTION, IF, ELSEIF, WHILE).
  */
@@ -114,6 +117,7 @@ struct Context
     VariableTable variables;
 
     /// Step setup script with common functions or constants like a small library.
+    /// Overwritten when a sequence is started.
     std::string step_setup = "";
 
     /// An initialization function that is called on a LUA state before a step is executed.

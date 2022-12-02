@@ -3573,7 +3573,6 @@ TEST_CASE("Sequence: add step setup with variable", "[Sequence]")
     Context ctx;
     ctx.variables["a"] = VarString{ "" };
     ctx.variables["b"] = VarString{ "" };
-    ctx.step_setup = "preface = 'Alice calls '";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface .. 'Bob'");
@@ -3586,12 +3585,14 @@ TEST_CASE("Sequence: add step setup with variable", "[Sequence]")
     Sequence seq{ "test_sequence" };
     seq.push_back(step_action_1);
     seq.push_back(step_action_2);
+    seq.set_step_setup_script("preface = 'Alice calls '");
 
     seq.execute(ctx, nullptr);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice"
         " calls Marvin!");
+    REQUIRE(ctx.step_setup == "preface = 'Alice calls '");
 }
 
 TEST_CASE("Sequence: add step setup with function", "[Sequence]")
@@ -3599,7 +3600,6 @@ TEST_CASE("Sequence: add step setup with function", "[Sequence]")
     Context ctx;
     ctx.variables["a"] = VarString{ "" };
     ctx.variables["b"] = VarString{ "" };
-    ctx.step_setup = "function preface(name) return 'Alice calls ' .. name end";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface('Bob!')");
@@ -3612,12 +3612,14 @@ TEST_CASE("Sequence: add step setup with function", "[Sequence]")
     Sequence seq{ "test_sequence" };
     seq.push_back(step_action_1);
     seq.push_back(step_action_2);
+    seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
 
     seq.execute(ctx, nullptr);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and"
         " Alice calls Eve!");
+    REQUIRE(ctx.step_setup == "function preface(name) return 'Alice calls ' .. name end");
 }
 
 TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequence]")
@@ -3627,7 +3629,6 @@ TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequ
     ctx.variables["b"] = VarString{ "" };
     ctx.variables["c"] = VarString{ "" };
     ctx.variables["d"] = VarString{ "" };
-    ctx.step_setup = "function preface(name) return 'Alice calls ' .. name end";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface('Bob!')");
@@ -3649,6 +3650,7 @@ TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequ
     seq.push_back(step_action_1);
     seq.push_back(step_action_2);
     seq.push_back(step_action_3);
+    seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
 
     seq.execute(ctx, nullptr);
 
@@ -3656,15 +3658,12 @@ TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequ
     REQUIRE(std::get<VarString>(ctx.variables["b"]) == "Alice calls Charlie!");
     REQUIRE(std::get<VarString>(ctx.variables["c"]) == "Bob calls Marvin!");
     REQUIRE(std::get<VarString>(ctx.variables["d"]) == "Alice calls Eve!");
+    REQUIRE(ctx.step_setup == "function preface(name) return 'Alice calls ' .. name end");
 }
 
 TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence]")
 {
     Context ctx;
-    ctx.step_setup =
-        R"(preface = 'Alice'
-           this line will fail
-        )";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script("a = preface .. ' and Bob'");
@@ -3672,6 +3671,10 @@ TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence
 
     Sequence seq{ "test_sequence" };
     seq.push_back(step_action_1);
+    seq.set_step_setup_script(
+        R"(preface = 'Alice'
+           this line will fail
+        )");
 
     try
     {
@@ -3685,12 +3688,15 @@ TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence
     {
         FAIL("Must throw Error exception");
     }
+    REQUIRE(ctx.step_setup ==
+        R"(preface = 'Alice'
+           this line will fail
+        )");
 }
 
 TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequence]")
 {
     Context ctx;
-    ctx.step_setup = "preface = 'Alice'";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script(
@@ -3701,6 +3707,7 @@ TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequenc
 
     Sequence seq{ "test_sequence" };
     seq.push_back(step_action_1);
+    seq.set_step_setup_script("preface = 'Alice'");
 
     try
     {
@@ -3719,7 +3726,6 @@ TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequenc
 TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequence]")
 {
     Context ctx;
-    ctx.step_setup = "preface = 'Alice'";
 
     Step step_action_1{Step::type_action};
     step_action_1.set_script(
@@ -3731,6 +3737,7 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
 
     Sequence seq{ "test_sequence" };
     seq.push_back(step_action_1);
+    seq.set_step_setup_script("preface = 'Alice'");
 
     try
     {
@@ -3744,40 +3751,5 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
     {
         FAIL("Must throw Error exception");
     }
-}
-
-TEST_CASE("Sequence: Change setup script during execution", "[Sequence]")
-{
-    Context ctx;
-    ctx.step_setup = "preface = 'Alice'";
-    ctx.variables["a"] = VarString{ "" };
-
-    Step step_action_set{Step::type_action};
-    step_action_set.set_used_context_variable_names({VariableName{"a"}});
-    step_action_set.set_script("a = preface .. ' and Bob'");
-
-    Step step_action_sleep_before{Step::type_action};
-    step_action_sleep_before.set_script("sleep(0.05)"); // wait 50ms
-
-    Step step_action_modify{Step::type_action};
-    step_action_modify.set_used_context_variable_names({VariableName{"a"}});
-    step_action_modify.set_script("a = preface .. ' and Bob'");
-
-    Sequence seq{ "test_sequence" };
-    seq.push_back(step_action_set);
-    seq.push_back(step_action_sleep_before);
-    seq.push_back(step_action_modify);
-
-    std::thread t([&ctx, &seq]()
-    {
-        seq.execute(ctx, nullptr);
-    });
-
-    gul14::sleep(10ms);
-    REQUIRE(std::get<VarString>(ctx.variables["a"]) == "Alice and Bob");
-    ctx.step_setup = "preface = 'Erik'";
-
-    t.join(); // wait for thread to finish
-
-    REQUIRE(std::get<VarString>(ctx.variables["a"]) == "Erik and Bob");
+    REQUIRE(ctx.step_setup == "preface = 'Alice'");
 }
