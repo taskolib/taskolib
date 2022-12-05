@@ -46,6 +46,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classtask_1_1Executor-members.html">List of all members</a>  </div>
@@ -118,9 +119,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a578bcd803247fd8d101b7276e6e7e2e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel</a> ()</td></tr>
 <tr class="memdesc:a578bcd803247fd8d101b7276e6e7e2e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Terminate a running sequence.  <a href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">More...</a><br /></td></tr>
 <tr class="separator:a578bcd803247fd8d101b7276e6e7e2e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a175cd06097d2c48d6875778195da2d5e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy</a> ()</td></tr>
-<tr class="memdesc:a175cd06097d2c48d6875778195da2d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the executor is currently running a sequence in a separate thread.  <a href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">More...</a><br /></td></tr>
-<tr class="separator:a175cd06097d2c48d6875778195da2d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bf9edf1cbe3e6008b3a69c6d46b63ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context)</td></tr>
 <tr class="memdesc:a7bf9edf1cbe3e6008b3a69c6d46b63ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a copy of the given sequence in a separate thread.  <a href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">More...</a><br /></td></tr>
 <tr class="separator:a7bf9edf1cbe3e6008b3a69c6d46b63ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad19328988ebba9537be4e86c460b8aaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#ad19328988ebba9537be4e86c460b8aaf">get_context_variables</a> ()</td></tr>
 <tr class="memdesc:ad19328988ebba9537be4e86c460b8aaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the variables stored in the context.  <a href="classtask_1_1Executor.html#ad19328988ebba9537be4e86c460b8aaf">More...</a><br /></td></tr>
 <tr class="separator:ad19328988ebba9537be4e86c460b8aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a175cd06097d2c48d6875778195da2d5e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy</a> ()</td></tr>
+<tr class="memdesc:a175cd06097d2c48d6875778195da2d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the executor is currently running a sequence in a separate thread.  <a href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">More...</a><br /></td></tr>
+<tr class="separator:a175cd06097d2c48d6875778195da2d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -355,6 +359,9 @@ Private Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool task::Executor::is_busy </td>
@@ -363,10 +370,16 @@ Private Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Determine if the executor is currently running a sequence in a separate thread. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if a sequence is being executed or false otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>true if a sequence is being executed or false otherwise.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function does not retrieve any messages from the message queue, but it does join the worker thread if it has finished its sequence. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, and <a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">task::Context::variables</a>.</p>
 
@@ -590,7 +603,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 30 2022 13:46:44 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Dec 5 2022 08:11:24 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
