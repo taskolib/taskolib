@@ -3688,10 +3688,6 @@ TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence
     {
         FAIL("Must throw Error exception");
     }
-    REQUIRE(ctx.step_setup_script ==
-        R"(preface = 'Alice'
-           this line will fail
-        )");
 }
 
 TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequence]")
@@ -3751,5 +3747,31 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
     {
         FAIL("Must throw Error exception");
     }
-    REQUIRE(ctx.step_setup_script == "preface = 'Alice'");
+}
+
+TEST_CASE("Sequence: Check step setup script", "[Sequence]")
+{
+    Sequence seq{ "test_sequence" };
+    seq.set_step_setup_script(
+        R"(preface1 = 'Alice'
+           preface2 = 'Bob'
+        )");
+
+    SECTION("Sequence::get_step_setup_script()")
+    {
+        REQUIRE(seq.get_step_setup_script() ==
+        R"(preface1 = 'Alice'
+           preface2 = 'Bob')");
+    }
+
+    SECTION("Context::step_setup_script")
+    {
+        Context ctx;
+        REQUIRE(ctx.step_setup_script.empty());
+
+        seq.execute(ctx, nullptr);
+        REQUIRE(ctx.step_setup_script ==
+        R"(preface1 = 'Alice'
+           preface2 = 'Bob')");
+    }
 }

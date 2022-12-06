@@ -348,21 +348,17 @@ std::istream& operator>>(std::istream& stream, Sequence& seq)
         step_setup_script += (gul14::trim_right(line) + '\n');
 
     if (not step_setup_script.empty())
-    {
-        // remove the previous trailing line feed
-        step_setup_script.pop_back();
-
         seq.set_step_setup_script(step_setup_script);
-    }
+
     return stream;
 }
 
 void deserialize_sequence_impl(const std::filesystem::path& path, Sequence& seq)
 {
-    if (not std::filesystem::exists(path / SEQUENCE_LUA_FILENAME))
+    if (not std::filesystem::exists(path / sequence_lua_filename))
         return;
 
-    std::ifstream stream(path / SEQUENCE_LUA_FILENAME);
+    std::ifstream stream(path / sequence_lua_filename);
 
     if (not stream.is_open())
         throw Error(gul14::cat("I/O error: unable to open file '", path.string(), "'"));
@@ -384,7 +380,8 @@ Sequence deserialize_sequence(const std::filesystem::path& path)
 
     std::vector<std::filesystem::path> steps;
     for (auto const& entry : std::filesystem::directory_iterator{path})
-        if (entry.is_regular_file() and entry.path().filename() != SEQUENCE_LUA_FILENAME)
+        if (entry.is_regular_file()
+            and gul14::starts_with(entry.path().filename().string(), "step_"))
             steps.push_back(entry.path());
 
     if (steps.empty())
