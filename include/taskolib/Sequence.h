@@ -254,7 +254,7 @@ public:
      *
      * During execute(), is_running() returns true to internal functions or LUA callbacks.
      *
-     * By executing the Context the step setup script is overwritten.
+     * By executing the Sequence the step setup script is overwritten.
      *
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function

@@ -32,6 +32,9 @@
 
 namespace task {
 
+/// Define the Lua sequence filename for storing and loading Lua script.
+const char SEQUENCE_LUA_FILENAME[] = "sequence.lua";
+
 /**
  * A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence
  * anywhere in an error message signals that the execution of a script should be stopped.
