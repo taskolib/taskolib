@@ -917,10 +917,13 @@ TEST_CASE("Step: set_disabled()", "[Step]")
     }
 }
 
+//
+// Unit tests for free functions
+//
+
 TEST_CASE("Step: executes_script()", "[Step]")
 {
-    REQUIRE(task::executes_script(Step::type_action));
-    REQUIRE(task::executes_script(Step::type_action));
+    REQUIRE(task::executes_script(Step::type_while));
     REQUIRE(task::executes_script(Step::type_if));
     REQUIRE(task::executes_script(Step::type_elseif));
     REQUIRE(task::executes_script(Step::type_action));
@@ -930,9 +933,6 @@ TEST_CASE("Step: executes_script()", "[Step]")
     REQUIRE_FALSE(task::executes_script(Step::type_catch));
     REQUIRE_FALSE(task::executes_script(Step::type_end));
 }
-//
-// Unit tests for free functions
-//
 
 TEST_CASE("to_string(Step::Type)", "[Step]")
 {
