@@ -33,7 +33,7 @@
 namespace task {
 
 /// Define the Lua sequence filename for storing and loading Lua script.
-const char SEQUENCE_LUA_FILENAME[] = "sequence.lua";
+const char sequence_lua_filename[] = "sequence.lua";
 
 /**
  * A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence

@@ -176,7 +176,7 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seq)
         throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
 
-    serialize_sequence_impl(seq_path / SEQUENCE_LUA_FILENAME, seq);
+    serialize_sequence_impl(seq_path / sequence_lua_filename, seq);
 
     for(const auto& step: seq)
         serialize_step(seq_path / extract_filename_step(++idx, max_digits, step), step);

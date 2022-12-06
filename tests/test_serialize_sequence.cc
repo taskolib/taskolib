@@ -442,7 +442,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     std::vector<std::string> expect{
-        task::SEQUENCE_LUA_FILENAME,
+        task::sequence_lua_filename,
         "step_01_action.lua",
         "step_02_if.lua",
         "step_03_action.lua",
