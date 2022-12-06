@@ -290,7 +290,7 @@ std::string to_string(Step::Type type)
     return "unknown";
 }
 
-bool executes_script(Step::Type step_type) noexcept
+bool executes_script(Step::Type step_type)
 {
     return execution_steps.find(step_type) != execution_steps.end();
 }

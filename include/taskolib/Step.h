@@ -75,7 +75,7 @@ public:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
      * 2. The step_setup_function from the context is run if it is defined (non-null).
-     * 3. The step setup script given as a parameter is run.
+     * 3. The step setup script is run.
      * 4. Selected variables are imported from the context into the runtime environment.
      * 5. The script from the step is loaded into the runtime environment and executed.
      * 6. Selected variables are exported from the runtime environment back into the
@@ -119,7 +119,7 @@ public:
      * 1. A fresh script runtime environment is prepared and safe library components are
      *    loaded into it.
      * 2. The step_setup_function from the context is run if it is defined (non-null).
-     * 3. The step setup script given as a parameter is run.
+     * 3. The step setup script is run.
      * 4. Selected variables are imported from the context into the runtime environment.
      * 5. The script from the step is loaded into the runtime environment and executed.
      * 6. Selected variables are exported from the runtime environment back into the
@@ -339,12 +339,12 @@ const ExecutionSteps execution_steps{
 std::string to_string(Step::Type type);
 
 /**
- * Request if a script is executed.
+ * Determine if a script is executed.
  *
  * \param step_type step type to check
  * \return true for executing a script otherwise false.
  */
-bool executes_script(Step::Type step_type) noexcept;
+bool executes_script(Step::Type step_type);
 
 /// Determine if a certain step type requires a boolean return value from the script.
 bool requires_bool_return_value(Step::Type step_type) noexcept;

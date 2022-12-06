@@ -70,10 +70,15 @@ namespace task {
  * seq.insert(seq.begin() + 1, Step{Step::type_action});
  * \endcode
  *
- * Global variables and functions defined in the setup script can be accessed in the
- * script.
+ * ## Step setup script #
  *
- * The setup is only executed for Step types ACTION, IF, ELSEIF, or WHILE.
+ * The sequence can contains a common setup script that is shared by all of its steps. It
+ * is called automatically before the execution of each step's script, just after
+ * executing the lua_step_setup. It is typically used like a small library for defining
+ * common functions or constants.
+ *
+ * The setup script is only executed for step types for which Step::executes_script()
+ * returns true (ACTION, IF, ELSEIF, WHILE).
  */
 class Sequence
 {
@@ -254,7 +259,8 @@ public:
      *
      * During execute(), is_running() returns true to internal functions or LUA callbacks.
      *
-     * By executing the Sequence the step setup script is overwritten.
+     * By executing the Sequence the step setup script overwrites
+     * Context::step_setup_script.
      *
      * \param context A context for storing variables that can be exchanged between
      *                different steps. The context may also contain a LUA init function
@@ -273,9 +279,9 @@ public:
     void execute(Context& context, CommChannel* comm_channel);
 
     /**
-     * Get the step setup script object.
+     * Get the step setup script.
      *
-     * @return const std::string& step setup script.
+     * \returns the step setup script.
      */
     const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
 

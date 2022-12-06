@@ -95,21 +95,10 @@ using OutputCallback =
  * - Several callbacks that are invoked when a script calls print() or when the engine
  *   produces log output.
  *
- * ## Step setup script #
- *
- * The sequence contains a common setup script named step_setup_script that is shared by all of
- * its steps. It is called automatically before the execution of each step's script, just
- * after executing the lua_step_setup. It is typically used like a small library for
- * defining common functions or constants.
- *
- * Global variables and functions defined in the setup script can be accessed in the
- * script.
+ * Global variables and functions defined in the step setup script can be accessed.
  *
  * Be aware that step setup script is overwritten with the content of the sequence setup
  * script during its execution.
- *
- * The setup script is only executed for step types for which Step::executes_script()
- * returns true (ACTION, IF, ELSEIF, WHILE).
  */
 struct Context
 {

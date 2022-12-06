@@ -3749,7 +3749,7 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
     }
 }
 
-TEST_CASE("Sequence: Check step setup script", "[Sequence]")
+TEST_CASE("Sequence: Check setter/getter function for step setup script", "[Sequence]")
 {
     Sequence seq{ "test_sequence" };
     seq.set_step_setup_script(
