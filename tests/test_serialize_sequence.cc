@@ -31,6 +31,7 @@
 #include <system_error>
 #include <vector>
 
+#include "../src/internals.h" // SEQUENCE_LUA_FILENAME
 #include "taskolib/deserialize_sequence.h"
 #include "taskolib/serialize_sequence.h"
 
@@ -441,6 +442,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     std::vector<std::string> expect{
+        task::SEQUENCE_LUA_FILENAME,
         "step_01_action.lua",
         "step_02_if.lua",
         "step_03_action.lua",
@@ -456,7 +458,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     std::vector<std::string> actual = collect_lua_filenames(temp_dir + "/sequence");
     std::sort(actual.begin(), actual.end());
 
-    REQUIRE(10 == actual.size());
+    REQUIRE(expect.size() == actual.size());
     REQUIRE(expect == actual);
 }
 

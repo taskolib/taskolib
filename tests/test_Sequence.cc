@@ -3592,7 +3592,7 @@ TEST_CASE("Sequence: add step setup with variable", "[Sequence]")
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice"
         " calls Marvin!");
-    REQUIRE(ctx.step_setup == "preface = 'Alice calls '");
+    REQUIRE(ctx.step_setup_script == "preface = 'Alice calls '");
 }
 
 TEST_CASE("Sequence: add step setup with function", "[Sequence]")
@@ -3619,7 +3619,7 @@ TEST_CASE("Sequence: add step setup with function", "[Sequence]")
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and"
         " Alice calls Eve!");
-    REQUIRE(ctx.step_setup == "function preface(name) return 'Alice calls ' .. name end");
+    REQUIRE(ctx.step_setup_script == "function preface(name) return 'Alice calls ' .. name end");
 }
 
 TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequence]")
@@ -3658,7 +3658,7 @@ TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequ
     REQUIRE(std::get<VarString>(ctx.variables["b"]) == "Alice calls Charlie!");
     REQUIRE(std::get<VarString>(ctx.variables["c"]) == "Bob calls Marvin!");
     REQUIRE(std::get<VarString>(ctx.variables["d"]) == "Alice calls Eve!");
-    REQUIRE(ctx.step_setup == "function preface(name) return 'Alice calls ' .. name end");
+    REQUIRE(ctx.step_setup_script == "function preface(name) return 'Alice calls ' .. name end");
 }
 
 TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence]")
@@ -3688,7 +3688,7 @@ TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence
     {
         FAIL("Must throw Error exception");
     }
-    REQUIRE(ctx.step_setup ==
+    REQUIRE(ctx.step_setup_script ==
         R"(preface = 'Alice'
            this line will fail
         )");
@@ -3751,5 +3751,5 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
     {
         FAIL("Must throw Error exception");
     }
-    REQUIRE(ctx.step_setup == "preface = 'Alice'");
+    REQUIRE(ctx.step_setup_script == "preface = 'Alice'");
 }

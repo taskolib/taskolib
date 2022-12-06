@@ -121,9 +121,9 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
                                                  comm);
 
-    if (executes_script(get_type()) and not context.step_setup.empty())
+    if (executes_script(get_type()) and not context.step_setup_script.empty())
     {
-        const auto result_or_error = execute_lua_script(lua, context.step_setup);
+        const auto result_or_error = execute_lua_script(lua, context.step_setup_script);
         if (std::holds_alternative<std::string>(result_or_error))
             throw Error(gul14::cat("[setup] ",std::get<std::string>(result_or_error)));
     }

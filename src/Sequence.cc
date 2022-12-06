@@ -289,7 +289,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     is_running_ = true;
 
-    context.step_setup = step_setup_script_;
+    context.step_setup_script = step_setup_script_;
 
     send_message(comm, Message::Type::sequence_started, "Sequence started",
                 Clock::now(), 0);
@@ -629,6 +629,9 @@ void Sequence::push_back(Step&& step)
 
 void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
 {
+    // remove trailing whitespaces
+    gul14::trim_right_sv(step_setup_script, "\n\r\v\f\t ");
+
     step_setup_script_.assign(step_setup_script.data(), step_setup_script.size());
 }
 

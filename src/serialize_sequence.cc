@@ -25,6 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include <gul14/gul.h>
+#include "internals.h"
 #include "taskolib/serialize_sequence.h"
 
 namespace task {
@@ -138,9 +139,7 @@ void serialize_step(const std::filesystem::path& path, const Step& step)
 
 std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
 {
-    stream << "step setup: [[[[[\n";
     stream << sequence.get_step_setup_script();
-    stream << "]]]]]\n";
 
     check_stream(stream);
 
@@ -177,7 +176,7 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seq)
         throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
 
-    serialize_sequence_impl(seq_path / "sequence.txt", seq);
+    serialize_sequence_impl(seq_path / SEQUENCE_LUA_FILENAME, seq);
 
     for(const auto& step: seq)
         serialize_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
