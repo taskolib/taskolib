@@ -1,3 +1,10 @@
+taskolib-0-3-5 (0.3.5) unstable; urgency=low
+
+  * automatically added debian changelog entry
+    by the DOOCS script check_changelog
+
+ -- Lars Froehlich <lars.froehlich@desy.de>  Wed, 07 Dec 2022 13:20:30 +0100
+
 taskolib-0-3-4 (0.3.4) unstable; urgency=low
 
   * automatically added debian changelog entry
