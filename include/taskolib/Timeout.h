@@ -26,6 +26,7 @@
 #define TASKOLIB_TIMEOUT_H_
 
 #include <chrono>
+#include <cmath>
 #include <limits>
 
 #include "taskolib/exceptions.h"
