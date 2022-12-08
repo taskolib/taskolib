@@ -134,7 +134,7 @@ void Executor::run_asynchronously(Sequence& sequence, Context context)
                          std::move(context), comm_channel_);
 
     sequence.set_running(true);
-    sequence.set_error_message("");
+    sequence.set_error(gul14::nullopt);
 }
 
 bool Executor::update(Sequence& sequence)
@@ -182,7 +182,7 @@ bool Executor::update(Sequence& sequence)
             break;
         case Message::Type::sequence_stopped_with_error:
             sequence.set_running(false);
-            sequence.set_error_message(msg.get_text());
+            sequence.set_error(Error{ msg.get_text(), msg.get_index() });
             if (context_.log_error_function)
                 context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;

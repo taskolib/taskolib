@@ -335,7 +335,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
         send_message(comm, Message::Type::sequence_stopped_with_error, msg, Clock::now(),
                      maybe_exception_index);
-        set_error_message(msg);
+        set_error(Error{ msg, maybe_exception_index });
 
         throw Error(msg);
     }
@@ -629,9 +629,9 @@ void Sequence::push_back(Step&& step)
     enforce_invariants();
 }
 
-void Sequence::set_error_message(gul14::string_view msg)
+void Sequence::set_error(gul14::optional<Error> opt_error)
 {
-    error_message_.assign(msg.data(), msg.size());
+    error_ = std::move(opt_error);
 }
 
 void Sequence::set_label(gul14::string_view label)

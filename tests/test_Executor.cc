@@ -29,6 +29,7 @@
 
 using namespace task;
 using namespace std::literals;
+using namespace Catch::Matchers;
 
 TEST_CASE("Executor: Constructor", "[Executor]")
 {
@@ -66,7 +67,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
 
     Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
-    REQUIRE(sequence.get_error_message() == "");
+    REQUIRE(sequence.get_error().has_value() == false);
 
     Executor executor;
 
@@ -115,7 +116,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
 
-    REQUIRE(sequence.get_error_message() == "");
+    REQUIRE(sequence.get_error().has_value() == false);
 }
 
 TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
@@ -128,9 +129,9 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
 
     Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
-    REQUIRE(sequence.get_error_message() == "");
+    REQUIRE(sequence.get_error().has_value() == false);
 
-    sequence.set_error_message("Test");
+    sequence.set_error(Error{ "Test", 42 });
 
     Executor executor;
     executor.run_asynchronously(sequence, context);
@@ -138,7 +139,7 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     // The sequence must signalize is_running() == true and an empty error message at
     // least until the first call to is_busy() or update().
     REQUIRE(sequence.is_running() == true);
-    REQUIRE(sequence.get_error_message() == "");
+    REQUIRE(sequence.get_error().has_value() == false);
 
     // Process messages as long as the thread is running
     while (executor.update(sequence))
@@ -148,7 +149,10 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     // returning false.
     REQUIRE(executor.update(sequence) == false);
 
-    REQUIRE(sequence.get_error_message() != "");
+    REQUIRE(sequence.get_error().has_value() == true);
+    REQUIRE(sequence.get_error()->what() != ""s);
+    REQUIRE(sequence.get_error()->get_index().has_value());
+    REQUIRE(sequence.get_error()->get_index().value() == 0);
 }
 
 TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
@@ -173,7 +177,8 @@ TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
     }
 
     // Make sure that exactly the desired error message comes out
-    REQUIRE(sequence.get_error_message() == "Sequence aborted: Stop on user request");
+    REQUIRE(sequence.get_error().has_value());
+    REQUIRE(sequence.get_error()->what() == "Sequence aborted: Stop on user request"s);
 }
 
 TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
@@ -192,7 +197,7 @@ TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
         gul14::sleep(1ms);
     } // executor is destructed here
 
-    REQUIRE(sequence.get_error_message() == "");
+    REQUIRE(sequence.get_error().has_value() == false);
 }
 
 TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
@@ -226,7 +231,8 @@ TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
         REQUIRE(step.is_running() == false);
 
     // Make sure that exactly the desired error message comes out
-    REQUIRE(sequence.get_error_message() == "Sequence aborted: Stop on user request");
+    REQUIRE(sequence.get_error().has_value());
+    REQUIRE(sequence.get_error()->what() == "Sequence aborted: Stop on user request"s);
 }
 
 TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
@@ -399,7 +405,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     for (const auto& step : seq)
         REQUIRE(step.is_running() == false);
 
-    REQUIRE(seq.get_error_message() == "");
+    REQUIRE(seq.get_error().has_value() == false);
 }
 
 // A function that would return the integer value 10 in Lua
@@ -447,5 +453,6 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
 
     REQUIRE(executor.update(seq) == false);
 
-    REQUIRE(gul14::contains(seq.get_error_message(), "Rainbows"));
+    REQUIRE(seq.get_error().has_value() == true);
+    REQUIRE_THAT(seq.get_error()->what(), Contains("Rainbows"));
 }

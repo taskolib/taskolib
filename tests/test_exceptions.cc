@@ -35,14 +35,14 @@ TEST_CASE("Error: Constructor", "[exceptions]")
     {
         Error e("Test");
         REQUIRE(e.what() == "Test"s);
-        REQUIRE(e.get_index() == gul14::nullopt);
+        REQUIRE(e.get_index().has_value() == false);
     }
 
     SECTION("Two arguments")
     {
         Error e("tesT", 42);
         REQUIRE(e.what() == "tesT"s);
-        REQUIRE(e.get_index().has_value());
+        REQUIRE(e.get_index().has_value() == true);
         REQUIRE(e.get_index().value() == 42);
     }
 }
