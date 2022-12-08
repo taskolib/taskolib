@@ -33,6 +33,7 @@
 
 #include <gul14/cat.h>
 #include <gul14/finalizer.h>
+#include <gul14/optional.h>
 #include <gul14/string_view.h>
 
 #include "taskolib/CommChannel.h"
@@ -279,13 +280,11 @@ public:
     void execute(Context& context, CommChannel* comm_channel);
 
     /**
-     * Return a string explaining why the sequence stopped prematurely.
+     * Return an optional Error object explaining why the sequence stopped prematurely.
      *
-     * If the sequence finished normally, the returned string is empty.
-     *
-     * \see execute()
+     * If the sequence finished normally, nullopt is returned.
      */
-    const std::string& get_error_message() const noexcept { return error_message_; }
+    gul14::optional<Error> get_error() const { return error_; }
 
     /**
      * Return an error string if the sequence is not consistently nested, or an empty
@@ -463,16 +462,20 @@ public:
     ConstReverseIterator rend() const noexcept { return steps_.crend(); }
 
     /**
-     * Set an error message for the sequence.
+     * Set an optional Error object to describe the outcome of the last sequence
+     * execution.
      *
-     * \param msg  A string explaining why the sequence stopped prematurely; to signalize
-     *             that the sequence finished normally, it should be empty.
+     * \param opt_error  This should be set to nullopt to indicate that the sequence
+     *                   finished normally, or to an Error object describing why and where
+     *                   it stopped prematurely.
      *
      * \note
      * This is usually not a useful call for end users of the library. It is used by the
      * Executor class and by unit tests.
+     *
+     * \see get_error()
      */
-    void set_error_message(gul14::string_view msg);
+    void set_error(gul14::optional<Error> opt_error);
 
     /**
      * Set the sequence label.
@@ -508,10 +511,10 @@ public:
 
 private:
     /**
-     * A string explaining why the sequence stopped prematurely (empty if it finished
-     * normally).
+     * An optional Error object describing why the Sequence stopped prematurely (if it has
+     * a value) or that it finished normally (if it is nullopt).
      */
-    std::string error_message_;
+    gul14::optional<Error> error_;
 
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
