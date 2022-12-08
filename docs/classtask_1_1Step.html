@@ -357,7 +357,8 @@ Private Attributes</h2></td></tr>
 <p>Execute the step script within the given context (without messaging). </p>
 <p>This function performs the following steps:</p><ol type="1">
 <li>A fresh script runtime environment is prepared and safe library components are loaded into it.</li>
-<li>The lua_init_function from the context is run if it is defined (non-null).</li>
+<li>The step_setup_function from the context is run if it is defined (non-null).</li>
+<li>The step setup script is run.</li>
 <li>Selected variables are imported from the context into the runtime environment.</li>
 <li>The script from the step is loaded into the runtime environment and executed.</li>
 <li>Selected variables are exported from the runtime environment back into the context.</li>
@@ -372,10 +373,11 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>If the step type requires a boolean return value (IF, ELSEIF, WHILE), this function returns the return value of the script. For other step types (ACTION etc.), it returns false.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>or <a class="el" href="classtask_1_1ErrorAtIndex.html" title="An exception class storing the index of the step in which an error occurred, in addition to the error...">ErrorAtIndex</a> is thrown if the script cannot be started, if there is a Lua error during execution, if the script has an inappropriate return value for the step type (see above), if a timeout is encountered, or if termination has been requested explicitly by the script. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>or <a class="el" href="classtask_1_1ErrorAtIndex.html" title="An exception class storing the index of the step in which an error occurred, in addition to the error...">ErrorAtIndex</a> is thrown if the script cannot be started, if there is a Lua error during execution, if the script has an inappropriate return value for the step type (see above), if a timeout is encountered, or if termination has been requested explicitly by the script.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd>For more information about step setup scripts see at <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">execute()</a>.</p>
 
@@ -416,7 +418,8 @@ Private Attributes</h2></td></tr>
 <p>Execute the step script within the given context, sending status information to a message queue. </p>
 <p>This function performs the following steps:</p><ol type="1">
 <li>A fresh script runtime environment is prepared and safe library components are loaded into it.</li>
-<li>The lua_init_function from the context is run if it is defined (non-null).</li>
+<li>The step_setup_function from the context is run if it is defined (non-null).</li>
+<li>The step setup script is run.</li>
 <li>Selected variables are imported from the context into the runtime environment.</li>
 <li>The script from the step is loaded into the runtime environment and executed.</li>
 <li>Selected variables are exported from the runtime environment back into the context.</li>
@@ -438,10 +441,11 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>If the step type requires a boolean return value (IF, ELSEIF, WHILE), this function returns the return value of the script. For other step types (ACTION etc.), it returns false.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>or <a class="el" href="classtask_1_1ErrorAtIndex.html" title="An exception class storing the index of the step in which an error occurred, in addition to the error...">ErrorAtIndex</a> is thrown if the script cannot be started, if there is a Lua error during execution, if the script has an inappropriate return value for the step type (see above), if a timeout is encountered, or if termination has been requested via the communication channel or explicitly by the script. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>or <a class="el" href="classtask_1_1ErrorAtIndex.html" title="An exception class storing the index of the step in which an error occurred, in addition to the error...">ErrorAtIndex</a> is thrown if the script cannot be started, if there is a Lua error during execution, if the script has an inappropriate return value for the step type (see above), if a timeout is encountered, or if termination has been requested via the communication channel or explicitly by the script.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd>For more information about step setup scripts see at <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>. </dd></dl>
 
 <p class="reference">References <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, and <a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message()</a>.</p>
 
@@ -492,7 +496,7 @@ Private Attributes</h2></td></tr>
 <p>Execute the Lua script, throwing an exception if anything goes wrong. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101" title="Execute the step script within the given context, sending status information to a message queue.">execute(Context&amp;, CommChannel*, StepIndex)</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">task::execute_lua_script()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands()</a>, <a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">task::install_timeout_and_termination_request_hook()</a>, <a class="el" href="structtask_1_1Context.html#a6daf071ee10242c41b1f0072af0aa7f0">task::Context::lua_init_function</a>, <a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">task::open_safe_library_subset()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">task::execute_lua_script()</a>, <a class="el" href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">task::executes_script()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands()</a>, <a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">task::install_timeout_and_termination_request_hook()</a>, <a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">task::open_safe_library_subset()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, <a class="el" href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">task::Context::step_setup_function</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
 </div>
 </div>
@@ -1339,7 +1343,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

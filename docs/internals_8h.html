@@ -47,7 +47,8 @@ $(function() {
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">internals.h File Reference</div>  </div>
 </div><!--header-->
@@ -79,11 +80,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="internals_8h__dep__incl.png" border="0" usemap="#ainternals_8hdep" alt=""/></div>
 <map name="ainternals_8hdep" id="ainternals_8hdep">
-<area shape="rect" title="Declaration of internal constants and functions." alt="" coords="202,5,293,32"/>
-<area shape="rect" href="internals_8cc.html" title="Definition of internal constants and functions." alt="" coords="5,80,103,107"/>
-<area shape="rect" href="lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="127,80,237,107"/>
-<area shape="rect" href="Sequence_8cc.html" title="A sequence of Steps." alt="" coords="261,80,364,107"/>
-<area shape="rect" href="Step_8cc.html" title="Implementation of the Step class." alt="" coords="389,80,458,107"/>
+<area shape="rect" title="Declaration of internal constants and functions." alt="" coords="406,5,497,32"/>
+<area shape="rect" href="deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="5,80,185,107"/>
+<area shape="rect" href="internals_8cc.html" title="Definition of internal constants and functions." alt="" coords="209,80,307,107"/>
+<area shape="rect" href="lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="331,80,441,107"/>
+<area shape="rect" href="Sequence_8cc.html" title="A sequence of Steps." alt="" coords="465,80,568,107"/>
+<area shape="rect" href="serialize__sequence_8cc.html" title="Implementation of the serialize_sequence() free function." alt="" coords="592,80,756,107"/>
+<area shape="rect" href="Step_8cc.html" title="Implementation of the Step class." alt="" coords="781,80,850,107"/>
 </map>
 </div>
 </div>
@@ -108,11 +111,17 @@ Functions</h2></td></tr>
 <tr class="memitem:adfba3503e0ced28341fcfe37f25eb244"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, ErrorCause &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers</a> (gul14::string_view error_message)</td></tr>
 <tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
 <tr class="separator:adfba3503e0ced28341fcfe37f25eb244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8af56c4748ce21663c6e542f150dc389"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">task::sequence_lua_filename</a> [] = &quot;sequence.lua&quot;</td></tr>
+<tr class="memdesc:a8af56c4748ce21663c6e542f150dc389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the Lua sequence filename for storing and loading Lua script.  <a href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">More...</a><br /></td></tr>
+<tr class="separator:a8af56c4748ce21663c6e542f150dc389"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

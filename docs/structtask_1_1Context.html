@@ -56,8 +56,10 @@ $(function() {
 <ul>
 <li>A list of variables that can be im-/exported into steps.</li>
 <li>An initialization function that is called on a LUA state before a step is executed.</li>
-<li>Several callbacks that are invoked when a script calls print() or when the engine produces log output. </li>
+<li>Several callbacks that are invoked when a script calls print() or when the engine produces log output.</li>
 </ul>
+<p>Global variables and functions defined in the step setup script can be accessed.</p>
+<p>Be aware that step setup script is overwritten with the content of the sequence setup script during its execution. </p>
 </div>
 <p><code>#include &lt;<a class="el" href="Context_8h_source.html">Context.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -66,9 +68,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a86fd00d26d28714257ad8f4b0e5fe0a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">variables</a></td></tr>
 <tr class="memdesc:a86fd00d26d28714257ad8f4b0e5fe0a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A map of variables (names and values) that can be im-/exported into steps.  <a href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">More...</a><br /></td></tr>
 <tr class="separator:a86fd00d26d28714257ad8f4b0e5fe0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6daf071ee10242c41b1f0072af0aa7f0"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(sol::state &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a6daf071ee10242c41b1f0072af0aa7f0">lua_init_function</a></td></tr>
-<tr class="memdesc:a6daf071ee10242c41b1f0072af0aa7f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">An initialization function that is called on a LUA state before a step is executed.  <a href="structtask_1_1Context.html#a6daf071ee10242c41b1f0072af0aa7f0">More...</a><br /></td></tr>
-<tr class="separator:a6daf071ee10242c41b1f0072af0aa7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5da357f420f72276a99d89767c0e907c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">step_setup_script</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a5da357f420f72276a99d89767c0e907c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> setup script with common functions or constants like a small library.  <a href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">More...</a><br /></td></tr>
+<tr class="separator:a5da357f420f72276a99d89767c0e907c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bf1fe7546f0a81a0ae43f666a0fefea"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(sol::state &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">step_setup_function</a></td></tr>
+<tr class="memdesc:a3bf1fe7546f0a81a0ae43f666a0fefea"><td class="mdescLeft">&#160;</td><td class="mdescRight">An initialization function that is called on a LUA state before a step is executed.  <a href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">More...</a><br /></td></tr>
+<tr class="separator:a3bf1fe7546f0a81a0ae43f666a0fefea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13c7e33d3b88611fe8453ebe9b9c27d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">print_function</a> = <a class="el" href="namespacetask.html#a8645c20643eec20318f602c266edbd48">print_to_stdout</a></td></tr>
 <tr class="memdesc:a13c7e33d3b88611fe8453ebe9b9c27d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked every time the script uses print().  <a href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">More...</a><br /></td></tr>
 <tr class="separator:a13c7e33d3b88611fe8453ebe9b9c27d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,24 +142,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6daf071ee10242c41b1f0072af0aa7f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6daf071ee10242c41b1f0072af0aa7f0">&#9670;&nbsp;</a></span>lua_init_function</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void(sol::state&amp;)&gt; task::Context::lua_init_function</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>An initialization function that is called on a LUA state before a step is executed. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
-
-</div>
-</div>
 <a id="a13c7e33d3b88611fe8453ebe9b9c27d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a13c7e33d3b88611fe8453ebe9b9c27d5">&#9670;&nbsp;</a></span>print_function</h2>
 
@@ -170,6 +157,43 @@ Public Attributes</h2></td></tr>
 <p>A callback that is invoked every time the script uses print(). </p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands()</a>, <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">task::Executor::run_asynchronously()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+
+</div>
+</div>
+<a id="a3bf1fe7546f0a81a0ae43f666a0fefea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bf1fe7546f0a81a0ae43f666a0fefea">&#9670;&nbsp;</a></span>step_setup_function</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;void(sol::state&amp;)&gt; task::Context::step_setup_function</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An initialization function that is called on a LUA state before a step is executed. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+
+</div>
+</div>
+<a id="a5da357f420f72276a99d89767c0e907c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5da357f420f72276a99d89767c0e907c">&#9670;&nbsp;</a></span>step_setup_script</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task::Context::step_setup_script = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> setup script with common functions or constants like a small library. </p>
+<p>Overwritten when a sequence is started. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -197,7 +221,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

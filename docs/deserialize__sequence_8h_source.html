@@ -65,21 +65,23 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;Step <a class="code" href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">deserialize_step</a>(<span class="keyword">const</span> std::filesystem::path&amp; path);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;Sequence <a class="code" href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">deserialize_sequence</a>(<span class="keyword">const</span> std::filesystem::path&amp; path);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;} <span class="comment">// namespace task</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;std::istream&amp; <a class="code" href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">operator&gt;&gt;</a>(std::istream&amp; stream, Sequence&amp; seq);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;Sequence <a class="code" href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">deserialize_sequence</a>(<span class="keyword">const</span> std::filesystem::path&amp; path);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;} <span class="comment">// namespace task</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aSequence_8h_html"><div class="ttname"><a href="Sequence_8h.html">Sequence.h</a></div><div class="ttdoc">A sequence of Steps.</div></div>
 <div class="ttc" id="aStep_8h_html"><div class="ttname"><a href="Step_8h.html">Step.h</a></div><div class="ttdoc">Declaration of the Step class.</div></div>
 <div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:36</div></div>
-<div class="ttc" id="anamespacetask_html_a6267718d543a5b3e74455d4e78de04f3"><div class="ttname"><a href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">task::operator&gt;&gt;</a></div><div class="ttdeci">std::istream &amp; operator&gt;&gt;(std::istream &amp;stream, Step &amp;step)</div><div class="ttdoc">Deserialize parameters of Step from the input stream.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:225</div></div>
-<div class="ttc" id="anamespacetask_html_a828883faf4abd4c06e63c0989abed8ff"><div class="ttname"><a href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">task::deserialize_sequence</a></div><div class="ttdeci">Sequence deserialize_sequence(const std::filesystem::path &amp;path)</div><div class="ttdoc">Deserialize Sequence from file path.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:340</div></div>
-<div class="ttc" id="anamespacetask_html_a8fb56facda2ea2287b3661a979447b86"><div class="ttname"><a href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">task::deserialize_step</a></div><div class="ttdeci">Step deserialize_step(const std::filesystem::path &amp;path)</div><div class="ttdoc">Extracts and creates from path a Step and returns it.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:327</div></div>
+<div class="ttc" id="anamespacetask_html_a6267718d543a5b3e74455d4e78de04f3"><div class="ttname"><a href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">task::operator&gt;&gt;</a></div><div class="ttdeci">std::istream &amp; operator&gt;&gt;(std::istream &amp;stream, Step &amp;step)</div><div class="ttdoc">Deserialize parameters of Step from the input stream.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:227</div></div>
+<div class="ttc" id="anamespacetask_html_a828883faf4abd4c06e63c0989abed8ff"><div class="ttname"><a href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">task::deserialize_sequence</a></div><div class="ttdeci">Sequence deserialize_sequence(const std::filesystem::path &amp;path)</div><div class="ttdoc">Deserialize Sequence from file path.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:369</div></div>
+<div class="ttc" id="anamespacetask_html_a8fb56facda2ea2287b3661a979447b86"><div class="ttname"><a href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">task::deserialize_step</a></div><div class="ttdeci">Step deserialize_step(const std::filesystem::path &amp;path)</div><div class="ttdoc">Extracts and creates from path a Step and returns it.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:329</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

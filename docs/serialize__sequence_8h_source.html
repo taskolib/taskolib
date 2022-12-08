@@ -65,21 +65,23 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">serialize_step</a>(<span class="keyword">const</span> std::filesystem::path&amp; path, <span class="keyword">const</span> Step&amp; step);</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">serialize_sequence</a>(<span class="keyword">const</span> std::filesystem::path&amp; path, <span class="keyword">const</span> Sequence&amp; sequence);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;} <span class="comment">// namespace task</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;std::ostream&amp; <a class="code" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> Sequence&amp; sequence);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">serialize_sequence</a>(<span class="keyword">const</span> std::filesystem::path&amp; path, <span class="keyword">const</span> Sequence&amp; sequence);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;} <span class="comment">// namespace task</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aSequence_8h_html"><div class="ttname"><a href="Sequence_8h.html">Sequence.h</a></div><div class="ttdoc">A sequence of Steps.</div></div>
 <div class="ttc" id="aStep_8h_html"><div class="ttname"><a href="Step_8h.html">Step.h</a></div><div class="ttdoc">Declaration of the Step class.</div></div>
 <div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:36</div></div>
-<div class="ttc" id="anamespacetask_html_a2246f61abd992f460cb3afe7ce45bac2"><div class="ttname"><a href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">task::operator&lt;&lt;</a></div><div class="ttdeci">std::ostream &amp; operator&lt;&lt;(std::ostream &amp;stream, const Step &amp;step)</div><div class="ttdoc">Serialize parameters of Step to the output stream.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:92</div></div>
-<div class="ttc" id="anamespacetask_html_a43508d1c2279af5bf6ca7060dc3bcdd1"><div class="ttname"><a href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">task::serialize_sequence</a></div><div class="ttdeci">void serialize_sequence(const std::filesystem::path &amp;path, const Sequence &amp;sequence)</div><div class="ttdoc">Serialize Sequence with all of its Step 's as files.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:139</div></div>
-<div class="ttc" id="anamespacetask_html_af28c4e2592d093e72faa983a544590c6"><div class="ttname"><a href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">task::serialize_step</a></div><div class="ttdeci">void serialize_step(const std::filesystem::path &amp;path, const Step &amp;step)</div><div class="ttdoc">Serialize Step to the file system.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:127</div></div>
+<div class="ttc" id="anamespacetask_html_a2246f61abd992f460cb3afe7ce45bac2"><div class="ttname"><a href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">task::operator&lt;&lt;</a></div><div class="ttdeci">std::ostream &amp; operator&lt;&lt;(std::ostream &amp;stream, const Step &amp;step)</div><div class="ttdoc">Serialize parameters of Step to the output stream.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:93</div></div>
+<div class="ttc" id="anamespacetask_html_a43508d1c2279af5bf6ca7060dc3bcdd1"><div class="ttname"><a href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">task::serialize_sequence</a></div><div class="ttdeci">void serialize_sequence(const std::filesystem::path &amp;path, const Sequence &amp;sequence)</div><div class="ttdoc">Serialize Sequence with all of its Step 's as files.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:162</div></div>
+<div class="ttc" id="anamespacetask_html_af28c4e2592d093e72faa983a544590c6"><div class="ttname"><a href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">task::serialize_step</a></div><div class="ttdeci">void serialize_step(const std::filesystem::path &amp;path, const Step &amp;step)</div><div class="ttdoc">Serialize Step to the file system.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:128</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -48,7 +48,8 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">Step.h File Reference</div>  </div>
 </div><!--header-->
@@ -147,20 +148,32 @@ Namespaces</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a94cb88831b94f9f5d3f4894307efef74"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a94cb88831b94f9f5d3f4894307efef74">task::VariableNames</a> = std::set&lt; VariableName &gt;</td></tr>
 <tr class="separator:a94cb88831b94f9f5d3f4894307efef74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e952d54cbd750da4c670919eb5cbdf3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">task::ExecutionSteps</a> = std::set&lt; Step::Type &gt;</td></tr>
+<tr class="memdesc:a6e952d54cbd750da4c670919eb5cbdf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a step type collection that executes a script.  <a href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">More...</a><br /></td></tr>
+<tr class="separator:a6e952d54cbd750da4c670919eb5cbdf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a7ea37a86e93c0787a6a6d84eeba336e8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string</a> (Step::Type type)</td></tr>
 <tr class="memdesc:a7ea37a86e93c0787a6a6d84eeba336e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a lower-case name for a step type ("action", "if", "end").  <a href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">More...</a><br /></td></tr>
 <tr class="separator:a7ea37a86e93c0787a6a6d84eeba336e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08abad536dcb1cd470dfc361f73817dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">task::executes_script</a> (Step::Type step_type)</td></tr>
+<tr class="memdesc:a08abad536dcb1cd470dfc361f73817dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a script is executed.  <a href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">More...</a><br /></td></tr>
+<tr class="separator:a08abad536dcb1cd470dfc361f73817dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94406da649401007df03cb8eead6ae6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value</a> (Step::Type step_type) noexcept</td></tr>
 <tr class="memdesc:a94406da649401007df03cb8eead6ae6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a certain step type requires a boolean return value from the script.  <a href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">More...</a><br /></td></tr>
 <tr class="separator:a94406da649401007df03cb8eead6ae6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a5a07d51367d998afc09843d4bb6349f9"><td class="memItemLeft" align="right" valign="top">const ExecutionSteps&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5a07d51367d998afc09843d4bb6349f9">task::execution_steps</a></td></tr>
+<tr class="memdesc:a5a07d51367d998afc09843d4bb6349f9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> types that execute a script.  <a href="namespacetask.html#a5a07d51367d998afc09843d4bb6349f9">More...</a><br /></td></tr>
+<tr class="separator:a5a07d51367d998afc09843d4bb6349f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -129,6 +129,9 @@ Typedefs</h2></td></tr>
 <tr class="separator:a8fbac3e17d0a96b17417a9eff8c9da93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94cb88831b94f9f5d3f4894307efef74"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a94cb88831b94f9f5d3f4894307efef74">VariableNames</a> = std::set&lt; <a class="el" href="classtask_1_1VariableName.html">VariableName</a> &gt;</td></tr>
 <tr class="separator:a94cb88831b94f9f5d3f4894307efef74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e952d54cbd750da4c670919eb5cbdf3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">ExecutionSteps</a> = std::set&lt; <a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a> &gt;</td></tr>
+<tr class="memdesc:a6e952d54cbd750da4c670919eb5cbdf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for a step type collection that executes a script.  <a href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">More...</a><br /></td></tr>
+<tr class="separator:a6e952d54cbd750da4c670919eb5cbdf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a256000de4540c0b9946038528c8158f9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a> = std::uint16_t</td></tr>
 <tr class="memdesc:a256000de4540c0b9946038528c8158f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type for storing the index of a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> in a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>.  <a href="namespacetask.html#a256000de4540c0b9946038528c8158f9">More...</a><br /></td></tr>
 <tr class="separator:a256000de4540c0b9946038528c8158f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,6 +174,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8fb56facda2ea2287b3661a979447b86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Step.html">Step</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">deserialize_step</a> (const std::filesystem::path &amp;path)</td></tr>
 <tr class="memdesc:a8fb56facda2ea2287b3661a979447b86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts and creates from <em>path</em> a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> and returns it.  <a href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">More...</a><br /></td></tr>
 <tr class="separator:a8fb56facda2ea2287b3661a979447b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a3947ea24c7fc75d50b5e1ccdae4aa7"><td class="memItemLeft" align="right" valign="top">std::istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8a3947ea24c7fc75d50b5e1ccdae4aa7">operator&gt;&gt;</a> (std::istream &amp;stream, <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;seq)</td></tr>
+<tr class="memdesc:a8a3947ea24c7fc75d50b5e1ccdae4aa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize parameters of <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> from the input stream.  <a href="namespacetask.html#a8a3947ea24c7fc75d50b5e1ccdae4aa7">More...</a><br /></td></tr>
+<tr class="separator:a8a3947ea24c7fc75d50b5e1ccdae4aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a828883faf4abd4c06e63c0989abed8ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">deserialize_sequence</a> (const std::filesystem::path &amp;path)</td></tr>
 <tr class="memdesc:a828883faf4abd4c06e63c0989abed8ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> from file path.  <a href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">More...</a><br /></td></tr>
 <tr class="separator:a828883faf4abd4c06e63c0989abed8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -189,12 +195,18 @@ Functions</h2></td></tr>
 <tr class="memitem:af28c4e2592d093e72faa983a544590c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">serialize_step</a> (const std::filesystem::path &amp;path, const <a class="el" href="classtask_1_1Step.html">Step</a> &amp;step)</td></tr>
 <tr class="memdesc:af28c4e2592d093e72faa983a544590c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> to the file system.  <a href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">More...</a><br /></td></tr>
 <tr class="separator:af28c4e2592d093e72faa983a544590c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb441c55c946559ff32889db4e735ca"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2bb441c55c946559ff32889db4e735ca">operator&lt;&lt;</a> (std::ostream &amp;stream, const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
+<tr class="memdesc:a2bb441c55c946559ff32889db4e735ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize parameters of <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> to the output stream.  <a href="namespacetask.html#a2bb441c55c946559ff32889db4e735ca">More...</a><br /></td></tr>
+<tr class="separator:a2bb441c55c946559ff32889db4e735ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43508d1c2279af5bf6ca7060dc3bcdd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">serialize_sequence</a> (const std::filesystem::path &amp;path, const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
 <tr class="memdesc:a43508d1c2279af5bf6ca7060dc3bcdd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> with all of its <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> 's as files.  <a href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">More...</a><br /></td></tr>
 <tr class="separator:a43508d1c2279af5bf6ca7060dc3bcdd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ea37a86e93c0787a6a6d84eeba336e8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">to_string</a> (<a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a> type)</td></tr>
 <tr class="memdesc:a7ea37a86e93c0787a6a6d84eeba336e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a lower-case name for a step type ("action", "if", "end").  <a href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">More...</a><br /></td></tr>
 <tr class="separator:a7ea37a86e93c0787a6a6d84eeba336e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08abad536dcb1cd470dfc361f73817dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">executes_script</a> (<a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a> step_type)</td></tr>
+<tr class="memdesc:a08abad536dcb1cd470dfc361f73817dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a script is executed.  <a href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">More...</a><br /></td></tr>
+<tr class="separator:a08abad536dcb1cd470dfc361f73817dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94406da649401007df03cb8eead6ae6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">requires_bool_return_value</a> (<a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a> step_type) noexcept</td></tr>
 <tr class="memdesc:a94406da649401007df03cb8eead6ae6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a certain step type requires a boolean return value from the script.  <a href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">More...</a><br /></td></tr>
 <tr class="separator:a94406da649401007df03cb8eead6ae6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,6 +214,8 @@ Functions</h2></td></tr>
 <tr class="separator:a77a3adfb97957bfee85dbc4a0a5ea371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8a13e460561c228be4437ac6e92a4f8"><td class="memItemLeft" align="right" valign="top">std::time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa8a13e460561c228be4437ac6e92a4f8">timegm</a> (const std::tm &amp;t)</td></tr>
 <tr class="separator:aa8a13e460561c228be4437ac6e92a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a3e81e4f8e1c5526c93315fa6d0481b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5a3e81e4f8e1c5526c93315fa6d0481b">deserialize_sequence_impl</a> (const std::filesystem::path &amp;path, <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;seq)</td></tr>
+<tr class="separator:a5a3e81e4f8e1c5526c93315fa6d0481b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfba3503e0ced28341fcfe37f25eb244"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers</a> (gul14::string_view error_message)</td></tr>
 <tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
 <tr class="separator:adfba3503e0ced28341fcfe37f25eb244"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,12 +251,20 @@ Functions</h2></td></tr>
 <tr class="separator:a2edfc1afaf6e9d8647ac3d98aa021e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65bd182d91456185224d296ca523b74c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct</a> (const std::string &amp;text, sol::this_state sol)</td></tr>
 <tr class="separator:a65bd182d91456185224d296ca523b74c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70263cda4b661f1491712de090ddb545"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a70263cda4b661f1491712de090ddb545">serialize_sequence_impl</a> (const std::filesystem::path &amp;path, const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;seq)</td></tr>
+<tr class="separator:a70263cda4b661f1491712de090ddb545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a5a07d51367d998afc09843d4bb6349f9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">ExecutionSteps</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5a07d51367d998afc09843d4bb6349f9">execution_steps</a></td></tr>
+<tr class="memdesc:a5a07d51367d998afc09843d4bb6349f9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> types that execute a script.  <a href="namespacetask.html#a5a07d51367d998afc09843d4bb6349f9">More...</a><br /></td></tr>
+<tr class="separator:a5a07d51367d998afc09843d4bb6349f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bef6a9def7c1bf4e524f19e5e201907"><td class="memItemLeft" align="right" valign="top">const gul14::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a> { u8&quot;\U0001F6D1ABORT\U0001F6D1&quot; }</td></tr>
 <tr class="memdesc:a7bef6a9def7c1bf4e524f19e5e201907"><td class="mdescLeft">&#160;</td><td class="mdescRight">A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence anywhere in an error message signals that the execution of a script should be stopped.  <a href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">More...</a><br /></td></tr>
 <tr class="separator:a7bef6a9def7c1bf4e524f19e5e201907"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8af56c4748ce21663c6e542f150dc389"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a> [] = &quot;sequence.lua&quot;</td></tr>
+<tr class="memdesc:a8af56c4748ce21663c6e542f150dc389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the Lua sequence filename for storing and loading Lua script.  <a href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">More...</a><br /></td></tr>
+<tr class="separator:a8af56c4748ce21663c6e542f150dc389"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="acce2a15aa7c38168b416d75758c752ff"></a>
@@ -256,6 +278,22 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e952d54cbd750da4c670919eb5cbdf3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e952d54cbd750da4c670919eb5cbdf3">&#9670;&nbsp;</a></span>ExecutionSteps</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">task::ExecutionSteps</a> = typedef std::set&lt;<a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Alias for a step type collection that executes a script. </p>
 
 </div>
 </div>
@@ -629,9 +667,41 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the deserialized <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> object. </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">deserialize_step()</a>, and <a class="el" href="classtask_1_1Sequence.html#a5b281658b4349ca8c63a8a287ebd0420">task::Sequence::push_back()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a5a3e81e4f8e1c5526c93315fa6d0481b">deserialize_sequence_impl()</a>, and <a class="el" href="namespacetask.html#a8fb56facda2ea2287b3661a979447b86">deserialize_step()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a48adcbdcc8cf7e351e63c449a1931049">task::SequenceManager::load_sequence()</a>.</p>
+
+</div>
+</div>
+<a id="a5a3e81e4f8e1c5526c93315fa6d0481b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a3e81e4f8e1c5526c93315fa6d0481b">&#9670;&nbsp;</a></span>deserialize_sequence_impl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::deserialize_sequence_impl </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>seq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a828883faf4abd4c06e63c0989abed8ff">deserialize_sequence()</a>.</p>
 
 </div>
 </div>
@@ -715,6 +785,37 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution. </p>
 <p>This function returns a variant: If the Lua script finishes without error, it contains a sol::object representing the return value of the script. If a Lua error or C++ exception occurs, the variant contains a string with an error message. The error message is pre-processed to a certain degree: Unhelpful parts like the chunk name of the script (<code>[string "..."]:</code>) are removed, and a few known special messages are replaced by more readable explanations. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+
+</div>
+</div>
+<a id="a08abad536dcb1cd470dfc361f73817dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08abad536dcb1cd470dfc361f73817dc">&#9670;&nbsp;</a></span>executes_script()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task::executes_script </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a>&#160;</td>
+          <td class="paramname"><em>step_type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if a script is executed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">step_type</td><td>step type to check </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true for executing a script otherwise false. </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a5a07d51367d998afc09843d4bb6349f9">execution_steps</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
 
@@ -1070,8 +1171,49 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
+<a id="a2bb441c55c946559ff32889db4e735ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb441c55c946559ff32889db4e735ca">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream &amp; task::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Serialize parameters of <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> to the output stream. </p>
+<p>No checking of any stream failure is done and should be performed by the caller.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>to serialize the <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> </td></tr>
+    <tr><td class="paramname">sequence</td><td>to serialize </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>passed output stream </dd></dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00">task::Sequence::get_step_setup_script()</a>.</p>
+
+</div>
+</div>
 <a id="a2246f61abd992f460cb3afe7ce45bac2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2246f61abd992f460cb3afe7ce45bac2">&#9670;&nbsp;</a></span>operator&lt;&lt;()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2246f61abd992f460cb3afe7ce45bac2">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1111,8 +1253,49 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
+<a id="a8a3947ea24c7fc75d50b5e1ccdae4aa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a3947ea24c7fc75d50b5e1ccdae4aa7">&#9670;&nbsp;</a></span>operator&gt;&gt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::istream &amp; task::operator&gt;&gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>seq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Deserialize parameters of <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> from the input stream. </p>
+<p>No checking of any stream failure is done and should be performed by the caller.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>input stream </td></tr>
+    <tr><td class="paramname">step</td><td><a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> to be deserialized. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>passed input stream </dd></dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>.</p>
+
+</div>
+</div>
 <a id="a6267718d543a5b3e74455d4e78de04f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6267718d543a5b3e74455d4e78de04f3">&#9670;&nbsp;</a></span>operator&gt;&gt;()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6267718d543a5b3e74455d4e78de04f3">&#9670;&nbsp;</a></span>operator&gt;&gt;() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1509,7 +1692,37 @@ the collection of context variable names can also be an empty list, ie. <code></
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ad2c6281b29b351dc92a491ae0e0858a9">task::Sequence::get_label()</a>, <a class="el" href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">serialize_step()</a>, and <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ad2c6281b29b351dc92a491ae0e0858a9">task::Sequence::get_label()</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="namespacetask.html#a70263cda4b661f1491712de090ddb545">serialize_sequence_impl()</a>, <a class="el" href="namespacetask.html#af28c4e2592d093e72faa983a544590c6">serialize_step()</a>, and <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>.</p>
+
+</div>
+</div>
+<a id="a70263cda4b661f1491712de090ddb545"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70263cda4b661f1491712de090ddb545">&#9670;&nbsp;</a></span>serialize_sequence_impl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::serialize_sequence_impl </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>seq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">serialize_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1679,10 +1892,52 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
+<a id="a5a07d51367d998afc09843d4bb6349f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a07d51367d998afc09843d4bb6349f9">&#9670;&nbsp;</a></span>execution_steps</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">ExecutionSteps</a> task::execution_steps</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    Step::type_action,</div>
+<div class="line">    Step::type_if,</div>
+<div class="line">    Step::type_elseif,</div>
+<div class="line">    Step::type_while</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
+<p><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> types that execute a script. </p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">executes_script()</a>.</p>
+
+</div>
+</div>
+<a id="a8af56c4748ce21663c6e542f150dc389"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8af56c4748ce21663c6e542f150dc389">&#9670;&nbsp;</a></span>sequence_lua_filename</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char task::sequence_lua_filename[] = &quot;sequence.lua&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Define the Lua sequence filename for storing and loading Lua script. </p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5a3e81e4f8e1c5526c93315fa6d0481b">deserialize_sequence_impl()</a>, and <a class="el" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">serialize_sequence()</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 7 2022 12:26:12 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
