@@ -2,7 +2,7 @@
  * \file   test_exceptions.cc
  * \author Lars Froehlich
  * \date   Created on December 10, 2021
- * \brief  Test suite for the Error and ErrorAtIndex exception classes.
+ * \brief  Test suite for the Error exception class.
  *
  * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -31,48 +31,38 @@ using namespace task;
 
 TEST_CASE("Error: Constructor", "[exceptions]")
 {
-    Error e("Test");
+    SECTION("Single argument")
+    {
+        Error e("Test");
+        REQUIRE(e.what() == "Test"s);
+        REQUIRE(e.get_index() == gul14::nullopt);
+    }
+
+    SECTION("Two arguments")
+    {
+        Error e("tesT", 42);
+        REQUIRE(e.what() == "tesT"s);
+        REQUIRE(e.get_index().has_value());
+        REQUIRE(e.get_index().value() == 42);
+    }
 }
 
 TEST_CASE("Error: Copy constructor", "[exceptions]")
 {
-    Error e("Test");
+    Error e("Test", 42);
     Error e2(e);
-
-    REQUIRE(e.what() == std::string(e2.what()));
-}
-
-TEST_CASE("Error: Copy assignment", "[exceptions]")
-{
-    Error e("Test");
-    Error e2("Test2");
-
-    e2 = e;
-
-    REQUIRE(e2.what() == "Test"s);
-}
-
-TEST_CASE("ErrorAtIndex: Constructor", "[exceptions]")
-{
-    ErrorAtIndex e("Test", 0);
-}
-
-TEST_CASE("ErrorAtIndex: Copy constructor", "[exceptions]")
-{
-    ErrorAtIndex e("Test", 42);
-    ErrorAtIndex e2(e);
 
     REQUIRE(e.what() == std::string(e2.what()));
     REQUIRE(e.get_index() == e2.get_index());
 }
 
-TEST_CASE("ErrorAtIndex: Copy assignment", "[exceptions]")
+TEST_CASE("Error: Copy assignment", "[exceptions]")
 {
-    ErrorAtIndex e("Test", 1);
-    ErrorAtIndex e2("Test2", 2);
+    const Error e("Test", 1);
+    Error e2("Test2", 2);
 
     e2 = e;
 
     REQUIRE(e2.what() == "Test"s);
-    REQUIRE(e2.get_index() == 1);
+    REQUIRE(e2.get_index() == e.get_index());
 }
