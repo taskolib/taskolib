@@ -186,7 +186,7 @@ bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
         auto [msg, _] = remove_abort_markers(e.what());
         send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
                      index);
-        throw ErrorAtIndex(e.what(), index);
+        throw Error(e.what(), index);
     }
 }
 
