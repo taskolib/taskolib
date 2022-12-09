@@ -2,7 +2,7 @@
  * \file   exceptions.h
  * \author Lars Froehlich
  * \date   Created on July 4, 2017
- * \brief  Definitions of the Error and ErrorAtIndex exception classes.
+ * \brief  Definition of the Error exception class.
  *
  * \copyright Copyright 2017-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -34,10 +34,11 @@
 namespace task {
 
 /**
- * A generic exception class carrying a message string.
+ * An exception class carrying an error message and, optionally, the index of the step in
+ * which the error occurred.
  *
- * The Error class is used as the standard exception by many functions throughout
- * Taskolib. It can be used directly or inherited from.
+ * Error is used as the standard exception class by many functions throughout Taskolib.
+ * It can be used directly or inherited from.
  *
  * \code
  * try
@@ -47,6 +48,19 @@ namespace task {
  * catch (const task::Error& e)
  * {
  *     std::cerr << e.what() << "\n";
+ * }
+ *
+ * try
+ * {
+ *     throw task::Error("An error has occurred", 42);
+ * }
+ * catch (const task::Error& e)
+ * {
+ *     std::cerr << e.what();
+ *     auto maybe_step_index = e.get_index();
+ *     if (maybe_step_index)
+ *         std::cerr << ": step index " << *maybe_step_index;
+ *     std::cerr << "\n";
  * }
  * \endcode
  *
@@ -58,47 +72,21 @@ namespace task {
 class Error : public std::runtime_error
 {
 public:
-    using std::runtime_error::runtime_error;
-};
-
-/**
- * An exception class storing the index of the step in which an error occurred, in
- * addition to the error message.
- *
- * \code
- * try
- * {
- *     throw task::ErrorAtIndex("An error has occurred", 42);
- * }
- * catch (const task::ErrorAtIndex& e)
- * {
- *     std::cerr << e.what() << " in step " << e.get_index() << "\n";
- * }
- * \endcode
- *
- * \note
- * task::ErrorAtIndex inherits from std::runtime_error. It can therefore be caught by
- * `catch (const std::exception&)`, `catch (const std::runtime_error&)`,
- * `catch (const task::Error&)`, and `catch (const task::ErrorAtIndex&)`.
- */
-class ErrorAtIndex : public Error
-{
-public:
-    ErrorAtIndex(const std::string& msg, StepIndex index)
-        : Error(msg)
-        , index_(index)
+    explicit Error(const std::string& msg, OptionalStepIndex opt_step_index = gul14::nullopt)
+        : std::runtime_error(msg)
+        , index_{ opt_step_index }
     {}
 
-    ErrorAtIndex(const char* msg, StepIndex index)
-        : Error(msg)
-        , index_(index)
+    explicit Error(const char* msg, OptionalStepIndex opt_step_index = gul14::nullopt)
+        : std::runtime_error(msg)
+        , index_{ opt_step_index }
     {}
 
     /// Return the associated step index.
-    StepIndex get_index() const noexcept { return index_; }
+    OptionalStepIndex get_index() const { return index_; }
 
 private:
-    StepIndex index_ = 0;
+    OptionalStepIndex index_;
 };
 
 } // namespace task
