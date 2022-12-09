@@ -303,7 +303,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
         check_syntax();
         execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
     }
-    catch (const ErrorAtIndex& e)
+    catch (const Error& e)
     {
         exception_thrown = true;
         exception_message = e.what();

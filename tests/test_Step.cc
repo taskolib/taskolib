@@ -280,7 +280,7 @@ TEST_CASE("execute(): Return value handling in scripts requiring a bool result",
         Step step{ type };
 
         SECTION("Empty step throws") {
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return true' returns true") {
@@ -295,32 +295,32 @@ TEST_CASE("execute(): Return value handling in scripts requiring a bool result",
 
         SECTION("'return nil' throws") {
             step.set_script("return nil");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return 42' throws") {
             step.set_script("return 42");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return 0' throws") {
             step.set_script("return 0");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return 0.1' throws") {
             step.set_script("return 0.1");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return 0.0' throws") {
             step.set_script("return 0.0");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("\"return 'false'\" throws") {
             step.set_script("return 'false'");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
     }
 }
@@ -348,27 +348,27 @@ TEST_CASE("execute(): Return value handling in scripts requiring no result", "[S
 
         SECTION("'return true' throws") {
             step.set_script("return true");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return false' throws") {
             step.set_script("return false");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return 0' throws") {
             step.set_script("return 0");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("'return 0.0' throws") {
             step.set_script("return 0.0");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
 
         SECTION("\"return 'black cow'\" throws") {
             step.set_script("return 'black cow'");
-            REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+            REQUIRE_THROWS_AS(step.execute(context), Error);
         }
     }
 }
@@ -428,8 +428,8 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
         step.set_script("throw_logic_error(); a = 42");
 
         // Like a genuine Lua exception, a C++ exception must be reported as a
-        // task::ErrorAtIndex.
-        REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        // task::Error.
+        REQUIRE_THROWS_AS(step.execute(context), Error);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == 0);
     }
 
@@ -437,7 +437,7 @@ TEST_CASE("execute(): C++ exceptions", "[Step]")
     {
         step.set_script("throw_weird_exception(); a = 42");
 
-        REQUIRE_THROWS_AS(step.execute(context), ErrorAtIndex);
+        REQUIRE_THROWS_AS(step.execute(context), Error);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == 0);
     }
 

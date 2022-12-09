@@ -102,7 +102,7 @@ public:
      *         function returns the return value of the script. For other step types
      *         (ACTION etc.), it returns false.
      *
-     * \exception Error or ErrorAtIndex is thrown if the script cannot be started, if
+     * \exception Error is thrown if the script cannot be started, if
      *            there is a Lua error during execution, if the script has an
      *            inappropriate return value for the step type (see above), if a timeout
      *            is encountered, or if termination has been requested via the
@@ -136,7 +136,7 @@ public:
      *         function returns the return value of the script. For other step types
      *         (ACTION etc.), it returns false.
      *
-     * \exception Error or ErrorAtIndex is thrown if the script cannot be started, if
+     * \exception Error is thrown if the script cannot be started, if
      *            there is a Lua error during execution, if the script has an
      *            inappropriate return value for the step type (see above), if a timeout
      *            is encountered, or if termination has been requested explicitly by the
