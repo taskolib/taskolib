@@ -59,11 +59,17 @@ void check_script_timeout(lua_State* lua_state);
 CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state);
 
 /**
- * Get the index of the currently executed Step from the LUA registry.
+ * Get the index of the currently executed Step from the Lua registry.
+ *
+ * This function has three different outcomes:
+ * - If the appropriate registry key is not found, an exception is thrown.
+ * - If a negative step index is found in the registry, this indicates that no step index
+ *   information is available. nullopt is returned.
+ * - Otherwise, the step index is returned.
  *
  * \exception Error is thrown if the appropriate registry key is not found.
  */
-StepIndex get_step_idx_from_registry(lua_State* lua_state);
+OptionalStepIndex get_step_idx_from_registry(lua_State* lua_state);
 
 // Return a time point in milliseconds since the epoch, calculated from a time point t0
 // plus a duration dt. In case of overflow, the maximum representable time point is
@@ -93,12 +99,13 @@ void install_custom_commands(sol::state& lua, const Context& context);
 // script is being executed. If one of both occurs, the script terminates with an error
 // message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
-    std::chrono::milliseconds timeout, StepIndex step_idx,
+    std::chrono::milliseconds timeout, OptionalStepIndex step_idx,
     CommChannel* comm_channel);
 
-/// Create a print() function for LUA that wraps a print callback from the Context.
+/// Create a print() function for Lua that wraps a print callback from the Context.
 std::function<void(sol::this_state, sol::variadic_args)>
-make_print_fct(std::function<void(const std::string&, StepIndex, CommChannel*)> print_fct);
+make_print_fct(
+    std::function<void(const std::string&, OptionalStepIndex, CommChannel*)> print_fct);
 
 // Open a safe subset of the LUA standard libraries in the given LUA state.
 //

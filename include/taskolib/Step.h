@@ -96,7 +96,8 @@ public:
      *                        successfully
      *                      - A message of type step_stopped_with_error when the step has
      *                        been stopped due to an error condition
-     * \param index         Index of the step in its parent Sequence.
+     * \param opt_step_index  Optional index of the step in its parent Sequence (to be
+     *                        used in exceptions and messages)
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -110,44 +111,8 @@ public:
      *
      * \see For more information about step setup scripts see at Sequence.
      */
-    bool execute(Context& context, CommChannel* comm_channel, StepIndex index);
-
-    /**
-     * Execute the step script within the given context (without messaging).
-     *
-     * This function performs the following steps:
-     * 1. A fresh script runtime environment is prepared and safe library components are
-     *    loaded into it.
-     * 2. The step_setup_function from the context is run if it is defined (non-null).
-     * 3. The step setup script is run.
-     * 4. Selected variables are imported from the context into the runtime environment.
-     * 5. The script from the step is loaded into the runtime environment and executed.
-     * 6. Selected variables are exported from the runtime environment back into the
-     *    context.
-     *
-     * Certain step types (IF, ELSEIF, WHILE) require the script to return a boolean
-     * value. Not returning a value or returning a different type is considered an error.
-     * Conversely, the other step types (ACTION etc.) do not allow returning values from
-     * the script, with the exception of nil.
-     *
-     * \param context       The context to be used for executing the step
-     *
-     * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
-     *         function returns the return value of the script. For other step types
-     *         (ACTION etc.), it returns false.
-     *
-     * \exception Error is thrown if the script cannot be started, if
-     *            there is a Lua error during execution, if the script has an
-     *            inappropriate return value for the step type (see above), if a timeout
-     *            is encountered, or if termination has been requested explicitly by the
-     *            script.
-     *
-     * \see For more information about step setup scripts see at Sequence.
-     */
-    bool execute(Context& context)
-    {
-        return execute(context, nullptr, 0);
-    }
+    bool execute(Context& context, CommChannel* comm_channel = nullptr,
+                 OptionalStepIndex opt_step_index = gul14::nullopt);
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -319,9 +284,9 @@ private:
 
     /**
      * Execute the Lua script, throwing an exception if anything goes wrong.
-     * \see execute(Context&, CommChannel*, StepIndex)
+     * \see execute(Context&, CommChannel*, OptionalStepIndex)
      */
-    bool execute_impl(Context& context, CommChannel* comm_channel, StepIndex index);
+    bool execute_impl(Context& context, CommChannel* comm_channel, OptionalStepIndex index);
 };
 
 /// Alias for a step type collection that executes a script.

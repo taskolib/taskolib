@@ -126,16 +126,20 @@ CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
     return *opt_comm_channel_ptr;
 }
 
-StepIndex get_step_idx_from_registry(lua_State* lua_state)
+OptionalStepIndex get_step_idx_from_registry(lua_State* lua_state)
 {
     sol::state_view lua(lua_state);
     const auto registry = lua.registry();
 
-    sol::optional<StepIndex> opt_step_idx = registry[step_index_key];
-    if (not opt_step_idx.has_value())
+    const sol::optional<LuaInteger> maybe_lua_step_idx = registry[step_index_key];
+    if (not maybe_lua_step_idx.has_value())
         throw Error(cat(step_index_key, " not found in LUA registry"));
 
-    return *opt_step_idx;
+    // The step index stored in the Lua registry is negative if it is not available.
+    if (*maybe_lua_step_idx < 0)
+        return gul14::nullopt;
+
+    return static_cast<StepIndex>(*maybe_lua_step_idx);
 }
 
 LuaInteger get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
@@ -187,12 +191,13 @@ void install_custom_commands(sol::state& lua, const Context& context)
 }
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
-    std::chrono::milliseconds timeout, StepIndex step_idx, CommChannel* comm_channel)
+    std::chrono::milliseconds timeout, OptionalStepIndex step_idx,
+    CommChannel* comm_channel)
 {
     auto registry = lua.registry();
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
     registry[step_timeout_ms_since_epoch_key] = get_ms_since_epoch(now, timeout);
-    registry[step_index_key] = step_idx;
+    registry[step_index_key] = step_idx ? static_cast<LuaInteger>(*step_idx) : LuaInteger{ -1 };
     registry[comm_channel_key] = comm_channel;
 
     // Install a hook that is called after every 100 LUA instructions
@@ -215,7 +220,8 @@ void open_safe_library_subset(sol::state& lua)
 }
 
 std::function<void(sol::this_state, sol::variadic_args)>
-make_print_fct(std::function<void(const std::string&, StepIndex, CommChannel*)> print_fct)
+make_print_fct(
+    std::function<void(const std::string&, OptionalStepIndex, CommChannel*)> print_fct)
 {
     return
         [print_fct = std::move(print_fct)](sol::this_state sol, sol::variadic_args va)

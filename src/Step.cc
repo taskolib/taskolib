@@ -108,7 +108,7 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
 }
 
 bool Step::execute_impl(Context& context, CommChannel* comm,
-    StepIndex index)
+                        OptionalStepIndex opt_step_index)
 {
     sol::state lua;
 
@@ -118,8 +118,8 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     if (context.step_setup_function)
         context.step_setup_function(lua);
 
-    install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(), index,
-                                                 comm);
+    install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(),
+                                                 opt_step_index, comm);
 
     if (executes_script(get_type()) and not context.step_setup_script.empty())
     {
@@ -159,7 +159,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     }
 }
 
-bool Step::execute(Context& context, CommChannel* comm, StepIndex index)
+bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index)
 {
     const auto now = Clock::now();
     const auto set_is_running_to_false_after_execution =
