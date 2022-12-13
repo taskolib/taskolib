@@ -380,8 +380,22 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
 
     SECTION("Syntax error")
     {
-        step.set_script("not a lua program");
-        REQUIRE_THROWS_AS(step.execute(context), Error);
+        step.set_script("This is not a Lua program.");
+        try
+        {
+            step.execute(context, nullptr, 42);
+            FAIL("Step::execute(): No exception thrown for invalid Lua code");
+        }
+        catch (const Error& e)
+        {
+            REQUIRE_THAT(e.what(), Contains("syntax error"));
+            REQUIRE(e.get_index().has_value());
+            REQUIRE(e.get_index().value() == 42);
+        }
+        catch (...)
+        {
+            FAIL("Wrong exception type thrown by Step::execute()");
+        }
     }
 
     SECTION("Runtime error")
@@ -390,14 +404,19 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
         try
         {
             step.execute(context); // Must throw
-            FAIL("No exception thrown by Lua error()");
+            FAIL("Step::execute(): No exception thrown by Lua error()");
         }
-        catch(const Error& e)
+        catch (const Error& e)
         {
             REQUIRE_THAT(e.what(), StartsWith("pippo"));
             // Lua adds a stack trace after this output. This is a somewhat brittle test,
             // but since we have control over our Lua version, we are sure to spot it if
             // the output format changes.
+            REQUIRE(e.get_index().has_value() == false);
+        }
+        catch (...)
+        {
+            FAIL("Wrong exception type thrown by Step::execute()");
         }
     }
 
