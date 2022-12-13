@@ -388,6 +388,8 @@ Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context&
 {
     Iterator step = step_begin;
 
+    if (comm and comm->immediate_termination_requested_)
+        throw Error{ gul14::cat(abort_marker, "Stop on user request") };
     while (step < step_end)
     {
         if (step->is_disabled())

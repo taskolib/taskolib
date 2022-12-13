@@ -25,6 +25,7 @@
 #include <thread>
 #include <type_traits>
 #include <gul14/catch.h>
+#include <gul14/time_util.h>
 #include "taskolib/exceptions.h"
 #include "taskolib/Message.h"
 #include "taskolib/LockedQueue.h"
@@ -130,6 +131,7 @@ TEST_CASE("LockedQueue: push() & pop() across threads", "[LockedQueue]")
                 queue.push(MyMessage(i));
         });
 
+    gul14::sleep(0.005);
     // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
