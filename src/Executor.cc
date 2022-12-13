@@ -72,8 +72,19 @@ void Executor::cancel()
         return;
 
     comm_channel_->immediate_termination_requested_ = true;
+    while (comm_channel_->queue_.try_pop());
     context_.variables = future_.get(); // Wait for thread to join
     comm_channel_->immediate_termination_requested_ = false;
+}
+
+void Executor::cancel(Sequence& sequence) {
+    if (not future_.valid())
+        return;
+    comm_channel_->immediate_termination_requested_ = true;
+    while(update(sequence));
+    if (future_.valid())
+        context_.variables = future_.get();
+    comm_channel_->immediate_termination_requested_ = false; // Successfully terminated, rearm comm_channel
 }
 
 VariableTable Executor::execute_sequence(Sequence sequence, Context context,

@@ -151,6 +151,50 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     REQUIRE(sequence.get_error_message() != "");
 }
 
+TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
+{
+    Context context;
+    context.log_error_function = nullptr; // suppress error output on console
+
+    Sequence sequence{ "test_sequence" };
+    sequence.push_back(Step{ Step::type_while }.set_script("return true"));
+    sequence.push_back(Step{ Step::type_action }.set_script("a = 1"));
+    sequence.push_back(Step{ Step::type_end });
+
+    Executor executor;
+
+    executor.run_asynchronously(sequence, context);
+
+    gul14::sleep(1ms);
+    executor.cancel(sequence);
+
+    while (executor.update(sequence)) {
+        gul14::sleep(5ms);
+    }
+
+    // Make sure that exactly the desired error message comes out
+    REQUIRE(sequence.get_error_message() == "Sequence aborted: Stop on user request");
+}
+
+TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
+{
+    Context context;
+    context.log_error_function = nullptr; // suppress error output on console
+
+    Sequence sequence{ "test_sequence" };
+    sequence.push_back(Step{ Step::type_while }.set_script("return true"));
+    sequence.push_back(Step{ Step::type_action }.set_script("a = 1"));
+    sequence.push_back(Step{ Step::type_end });
+
+    {
+        Executor executor;
+        executor.run_asynchronously(sequence, context);
+        gul14::sleep(1ms);
+    } // executor is destructed here
+
+    REQUIRE(sequence.get_error_message() == "");
+}
+
 TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
 {
     Context context;

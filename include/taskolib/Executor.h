@@ -121,8 +121,20 @@ public:
      * If a sequence is running in a separate thread, this call sends a termination
      * request and waits for the thread to shut down. If no sequence is currently running,
      * the call has no effect.
+     * An associated Sequence will not be updated and all messages are lost.
+     * Usually you should call \ref cancel(Sequence& sequence).
      */
     void cancel();
+
+    /**
+     * Terminate a running sequence.
+     *
+     * If a sequence is running in a separate thread, this call sends a termination
+     * request and waits for the thread to shut down. If no sequence is currently running,
+     * the call has no effect.
+     * The associated Sequence will be updated with all pending messages.
+     */
+    void cancel(Sequence& sequence);
 
     /**
      * Start a copy of the given sequence in a separate thread.
