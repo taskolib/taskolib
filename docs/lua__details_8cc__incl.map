@@ -5,7 +5,7 @@
 <area shape="rect" id="node4" href="$internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="144,229,235,256"/>
 <area shape="rect" id="node8" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="726,80,831,107"/>
 <area shape="rect" id="node13" href="$CommChannel_8h.html" title="Declaration of the CommChannel struct and of the send_message() function." alt="" coords="1245,229,1430,256"/>
-<area shape="rect" id="node32" href="$exceptions_8h.html" title="Definitions of the Error and ErrorAtIndex exception classes." alt="" coords="1791,304,1951,331"/>
+<area shape="rect" id="node32" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1791,304,1951,331"/>
 <area shape="rect" id="node5" title=" " alt="" coords="379,453,437,480"/>
 <area shape="rect" id="node6" title=" " alt="" coords="123,304,183,331"/>
 <area shape="rect" id="node7" title=" " alt="" coords="370,304,518,331"/>

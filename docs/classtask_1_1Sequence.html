@@ -58,7 +58,7 @@ $(function() {
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A sequence of <a class="el" href="classtask_1_1Step.html">Step</a>s to be executed under a given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
-<p>On executing a validation is performed to check if the steps are consistent. When a fault is detected an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> is thrown including a precise error message about what fails.</p>
+<p>On executing a validation is performed to check if the steps are consistent. When a fault is detected an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> is thrown including a precise error message about what fails.</p>
 <p>To modify the sequence the following member functions are implemented:</p>
 <ol type="1">
 <li><a class="el" href="classtask_1_1Sequence.html#a5b281658b4349ca8c63a8a287ebd0420" title="Add a Step to the end of the sequence.">push_back()</a>: add a new <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> at the end</li>
@@ -262,10 +262,10 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a8a3fe135a95f6639974bf38c87e1f9e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign indentation levels to all steps according to their logical nesting.  <a href="classtask_1_1Sequence.html#a8a3fe135a95f6639974bf38c87e1f9e7">More...</a><br /></td></tr>
 <tr class="separator:a8a3fe135a95f6639974bf38c87e1f9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b07ec71a9ba5cf56a857de45afd73e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a2b07ec71a9ba5cf56a857de45afd73e2">throw_if_full</a> () const</td></tr>
-<tr class="memdesc:a2b07ec71a9ba5cf56a857de45afd73e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> if no further steps can be inserted into the sequence.  <a href="classtask_1_1Sequence.html#a2b07ec71a9ba5cf56a857de45afd73e2">More...</a><br /></td></tr>
+<tr class="memdesc:a2b07ec71a9ba5cf56a857de45afd73e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> if no further steps can be inserted into the sequence.  <a href="classtask_1_1Sequence.html#a2b07ec71a9ba5cf56a857de45afd73e2">More...</a><br /></td></tr>
 <tr class="separator:a2b07ec71a9ba5cf56a857de45afd73e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d217e1589b645acfd1845732140190d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a3d217e1589b645acfd1845732140190d">throw_if_running</a> () const</td></tr>
-<tr class="memdesc:a3d217e1589b645acfd1845732140190d"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the sequence is executed it rejects with an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> exception.  <a href="classtask_1_1Sequence.html#a3d217e1589b645acfd1845732140190d">More...</a><br /></td></tr>
+<tr class="memdesc:a3d217e1589b645acfd1845732140190d"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the sequence is executed it rejects with an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception.  <a href="classtask_1_1Sequence.html#a3d217e1589b645acfd1845732140190d">More...</a><br /></td></tr>
 <tr class="separator:a3d217e1589b645acfd1845732140190d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99779d1ae21f9225e60cf598dd9e4bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a99779d1ae21f9225e60cf598dd9e4bee">throw_syntax_error_for_step</a> (<a class="el" href="classtask_1_1Sequence.html#af25e2e69a711e192c98e90b94f3a0d82">ConstIterator</a> it, gul14::string_view msg) const</td></tr>
 <tr class="memdesc:a99779d1ae21f9225e60cf598dd9e4bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw a syntax error for the specified step.  <a href="classtask_1_1Sequence.html#a99779d1ae21f9225e60cf598dd9e4bee">More...</a><br /></td></tr>
@@ -392,7 +392,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the label is empty or if its length exceeds max_label_length bytes. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the label is empty or if its length exceeds max_label_length bytes. </td></tr>
   </table>
   </dd>
 </dl>
@@ -595,7 +595,7 @@ Private Attributes</h2></td></tr>
 <li>each type <em>Step::while</em> must have the corresponding <em><a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fda0684bc74189c4e7fd25efaaf1fe27aef">Step::type_end</a></em> </li>
 </ol>
 <p>As a body of each surrounding token must have at least one <em><a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fda39cc3eb41e1d417d6e0ac4a98befe1bd">Step::type_action</a></em> token.</p>
-<p>If one of those is ill-formed an <em><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></em> exception is thrown. </p>
+<p>If one of those is ill-formed an <em><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></em> exception is thrown. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a2547a2627f1a15c9ee1e87761a1ac897">indentation_error_</a>, and <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>.</p>
 
@@ -653,7 +653,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if a syntax error is found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if a syntax error is found. </td></tr>
   </table>
   </dd>
 </dl>
@@ -709,7 +709,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>an iterator pointing to the first step after the IF..(ELSEIF)..(ELSE)..END construct. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if an ill-formed 'if-elseif-else' token is found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if an ill-formed 'if-elseif-else' token is found. </td></tr>
   </table>
   </dd>
 </dl>
@@ -766,7 +766,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>an iterator pointing to the first step after the TRY..CATCH..END construct. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if a syntax error is found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if a syntax error is found. </td></tr>
   </table>
   </dd>
 </dl>
@@ -823,7 +823,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>an iterator pointing to the first step after the WHILE..END construct. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if a syntax error is found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if a syntax error is found. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1136,7 +1136,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Execute the sequence within a given context. </p>
-<p>This function first performs a syntax check and throws an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> exception if it fails. Then, it executes the sequence step by step, following the control flow given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is finished or has stopped with an error.</p>
+<p>This function first performs a syntax check and throws an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception if it fails. Then, it executes the sequence step by step, following the control flow given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is finished or has stopped with an error.</p>
 <p>During <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">execute()</a>, <a class="el" href="classtask_1_1Sequence.html#a49499874ef52b9e6baa5f42485996864" title="Retrieve if the sequence is executed.">is_running()</a> returns true to internal functions or LUA callbacks.</p>
 <p>By executing the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> the step setup script overwrites <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c" title="Step setup script with common functions or constants like a small library.">Context::step_setup_script</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1148,12 +1148,12 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the script cannot be executed due to a syntax error or if it raises an error during execution. In these cases, the error message is also stored in the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> object and can be retrieved with <a class="el" href="classtask_1_1Sequence.html#a9b590e29bbce7d38aabc300df303a94e" title="Return a string explaining why the sequence stopped prematurely.">get_error_message()</a>. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the script cannot be executed due to a syntax error or if it raises an error during execution. In these cases, the error message is also stored in the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> object and can be retrieved with <a class="el" href="classtask_1_1Sequence.html#a9b590e29bbce7d38aabc300df303a94e" title="Return a string explaining why the sequence stopped prematurely.">get_error_message()</a>. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">task::aborted</a>, <a class="el" href="classtask_1_1Sequence.html#ae23605d38b5fe5be9c3c7ee64a542226">check_syntax()</a>, <a class="el" href="classtask_1_1Sequence.html#a3377a10b8e4e13fb377790a077994081">execute_sequence_impl()</a>, <a class="el" href="classtask_1_1ErrorAtIndex.html#a59eaefcfbc22efe48f774ae3c5c78ea5">task::ErrorAtIndex::get_index()</a>, <a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a>, <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message()</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c">task::Message::sequence_started</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4afbfb3cd476005a7cafb0ea7a1a10e6c7">task::Message::sequence_stopped</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">task::Message::sequence_stopped_with_error</a>, <a class="el" href="classtask_1_1Sequence.html#ada24904eacc08bb160c98b5c5207b467">set_error_message()</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, <a class="el" href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">step_setup_script_</a>, <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">task::terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">task::uncaught_error</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">task::aborted</a>, <a class="el" href="classtask_1_1Sequence.html#ae23605d38b5fe5be9c3c7ee64a542226">check_syntax()</a>, <a class="el" href="classtask_1_1Sequence.html#a3377a10b8e4e13fb377790a077994081">execute_sequence_impl()</a>, <a class="el" href="classtask_1_1Error.html#a00e1ae9a53ae4208cfe4dec0778f6be3">task::Error::get_index()</a>, <a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a>, <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message()</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c">task::Message::sequence_started</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4afbfb3cd476005a7cafb0ea7a1a10e6c7">task::Message::sequence_stopped</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">task::Message::sequence_stopped_with_error</a>, <a class="el" href="classtask_1_1Sequence.html#ada24904eacc08bb160c98b5c5207b467">set_error_message()</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, <a class="el" href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">step_setup_script_</a>, <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">task::terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">task::uncaught_error</a>.</p>
 
 </div>
 </div>
@@ -1343,7 +1343,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the execution fails at some point. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the execution fails at some point. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1743,7 +1743,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>an iterator to the newly inserted <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1790,7 +1790,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>an iterator to the newly inserted <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1998,7 +1998,7 @@ template&lt;typename Closure &gt; </div>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2032,7 +2032,7 @@ template&lt;typename Closure &gt; </div>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> has no capacity for additional entries. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2154,7 +2154,7 @@ template&lt;typename Closure &gt; </div>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the label is empty or if its length exceeds max_label_length bytes. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the label is empty or if its length exceeds max_label_length bytes. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2278,7 +2278,7 @@ template&lt;typename Closure &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Throw an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> if no further steps can be inserted into the sequence. </p>
+<p>Throw an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> if no further steps can be inserted into the sequence. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ab0dce3ac5d3f439506d5af3db9f27d10">max_size()</a>, and <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>.</p>
 
@@ -2309,7 +2309,7 @@ template&lt;typename Closure &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>When the sequence is executed it rejects with an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> exception. </p>
+<p>When the sequence is executed it rejects with an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a>.</p>
 
@@ -2548,7 +2548,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Dec 14 2022 10:25:20 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

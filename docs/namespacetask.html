@@ -62,10 +62,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A context stores information that influences the execution of steps and sequences, namely:  <a href="structtask_1_1Context.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Error.html">Error</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic exception class carrying a message string.  <a href="classtask_1_1Error.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1ErrorAtIndex.html">ErrorAtIndex</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An exception class storing the index of the step in which an error occurred, in addition to the error message.  <a href="classtask_1_1ErrorAtIndex.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An exception class carrying an error message and, optionally, the index of the step in which the error occurred.  <a href="classtask_1_1Error.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html">Executor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An executor runs a copy of a given <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> in a separate thread, receives messages from it, and updates the local copy accordingly.  <a href="classtask_1_1Executor.html#details">More...</a><br /></td></tr>
@@ -228,9 +225,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the LUA registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
 <tr class="separator:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28744f8db2a3af128f5bb0f49550c6fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a28744f8db2a3af128f5bb0f49550c6fa">get_step_idx_from_registry</a> (lua_State *lua_state)</td></tr>
-<tr class="memdesc:a28744f8db2a3af128f5bb0f49550c6fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the LUA registry.  <a href="namespacetask.html#a28744f8db2a3af128f5bb0f49550c6fa">More...</a><br /></td></tr>
-<tr class="separator:a28744f8db2a3af128f5bb0f49550c6fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry</a> (lua_State *lua_state)</td></tr>
+<tr class="memdesc:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the Lua registry.  <a href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">More...</a><br /></td></tr>
+<tr class="separator:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a528bc0c099e1da1ff73dae10b926128f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">LuaInteger</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a528bc0c099e1da1ff73dae10b926128f">get_ms_since_epoch</a> (<a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> t0, std::chrono::milliseconds dt)</td></tr>
 <tr class="separator:a528bc0c099e1da1ff73dae10b926128f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace524b550971d657d53d927af82ff984"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request</a> (lua_State *lua_state, lua_Debug *)</td></tr>
@@ -240,13 +237,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a2b7a11a007fc8aef5ca36bb152506877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands</a> (sol::state &amp;lua, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context)</td></tr>
 <tr class="memdesc:a2b7a11a007fc8aef5ca36bb152506877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given LUA state.  <a href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">More...</a><br /></td></tr>
 <tr class="separator:a2b7a11a007fc8aef5ca36bb152506877"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a102418bc6ddcbd78277c83e77aaa51a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">install_timeout_and_termination_request_hook</a> (sol::state &amp;lua, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> now, std::chrono::milliseconds timeout, <a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a> step_idx, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
-<tr class="separator:a102418bc6ddcbd78277c83e77aaa51a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook</a> (sol::state &amp;lua, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> now, std::chrono::milliseconds timeout, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> step_idx, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
+<tr class="separator:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1970184ef62d5b886ee123608c7e852f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">open_safe_library_subset</a> (sol::state &amp;lua)</td></tr>
 <tr class="separator:a1970184ef62d5b886ee123608c7e852f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addf7fa83e984c536f7cb73f3fd91871d"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(sol::this_state, sol::variadic_args)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct</a> (std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt; <a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct</a>)</td></tr>
-<tr class="memdesc:addf7fa83e984c536f7cb73f3fd91871d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a print() function for LUA that wraps a print callback from the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">More...</a><br /></td></tr>
-<tr class="separator:addf7fa83e984c536f7cb73f3fd91871d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d7b6a16753639a074892a0acf61cac2"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(sol::this_state, sol::variadic_args)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct</a> (std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt; <a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct</a>)</td></tr>
+<tr class="memdesc:a8d7b6a16753639a074892a0acf61cac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a print() function for Lua that wraps a print callback from the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">More...</a><br /></td></tr>
+<tr class="separator:a8d7b6a16753639a074892a0acf61cac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2edfc1afaf6e9d8647ac3d98aa021e40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct</a> (double seconds, sol::this_state sol)</td></tr>
 <tr class="separator:a2edfc1afaf6e9d8647ac3d98aa021e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65bd182d91456185224d296ca523b74c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct</a> (const std::string &amp;text, sol::this_state sol)</td></tr>
@@ -594,7 +591,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, and <a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">hook_abort_with_error()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands()</a>, and <a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands()</a>, and <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
 
 </div>
 </div>
@@ -723,7 +720,7 @@ Variables</h2></td></tr>
 
 <p>Extracts and creates from <em>path</em> a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> and returns it. </p>
 <p>The file path must be a Lua script and should have the extension 'lua'.</p>
-<p>It will throw an <a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a> exception if an I/O error occurs on the external file path or the file does not exist.</p>
+<p>It will throw an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception if an I/O error occurs on the external file path or the file does not exist.</p>
 <p>To deserialize a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> it must consist with following minimum properties: </p><div class="fragment"><div class="line">-- type: action \a or if \a or ...</div>
 <div class="line">-- label: &lt; \a label \a description &gt;</div>
 </div><!-- fragment --><p>Optional are the following properties: </p><div class="fragment"><div class="line">-- use context variable names: [ \a variable1, ... ]</div>
@@ -786,7 +783,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 <p>Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution. </p>
 <p>This function returns a variant: If the Lua script finishes without error, it contains a sol::object representing the return value of the script. If a Lua error or C++ exception occurs, the variant contains a string with an error message. The error message is pre-processed to a certain degree: Unhelpful parts like the chunk name of the script (<code>[string "..."]:</code>) are removed, and a few known special messages are replaced by more readable explanations. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -817,7 +814,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#a5a07d51367d998afc09843d4bb6349f9">execution_steps</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -841,12 +838,12 @@ the collection of context variable names can also be an empty list, ie. <code></
 <p>The pointer can be null to indicate that no <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> is used.</p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the appropriate registry key is not found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the appropriate registry key is not found. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, and <a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, and <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
 
 </div>
 </div>
@@ -876,18 +873,18 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">install_timeout_and_termination_request_hook()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook()</a>.</p>
 
 </div>
 </div>
-<a id="a28744f8db2a3af128f5bb0f49550c6fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28744f8db2a3af128f5bb0f49550c6fa">&#9670;&nbsp;</a></span>get_step_idx_from_registry()</h2>
+<a id="a1ccb3dd2dcf762c092f177671fca1d5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ccb3dd2dcf762c092f177671fca1d5e">&#9670;&nbsp;</a></span>get_step_idx_from_registry()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a> task::get_step_idx_from_registry </td>
+          <td class="memname"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> task::get_step_idx_from_registry </td>
           <td>(</td>
           <td class="paramtype">lua_State *&#160;</td>
           <td class="paramname"><em>lua_state</em></td><td>)</td>
@@ -896,15 +893,20 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p>Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the LUA registry. </p>
+<p>Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the Lua registry. </p>
+<p>This function has three different outcomes:</p><ul>
+<li>If the appropriate registry key is not found, an exception is thrown.</li>
+<li>If a negative step index is found in the registry, this indicates that no step index information is available. nullopt is returned.</li>
+<li>Otherwise, the step index is returned.</li>
+</ul>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="A generic exception class carrying a message string.">Error</a></td><td>is thrown if the appropriate registry key is not found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the appropriate registry key is not found. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
 
 </div>
 </div>
@@ -996,7 +998,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, and <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a102418bc6ddcbd78277c83e77aaa51a2">install_timeout_and_termination_request_hook()</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook()</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
 
 </div>
 </div>
@@ -1031,14 +1033,14 @@ the collection of context variable names can also be an empty list, ie. <code></
 <div class="line">           print_function callback from the given context</div>
 <div class="line">sleep() -- wait for a given number of seconds</div>
 </div><!-- fragment --> 
-<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct()</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
-<a id="a102418bc6ddcbd78277c83e77aaa51a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a102418bc6ddcbd78277c83e77aaa51a2">&#9670;&nbsp;</a></span>install_timeout_and_termination_request_hook()</h2>
+<a id="ae3c627ea1a60eec0c0f39c034db7da66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3c627ea1a60eec0c0f39c034db7da66">&#9670;&nbsp;</a></span>install_timeout_and_termination_request_hook()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1064,7 +1066,7 @@ the collection of context variable names can also be an empty list, ie. <code></
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
           <td class="paramname"><em>step_idx</em>, </td>
         </tr>
         <tr>
@@ -1083,12 +1085,12 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#a528bc0c099e1da1ff73dae10b926128f">get_ms_since_epoch()</a>, and <a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
-<a id="addf7fa83e984c536f7cb73f3fd91871d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#addf7fa83e984c536f7cb73f3fd91871d">&#9670;&nbsp;</a></span>make_print_fct()</h2>
+<a id="a8d7b6a16753639a074892a0acf61cac2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d7b6a16753639a074892a0acf61cac2">&#9670;&nbsp;</a></span>make_print_fct()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1096,16 +1098,16 @@ the collection of context variable names can also be an empty list, ie. <code></
         <tr>
           <td class="memname">std::function&lt; void(sol::this_state, sol::variadic_args)&gt; task::make_print_fct </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt;&#160;</td>
           <td class="paramname"><em>print_fct</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a print() function for LUA that wraps a print callback from the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
+<p>Create a print() function for Lua that wraps a print callback from the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry()</a>, <a class="el" href="namespacetask.html#a28744f8db2a3af128f5bb0f49550c6fa">get_step_idx_from_registry()</a>, and <a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry()</a>, <a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry()</a>, and <a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands()</a>.</p>
 
@@ -1127,7 +1129,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -1397,7 +1399,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#addf7fa83e984c536f7cb73f3fd91871d">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
 
 </div>
 </div>
@@ -1539,7 +1541,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>.</p>
 
 </div>
 </div>
@@ -1569,7 +1571,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Determine if a certain step type requires a boolean return value from the script. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
@@ -1644,7 +1646,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- fragment --> 
 <p class="reference">References <a class="el" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">task::CommChannel::queue_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a635171fdec93b6ba550e42a8066a2101">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>.</p>
 
 </div>
 </div>
@@ -1851,7 +1853,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Return a lower-case name for a step type ("action", "if", "end"). </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#abd2262a000a7653988a77d523425bccb">task::Step::execute_impl()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -1937,7 +1939,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 8 2022 11:24:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Dec 14 2022 10:25:20 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

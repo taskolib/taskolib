@@ -6,7 +6,7 @@
 <area shape="rect" id="node5" href="$internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="387,244,478,271"/>
 <area shape="rect" id="node9" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="767,80,872,107"/>
 <area shape="rect" id="node13" title=" " alt="" coords="571,244,663,271"/>
-<area shape="rect" id="node33" href="$exceptions_8h.html" title="Definitions of the Error and ErrorAtIndex exception classes." alt="" coords="2333,319,2493,345"/>
+<area shape="rect" id="node33" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="2333,319,2493,345"/>
 <area shape="rect" id="node35" href="$execute__lua__script_8h.html" title="Declaration of execute_lua_script()." alt="" coords="501,155,655,196"/>
 <area shape="rect" id="node36" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="1761,80,1880,107"/>
 <area shape="rect" id="node6" title=" " alt="" coords="970,468,1029,495"/>

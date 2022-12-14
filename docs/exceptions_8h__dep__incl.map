@@ -1,5 +1,5 @@
 <map id="exceptions.h" name="exceptions.h">
-<area shape="rect" id="node1" title="Definitions of the Error and ErrorAtIndex exception classes." alt="" coords="349,5,454,32"/>
+<area shape="rect" id="node1" title="Definition of the Error exception class." alt="" coords="349,5,454,32"/>
 <area shape="rect" id="node2" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="345,229,442,256"/>
 <area shape="rect" id="node7" href="$taskolib_8h.html" title="Main include file for Taskolib." alt="" coords="411,379,496,405"/>
 <area shape="rect" id="node12" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="110,304,213,331"/>
