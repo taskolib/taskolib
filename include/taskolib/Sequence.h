@@ -279,13 +279,6 @@ public:
     void execute(Context& context, CommChannel* comm_channel);
 
     /**
-     * Get the step setup script.
-     *
-     * \returns the step setup script.
-     */
-    const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
-
-    /**
      * Return a string explaining why the sequence stopped prematurely.
      *
      * If the sequence finished normally, the returned string is empty.
@@ -306,6 +299,13 @@ public:
      * @returns a descriptive name for the sequence.
      */
     const std::string& get_label() const noexcept { return label_; }
+
+    /**
+     * Get the step setup script.
+     *
+     * \returns the step setup script.
+     */
+    const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
 
     /**
      * Insert the given Step into the sequence just before the specified iterator.
@@ -463,13 +463,6 @@ public:
     ConstReverseIterator rend() const noexcept { return steps_.crend(); }
 
     /**
-     * Sets setup script.
-     *
-     * \param step_setup_script step setup script.
-     */
-    void set_step_setup_script(gul14::string_view step_setup_script);
-
-    /**
      * Set an error message for the sequence.
      *
      * \param msg  A string explaining why the sequence stopped prematurely; to signalize
@@ -502,6 +495,13 @@ public:
      * Executor class and by unit tests.
      */
     void set_running(bool running) noexcept { is_running_ = running; }
+
+    /**
+     * Sets setup script.
+     *
+     * \param step_setup_script step setup script.
+     */
+    void set_step_setup_script(gul14::string_view step_setup_script);
 
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
