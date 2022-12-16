@@ -491,6 +491,9 @@ TEST_CASE("Sequence: set_running()", "[Sequence]")
 
         REQUIRE_THROWS_AS(seq.pop_back(), Error);
         REQUIRE(seq.size() == 1);
+
+        REQUIRE_THROWS_AS(seq.set_step_setup_script("b = 1"), Error);
+        REQUIRE(seq.get_step_setup_script() == "");
     }
 }
 

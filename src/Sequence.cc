@@ -652,6 +652,8 @@ void Sequence::set_label(gul14::string_view label)
 
 void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
 {
+    throw_if_running();
+
     // remove trailing whitespaces
     step_setup_script = gul14::trim_right_sv(step_setup_script);
 
