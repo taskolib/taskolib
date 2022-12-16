@@ -4,7 +4,7 @@
 <area shape="rect" id="node3" href="$taskolib_8h.html" title="Main include file for Taskolib." alt="" coords="98,304,184,331"/>
 <area shape="rect" id="node5" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="348,155,446,181"/>
 <area shape="rect" id="node13" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="447,80,510,107"/>
-<area shape="rect" id="node15" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="840,80,946,107"/>
+<area shape="rect" id="node15" href="$lua__details_8h.html" title="Declaration of free functions dealing with Lua specifics." alt="" coords="840,80,946,107"/>
 <area shape="rect" id="node4" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="816,304,911,331"/>
 <area shape="rect" id="node6" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="388,229,563,256"/>
 <area shape="rect" id="node9" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="211,229,364,256"/>
@@ -14,5 +14,5 @@
 <area shape="rect" id="node8" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="208,304,367,331"/>
 <area shape="rect" id="node11" href="$serialize__sequence_8cc.html" title="Implementation of the serialize_sequence() free function." alt="" coords="595,304,759,331"/>
 <area shape="rect" id="node14" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="673,155,742,181"/>
-<area shape="rect" id="node16" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="935,155,1046,181"/>
+<area shape="rect" id="node16" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="935,155,1046,181"/>
 </map>

@@ -223,7 +223,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a641a9ed8df01060d4121c81bc7adf8c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout</a> (lua_State *lua_state)</td></tr>
 <tr class="separator:a641a9ed8df01060d4121c81bc7adf8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry</a> (lua_State *lua_state)</td></tr>
-<tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the LUA registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
+<tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the Lua registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
 <tr class="separator:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the Lua registry.  <a href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">More...</a><br /></td></tr>
@@ -235,7 +235,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">hook_abort_with_error</a> (lua_State *lua_state, lua_Debug *)</td></tr>
 <tr class="separator:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b7a11a007fc8aef5ca36bb152506877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands</a> (sol::state &amp;lua, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context)</td></tr>
-<tr class="memdesc:a2b7a11a007fc8aef5ca36bb152506877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given LUA state.  <a href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">More...</a><br /></td></tr>
+<tr class="memdesc:a2b7a11a007fc8aef5ca36bb152506877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given Lua state.  <a href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">More...</a><br /></td></tr>
 <tr class="separator:a2b7a11a007fc8aef5ca36bb152506877"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook</a> (sol::state &amp;lua, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> now, std::chrono::milliseconds timeout, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> step_idx, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
 <tr class="separator:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -834,7 +834,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p>Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the LUA registry. </p>
+<p>Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the Lua registry. </p>
 <p>The pointer can be null to indicate that no <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> is used.</p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -1028,7 +1028,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p>Install implementations for some custom functions in the given LUA state. </p>
+<p>Install implementations for some custom functions in the given Lua state. </p>
 <div class="fragment"><div class="line">print() -- print a <span class="keywordtype">string</span> on the (<span class="keyword">virtual</span>) console; this function calls the</div>
 <div class="line">           print_function callback from the given context</div>
 <div class="line">sleep() -- wait for a given number of seconds</div>
@@ -1939,7 +1939,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 16 2022 12:55:27 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 16 2022 13:31:18 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

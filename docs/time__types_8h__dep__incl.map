@@ -10,8 +10,8 @@
 <area shape="rect" id="node21" href="$console_8h.html" title="Declaration of several functions for console output." alt="" coords="439,155,523,181"/>
 <area shape="rect" id="node6" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="310,453,399,480"/>
 <area shape="rect" id="node9" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="585,379,682,405"/>
-<area shape="rect" id="node19" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="166,304,271,331"/>
-<area shape="rect" id="node20" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="94,379,205,405"/>
+<area shape="rect" id="node19" href="$lua__details_8h.html" title="Declaration of free functions dealing with Lua specifics." alt="" coords="166,304,271,331"/>
+<area shape="rect" id="node20" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="94,379,205,405"/>
 <area shape="rect" id="node8" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="250,528,345,555"/>
 <area shape="rect" id="node10" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="881,453,1055,480"/>
 <area shape="rect" id="node13" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="577,453,730,480"/>

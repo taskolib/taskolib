@@ -1152,11 +1152,11 @@ Private Attributes</h2></td></tr>
 
 <p>Execute the sequence within a given context. </p>
 <p>This function first performs a syntax check and throws an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception if it fails. Then, it executes the sequence step by step, following the control flow given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is finished or has stopped with an error.</p>
-<p>During <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">execute()</a>, <a class="el" href="classtask_1_1Sequence.html#a49499874ef52b9e6baa5f42485996864" title="Retrieve if the sequence is executed.">is_running()</a> returns true to internal functions or LUA callbacks.</p>
+<p>During <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">execute()</a>, <a class="el" href="classtask_1_1Sequence.html#a49499874ef52b9e6baa5f42485996864" title="Retrieve if the sequence is executed.">is_running()</a> returns true to internal functions or Lua callbacks.</p>
 <p>By executing the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> the step setup script overwrites <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c" title="Step setup script with common functions or constants like a small library.">Context::step_setup_script</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">context</td><td>A context for storing variables that can be exchanged between different steps. The context may also contain a LUA init function that is run before each step. </td></tr>
+    <tr><td class="paramname">context</td><td>A context for storing variables that can be exchanged between different steps. The context may also contain a Lua init function that is run before each step. </td></tr>
     <tr><td class="paramname">comm_channel</td><td>Pointer to a communication channel. If this is a null pointer, no messages are sent and no external interaction with the running sequence is possible. Otherwise, messages for starting/stopping steps and the sequence itself are sent and termination requests are honored.</td></tr>
   </table>
   </dd>
@@ -2576,7 +2576,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 16 2022 12:55:27 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 16 2022 13:31:18 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -158,10 +158,10 @@ Static Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a7b6c9eb3ad90efaef0ccb08e9bf1a7a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a7b6c9eb3ad90efaef0ccb08e9bf1a7a7">copy_used_variables_from_context_to_lua</a> (const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, sol::state &amp;lua)</td></tr>
-<tr class="memdesc:a7b6c9eb3ad90efaef0ccb08e9bf1a7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the variables listed in used_context_variable_names_ from the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> into a LUA state.  <a href="classtask_1_1Step.html#a7b6c9eb3ad90efaef0ccb08e9bf1a7a7">More...</a><br /></td></tr>
+<tr class="memdesc:a7b6c9eb3ad90efaef0ccb08e9bf1a7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the variables listed in used_context_variable_names_ from the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> into a Lua state.  <a href="classtask_1_1Step.html#a7b6c9eb3ad90efaef0ccb08e9bf1a7a7">More...</a><br /></td></tr>
 <tr class="separator:a7b6c9eb3ad90efaef0ccb08e9bf1a7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">copy_used_variables_from_lua_to_context</a> (const sol::state &amp;lua, <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context)</td></tr>
-<tr class="memdesc:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the variables listed in used_context_variable_names_ from a LUA state into the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">More...</a><br /></td></tr>
+<tr class="memdesc:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the variables listed in used_context_variable_names_ from a Lua state into the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">More...</a><br /></td></tr>
 <tr class="separator:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44b367f575ca24f542da3eca0854a778"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">execute_impl</a> (<a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index)</td></tr>
 <tr class="memdesc:a44b367f575ca24f542da3eca0854a778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the Lua script, throwing an exception if anything goes wrong.  <a href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">More...</a><br /></td></tr>
@@ -281,7 +281,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Copy the variables listed in used_context_variable_names_ from the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> into a LUA state. </p>
+<p>Copy the variables listed in used_context_variable_names_ from the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> into a Lua state. </p>
 
 <p class="reference">References <a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">task::Context::variables</a>.</p>
 
@@ -321,7 +321,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Copy the variables listed in used_context_variable_names_ from a LUA state into the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
+<p>Copy the variables listed in used_context_variable_names_ from a Lua state into the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
 
 <p class="reference">References <a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">task::Context::variables</a>.</p>
 
@@ -1285,7 +1285,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 16 2022 12:55:27 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 16 2022 13:31:18 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -52,7 +52,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation of free functions dealing with LUA specifics. </p>
+<div class="textblock"><p>Implementation of free functions dealing with Lua specifics. </p>
 <dl class="section author"><dt>Author</dt><dd>Lars Froehlich, Marcus Walla </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>Created on June 15, 2022</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg</dd></dl>
@@ -70,11 +70,11 @@ Include dependency graph for lua_details.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="lua__details_8cc__incl.png" border="0" usemap="#alua__details_8cc" alt=""/></div>
 <map name="alua__details_8cc" id="alua__details_8cc">
-<area shape="rect" title="Implementation of free functions dealing with LUA specifics." alt="" coords="495,5,606,32"/>
+<area shape="rect" title="Implementation of free functions dealing with Lua specifics." alt="" coords="495,5,606,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,64,107"/>
 <area shape="rect" title=" " alt="" coords="89,80,183,107"/>
 <area shape="rect" href="internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="144,229,235,256"/>
-<area shape="rect" href="lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="726,80,831,107"/>
+<area shape="rect" href="lua__details_8h.html" title="Declaration of free functions dealing with Lua specifics." alt="" coords="726,80,831,107"/>
 <area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct and of the send_message() function." alt="" coords="1245,229,1430,256"/>
 <area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1791,304,1951,331"/>
 <area shape="rect" title=" " alt="" coords="379,453,437,480"/>
@@ -121,7 +121,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a641a9ed8df01060d4121c81bc7adf8c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">task::check_script_timeout</a> (lua_State *lua_state)</td></tr>
 <tr class="separator:a641a9ed8df01060d4121c81bc7adf8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memItemLeft" align="right" valign="top">CommChannel *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">task::get_comm_channel_ptr_from_registry</a> (lua_State *lua_state)</td></tr>
-<tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the LUA registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
+<tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the Lua registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
 <tr class="separator:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="memItemLeft" align="right" valign="top">OptionalStepIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">task::get_step_idx_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the Lua registry.  <a href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">More...</a><br /></td></tr>
@@ -133,7 +133,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">task::hook_abort_with_error</a> (lua_State *lua_state, lua_Debug *)</td></tr>
 <tr class="separator:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b7a11a007fc8aef5ca36bb152506877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands</a> (sol::state &amp;lua, const Context &amp;context)</td></tr>
-<tr class="memdesc:a2b7a11a007fc8aef5ca36bb152506877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given LUA state.  <a href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">More...</a><br /></td></tr>
+<tr class="memdesc:a2b7a11a007fc8aef5ca36bb152506877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given Lua state.  <a href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">More...</a><br /></td></tr>
 <tr class="separator:a2b7a11a007fc8aef5ca36bb152506877"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">task::install_timeout_and_termination_request_hook</a> (sol::state &amp;lua, TimePoint now, std::chrono::milliseconds timeout, OptionalStepIndex step_idx, CommChannel *comm_channel)</td></tr>
 <tr class="separator:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,7 +148,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 16 2022 12:55:27 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 16 2022 13:31:18 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

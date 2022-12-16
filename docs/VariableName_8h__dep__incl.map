@@ -6,7 +6,7 @@
 <area shape="rect" id="node18" href="$VariableName_8cc.html" title="Implementation of the VariableName class." alt="" coords="433,80,565,107"/>
 <area shape="rect" id="node3" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="116,304,205,331"/>
 <area shape="rect" id="node6" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="497,229,595,256"/>
-<area shape="rect" id="node16" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="263,155,368,181"/>
+<area shape="rect" id="node16" href="$lua__details_8h.html" title="Declaration of free functions dealing with Lua specifics." alt="" coords="263,155,368,181"/>
 <area shape="rect" id="node5" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="5,379,100,405"/>
 <area shape="rect" id="node7" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="636,304,811,331"/>
 <area shape="rect" id="node10" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="332,304,485,331"/>
@@ -16,5 +16,5 @@
 <area shape="rect" id="node9" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="387,379,545,405"/>
 <area shape="rect" id="node12" href="$serialize__sequence_8cc.html" title="Implementation of the serialize_sequence() free function." alt="" coords="835,379,999,405"/>
 <area shape="rect" id="node15" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="353,229,422,256"/>
-<area shape="rect" id="node17" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="167,229,277,256"/>
+<area shape="rect" id="node17" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="167,229,277,256"/>
 </map>

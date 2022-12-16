@@ -4,7 +4,7 @@
 <area shape="rect" id="node3" title=" " alt="" coords="125,80,250,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="274,80,375,107"/>
 <area shape="rect" id="node5" href="$internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="387,244,478,271"/>
-<area shape="rect" id="node9" href="$lua__details_8h.html" title="Declaration of free functions dealing with LUA specifics." alt="" coords="767,80,872,107"/>
+<area shape="rect" id="node9" href="$lua__details_8h.html" title="Declaration of free functions dealing with Lua specifics." alt="" coords="767,80,872,107"/>
 <area shape="rect" id="node13" title=" " alt="" coords="571,244,663,271"/>
 <area shape="rect" id="node33" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="2333,319,2493,345"/>
 <area shape="rect" id="node35" href="$execute__lua__script_8h.html" title="Declaration of execute_lua_script()." alt="" coords="501,155,655,196"/>
