@@ -252,13 +252,13 @@ public:
      * given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is
      * finished or has stopped with an error.
      *
-     * During execute(), is_running() returns true to internal functions or LUA callbacks.
+     * During execute(), is_running() returns true to internal functions or Lua callbacks.
      *
      * By executing the Sequence the step setup script overwrites
      * Context::step_setup_script.
      *
      * \param context A context for storing variables that can be exchanged between
-     *                different steps. The context may also contain a LUA init function
+     *                different steps. The context may also contain a Lua init function
      *                that is run before each step.
      * \param comm_channel  Pointer to a communication channel. If this is a null pointer,
      *                no messages are sent and no external interaction with the running

@@ -94,7 +94,7 @@ std::string unescape_filename_characters(gul14::string_view str)
 }
 
 /**
- * Separate a comment line from a LUA script into a keyword and a remainder.
+ * Separate a comment line from a Lua script into a keyword and a remainder.
  *
  * "-- label: Hello" -> ["label", " Hello"]
  * "   -- label:Pippo " -> ["label", "Pippo "]

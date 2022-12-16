@@ -5,7 +5,7 @@
  *
  * Taskolib is a library for automating processes. Its main automatization unit is a
  * sequence of steps which are executed in order or through control flow statements. The
- * behavior of each step is defined in the LUA scripting language.
+ * behavior of each step is defined in the Lua scripting language.
  *
  * The library provides the main modeling classes for sequences and steps, functionality
  * for executing them in the current thread or in a parallel one, as well as serialization
@@ -122,14 +122,14 @@
  *
  * \section additional_copyright_notices Additional Copyright Notices
  *
- * This library contains a version of <a href="https://www.lua.org/">LUA</a> in the
+ * This library contains a version of <a href="https://www.lua.org/">Lua</a> in the
  * directory src/lua and a version of the <a href="https://github.com/ThePhD/sol2">Sol2</a>
  * library in the directory src/sol. Sol2 incorporates other open source software such as
  * the Ogonek library. Here are all of the copyright statements and licenses of the
  * individual components:
  *
  * <dl>
- * <dt>LUA</dt>
+ * <dt>Lua</dt>
  * <dd>Copyright (c) 1994–2021 Lua.org, PUC-Rio.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this

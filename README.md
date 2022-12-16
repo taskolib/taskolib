@@ -3,7 +3,7 @@ Taskolib Library
 
 The Taskolib library helps to automate processes. Its main automatization unit is a
 sequence of steps which are executed in order or through control flow statements. The
-behavior of each step is defined in the LUA scripting language.
+behavior of each step is defined in the Lua scripting language.
 
 The library API is documented with Doxygen on the web page
 https://taskolib.github.io/taskolib/ .

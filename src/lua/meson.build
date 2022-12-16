@@ -1,4 +1,4 @@
-# Source files for our LUA library compiled as C++
+# Source files for our Lua library compiled as C++
 lua_sources = files(
     'lapi.cc',
     'lauxlib.cc',
@@ -34,7 +34,7 @@ lua_sources = files(
     'lzio.cc',
 )
 
-# Build LUA library
+# Build Lua library
 lua_lib = static_library(
     'lua',
     lua_sources,
@@ -45,7 +45,7 @@ lua_lib = static_library(
     include_directories : lua_inc,
 )
 
-# The generated static LUA library
+# The generated static Lua library
 # can be used via lua_dep
 lua_dep = declare_dependency(
     link_with : lua_lib,

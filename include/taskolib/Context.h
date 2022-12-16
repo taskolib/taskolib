@@ -91,7 +91,7 @@ using OutputCallback =
  * A context stores information that influences the execution of steps and sequences,
  * namely:
  * - A list of variables that can be im-/exported into steps.
- * - An initialization function that is called on a LUA state before a step is executed.
+ * - An initialization function that is called on a Lua state before a step is executed.
  * - Several callbacks that are invoked when a script calls print() or when the engine
  *   produces log output.
  *
@@ -109,7 +109,7 @@ struct Context
     /// Overwritten when a sequence is started.
     std::string step_setup_script = "";
 
-    /// An initialization function that is called on a LUA state before a step is executed.
+    /// An initialization function that is called on a Lua state before a step is executed.
     std::function<void(sol::state&)> step_setup_function;
 
     /// A callback that is invoked every time the script uses print().

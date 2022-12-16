@@ -2,7 +2,7 @@
  * \file   lua_details.cc
  * \author Lars Froehlich, Marcus Walla
  * \date   Created on June 15, 2022
- * \brief  Implementation of free functions dealing with LUA specifics.
+ * \brief  Implementation of free functions dealing with Lua specifics.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -61,7 +61,7 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg)
     // We store the error message in the registry...
     registry[abort_error_message_key] = gul14::cat(abort_marker, msg, abort_marker);
 
-    // ... and call the abort hook which raises a LUA error with the message from the
+    // ... and call the abort hook which raises a Lua error with the message from the
     // registry.
     hook_abort_with_error(lua_state, nullptr);
 }
@@ -94,7 +94,7 @@ void check_script_timeout(lua_State* lua_state)
 
     if (not timeout_ms.has_value())
     {
-        abort_script_with_error(lua_state, cat("Timeout time point not found in LUA "
+        abort_script_with_error(lua_state, cat("Timeout time point not found in Lua "
             "registry (", step_timeout_ms_since_epoch_key, ')'));
     }
     else
@@ -121,7 +121,7 @@ CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
 
     sol::optional<CommChannel*> opt_comm_channel_ptr = registry[comm_channel_key];
     if (not opt_comm_channel_ptr.has_value())
-        throw Error(cat(comm_channel_key, " not found in LUA registry"));
+        throw Error(cat(comm_channel_key, " not found in Lua registry"));
 
     return *opt_comm_channel_ptr;
 }
@@ -133,7 +133,7 @@ OptionalStepIndex get_step_idx_from_registry(lua_State* lua_state)
 
     const sol::optional<LuaInteger> maybe_lua_step_idx = registry[step_index_key];
     if (not maybe_lua_step_idx.has_value())
-        throw Error(cat(step_index_key, " not found in LUA registry"));
+        throw Error(cat(step_index_key, " not found in Lua registry"));
 
     // The step index stored in the Lua registry is negative if it is not available.
     if (*maybe_lua_step_idx < 0)
@@ -164,9 +164,9 @@ LuaInteger get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)
 
 void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*)
 {
-    // If necessary, these functions raise LUA errors to terminate the execution of the
-    // script. As we use a C++ compiled LUA, the error is thrown as an exception that is
-    // caught by a LUA-internal handler.
+    // If necessary, these functions raise Lua errors to terminate the execution of the
+    // script. As we use a C++ compiled Lua, the error is thrown as an exception that is
+    // caught by a Lua-internal handler.
     check_immediate_termination_request(lua_state);
     check_script_timeout(lua_state);
 }
@@ -200,7 +200,7 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
     registry[step_index_key] = step_idx ? static_cast<LuaInteger>(*step_idx) : LuaInteger{ -1 };
     registry[comm_channel_key] = comm_channel;
 
-    // Install a hook that is called after every 100 LUA instructions
+    // Install a hook that is called after every 100 Lua instructions
     lua_sethook(lua, hook_check_timeout_and_termination_request, LUA_MASKCOUNT, 100);
 }
 

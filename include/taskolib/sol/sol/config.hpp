@@ -30,7 +30,7 @@ https://sol2.readthedocs.io/en/latest/safety.html ! You can also pass them throu
 the build system, or the command line options of your compiler.
 */
 
-// Tell Sol3 that we are using a custom LUA build that was compiled with C++ and therefore
+// Tell Sol3 that we are using a custom Lua build that was compiled with C++ and therefore
 // properly handles exceptions.
 #define SOL_USING_CXX_LUA 1
 
