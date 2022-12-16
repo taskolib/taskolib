@@ -629,14 +629,6 @@ void Sequence::push_back(Step&& step)
     enforce_invariants();
 }
 
-void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
-{
-    // remove trailing whitespaces
-    step_setup_script = gul14::trim_right_sv(step_setup_script);
-
-    step_setup_script_.assign(step_setup_script.data(), step_setup_script.size());
-}
-
 void Sequence::set_error_message(gul14::string_view msg)
 {
     error_message_.assign(msg.data(), msg.size());
@@ -656,6 +648,14 @@ void Sequence::set_label(gul14::string_view label)
     }
 
     label_.assign(label.begin(), label.end());
+}
+
+void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
+{
+    // remove trailing whitespaces
+    step_setup_script = gul14::trim_right_sv(step_setup_script);
+
+    step_setup_script_.assign(step_setup_script.data(), step_setup_script.size());
 }
 
 void Sequence::throw_if_full() const
