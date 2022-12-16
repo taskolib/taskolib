@@ -808,7 +808,7 @@ TEST_CASE("execute(): External commands on Lua scripts", "[Step]")
     }
 }
 
-TEST_CASE("execute(): LUA initialization function", "[Step]")
+TEST_CASE("execute(): Lua initialization function", "[Step]")
 {
     Context context;
     context.variables["a"] = VarInteger{ 41 };

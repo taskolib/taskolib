@@ -1286,7 +1286,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
     }
 }
 
-TEST_CASE("execute(): complex sequence with prohibited LUA function", "[Sequence]")
+TEST_CASE("execute(): complex sequence with prohibited Lua function", "[Sequence]")
 {
     Context context;
 

@@ -2,7 +2,7 @@
  * \file   lua_details.h
  * \author Lars Froehlich, Marcus Walla
  * \date   Created on June 15, 2022
- * \brief  Declaration of free functions dealing with LUA specifics.
+ * \brief  Declaration of free functions dealing with Lua specifics.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -40,18 +40,18 @@ namespace task {
 static_assert(std::is_same<LuaFloat, double>::value, "Unexpected Lua-internal floating point type");
 static_assert(std::is_same<LuaInteger, long long>::value, "Unexpected Lua-internal integer type");
 
-// Abort the execution of the script by raising a LUA error with the given error message.
+// Abort the execution of the script by raising a Lua error with the given error message.
 void abort_script_with_error(lua_State* lua_state, const std::string& msg);
 
 // Check if immediate termination has been requested via the CommChannel. If so, raise a
-// LUA error.
+// Lua error.
 void check_immediate_termination_request(lua_State* lua_state);
 
-// Check if the step timeout has expired and raise a LUA error if that is the case.
+// Check if the step timeout has expired and raise a Lua error if that is the case.
 void check_script_timeout(lua_State* lua_state);
 
 /**
- * Retrieve a pointer to the used CommChannel from the LUA registry.
+ * Retrieve a pointer to the used CommChannel from the Lua registry.
  * The pointer can be null to indicate that no CommChannel is used.
  *
  * \exception Error is thrown if the appropriate registry key is not found.
@@ -76,17 +76,17 @@ OptionalStepIndex get_step_idx_from_registry(lua_State* lua_state);
 // returned.
 LuaInteger get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt);
 
-// A LUA hook that stops the execution of the script by raising a LUA error.
+// A Lua hook that stops the execution of the script by raising a Lua error.
 // This hook reinstalls itself so that it is called immediately if the execution should
 // resume. This helps to break out of pcalls.
 void hook_abort_with_error(lua_State* lua_state, lua_Debug*);
 
 // Check if the step timeout has expired or if immediate termination has been requested
-// via the comm channel. If so, raise a LUA error.
+// via the comm channel. If so, raise a Lua error.
 void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*);
 
 /**
- * Install implementations for some custom functions in the given LUA state.
+ * Install implementations for some custom functions in the given Lua state.
  * \code
  * print() -- print a string on the (virtual) console; this function calls the
  *            print_function callback from the given context
@@ -95,7 +95,7 @@ void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*
  */
 void install_custom_commands(sol::state& lua, const Context& context);
 
-// Install hooks that check for timeouts and immediate termination requests while a LUA
+// Install hooks that check for timeouts and immediate termination requests while a Lua
 // script is being executed. If one of both occurs, the script terminates with an error
 // message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
@@ -107,7 +107,7 @@ std::function<void(sol::this_state, sol::variadic_args)>
 make_print_fct(
     std::function<void(const std::string&, OptionalStepIndex, CommChannel*)> print_fct);
 
-// Open a safe subset of the LUA standard libraries in the given LUA state.
+// Open a safe subset of the Lua standard libraries in the given Lua state.
 //
 // This opens the math, string, table, and UTF8 libraries. The base library is also
 // opened, but the following potentially dangerous commands are removed:

@@ -125,7 +125,7 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     context.log_error_function = nullptr;
 
     Step step(Step::type_action);
-    step.set_script("not valid LUA");
+    step.set_script("not valid Lua");
 
     Sequence sequence{ "test_sequence" };
     sequence.push_back(std::move(step));
@@ -200,7 +200,7 @@ TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
     REQUIRE(sequence.get_error().has_value() == false);
 }
 
-TEST_CASE("Executor: cancel() within LUA sleep()", "[Executor]")
+TEST_CASE("Executor: cancel() within Lua sleep()", "[Executor]")
 {
     Context context;
     context.log_error_function = nullptr; // suppress error output on console

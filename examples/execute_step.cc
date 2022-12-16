@@ -19,7 +19,7 @@ int main()
     step.execute(context);
 
     // Retrieve variables from the context with std::get()
-    std::cout << "According to LUA, the sum of "
+    std::cout << "According to Lua, the sum of "
               << std::get<VarInteger>(context.variables["a"])
               << " and " << std::get<VarFloat>(context.variables["b"]) << " is "
               << std::get<VarFloat>(context.variables["sum"]) << ".\n";

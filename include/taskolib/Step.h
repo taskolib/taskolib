@@ -272,12 +272,12 @@ private:
 
     /**
      * Copy the variables listed in used_context_variable_names_ from the given Context
-     * into a LUA state.
+     * into a Lua state.
      */
     void copy_used_variables_from_context_to_lua(const Context& context, sol::state& lua);
 
     /**
-     * Copy the variables listed in used_context_variable_names_ from a LUA state into the
+     * Copy the variables listed in used_context_variable_names_ from a Lua state into the
      * given Context.
      */
     void copy_used_variables_from_lua_to_context(const sol::state& lua, Context& context);
