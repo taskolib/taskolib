@@ -111,16 +111,20 @@ public:
     /**
      * Assign a Step to the sequence entry at the given position.
      *
-     * @param iter Position to which the Step should be assigned
-     * @param step New step to be assigned to the sequence entry
+     * \param iter Position to which the Step should be assigned
+     * \param step New step to be assigned to the sequence entry
+     *
+     * \exception Error is thrown if the sequence is currently running.
      */
     void assign(ConstIterator iter, const Step& step);
 
     /**
      * Assign a Step to the sequence entry at the given position.
      *
-     * @param iter Position to which the Step should be assigned
-     * @param step New step to be assigned to the sequence entry
+     * \param iter Position to which the Step should be assigned
+     * \param step New step to be assigned to the sequence entry
+     *
+     * \exception Error is thrown if the sequence is currently running.
      */
     void assign(ConstIterator iter, Step&& step);
 
@@ -195,60 +199,50 @@ public:
     ConstIterator end() const noexcept { return steps_.cend(); }
 
     /**
-     * Remove \a Step iterator from sequence.
+     * Remove a step from the sequence.
      *
-     * It returns the iterator after the removed one.
+     * This operation invalidates all iterators to the removed step and following ones,
+     * including the end() iterator.
      *
-     * All iterators, inclusive the \a end() iterator are invalid after this operation.
+     * \param iter  Iterator to the step that should be removed
      *
-     * @param iter \a Step iterator to be removed
-     * @return Steps::iterator iterator after the removed \a Step
+     * \returns the iterator of the step after the removed one.
+     *
+     * \exception Error is thrown if the sequence is currently running.
      */
     ConstIterator erase(ConstIterator iter);
 
     /**
-     * Remove a bunch of \a Step 's iterator from sequence from \a first to \a last . The
-     * removed iterators is exclusive the \a last one: [first, last)
+     * Remove a range of steps from the sequence.
+     *
+     * The removed range includes the begin iterator and excludes the end iterator:
      *
      * \code
-     * 0: ACTION
-     * 1:    WHILE
-     * 2:        ACTION
-     * 3:    END
-     * 4: ACTION
+     * it0: ACTION
+     * it1:    WHILE
+     * it2:        ACTION
+     * it3:    END
+     * it4: ACTION
      * \endcode
      *
-     * After removing iterator 1 to exclusive 4 ( \a while-loop ):
+     * After erase(it1, it4):
      *
      * \code
-     * 0: ACTION
-     * 1: ACTION
+     * it0: ACTION
+     * it1a: ACTION
      * \endcode
      *
-     * When you try to remove the \a last one as \a end() the first remove \a Step is
-     * returned. Example: remove iterator 1 to 5 (here \a end() ):
+     * The begin iterator and all iterators to elements following it are invalidated by
+     * this operation, including the end() iterator.
      *
-     * \code
-     * 0: ACTION
-     * 1:    WHILE
-     * 2:        ACTION
-     * 3:    END
-     * 4: ACTION
-     * \endcode
+     * \param begin  Iterator to the first Step to be removed
+     * \param end    Iterator past the last Step to be removed
      *
-     * Result: return iterator with step \a while (element 1)
+     * \returns an iterator to the first step after the deleted range.
      *
-     * \code
-     * 0: ACTION
-     * \endcode
-     *
-     * All iterators, inclusive the \a end() iterator are invalid after this operation.
-     *
-     * @param first first \a Step iterator to be removed
-     * @param last last \a Step iterator to be removed (exclusive)
-     * @return Steps::iterator new iterator after erasing a bunch of \a Step 's
+     * \exception Error is thrown if the sequence is currently running.
      */
-    ConstIterator erase(ConstIterator first, ConstIterator last);
+    ConstIterator erase(ConstIterator begin, ConstIterator end);
 
     /**
      * Execute the sequence within a given context.
@@ -315,7 +309,9 @@ public:
      *              be inserted
      * \param step  the Step to be inserted
      * \returns an iterator to the newly inserted Step
-     * \exception Error is thrown if the Sequence has no capacity for additional entries.
+     *
+     * \exception Error is thrown if the sequence has no capacity for additional entries
+     *            or if it is currently running.
      */
     ConstIterator insert(ConstIterator iter, const Step& step);
 
@@ -328,7 +324,9 @@ public:
      *              be inserted
      * \param step  the Step to be inserted by moving
      * \returns an iterator to the newly inserted Step
-     * \exception Error is thrown if the Sequence has no capacity for additional entries.
+     *
+     * \exception Error is thrown if the sequence has no capacity for additional entries
+     *            or if it is currently running.
      */
     ConstIterator insert(ConstIterator iter, Step&& step);
 
@@ -366,10 +364,10 @@ public:
      *              `void fct(Step&)` that applies the desired modifications on a Step.
      *              The step reference becomes invalid after the call.
      *
-     * \exception
-     * If an exception is thrown by the modification function, the step may only be
-     * partially modified, but the invariants of the sequence are maintained (basic
-     * exception guarantee).
+     * \exception Error is thrown if the sequence is currently running or if the
+     * modification function throws. In the latter case, the step may only be partially
+     * modified, but the invariants of the sequence are maintained (basic exception
+     * guarantee).
      */
     template <typename Closure>
     void modify(ConstIterator iter, Closure modification_fct)
@@ -424,24 +422,30 @@ public:
     /**
      * Remove the last element from the sequence.
      *
-     * Calling pop_back() on an empty Sequence returns silently. Iterators and references to the
-     * last element as well as the end() iterator are invalidated.
+     * Calling pop_back() on an empty Sequence returns silently. Iterators and references
+     * to the last element and the end() iterator are invalidated.
+     *
+     * \exception Error is thrown if the sequence is currently running.
      */
     void pop_back();
 
     /**
-     * Add a Step to the end of the sequence.
+     * Add a step to the end of the sequence.
      *
-     * \param step  the Step to be appended to the sequence
-     * \exception Error is thrown if the Sequence has no capacity for additional entries.
+     * \param step  The Step to be appended to the sequence
+     *
+     * \exception Error is thrown if the sequence has no capacity for additional entries
+     *            or if it is currently running.
      */
     void push_back(const Step& step);
 
     /**
-     * Add a Step to the end of the sequence.
+     * Add a step to the end of the sequence.
      *
-     * \param step  the Step to be appended to the sequence by moving
-     * \exception Error is thrown if the Sequence has no capacity for additional entries.
+     * \param step  The Step to be appended to the sequence by moving
+     *
+     * \exception Error is thrown if the sequence has no capacity for additional entries
+     *            or if it is currently running.
      */
     void push_back(Step&& step);
 
@@ -500,9 +504,13 @@ public:
     void set_running(bool running) noexcept { is_running_ = running; }
 
     /**
-     * Sets setup script.
+     * Sets the step setup script.
      *
-     * \param step_setup_script step setup script.
+     * The step setup script is executed before the script of each individual Step.
+     *
+     * \param step_setup_script  The new step setup script
+     *
+     * \exception Error is thrown if the sequence is currently running.
      */
     void set_step_setup_script(gul14::string_view step_setup_script);
 
