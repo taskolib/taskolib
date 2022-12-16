@@ -273,11 +273,11 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
     return return_iter;
 }
 
-Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator first
-    , Sequence::ConstIterator last)
+Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
+                                        Sequence::ConstIterator end)
 {
     throw_if_running();
-    auto return_iter = steps_.erase(first, last);
+    auto return_iter = steps_.erase(begin, end);
     enforce_invariants();
     return return_iter;
 }
@@ -292,7 +292,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
     context.step_setup_script = step_setup_script_;
 
     send_message(comm, Message::Type::sequence_started, "Sequence started",
-                Clock::now(), 0);
+                 Clock::now(), 0);
 
     bool exception_thrown = false;
     std::string exception_message;
