@@ -8,7 +8,7 @@
             "name": "(gdb) Debug Test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/builddir/taskolib_test",
+            "program": "${workspaceFolder}/builddir/tests/taskolib_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -20,7 +20,9 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "Meson: Build all targets"
+
         },
         {
             "name": "(gdb) Debug run_lua Playground",
