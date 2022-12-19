@@ -342,13 +342,12 @@ Step deserialize_step(const std::filesystem::path& path)
 std::istream& operator>>(std::istream& stream, Sequence& seq)
 {
     std::string line;
-    std::string step_setup_script;
+    std::string step_setup_script = ""; // set an empty step setup script
 
     while(std::getline(stream, line, '\n'))
         step_setup_script += (gul14::trim_right(line) + '\n');
 
-    if (not step_setup_script.empty())
-        seq.set_step_setup_script(step_setup_script);
+    seq.set_step_setup_script(step_setup_script);
 
     return stream;
 }
@@ -384,15 +383,16 @@ Sequence deserialize_sequence(const std::filesystem::path& path)
             and gul14::starts_with(entry.path().filename().string(), "step_"))
             steps.push_back(entry.path());
 
-    if (steps.empty())
-        throw Error(gul14::cat("No steps found: ", path.string()));
+    if (not steps.empty())
+    {
+        // load steps ...
+        std::sort(std::begin(steps), std::end(steps),
+            [](const auto& lhs, const auto& rhs) -> bool
+            { return lhs.filename() < rhs.filename(); });
 
-    std::sort(std::begin(steps), std::end(steps),
-        [](const auto& lhs, const auto& rhs) -> bool
-        { return lhs.filename() < rhs.filename(); });
-
-    for(auto entry: steps)
-        seq.push_back(deserialize_step(entry));
+        for(auto entry: steps)
+            seq.push_back(deserialize_step(entry));
+    }
 
     return seq;
 }

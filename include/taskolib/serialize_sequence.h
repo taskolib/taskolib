@@ -33,6 +33,17 @@
 namespace task {
 
 /**
+ * Serialize parameters of Step to the output stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * @param stream to serialize the Step
+ * @param step to serialize
+ * @return passed output stream
+ */
+std::ostream& operator<<(std::ostream& stream, const Step& step);
+
+/**
  * Serialize Step to the file system. It pushes the Step properties to the
  * stream:
  *
@@ -68,6 +79,17 @@ namespace task {
  * @param path for the Step
  */
 void serialize_step(const std::filesystem::path& path, const Step& step);
+
+/**
+ * Serialize parameters of Sequence to the output stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * @param stream to serialize the Step
+ * @param sequence to serialize
+ * @return passed output stream
+ */
+std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
 
 /**
  * Serialize Sequence with all of its Step 's as files.
