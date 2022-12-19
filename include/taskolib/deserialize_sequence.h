@@ -33,6 +33,17 @@
 namespace task {
 
 /**
+ * Deserialize parameters of Step from the input stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * \param stream input stream
+ * \param step Step to be deserialized.
+ * \return passed input stream
+ */
+std::istream& operator>>(std::istream& stream, Step& step);
+
+/**
  * Extracts and creates from \a path a Step and returns it. The file path must be a Lua
  * script and should have the extension 'lua'.
  *
@@ -77,6 +88,17 @@ namespace task {
  * \returns the deserialized Step object.
  */
 Step deserialize_step(const std::filesystem::path& path);
+
+/**
+ * Deserialize parameters of Sequence from the input stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * \param stream input stream
+ * \param step Sequence to be deserialized.
+ * \return passed input stream
+ */
+std::istream& operator>>(std::istream& stream, Sequence& seq);
 
 /**
  * Deserialize Sequence from file path.
