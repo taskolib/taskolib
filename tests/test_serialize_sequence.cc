@@ -625,8 +625,10 @@ TEST_CASE("serialize_sequence: empty sequence", "[serialize_sequence]")
 
     SECTION("Deserialize empty sequence (part 2)")
     {
-        // remove previously stored sequence ...
-        std::filesystem::remove_all(temp_dir + '/' + seq_label);
+
+        std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously
+                                                                 // stored sequence
+
         serialize_sequence(temp_dir, seq);
 
         Sequence seq_deserialized = deserialize_sequence(temp_dir + '/' + seq_label);
@@ -639,8 +641,8 @@ TEST_CASE("serialize_sequence: sequence step setup script", "[serialize_sequence
     std::string seq_label{"test_empty_sequence_with_step_setup"};
     Sequence seq{seq_label};
 
-    // remove previously stored sequence ...
-    std::filesystem::remove_all(temp_dir + '/' + seq_label);
+    std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously stored
+                                                             // sequence
 
     seq.set_step_setup_script("a = 'Bob is alive'");
     serialize_sequence(temp_dir, seq);
