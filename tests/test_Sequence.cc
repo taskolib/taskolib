@@ -1,6 +1,6 @@
 /**
  * \file   test_Sequence.cc
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Froehlich, Ulf Fini Jastrow
  * \date   Created on February 8, 2022
  * \brief  Test suite for the the Sequence class.
  *
@@ -26,8 +26,9 @@
 #include <gul14/time_util.h>
 #include "taskolib/Sequence.h"
 
-using namespace task;
+using namespace Catch::Matchers;
 using namespace std::literals;
+using namespace task;
 
 TEST_CASE("Sequence: Constructor without descriptive label", "[Sequence]")
 {
@@ -3541,6 +3542,59 @@ TEST_CASE("execute(): Disable + re-enable action inside while loop", "[Sequence]
         REQUIRE(s[0].is_disabled() == true);
         REQUIRE(s[1].is_disabled() == true);
         REQUIRE(s[2].is_disabled() == true);
+    }
+}
+
+TEST_CASE("execute_single_step()", "[Sequence]")
+{
+    // A deliberately invalid sequence for testing single-step execution:
+    // END
+    // WHILE
+    // ACTION
+
+    Step step_end{ Step::type_end };
+    step_end.set_used_context_variable_names(VariableNames{ "a" })
+            .set_script("a = 1; error('End Boom')");
+
+    Step step_while{ Step::type_while };
+    step_while.set_used_context_variable_names(VariableNames{ "a" })
+              .set_script("a = 2; return true");
+
+    Step step_action{ Step::type_action };
+    step_action.set_used_context_variable_names(VariableNames{ "a" })
+               .set_script("a = 3; error('Action Boom')");
+
+    Sequence sequence{ "test_sequence" };
+    sequence.push_back(step_end);
+    sequence.push_back(step_while);
+    sequence.push_back(step_action);
+
+    Context context;
+    context.variables["a"] = VarInteger{ 0 };
+
+    SECTION("Index 0 (END step): Script is not executed because of the step type")
+    {
+        sequence.execute_single_step(context, nullptr, 0);
+        REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 0 });
+    }
+
+    SECTION("Index 1 (WHILE step): Script is executed")
+    {
+        sequence.execute_single_step(context, nullptr, 1);
+        REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 2 });
+    }
+
+    SECTION("Index 2 (ACTION step): Script is executed")
+    {
+        REQUIRE_THROWS_WITH(sequence.execute_single_step(context, nullptr, 2),
+                            Contains("Action Boom"));
+        REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 3 });
+    }
+
+    SECTION("Invalid index")
+    {
+        REQUIRE_THROWS_AS(sequence.execute_single_step(context, nullptr, 3), Error);
+        REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 0 });
     }
 }
 
