@@ -22,6 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <iterator>
+
 #include <gul14/join_split.h>
 #include <gul14/SmallVector.h>
 #include <gul14/string_view.h>
@@ -282,7 +284,37 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
     return return_iter;
 }
 
-void Sequence::execute(Context& context, CommChannel* comm)
+void Sequence::execute(Context& context, CommChannel* comm_channel)
+{
+    handle_execution(context, comm_channel, "Sequence",
+        [this](Context& context, CommChannel* comm)
+        {
+            check_syntax();
+            execute_range(steps_.begin(), steps_.end(), context, comm);
+        });
+}
+
+void Sequence::execute_single_step(Context& context, CommChannel* comm_channel,
+                                   StepIndex step_index)
+{
+    if (step_index >= size())
+        throw Error(cat("Invalid step index ", step_index));
+
+    const auto step_it = steps_.begin() + step_index;
+
+    handle_execution(context, comm_channel,
+        cat("Single-step execution (", to_string(step_it->get_type()), " \"",
+            step_it->get_label(), "\")"),
+        [this, step_index, step_it](Context& context, CommChannel* comm)
+        {
+            if (executes_script(step_it->get_type()))
+                step_it->execute(context, comm, step_index);
+        });
+}
+
+void Sequence::handle_execution(Context& context, CommChannel* comm,
+                                gul14::string_view exec_block_name,
+                                std::function<void(Context&, CommChannel*)> runner)
 {
     const auto clear_is_running_at_function_exit =
         gul14::finally([this]{ is_running_ = false; });
@@ -291,8 +323,8 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     context.step_setup_script = step_setup_script_;
 
-    send_message(comm, Message::Type::sequence_started, "Sequence started",
-                 Clock::now(), 0);
+    send_message(comm, Message::Type::sequence_started, cat(exec_block_name, " started"),
+                 Clock::now(), gul14::nullopt);
 
     bool exception_thrown = false;
     std::string exception_message;
@@ -300,8 +332,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
 
     try
     {
-        check_syntax();
-        execute_range(steps_.begin(), steps_.end(), context, comm);
+        runner(context, comm);
     }
     catch (const Error& e)
     {
@@ -326,10 +357,10 @@ void Sequence::execute(Context& context, CommChannel* comm)
                          maybe_exception_index);
             return; // silently return to the caller
         case ErrorCause::aborted:
-            msg = "Sequence aborted: " + msg;
+            msg = cat(exec_block_name, " aborted: ", msg);
             break;
         case ErrorCause::uncaught_error:
-            msg = "Sequence stopped with error: " + msg;
+            msg = cat(exec_block_name, " stopped with error: ", msg);
             break;
         }
 
@@ -340,8 +371,8 @@ void Sequence::execute(Context& context, CommChannel* comm)
         throw Error(msg);
     }
 
-    send_message(comm, Message::Type::sequence_stopped, "Sequence finished", Clock::now(),
-                 gul14::nullopt);
+    send_message(comm, Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
+                 Clock::now(), gul14::nullopt);
 }
 
 Sequence::Iterator
@@ -384,7 +415,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
 
 Sequence::Iterator
 Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context,
-                                CommChannel* comm)
+                        CommChannel* comm)
 {
     Iterator step = step_begin;
 

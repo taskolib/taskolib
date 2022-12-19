@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <functional>
 #include <limits>
 #include <string>
 #include <vector>
@@ -257,14 +258,13 @@ public:
      * By executing the Sequence the step setup script overwrites
      * Context::step_setup_script.
      *
-     * \param context A context for storing variables that can be exchanged between
-     *                different steps. The context may also contain a Lua init function
-     *                that is run before each step.
+     * \param context  A Context for storing variables, step setup information and other
+     *                 data relevant for the execution
      * \param comm_channel  Pointer to a communication channel. If this is a null pointer,
-     *                no messages are sent and no external interaction with the running
-     *                sequence is possible. Otherwise, messages for starting/stopping
-     *                steps and the sequence itself are sent and termination requests are
-     *                honored.
+     *                 no messages are sent and no external interaction with the running
+     *                 sequence is possible. Otherwise, messages for starting/stopping
+     *                 steps and the sequence itself are sent and termination requests are
+     *                 honored.
      *
      * \exception Error is thrown if the script cannot be executed due to a syntax error
      *            or if it raises an error during execution. In these cases, the error
@@ -272,6 +272,34 @@ public:
      *            get_error_message().
      */
     void execute(Context& context, CommChannel* comm_channel);
+
+    /**
+     * Execute a single step of this sequence in isolation.
+     *
+     * This function executes a single step identified by its index. As usual, both the
+     * step setup function (from the context) and the step setup script (from the
+     * sequence) are run before the step script. Contrary to `execute()`, no verification
+     * of the entire sequence takes place, so that a single step can even be run if the
+     * logical structure of the sequence is faulty. For most other intents and purposes,
+     * running a single step behaves like running the entire sequence.
+     *
+     * Like execute(), this function overwrites `context.step_setup_script`.
+     *
+     * \param context  A Context for storing variables, step setup information and other
+     *                 data relevant for the execution
+     * \param comm_channel  Pointer to a communication channel. If this is a null pointer,
+     *                 no messages are sent and no external interaction with the running
+     *                 sequence is possible. Otherwise, messages for starting/stopping
+     *                 the step are sent and termination requests are honored.
+     * \param step_index  Index of the step to be executed
+     *
+     * \exception Error is thrown if the step index is invalid, if the step cannot be
+     *            executed due to a Lua syntax error or if it raises an error during
+     *            execution. In these cases, the error message is also stored in the
+     *            Sequence object and can be retrieved with get_error_message().
+     */
+    void execute_single_step(Context& context, CommChannel* comm_channel,
+                             StepIndex step_index);
 
     /**
      * Return an optional Error object explaining why the sequence stopped prematurely.
@@ -705,6 +733,22 @@ private:
      */
     Iterator find_end_of_continuation(Iterator block_start);
     ConstIterator find_end_of_continuation(ConstIterator block_start) const;
+
+    /**
+     * Run a given execution function on the sequence, taking care of exception handling
+     * and messaging.
+     *
+     * \param context       Execution context
+     * \param comm_channel  Pointer to a communication channel; if null, messaging and
+     *                      cross-thread interaction are disabled.
+     * \param exec_block_name  Name of the execution block, preferably starting with a
+     *                      capital letter (e.g. "Sequence", "Single-step execution")
+     * \param runner        Function to be executed
+     */
+    void
+    handle_execution(Context& context, CommChannel* comm_channel,
+                     gul14::string_view exec_block_name,
+                     std::function<void(Context&, CommChannel*)> runner);
 
     /**
      * Assign indentation levels to all steps according to their logical nesting.
