@@ -651,13 +651,13 @@ private:
      * \param step_begin Iterator to the first step that should be executed
      * \param step_end   Iterator past the last step that should be executed
      * \param context    Context for executing the steps
-     * \param comm     Pointer to a communication channel; if null, messaging and
-     *                 cross-thread interaction are disabled.
+     * \param comm       Pointer to a communication channel; if null, messaging and
+     *                   cross-thread interaction are disabled.
      * \exception Error is thrown if the execution fails at some point.
      */
     Iterator
-    execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
-                          CommChannel* comm);
+    execute_range(Iterator step_begin, Iterator step_end, Context& context,
+                  CommChannel* comm);
 
     /**
      * Execute a TRY block.

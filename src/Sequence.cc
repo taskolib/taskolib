@@ -301,7 +301,7 @@ void Sequence::execute(Context& context, CommChannel* comm)
     try
     {
         check_syntax();
-        execute_sequence_impl(steps_.begin(), steps_.end(), context, comm);
+        execute_range(steps_.begin(), steps_.end(), context, comm);
     }
     catch (const Error& e)
     {
@@ -351,7 +351,7 @@ Sequence::execute_else_block(Iterator begin, Iterator end, Context& context,
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    execute_sequence_impl(begin + 1, block_end, context, comm);
+    execute_range(begin + 1, block_end, context, comm);
 
     return block_end;
 }
@@ -365,7 +365,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
 
     if (begin->execute(context, comm, begin - steps_.begin()))
     {
-        execute_sequence_impl(begin + 1, block_end, context, comm);
+        execute_range(begin + 1, block_end, context, comm);
 
         // Skip forward past the END
         auto end_it = std::find_if(block_end, end,
@@ -383,7 +383,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
 }
 
 Sequence::Iterator
-Sequence::execute_sequence_impl(Iterator step_begin, Iterator step_end, Context& context,
+Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context,
                                 CommChannel* comm)
 {
     Iterator step = step_begin;
@@ -449,7 +449,7 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
 
     try
     {
-        execute_sequence_impl(begin + 1, it_catch, context, comm);
+        execute_range(begin + 1, it_catch, context, comm);
     }
     catch (const Error& e)
     {
@@ -458,7 +458,7 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
         if (gul14::contains(e.what(), abort_marker))
             throw;
 
-        execute_sequence_impl(it_catch + 1, it_catch_block_end, context, comm);
+        execute_range(it_catch + 1, it_catch_block_end, context, comm);
     }
 
     return it_catch_block_end;
@@ -472,7 +472,7 @@ Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
         begin + 1, end, begin->get_indentation_level() + 1);
 
     while (begin->execute(context, comm, begin - steps_.begin()))
-        execute_sequence_impl(begin + 1, block_end, context, comm);
+        execute_range(begin + 1, block_end, context, comm);
 
     return block_end + 1;
 }
