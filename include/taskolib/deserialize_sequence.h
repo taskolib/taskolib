@@ -84,26 +84,24 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * the time on loading the step.
  * \note the collection of context variable names can also be an empty list, ie. \c [] .
  *
- * \param path  the path to a file from which the step should be loaded
+ * \param path from which the Step should be loaded.
  * \returns the deserialized Step object.
  */
 Step deserialize_step(const std::filesystem::path& path);
 
 /**
- * Deserialize parameters of Sequence from the input stream.
+ * Deserialize Sequence step setup script but did not load the Step's.
  *
- * No checking of any stream failure is done and should be performed by the caller.
- *
- * \param stream input stream
- * \param step Sequence to be deserialized.
- * \return passed input stream
+ * \param path of the Sequence.
+ * \param sequence to store the loaded step setup script.
+ * \see Sequence for step setup script.
  */
-std::istream& operator>>(std::istream& stream, Sequence& seq);
+void deserialize_step_setup_script(const std::filesystem::path& path, Sequence& sequence);
 
 /**
- * Deserialize Sequence from file path.
+ * Deserialize Sequence with all of the stored Step's from file path.
  *
- * \param path  a directory from which the sequence should be loaded
+ * \param path from which the Sequence should be loaded.
  * \returns the deserialized Sequence object.
  */
 Sequence deserialize_sequence(const std::filesystem::path& path);
