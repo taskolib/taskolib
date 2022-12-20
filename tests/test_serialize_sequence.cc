@@ -443,7 +443,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
 
     std::vector<std::string> expect{
-        task::sequence_lua_filename,
+        sequence_lua_filename,
         "step_01_action.lua",
         "step_02_if.lua",
         "step_03_action.lua",
@@ -613,7 +613,7 @@ b = test('Alice') \b\b  c = 4)";
 
 TEST_CASE("serialize_sequence: empty sequence", "[serialize_sequence]")
 {
-    std::string seq_label{"test_empty_sequence_with_step_setup"};
+    std::string seq_label{"test empty sequence with step setup script"};
     Sequence seq{seq_label};
 
     SECTION("Deserialize empty sequence (part 1)")
@@ -636,23 +636,27 @@ TEST_CASE("serialize_sequence: empty sequence", "[serialize_sequence]")
     }
 }
 
-TEST_CASE("serialize_sequence: sequence step setup script", "[serialize_sequence]")
+TEST_CASE("serialize_sequence: sequence with step setup script", "[serialize_sequence]")
 {
-    std::string seq_label{"test_empty_sequence_with_step_setup"};
-    Sequence seq{seq_label};
+
+    std::string seq_label{"test sequence with step setup script"};
 
     std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously stored
                                                              // sequence
 
+    Step step_action{Step::type_action};
+    step_action.set_script("a = preface .. 'Bob'");
+
+    Sequence seq{seq_label};
     seq.set_step_setup_script("a = 'Bob is alive'");
+    seq.push_back(step_action);
     serialize_sequence(temp_dir, seq);
 
     Sequence seq_deserialized{seq_label};
     seq_deserialized.set_step_setup_script("b = 'Should break the test!'");
 
-    std::ifstream stream(temp_dir + '/' + seq_label + '/' + task::sequence_lua_filename);
-    REQUIRE(not stream.fail()); // sanity check if path exists
-    stream >> seq_deserialized;
-    stream.close();
+    std::filesystem::path path{temp_dir + '/' + seq_label};
+    deserialize_step_setup_script(path, seq_deserialized);
     REQUIRE(seq_deserialized.get_step_setup_script() == "a = 'Bob is alive'");
+    REQUIRE(seq_deserialized.empty()); // no Step's loaded
 }

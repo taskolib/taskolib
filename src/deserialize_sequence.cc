@@ -339,43 +339,33 @@ Step deserialize_step(const std::filesystem::path& path)
     return step;
 }
 
-std::istream& operator>>(std::istream& stream, Sequence& seq)
+void deserialize_step_setup_script(const std::filesystem::path& path, Sequence& sequence)
 {
-    std::string line;
+    if (not std::filesystem::exists(path))
+        throw Error(gul14::cat("Path does not exist: '", path.string(), '\''));
+
     std::string step_setup_script = ""; // set an empty step setup script
 
-    while(std::getline(stream, line, '\n'))
-        step_setup_script += (gul14::trim_right(line) + '\n');
+    auto stream = std::ifstream(path / sequence_lua_filename);
+    if (stream.good())
+    {
+        std::string line;
+        while(std::getline(stream, line, '\n'))
+            step_setup_script += (gul14::trim_right(line) + '\n');
+    }
 
-    seq.set_step_setup_script(step_setup_script);
-
-    return stream;
-}
-
-void deserialize_sequence_impl(const std::filesystem::path& path, Sequence& seq)
-{
-    if (not std::filesystem::exists(path / sequence_lua_filename))
-        return;
-
-    std::ifstream stream(path / sequence_lua_filename);
-
-    if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file '", path.string(), "'"));
-
-    stream >> seq; // RAII closes the stream (let the destructor do the job)
+    sequence.set_step_setup_script(step_setup_script);
 }
 
 Sequence deserialize_sequence(const std::filesystem::path& path)
 {
     if (path.empty())
         throw Error("Must specify a valid path. Currently it is empty.");
-    else if (not std::filesystem::exists(path))
-        throw Error(gul14::cat("Path does not exist: '", path.string(), "'"));
 
     auto label = unescape_filename_characters(path.filename().string());
     Sequence seq{label};
 
-    deserialize_sequence_impl(path, seq);
+    deserialize_step_setup_script(path, seq);
 
     std::vector<std::filesystem::path> steps;
     for (auto const& entry : std::filesystem::directory_iterator{path})
