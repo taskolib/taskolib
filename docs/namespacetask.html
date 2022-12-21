@@ -1541,7 +1541,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Sequence.html#a232bd4ccb619fa6d5ff6a9ecf57bbee8">task::Sequence::handle_execution()</a>.</p>
 
 </div>
 </div>
@@ -1646,7 +1646,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- fragment --> 
 <p class="reference">References <a class="el" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">task::CommChannel::queue_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901">task::Sequence::execute()</a>, and <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Sequence.html#a232bd4ccb619fa6d5ff6a9ecf57bbee8">task::Sequence::handle_execution()</a>.</p>
 
 </div>
 </div>
@@ -1853,7 +1853,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Return a lower-case name for a step type ("action", "if", "end"). </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>, <a class="el" href="classtask_1_1Sequence.html#a0a952944987a4936a9ba1cfcb725338b">task::Sequence::execute_single_step()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -1890,7 +1890,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence anywhere in an error message signals that the execution of a script should be stopped. </p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="classtask_1_1Sequence.html#a3377a10b8e4e13fb377790a077994081">task::Sequence::execute_sequence_impl()</a>, <a class="el" href="classtask_1_1Sequence.html#a6eae0848dfaa6e444117bc4a6e24d6ac">task::Sequence::execute_try_block()</a>, and <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="classtask_1_1Sequence.html#af37a6ecadb025f85690c15d680e4c1a1">task::Sequence::execute_range()</a>, <a class="el" href="classtask_1_1Sequence.html#a6eae0848dfaa6e444117bc4a6e24d6ac">task::Sequence::execute_try_block()</a>, and <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers()</a>.</p>
 
 </div>
 </div>
@@ -1939,7 +1939,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 16 2022 13:31:18 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Dec 21 2022 08:11:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
