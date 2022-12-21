@@ -27,17 +27,21 @@
 
 #include <future>
 #include <memory>
+
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
 #include "taskolib/Sequence.h"
+#include "taskolib/StepIndex.h"
 
 namespace task {
 
 /**
- * An executor runs a copy of a given Sequence in a separate thread, receives messages
- * from it, and updates the local copy accordingly.
+ * An executor runs a copy of a given Sequence (or just a single step within it) in a
+ * separate thread, receives messages from it, and updates the local instance of the
+ * Sequence accordingly.
  *
- * A sequence is started in a separate thread with run_asynchronously(). Afterwards, the
+ * A sequence is started in a separate thread with run_asynchronously() and a single step
+ * can be started in isolation with run_single_step_asynchronously(). Afterwards, the
  * main thread must periodically call update() to process messages from the thread. The
  * thread has finished when update() returns false.
  *
@@ -150,6 +154,22 @@ public:
     void run_asynchronously(Sequence& sequence, Context context);
 
     /**
+     * Start a single step of the given sequence in a separate thread.
+     * The given sequence is updated in this thread whenever update() is called.
+     *
+     * \param sequence    Reference to the sequence containing the step to be executed;
+     *                    This sequence is marked as is_running(), but the actual
+     *                    execution takes place on a copy in a separate thread.
+     * \param context     The context in which the step should be executed
+     * \param step_index  The index of the step to be executed
+     *
+     * \exception Error is thrown if this executor is still busy running another sequence
+     *            or if the step index is invalid.
+     */
+    void run_single_step_asynchronously(Sequence& sequence, Context context,
+                                        StepIndex step_index);
+
+    /**
      * Update the local copy of the sequence from messages that have arrived from the
      * execution thread.
      *
@@ -198,11 +218,20 @@ private:
     Context context_;
 
     /**
-     * This is the function running in the execution thread: It calls Sequence::execute()
-     * and silently swallows all exceptions.
+     * Start a sequence- or single-step-execution function in a separate thread.
+     *
+     * \param sequence      The Sequence to be started or the parent sequence of the step
+     * \param context       The execution Context
+     * \param comm_channel  Shared pointer to a CommChannel for communication (can be
+     *                      null)
+     * \param step_index    For single-step execution, this is the index of the step to be
+     *                      started; for sequence execution, it has no meaning.
+     *
+     * \exception Error is thrown if the executor is already busy. The function can also
+     *            throw any exception from std::async if the thread cannot be created.
      */
-    static VariableTable execute_sequence(Sequence sequence, Context context,
-        std::shared_ptr<CommChannel> comm_channel) noexcept;
+    void launch_async_execution(Sequence& sequence, Context context,
+                                OptionalStepIndex step_index);
 
     /**
      * Determine if the executor is currently running a sequence in a separate thread.

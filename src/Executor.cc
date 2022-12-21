@@ -1,6 +1,6 @@
 /**
  * \file   Executor.cc
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Froehlich, Ulf Fini Jastrow, Marcus Walla
  * \date   Created on May 30, 2022
  * \brief  Implementation of the Executor class.
  *
@@ -23,9 +23,10 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/cat.h>
+
+#include "lua_details.h"
 #include "sol/sol.hpp"
 #include "taskolib/Executor.h"
-#include "lua_details.h"
 
 using gul14::cat;
 using namespace std::literals;
@@ -33,6 +34,35 @@ using namespace std::literals;
 namespace task {
 
 namespace {
+
+// The sequence/single-step execution function to be started with launch_async_execution().
+//
+// If step_index is nullopt, this function calls Sequence::execute() to run the entire
+// sequence. If step_index contains a step index, it calls
+// Sequence::execute_single_step(). In both cases, all exceptions are silently
+//
+// \param sequence    The Sequence to be started
+// \param context     The Context under which the sequence should run
+// \param comm        Shared pointer to a CommChannel for communication (can be null)
+// \param step_index  The index of the step to be started in isolation or nullopt to start
+//                    the entire sequence
+VariableTable execute_sequence(Sequence sequence, Context context,
+    std::shared_ptr<CommChannel> comm, OptionalStepIndex step_index) noexcept
+{
+    try
+    {
+        if (step_index)
+            sequence.execute_single_step(context, comm.get(), *step_index);
+        else
+            sequence.execute(context, comm.get());
+    }
+    catch (const std::exception&)
+    {
+        // Silently ignore any thrown exception - the sequence already takes care of
+        // sending the appropriate messages.
+    }
+    return context.variables;
+}
 
 void print_to_message_queue(const std::string& text, OptionalStepIndex idx,
                             CommChannel* comm_channel)
@@ -87,21 +117,6 @@ void Executor::cancel(Sequence& sequence) {
     comm_channel_->immediate_termination_requested_ = false; // Successfully terminated, rearm comm_channel
 }
 
-VariableTable Executor::execute_sequence(Sequence sequence, Context context,
-                                         std::shared_ptr<CommChannel> comm) noexcept
-{
-    try
-    {
-        sequence.execute(context, comm.get());
-    }
-    catch (const std::exception&)
-    {
-        // Silently ignore any thrown exception - the sequence already takes care of
-        // sending the appropriate messages.
-    }
-    return context.variables;
-}
-
 bool Executor::is_busy()
 {
     if (not future_.valid())
@@ -116,7 +131,8 @@ bool Executor::is_busy()
     return false;
 }
 
-void Executor::run_asynchronously(Sequence& sequence, Context context)
+void Executor::launch_async_execution(Sequence& sequence, Context context,
+                                      OptionalStepIndex step_index)
 {
     if (future_.valid())
         throw Error("Busy executing another sequence");
@@ -131,10 +147,24 @@ void Executor::run_asynchronously(Sequence& sequence, Context context)
     context.log_error_function = log_error_to_message_queue;
 
     future_ = std::async(std::launch::async, execute_sequence, sequence,
-                         std::move(context), comm_channel_);
+                         std::move(context), comm_channel_, step_index);
 
     sequence.set_running(true);
     sequence.set_error(gul14::nullopt);
+}
+
+void Executor::run_asynchronously(Sequence& sequence, Context context)
+{
+    launch_async_execution(sequence, context, gul14::nullopt);
+}
+
+void Executor::run_single_step_asynchronously(Sequence& sequence, Context context,
+                                              StepIndex step_index)
+{
+    if (step_index >= sequence.size())
+        throw Error(cat("Invalid step index ", step_index));
+
+    launch_async_execution(sequence, context, step_index);
 }
 
 bool Executor::update(Sequence& sequence)

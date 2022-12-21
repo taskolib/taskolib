@@ -58,7 +58,7 @@ TEST_CASE("Executor: Move assignment", "[Executor]")
     ex2 = std::move(ex);
 }
 
-TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
+TEST_CASE("Executor: run_asynchronously()", "[Executor]")
 {
     Context context;
 
@@ -119,7 +119,7 @@ TEST_CASE("Executor: Run a sequence asynchronously", "[Executor]")
     REQUIRE(sequence.get_error().has_value() == false);
 }
 
-TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
+TEST_CASE("Executor: run_asynchronously(), failing sequence", "[Executor]")
 {
     Context context;
     context.log_error_function = nullptr;
@@ -153,6 +153,100 @@ TEST_CASE("Executor: Run a failing sequence asynchronously", "[Executor]")
     REQUIRE(sequence.get_error()->what() != ""s);
     REQUIRE(sequence.get_error()->get_index().has_value());
     REQUIRE(sequence.get_error()->get_index().value() == 0);
+}
+
+TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
+{
+    Context context;
+    context.log_error_function = nullptr; // disable console output
+
+    Step step1{ Step::type_action };
+    step1.set_script("a = 1; error('Waldeinsamkeit')").set_used_context_variable_names(VariableNames{ "a" });
+    Step step2{ Step::type_action };
+    step2.set_script("a = 2; sleep(0.02)").set_used_context_variable_names(VariableNames{ "a" });
+
+    Sequence sequence{ "test_sequence" };
+    sequence.push_back(std::move(step1));
+    sequence.push_back(std::move(step2));
+    REQUIRE(sequence.get_error().has_value() == false);
+
+    Executor executor;
+
+    REQUIRE(sequence.is_running() == false);
+    for (const auto& step : sequence)
+        REQUIRE(step.is_running() == false);
+
+    SECTION("Running a step successfully")
+    {
+        const auto t0 = gul14::tic();
+
+        // Invalid step index must throw
+        REQUIRE_THROWS_AS(
+            executor.run_single_step_asynchronously(sequence, context, StepIndex{ 2 }), Error);
+
+        // Start the second step in a separate thread
+        executor.run_single_step_asynchronously(sequence, context, StepIndex{ 1 });
+
+        // Starting another sequence must fail because the first one is still running
+        REQUIRE_THROWS_AS(
+            executor.run_single_step_asynchronously(sequence, context, StepIndex{ 1 }), Error);
+
+        // As long as the thread is running, update() must return true, and the sequence must
+        // signalize is_running().
+        REQUIRE(executor.update(sequence) == true);
+        REQUIRE(sequence.is_running() == true);
+
+        bool step2_seen_running = false;
+
+        // Process messages as long as the thread is running
+        while (executor.update(sequence))
+        {
+            REQUIRE(sequence[0].is_running() == false);
+            step2_seen_running |= sequence[1].is_running();
+            gul14::sleep(5ms);
+        }
+
+        REQUIRE(gul14::toc(t0) >= 0.02);
+        REQUIRE(step2_seen_running == true);
+
+        // Thread has now finished. As long as we do not start another one, update() keeps
+        // returning false.
+        REQUIRE(executor.update(sequence) == false);
+
+        auto vars = executor.get_context_variables();
+        REQUIRE(std::get<VarInteger>(vars["a"]) == 2);
+
+        // Both the sequence and all of its steps must show is_running() == false.
+        REQUIRE(sequence.is_running() == false);
+        for (const auto& step : sequence)
+            REQUIRE(step.is_running() == false);
+
+        REQUIRE(sequence.get_error().has_value() == false);
+    }
+
+    SECTION("Running a failing step")
+    {
+        // Start the first step in a separate thread
+        executor.run_single_step_asynchronously(sequence, context, StepIndex{ 0 });
+        REQUIRE(sequence.is_running() == true);
+
+        // Process messages as long as the thread is running
+        while (executor.update(sequence))
+        {
+            REQUIRE(sequence[1].is_running() == false);
+            gul14::sleep(5ms);
+        }
+
+        REQUIRE(sequence.is_running() == false);
+
+        auto vars = executor.get_context_variables();
+        REQUIRE(std::get<VarInteger>(vars["a"]) == 1);
+
+        REQUIRE(sequence.get_error().has_value() == true);
+        REQUIRE_THAT(sequence.get_error()->what(), Contains("Waldeinsamkeit"));
+        REQUIRE(sequence.get_error()->get_index().has_value() == true);
+        REQUIRE(sequence.get_error()->get_index().value() == 0);
+    }
 }
 
 TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
