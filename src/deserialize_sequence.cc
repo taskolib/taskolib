@@ -326,27 +326,27 @@ std::istream& operator>>(std::istream& stream, Step& step)
     return stream;
 }
 
-Step deserialize_step(const std::filesystem::path& path)
+Step load_step(const std::filesystem::path& folder)
 {
     Step step{};
-    std::ifstream stream(path);
+    std::ifstream stream(folder);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file '", path.string(), "'"));
+        throw Error(gul14::cat("I/O error: unable to open file '", folder.string(), "'"));
 
     stream >> step; // RAII closes the stream (let the destructor do the job)
 
     return step;
 }
 
-void deserialize_step_setup_script(const std::filesystem::path& path, Sequence& sequence)
+void load_step_setup_script(const std::filesystem::path& folder, Sequence& sequence)
 {
-    if (not std::filesystem::exists(path))
-        throw Error(gul14::cat("Path does not exist: '", path.string(), '\''));
+    if (not std::filesystem::exists(folder))
+        throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
 
     std::string step_setup_script = ""; // set an empty step setup script
 
-    auto stream = std::ifstream(path / sequence_lua_filename);
+    auto stream = std::ifstream(folder / sequence_lua_filename);
     if (stream.good())
     {
         std::string line;
@@ -357,18 +357,18 @@ void deserialize_step_setup_script(const std::filesystem::path& path, Sequence& 
     sequence.set_step_setup_script(step_setup_script);
 }
 
-Sequence deserialize_sequence(const std::filesystem::path& path)
+Sequence load_sequence(const std::filesystem::path& folder)
 {
-    if (path.empty())
-        throw Error("Must specify a valid path. Currently it is empty.");
+    if (folder.empty())
+        throw Error("Must specify a valid folder. Currently it is empty.");
 
-    auto label = unescape_filename_characters(path.filename().string());
+    auto label = unescape_filename_characters(folder.filename().string());
     Sequence seq{label};
 
-    deserialize_step_setup_script(path, seq);
+    load_step_setup_script(folder, seq);
 
     std::vector<std::filesystem::path> steps;
-    for (auto const& entry : std::filesystem::directory_iterator{path})
+    for (auto const& entry : std::filesystem::directory_iterator{folder})
         if (entry.is_regular_file()
             and gul14::starts_with(entry.path().filename().string(), "step_"))
             steps.push_back(entry.path());
@@ -381,10 +381,25 @@ Sequence deserialize_sequence(const std::filesystem::path& path)
             { return lhs.filename() < rhs.filename(); });
 
         for(auto entry: steps)
-            seq.push_back(deserialize_step(entry));
+            seq.push_back(load_step(entry));
     }
 
     return seq;
+}
+
+Step deserialize_step(const std::filesystem::path& folder)
+{
+    return load_step(folder);
+}
+
+void deserialize_step_setup_script(const std::filesystem::path& folder, Sequence& sequence)
+{
+    return load_step_setup_script(folder, sequence);
+}
+
+Sequence deserialize_sequence(const std::filesystem::path& folder)
+{
+    return load_sequence(folder);
 }
 
 } // namespace task

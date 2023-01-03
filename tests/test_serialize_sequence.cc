@@ -405,7 +405,7 @@ R"(
 
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
-    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence"), Error);
+    REQUIRE_THROWS_AS(load_sequence(temp_dir + "/sequence"), Error);
 
     Step step01{Step::type_action};
     step01.set_label("action");
@@ -440,7 +440,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     sequence.push_back(step09);
     sequence.push_back(step10);
 
-    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
 
     std::vector<std::string> expect{
         sequence_lua_filename,
@@ -466,12 +466,12 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]")
 {
     // empty path
-    REQUIRE_THROWS_AS(deserialize_sequence(""), Error);
+    REQUIRE_THROWS_AS(load_sequence(""), Error);
 
     std::filesystem::create_directory(temp_dir);
 
     // folder 'sequence' does not exist
-    REQUIRE_THROWS_AS(deserialize_sequence(temp_dir + "/sequence2"), Error);
+    REQUIRE_THROWS_AS(load_sequence(temp_dir + "/sequence2"), Error);
 }
 
 TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]")
@@ -488,9 +488,9 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
     sequence.push_back(step02);
     sequence.push_back(step03);
 
-    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
 
-    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/This is a sequence");
+    Sequence deserialize_seq = load_sequence(temp_dir + "/This is a sequence");
 
     REQUIRE(not deserialize_seq.empty());
     REQUIRE(deserialize_seq.size() == 3);
@@ -509,8 +509,8 @@ TEST_CASE("serialize_sequence: default constructed Step", "[serialize_sequence]"
     Sequence sequence{ "BlueAsBlood" };
     sequence.push_back(step);
 
-    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
-    REQUIRE_NOTHROW(deserialize_sequence(temp_dir + "/BlueAsBlood"));
+    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(load_sequence(temp_dir + "/BlueAsBlood"));
 }
 
 TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
@@ -519,7 +519,7 @@ TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
 
     Sequence sequence{ "A/\"sequence\"$<again>" };
     sequence.push_back(Step{ });
-    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
 
     auto after = collect_filenames(temp_dir);
     // Man do I hate C++, I just want to subtract one array from another
@@ -536,7 +536,7 @@ TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
     REQUIRE(after.size() == 1);
     REQUIRE(after[0] == "A$2f$22sequence$22$24$3cagain$3e"); // This is strictly speaking not required
 
-    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
+    Sequence deserialize_seq = load_sequence(temp_dir + "/" + after[0]);
     REQUIRE(sequence.get_label() == deserialize_seq.get_label());
 }
 
@@ -549,7 +549,7 @@ TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]"
     Sequence sequence{ "A\bbell" };
 
     sequence.push_back(Step{ });
-    REQUIRE_NOTHROW(serialize_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
 
     auto after = collect_filenames(temp_dir);
     after.erase(std::remove_if(after.begin(), after.end(),
@@ -564,7 +564,7 @@ TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]"
     REQUIRE(after.size() == 1);
     REQUIRE(after[0] == "A bell"); // This is strictly speaking not required
 
-    Sequence deserialize_seq = deserialize_sequence(temp_dir + "/" + after[0]);
+    Sequence deserialize_seq = load_sequence(temp_dir + "/" + after[0]);
     // REQUIRE(sequence.get_label() == deserialize_seq.get_label());
     // Compare all chars but not the control char which is at index 1:
     REQUIRE(sequence.get_label().substr(0,1) == deserialize_seq.get_label().substr(0,1));
@@ -582,9 +582,9 @@ TEST_CASE("serialize_sequence: : simple step setup", "[serialize_sequence]")
     seq.push_back(step_action);
     seq.set_step_setup_script("preface = 'Alice calls '");
 
-    serialize_sequence(temp_dir, seq);
+    store_sequence(temp_dir, seq);
 
-    Sequence seq_deserialized = deserialize_sequence(temp_dir + "/test_sequence_with_simple_step_setup");
+    Sequence seq_deserialized = load_sequence(temp_dir + "/test_sequence_with_simple_step_setup");
 
     REQUIRE(seq_deserialized.get_step_setup_script() == "preface = 'Alice calls '");
 }
@@ -604,9 +604,9 @@ b = test('Alice') \b\b  c = 4)";
     seq.push_back(step_action);
     seq.set_step_setup_script(step_setup_script);
 
-    serialize_sequence(temp_dir, seq);
+    store_sequence(temp_dir, seq);
 
-    Sequence seq_deserialized = deserialize_sequence(temp_dir + "/test_sequence_with_complex_step_setup");
+    Sequence seq_deserialized = load_sequence(temp_dir + "/test_sequence_with_complex_step_setup");
 
     REQUIRE(seq_deserialized.get_step_setup_script() == step_setup_script);
 }
@@ -618,9 +618,9 @@ TEST_CASE("serialize_sequence: empty sequence", "[serialize_sequence]")
 
     SECTION("Deserialize empty sequence (part 1)")
     {
-        serialize_sequence(temp_dir, seq);
+        store_sequence(temp_dir, seq);
 
-        REQUIRE_NOTHROW(deserialize_sequence(temp_dir + '/' + seq_label));
+        REQUIRE_NOTHROW(load_sequence(temp_dir + '/' + seq_label));
     }
 
     SECTION("Deserialize empty sequence (part 2)")
@@ -629,9 +629,9 @@ TEST_CASE("serialize_sequence: empty sequence", "[serialize_sequence]")
         std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously
                                                                  // stored sequence
 
-        serialize_sequence(temp_dir, seq);
+        store_sequence(temp_dir, seq);
 
-        Sequence seq_deserialized = deserialize_sequence(temp_dir + '/' + seq_label);
+        Sequence seq_deserialized = load_sequence(temp_dir + '/' + seq_label);
         REQUIRE(seq_deserialized.empty());
     }
 }
@@ -650,13 +650,13 @@ TEST_CASE("serialize_sequence: sequence with step setup script", "[serialize_seq
     Sequence seq{seq_label};
     seq.set_step_setup_script("a = 'Bob is alive'");
     seq.push_back(step_action);
-    serialize_sequence(temp_dir, seq);
+    store_sequence(temp_dir, seq);
 
     Sequence seq_deserialized{seq_label};
     seq_deserialized.set_step_setup_script("b = 'Should break the test!'");
 
     std::filesystem::path path{temp_dir + '/' + seq_label};
-    deserialize_step_setup_script(path, seq_deserialized);
+    load_step_setup_script(path, seq_deserialized);
     REQUIRE(seq_deserialized.get_step_setup_script() == "a = 'Bob is alive'");
     REQUIRE(seq_deserialized.empty()); // no Step's loaded
 }
