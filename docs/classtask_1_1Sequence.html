@@ -2263,12 +2263,12 @@ template&lt;typename Closure &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This is usually not a useful call for end users of the library. It is used by the <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a> class and by unit tests.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is usually not a useful call for end users of the library. It is used by the <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> class and by unit tests.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a184bce2d60f0201676feb3b924c39b8f" title="Return an optional Error object explaining why the sequence stopped prematurely.">get_error()</a> </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ab7eede5c5003539bef2c2617d1aee1ce">error_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a232bd4ccb619fa6d5ff6a9ecf57bbee8">handle_execution()</a>, <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">task::Executor::run_asynchronously()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a232bd4ccb619fa6d5ff6a9ecf57bbee8">handle_execution()</a>, <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
 
 </div>
 </div>
@@ -2334,9 +2334,9 @@ template&lt;typename Closure &gt; </div>
 </div><div class="memdoc">
 
 <p>Set the sequence into the state "is running" (true) or "is not running" (false). </p>
-<dl class="section note"><dt>Note</dt><dd>This is usually not a useful call for end users of the library. It is used by the <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a> class and by unit tests. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is usually not a useful call for end users of the library. It is used by the <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> class and by unit tests. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">task::Executor::run_asynchronously()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
 
 </div>
 </div>
@@ -2402,7 +2402,7 @@ template&lt;typename Closure &gt; </div>
 
 <p>Return the number of steps contained in this sequence. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a0a952944987a4936a9ba1cfcb725338b">execute_single_step()</a>, and <a class="el" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">task::serialize_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a0a952944987a4936a9ba1cfcb725338b">execute_single_step()</a>, <a class="el" href="classtask_1_1Executor.html#a5d2005a5505764fd05b8c0cea9a34e36">task::Executor::run_single_step_asynchronously()</a>, and <a class="el" href="namespacetask.html#a43508d1c2279af5bf6ca7060dc3bcdd1">task::serialize_sequence()</a>.</p>
 
 </div>
 </div>
@@ -2699,7 +2699,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 21 2022 08:11:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jan 4 2023 11:49:09 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

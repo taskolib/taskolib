@@ -47,7 +47,6 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classtask_1_1Executor-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -55,8 +54,8 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An executor runs a copy of a given <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> in a separate thread, receives messages from it, and updates the local copy accordingly. </p>
-<p>A sequence is started in a separate thread with <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca" title="Start a copy of the given sequence in a separate thread.">run_asynchronously()</a>. Afterwards, the main thread must periodically call <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> to process messages from the thread. The thread has finished when <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> returns false.</p>
+<div class="textblock"><p>An executor runs a copy of a given <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> (or just a single step within it) in a separate thread, receives messages from it, and updates the local instance of the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> accordingly. </p>
+<p>A sequence is started in a separate thread with <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca" title="Start a copy of the given sequence in a separate thread.">run_asynchronously()</a> and a single step can be started in isolation with <a class="el" href="classtask_1_1Executor.html#a5d2005a5505764fd05b8c0cea9a34e36" title="Start a single step of the given sequence in a separate thread.">run_single_step_asynchronously()</a>. Afterwards, the main thread must periodically call <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> to process messages from the thread. The thread has finished when <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> returns false.</p>
 <div class="fragment"><div class="line"><a class="code" href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">Executor</a> ex;</div>
 <div class="line">Sequence sequence = load_sequence();</div>
 <div class="line">Context context;</div>
@@ -69,7 +68,7 @@ $(function() {
 <div class="line"><span class="comment">// has finished, update() returns false and the thread is joined automatically.</span></div>
 <div class="line"><span class="keywordflow">while</span> (ex.update(sequence))</div>
 <div class="line">    sleep(0.1s);</div>
-<div class="ttc" id="aclasstask_1_1Executor_html_ac778aee53d739377df9fbd88eb063e88"><div class="ttname"><a href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">task::Executor::Executor</a></div><div class="ttdeci">Executor()</div><div class="ttdoc">Construct an Executor.</div><div class="ttdef"><b>Definition:</b> Executor.cc:64</div></div>
+<div class="ttc" id="aclasstask_1_1Executor_html_ac778aee53d739377df9fbd88eb063e88"><div class="ttname"><a href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">task::Executor::Executor</a></div><div class="ttdeci">Executor()</div><div class="ttdoc">Construct an Executor.</div><div class="ttdef"><b>Definition:</b> Executor.cc:94</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Calling <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> in the main thread is mandatory to ensure that the sequence in the worker thread can make progress. This is because the message queue for communication between the threads has only a limited capacity, and execution is paused once it is full. Only calls to <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> take messages out of the queue again.</dd></dl>
 <h3>The <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> and its output functions</h3>
 <p>The sequence can produce (virtual) console output and logging messages of various kinds. The user can set several callback functions in the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> to determine what to do with this output: </p><div class="fragment"><div class="line"><span class="keyword">using</span> <a class="code" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> = std::function&lt;void(<span class="keyword">const</span> std::string&amp;, CommChannel*)&gt;;</div>
@@ -93,9 +92,9 @@ $(function() {
 <div class="ttc" id="anamespacetask_html_ac71f52027c266027fa13ba4254a099b2"><div class="ttname"><a href="namespacetask.html#ac71f52027c266027fa13ba4254a099b2">task::print_info_to_stdout</a></div><div class="ttdeci">void print_info_to_stdout(const std::string &amp;str, OptionalStepIndex, CommChannel *comm_channel)</div><div class="ttdoc">Print a string to stdout with an &quot;INFO: &quot; prefix.</div><div class="ttdef"><b>Definition:</b> console.cc:35</div></div>
 </div><!-- fragment --><p> From a user perspective, these functions only need a string argument to do their job. Under the hood, however, things get a little tricky when a sequence is run in a parallel thread because that thread may not invoke the callback functions directly due to lack of inter-thread synchronization. What happens instead is the following:</p>
 <ul>
-<li>The <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a> makes a copy of the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> for the parallel thread.</li>
+<li>The <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> makes a copy of the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> for the parallel thread.</li>
 <li>In that <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> copy, it replaces the callback functions by versions that send appropriate messages via a message queue (<a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a>) instead.</li>
-<li>The <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a> receives these messages and takes care about calling the original user callbacks in the main thread.</li>
+<li>The <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> receives these messages and takes care about calling the original user callbacks in the main thread.</li>
 </ul>
 <p>This also explains why there is a second argument in the OutputCallback function signature. User code should generally ignore it. </p>
 </div>
@@ -104,7 +103,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac778aee53d739377df9fbd88eb063e88"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">Executor</a> ()</td></tr>
-<tr class="memdesc:ac778aee53d739377df9fbd88eb063e88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a>.  <a href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">More...</a><br /></td></tr>
+<tr class="memdesc:ac778aee53d739377df9fbd88eb063e88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a>.  <a href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">More...</a><br /></td></tr>
 <tr class="separator:ac778aee53d739377df9fbd88eb063e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7166f10cf1763236d2c20bbf0e9d80da"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a7166f10cf1763236d2c20bbf0e9d80da">Executor</a> (<a class="el" href="classtask_1_1Executor.html">Executor</a> const &amp;)=delete</td></tr>
 <tr class="separator:a7166f10cf1763236d2c20bbf0e9d80da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,6 +124,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7bf9edf1cbe3e6008b3a69c6d46b63ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context)</td></tr>
 <tr class="memdesc:a7bf9edf1cbe3e6008b3a69c6d46b63ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a copy of the given sequence in a separate thread.  <a href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">More...</a><br /></td></tr>
 <tr class="separator:a7bf9edf1cbe3e6008b3a69c6d46b63ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d2005a5505764fd05b8c0cea9a34e36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a5d2005a5505764fd05b8c0cea9a34e36">run_single_step_asynchronously</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context, <a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a> step_index)</td></tr>
+<tr class="memdesc:a5d2005a5505764fd05b8c0cea9a34e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a single step of the given sequence in a separate thread.  <a href="classtask_1_1Executor.html#a5d2005a5505764fd05b8c0cea9a34e36">More...</a><br /></td></tr>
+<tr class="separator:a5d2005a5505764fd05b8c0cea9a34e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab80e82198ae3f014a91b82d8ac1376ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
 <tr class="memdesc:ab80e82198ae3f014a91b82d8ac1376ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the local copy of the sequence from messages that have arrived from the execution thread.  <a href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">More...</a><br /></td></tr>
 <tr class="separator:ab80e82198ae3f014a91b82d8ac1376ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,15 +136,12 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:ab24061adfe403a7eabfda8caa27a9871"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">launch_async_execution</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> step_index)</td></tr>
+<tr class="memdesc:ab24061adfe403a7eabfda8caa27a9871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a sequence- or single-step-execution function in a separate thread.  <a href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">More...</a><br /></td></tr>
+<tr class="separator:ab24061adfe403a7eabfda8caa27a9871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a175cd06097d2c48d6875778195da2d5e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy</a> ()</td></tr>
 <tr class="memdesc:a175cd06097d2c48d6875778195da2d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the executor is currently running a sequence in a separate thread.  <a href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">More...</a><br /></td></tr>
 <tr class="separator:a175cd06097d2c48d6875778195da2d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
-Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a3e890bb0e3606312adfd33aaf440daaa"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Executor.html#a3e890bb0e3606312adfd33aaf440daaa">execute_sequence</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> sequence, <a class="el" href="structtask_1_1Context.html">Context</a> context, std::shared_ptr&lt; <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> &gt; comm_channel) noexcept</td></tr>
-<tr class="memdesc:a3e890bb0e3606312adfd33aaf440daaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the function running in the execution thread: It calls <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">Sequence::execute()</a> and silently swallows all exceptions.  <a href="classtask_1_1Executor.html#a3e890bb0e3606312adfd33aaf440daaa">More...</a><br /></td></tr>
-<tr class="separator:a3e890bb0e3606312adfd33aaf440daaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -172,7 +171,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Construct an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a>. </p>
+<p>Construct an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a>. </p>
 
 </div>
 </div>
@@ -303,52 +302,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3e890bb0e3606312adfd33aaf440daaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e890bb0e3606312adfd33aaf440daaa">&#9670;&nbsp;</a></span>execute_sequence()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a> task::Executor::execute_sequence </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td>
-          <td class="paramname"><em>sequence</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtask_1_1Context.html">Context</a>&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> &gt;&#160;</td>
-          <td class="paramname"><em>comm_channel</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>This is the function running in the execution thread: It calls <a class="el" href="classtask_1_1Sequence.html#a72a058077848e9856dd785df72cfb901" title="Execute the sequence within a given context.">Sequence::execute()</a> and silently swallows all exceptions. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously()</a>.</p>
-
-</div>
-</div>
 <a id="ad19328988ebba9537be4e86c460b8aaf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad19328988ebba9537be4e86c460b8aaf">&#9670;&nbsp;</a></span>get_context_variables()</h2>
 
@@ -410,6 +363,69 @@ Private Attributes</h2></td></tr>
 <p class="reference">References <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, and <a class="el" href="structtask_1_1Context.html#a86fd00d26d28714257ad8f4b0e5fe0a3">task::Context::variables</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update()</a>.</p>
+
+</div>
+</div>
+<a id="ab24061adfe403a7eabfda8caa27a9871"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab24061adfe403a7eabfda8caa27a9871">&#9670;&nbsp;</a></span>launch_async_execution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::Executor::launch_async_execution </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtask_1_1Context.html">Context</a>&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
+          <td class="paramname"><em>step_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Start a sequence- or single-step-execution function in a separate thread. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence</td><td>The <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> to be started or the parent sequence of the step </td></tr>
+    <tr><td class="paramname">context</td><td>The execution <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> </td></tr>
+    <tr><td class="paramname">comm_channel</td><td>Shared pointer to a <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> for communication (can be null) </td></tr>
+    <tr><td class="paramname">step_index</td><td>For single-step execution, this is the index of the step to be started; for sequence execution, it has no meaning.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the executor is already busy. The function can also throw any exception from std::async if the thread cannot be created. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a>, <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, <a class="el" href="structtask_1_1Context.html#a8c5c2cc1d1078d95a0cd5307ea488079">task::Context::log_error_function</a>, <a class="el" href="structtask_1_1Context.html#a4c37bfb946bd7a46ca0cb66270dc18f5">task::Context::log_info_function</a>, <a class="el" href="structtask_1_1Context.html#a8b48a3a862f9550b7e1fc42359861ce2">task::Context::log_warning_function</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, <a class="el" href="classtask_1_1Sequence.html#ab45e55eb4ea1009ad121de6c113e8a77">task::Sequence::set_error()</a>, and <a class="el" href="classtask_1_1Sequence.html#a3b15c91fc7449b5c5af7fa4882902c94">task::Sequence::set_running()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously()</a>, and <a class="el" href="classtask_1_1Executor.html#a5d2005a5505764fd05b8c0cea9a34e36">run_single_step_asynchronously()</a>.</p>
 
 </div>
 </div>
@@ -507,7 +523,60 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ae96af23950e042e68d841a2d88561de0">comm_channel_</a>, <a class="el" href="classtask_1_1Executor.html#a12f02c8900453c77349f5966c436f562">context_</a>, <a class="el" href="classtask_1_1Executor.html#a3e890bb0e3606312adfd33aaf440daaa">execute_sequence()</a>, <a class="el" href="classtask_1_1Executor.html#a0e2657ff7a68e4a53d316a90ee8a16de">future_</a>, <a class="el" href="structtask_1_1Context.html#a8c5c2cc1d1078d95a0cd5307ea488079">task::Context::log_error_function</a>, <a class="el" href="structtask_1_1Context.html#a4c37bfb946bd7a46ca0cb66270dc18f5">task::Context::log_info_function</a>, <a class="el" href="structtask_1_1Context.html#a8b48a3a862f9550b7e1fc42359861ce2">task::Context::log_warning_function</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, <a class="el" href="classtask_1_1Sequence.html#ab45e55eb4ea1009ad121de6c113e8a77">task::Sequence::set_error()</a>, and <a class="el" href="classtask_1_1Sequence.html#a3b15c91fc7449b5c5af7fa4882902c94">task::Sequence::set_running()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">launch_async_execution()</a>.</p>
+
+</div>
+</div>
+<a id="a5d2005a5505764fd05b8c0cea9a34e36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d2005a5505764fd05b8c0cea9a34e36">&#9670;&nbsp;</a></span>run_single_step_asynchronously()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::Executor::run_single_step_asynchronously </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtask_1_1Context.html">Context</a>&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetask.html#a256000de4540c0b9946038528c8158f9">StepIndex</a>&#160;</td>
+          <td class="paramname"><em>step_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Start a single step of the given sequence in a separate thread. </p>
+<p>The given sequence is updated in this thread whenever <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> is called.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence</td><td>Reference to the sequence containing the step to be executed; This sequence is marked as is_running(), but the actual execution takes place on a copy in a separate thread. </td></tr>
+    <tr><td class="paramname">context</td><td>The context in which the step should be executed </td></tr>
+    <tr><td class="paramname">step_index</td><td>The index of the step to be executed</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if this executor is still busy running another sequence or if the step index is invalid. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">launch_async_execution()</a>, and <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>.</p>
 
 </div>
 </div>
@@ -564,9 +633,9 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Communications channel between the main thread and the executing thread. </p>
-<p>It must stay at a fixed address so both threads can access it even if the <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence in a separate thread, receives messages from it,...">Executor</a> object is moved. Both the main thread and the worker thread have one shared_ptr to the channel. </p>
+<p>It must stay at a fixed address so both threads can access it even if the <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> object is moved. Both the main thread and the worker thread have one shared_ptr to the channel. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update()</a>.</p>
 
 </div>
 </div>
@@ -593,7 +662,7 @@ Private Attributes</h2></td></tr>
 <p>A local copy of the context that was used to start the last sequence. </p>
 <p>Its output callbacks are used to produce "console" and logging output. After the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> finished it contains the processed context. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#ad19328988ebba9537be4e86c460b8aaf">get_context_variables()</a>, <a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy()</a>, <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#ad19328988ebba9537be4e86c460b8aaf">get_context_variables()</a>, <a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy()</a>, <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">update()</a>.</p>
 
 </div>
 </div>
@@ -620,7 +689,7 @@ Private Attributes</h2></td></tr>
 <p>A future for the result of the execution thread. </p>
 <p>Once the thread has joined, it contains the context variables from the executed sequence. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy()</a>, and <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">run_asynchronously()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#a578bcd803247fd8d101b7276e6e7e2e8">cancel()</a>, <a class="el" href="classtask_1_1Executor.html#a175cd06097d2c48d6875778195da2d5e">is_busy()</a>, and <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">launch_async_execution()</a>.</p>
 
 </div>
 </div>
@@ -631,7 +700,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 21 2022 08:11:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jan 4 2023 11:49:09 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
