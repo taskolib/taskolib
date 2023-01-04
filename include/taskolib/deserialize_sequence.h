@@ -90,7 +90,7 @@ std::istream& operator>>(std::istream& stream, Step& step);
 Step load_step(const std::filesystem::path& folder);
 
 /**
- * For description \see load_step().
+ * For description see load_step().
  *
  * \param folder from which the Step should be loaded.
  * \returns the deserialized Step object.
