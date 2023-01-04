@@ -64,6 +64,12 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * -- timeout: [infinity|< \a timeout \a in \a milliseconds >]
  * \endcode
  *
+ * If one of the optional parameters is not set the following is provided as default:
+ * - context variable names is an empty list
+ * - time of last modification is set to a time stamp when loaded
+ * - time of last execution is set to January 1st 1970
+ * - timeout is set to 0s
+ *
  * Here is one example of a stored Step \a step_001_while.lua :
  * \code
  * -- type: while
