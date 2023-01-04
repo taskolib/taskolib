@@ -351,7 +351,7 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
     {
         std::string line;
         while(std::getline(stream, line, '\n'))
-            step_setup_script += (gul14::trim_right(line) + '\n');
+            step_setup_script += (line + '\n');
     }
 
     sequence.set_step_setup_script(step_setup_script);
