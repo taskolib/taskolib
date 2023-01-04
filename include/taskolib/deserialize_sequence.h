@@ -109,7 +109,7 @@ Step deserialize_step(const std::filesystem::path& folder);
 void load_step_setup_script(const std::filesystem::path& folder, Sequence& sequence);
 
 /**
- * Deserialize Sequence step setup script but did not load the Step's.
+ * Load a step setup script into the Sequence.
  *
  * \param folder of the Sequence.
  * \param sequence to store the loaded step setup script.
