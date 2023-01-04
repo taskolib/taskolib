@@ -81,7 +81,7 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
 void store_step(const std::filesystem::path& folder, const Step& step);
 
 /**
- * For a description \see store_step().
+ * For a description see store_step().
  *
  * \param folder for the Step
  * \param step step to serialize
