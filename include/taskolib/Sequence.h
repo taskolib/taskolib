@@ -246,60 +246,44 @@ public:
     ConstIterator erase(ConstIterator begin, ConstIterator end);
 
     /**
-     * Execute the sequence within a given context.
+     * Execute the sequence (or just one of its steps) within a given context.
      *
-     * This function first performs a syntax check and throws an Error exception if it
-     * fails. Then, it executes the sequence step by step, following the control flow
-     * given by steps such as WHILE, IF, TRY, and so on. It returns when the sequence is
-     * finished or has stopped with an error.
+     * Depending on the value of the opt_step_index parameter, this function either runs
+     * the entire sequence or just one of its steps:
+     *
+     * - If `opt_step_index == nullopt`, the function first performs a syntax check and
+     *   throws an Error exception if it fails. Then, it executes the sequence step by
+     *   step, following the control flow given by steps such as WHILE, IF, TRY, and so
+     *   on. Disabled steps are ignored. The function returns when the sequence has
+     *   finished or has stopped with an error.
+     *
+     * - If `opt_step_index` contains a step index, this function executes the single step
+     *   identified by the index. As usual, both the step setup function (from the
+     *   context) and the step setup script (from the sequence) are run before the step
+     *   script. No verification of the entire sequence takes place, so that a single step
+     *   can even be run if the logical structure of the sequence is faulty. For most
+     *   other intents and purposes, running a single step behaves like running the entire
+     *   sequence.
      *
      * During execute(), is_running() returns true to internal functions or Lua callbacks.
      *
-     * By executing the Sequence the step setup script overwrites
-     * Context::step_setup_script.
-     *
      * \param context  A Context for storing variables, step setup information and other
-     *                 data relevant for the execution
+     *                 data relevant for the execution. The `step_setup_script` member is
+     *                 overwritten with the step setup script of the executed sequence.
      * \param comm_channel  Pointer to a communication channel. If this is a null pointer,
      *                 no messages are sent and no external interaction with the running
      *                 sequence is possible. Otherwise, messages for starting/stopping
      *                 steps and the sequence itself are sent and termination requests are
      *                 honored.
+     * \param opt_step_index  Index of the step to be executed
      *
      * \exception Error is thrown if the script cannot be executed due to a syntax error
      *            or if it raises an error during execution. In these cases, the error
      *            message is also stored in the Sequence object and can be retrieved with
      *            get_error_message().
      */
-    void execute(Context& context, CommChannel* comm_channel);
-
-    /**
-     * Execute a single step of this sequence in isolation.
-     *
-     * This function executes a single step identified by its index. As usual, both the
-     * step setup function (from the context) and the step setup script (from the
-     * sequence) are run before the step script. Contrary to `execute()`, no verification
-     * of the entire sequence takes place, so that a single step can even be run if the
-     * logical structure of the sequence is faulty. For most other intents and purposes,
-     * running a single step behaves like running the entire sequence.
-     *
-     * Like execute(), this function overwrites `context.step_setup_script`.
-     *
-     * \param context  A Context for storing variables, step setup information and other
-     *                 data relevant for the execution
-     * \param comm_channel  Pointer to a communication channel. If this is a null pointer,
-     *                 no messages are sent and no external interaction with the running
-     *                 sequence is possible. Otherwise, messages for starting/stopping
-     *                 the step are sent and termination requests are honored.
-     * \param step_index  Index of the step to be executed
-     *
-     * \exception Error is thrown if the step index is invalid, if the step cannot be
-     *            executed due to a Lua syntax error or if it raises an error during
-     *            execution. In these cases, the error message is also stored in the
-     *            Sequence object and can be retrieved with get_error_message().
-     */
-    void execute_single_step(Context& context, CommChannel* comm_channel,
-                             StepIndex step_index);
+    void execute(Context& context, CommChannel* comm_channel,
+                 OptionalStepIndex opt_step_index = gul14::nullopt);
 
     /**
      * Return an optional Error object explaining why the sequence stopped prematurely.
