@@ -3545,7 +3545,7 @@ TEST_CASE("execute(): Disable + re-enable action inside while loop", "[Sequence]
     }
 }
 
-TEST_CASE("execute_single_step()", "[Sequence]")
+TEST_CASE("execute(): Single step", "[Sequence]")
 {
     // A deliberately invalid sequence for testing single-step execution:
     // END
@@ -3574,26 +3574,26 @@ TEST_CASE("execute_single_step()", "[Sequence]")
 
     SECTION("Index 0 (END step): Script is not executed because of the step type")
     {
-        sequence.execute_single_step(context, nullptr, 0);
+        sequence.execute(context, nullptr, 0);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 0 });
     }
 
     SECTION("Index 1 (WHILE step): Script is executed")
     {
-        sequence.execute_single_step(context, nullptr, 1);
+        sequence.execute(context, nullptr, 1);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 2 });
     }
 
     SECTION("Index 2 (ACTION step): Script is executed")
     {
-        REQUIRE_THROWS_WITH(sequence.execute_single_step(context, nullptr, 2),
+        REQUIRE_THROWS_WITH(sequence.execute(context, nullptr, 2),
                             Contains("Action Boom"));
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 3 });
     }
 
     SECTION("Invalid index")
     {
-        REQUIRE_THROWS_AS(sequence.execute_single_step(context, nullptr, 3), Error);
+        REQUIRE_THROWS_AS(sequence.execute(context, nullptr, 3), Error);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 0 });
     }
 }

@@ -284,32 +284,35 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
     return return_iter;
 }
 
-void Sequence::execute(Context& context, CommChannel* comm_channel)
+void Sequence::execute(Context& context, CommChannel* comm_channel,
+                       OptionalStepIndex opt_step_index)
 {
-    handle_execution(context, comm_channel, "Sequence",
-        [this](Context& context, CommChannel* comm)
-        {
-            check_syntax();
-            execute_range(steps_.begin(), steps_.end(), context, comm);
-        });
-}
+    if (opt_step_index)
+    {
+        const auto step_index = *opt_step_index;
+        const auto step_it = steps_.begin() + step_index;
 
-void Sequence::execute_single_step(Context& context, CommChannel* comm_channel,
-                                   StepIndex step_index)
-{
-    if (step_index >= size())
-        throw Error(cat("Invalid step index ", step_index));
+        if (step_index >= size())
+            throw Error(cat("Invalid step index ", step_index));
 
-    const auto step_it = steps_.begin() + step_index;
-
-    handle_execution(context, comm_channel,
-        cat("Single-step execution (", to_string(step_it->get_type()), " \"",
-            step_it->get_label(), "\")"),
-        [this, step_index, step_it](Context& context, CommChannel* comm)
-        {
-            if (executes_script(step_it->get_type()))
-                step_it->execute(context, comm, step_index);
-        });
+        handle_execution(context, comm_channel,
+            cat("Single-step execution (", to_string(step_it->get_type()), " \"",
+                step_it->get_label(), "\")"),
+            [this, step_index, step_it](Context& context, CommChannel* comm)
+            {
+                if (executes_script(step_it->get_type()))
+                    step_it->execute(context, comm, step_index);
+            });
+    }
+    else
+    {
+        handle_execution(context, comm_channel, "Sequence",
+            [this](Context& context, CommChannel* comm)
+            {
+                check_syntax();
+                execute_range(steps_.begin(), steps_.end(), context, comm);
+            });
+    }
 }
 
 void Sequence::handle_execution(Context& context, CommChannel* comm,

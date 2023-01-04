@@ -41,20 +41,17 @@ namespace {
 // sequence. If step_index contains a step index, it calls
 // Sequence::execute_single_step(). In both cases, all exceptions are silently
 //
-// \param sequence    The Sequence to be started
-// \param context     The Context under which the sequence should run
-// \param comm        Shared pointer to a CommChannel for communication (can be null)
-// \param step_index  The index of the step to be started in isolation or nullopt to start
-//                    the entire sequence
+// \param sequence        The Sequence to be started
+// \param context         The Context under which the sequence should run
+// \param comm            Shared pointer to a CommChannel for communication (can be null)
+// \param opt_step_index  The index of the step to be started in isolation or nullopt to
+//                        start the entire sequence
 VariableTable execute_sequence(Sequence sequence, Context context,
-    std::shared_ptr<CommChannel> comm, OptionalStepIndex step_index) noexcept
+    std::shared_ptr<CommChannel> comm, OptionalStepIndex opt_step_index) noexcept
 {
     try
     {
-        if (step_index)
-            sequence.execute_single_step(context, comm.get(), *step_index);
-        else
-            sequence.execute(context, comm.get());
+        sequence.execute(context, comm.get(), opt_step_index);
     }
     catch (const std::exception&)
     {
