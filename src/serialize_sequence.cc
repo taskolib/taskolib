@@ -138,11 +138,6 @@ void store_step(const std::filesystem::path& folder, const Step& step)
     stream << step; // RAII closes the stream (let the destructor do the job)
 }
 
-void serialize_step(const std::filesystem::path& folder, const Step& step)
-{
-    store_step(folder, step);
-}
-
 std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
 {
     stream << sequence.get_step_setup_script();
