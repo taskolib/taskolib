@@ -66,3 +66,27 @@ TEST_CASE("Error: Copy assignment", "[exceptions]")
     REQUIRE(e2.what() == "Test"s);
     REQUIRE(e2.get_index() == e.get_index());
 }
+
+TEST_CASE("Error: operator==", "[exceptions]")
+{
+    REQUIRE(Error("Test", 42) == Error("Test", 42));
+    REQUIRE(Error("Test", gul14::nullopt) == Error("Test", gul14::nullopt));
+    REQUIRE(Error("", 42) == Error("", 42));
+
+    REQUIRE_FALSE(Error("test", 42) == Error("TEST", 42));
+    REQUIRE_FALSE(Error("test", 42) == Error("test", 23));
+    REQUIRE_FALSE(Error("Test", 13) == Error("Test", gul14::nullopt));
+    REQUIRE_FALSE(Error(" ", gul14::nullopt) == Error("", gul14::nullopt));
+}
+
+TEST_CASE("Error: operator!=", "[exceptions]")
+{
+    REQUIRE_FALSE(Error("Test", 42) != Error("Test", 42));
+    REQUIRE_FALSE(Error("Test", gul14::nullopt) != Error("Test", gul14::nullopt));
+    REQUIRE_FALSE(Error("", 42) != Error("", 42));
+
+    REQUIRE(Error("test", 42) != Error("TEST", 42));
+    REQUIRE(Error("test", 42) != Error("test", 23));
+    REQUIRE(Error("Test", 13) != Error("Test", gul14::nullopt));
+    REQUIRE(Error(" ", gul14::nullopt) != Error("", gul14::nullopt));
+}

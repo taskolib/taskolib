@@ -25,7 +25,7 @@
 #ifndef TASKOLIB_EXCEPTIONS_H_
 #define TASKOLIB_EXCEPTIONS_H_
 
-#include <cstdint>
+#include <cstring>
 #include <stdexcept>
 #include <string>
 
@@ -84,6 +84,19 @@ public:
 
     /// Return the associated step index.
     OptionalStepIndex get_index() const { return index_; }
+
+    /// Determine if two Error objects have the same content.
+    friend bool operator==(const Error& lhs, const Error& rhs) noexcept
+    {
+        return (std::strcmp(lhs.what(), rhs.what()) == 0)
+            && lhs.index_ == rhs.index_;
+    }
+
+    /// Determine if two Error objects have different content.
+    friend bool operator!=(const Error& lhs, const Error& rhs) noexcept
+    {
+        return !(lhs == rhs);
+    }
 
 private:
     OptionalStepIndex index_;
