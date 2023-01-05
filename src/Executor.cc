@@ -49,15 +49,10 @@ namespace {
 VariableTable execute_sequence(Sequence sequence, Context context,
     std::shared_ptr<CommChannel> comm, OptionalStepIndex opt_step_index) noexcept
 {
-    try
-    {
-        sequence.execute(context, comm.get(), opt_step_index);
-    }
-    catch (const std::exception&)
-    {
-        // Silently ignore any thrown exception - the sequence already takes care of
-        // sending the appropriate messages.
-    }
+    // Ignore any returned errors - the sequence already takes care of sending the
+    // appropriate messages.
+    (void)sequence.execute(context, comm.get(), opt_step_index);
+
     return context.variables;
 }
 

@@ -277,13 +277,14 @@ public:
      *                 honored.
      * \param opt_step_index  Index of the step to be executed
      *
-     * \exception Error is thrown if the script cannot be executed due to a syntax error
-     *            or if it raises an error during execution. In these cases, the error
-     *            message is also stored in the Sequence object and can be retrieved with
-     *            get_error_message().
+     * \returns nullopt if the execution finished successfully, or an Error object if the
+     *          script cannot be executed due to a syntax error or if it raises an error
+     *          during execution. The return value is also stored in the Sequence object
+     *          and can be retrieved with get_error_message().
      */
-    void execute(Context& context, CommChannel* comm_channel,
-                 OptionalStepIndex opt_step_index = gul14::nullopt);
+    [[nodiscard]]
+    gul14::optional<Error> execute(Context& context, CommChannel* comm_channel,
+                                   OptionalStepIndex opt_step_index = gul14::nullopt);
 
     /**
      * Return an optional Error object explaining why the sequence stopped prematurely.
@@ -728,8 +729,12 @@ private:
      * \param exec_block_name  Name of the execution block, preferably starting with a
      *                      capital letter (e.g. "Sequence", "Single-step execution")
      * \param runner        Function to be executed
+     *
+     * \returns nullopt if the execution function finished successfully, or an Error
+     *          object if anything went wrong.
      */
-    void
+    [[nodiscard]]
+    gul14::optional<Error>
     handle_execution(Context& context, CommChannel* comm_channel,
                      gul14::string_view exec_block_name,
                      std::function<void(Context&, CommChannel*)> runner);
