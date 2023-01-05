@@ -146,12 +146,9 @@ void deserialize_step_setup_script(const std::filesystem::path& folder, Sequence
 
 /**
  * Deserialize Sequence with all of the stored Step's from folder.
- * Deserialize Sequence with all of the stored Step's from folder.
  *
  * \param folder from which the Sequence should be loaded.
- * \param folder from which the Sequence should be loaded.
  * \returns the deserialized Sequence object.
- * \deprecated Use load_sequence() instead.
  * \deprecated Use load_sequence() instead.
  */
 [[deprecated("Use load_sequence() instead.")]]
