@@ -45,15 +45,11 @@ std::istream& operator>>(std::istream& stream, Step& step);
 
 /**
  * Extracts and creates from \a folder a Step and returns it. The filename must be a Lua
- * Extracts and creates from \a folder a Step and returns it. The filename must be a Lua
  * script and should have the extension 'lua'.
  *
  * It will throw an Error exception if an I/O error occurs on the external filename object
  * or the file does not exist.
- * It will throw an Error exception if an I/O error occurs on the external filename object
- * or the file does not exist.
  *
- * To load a Step it must consist with following minimum properties:
  * To load a Step it must consist with following minimum properties:
  * \code
  * -- type: action \a or if \a or ...
@@ -67,12 +63,6 @@ std::istream& operator>>(std::istream& stream, Step& step);
  * -- time of last execution: %Y-%m-%d %H:%M:%S
  * -- timeout: [infinity|< \a timeout \a in \a milliseconds >]
  * \endcode
- *
- * If one of the optional parameters is not set the following is provided as default:
- * - context variable names is an empty list
- * - time of last modification is set to a time stamp when loaded
- * - time of last execution is set to January 1st 1970
- * - timeout is set to 0s
  *
  * If one of the optional parameters is not set the following is provided as default:
  * - context variable names is an empty list

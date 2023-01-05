@@ -49,8 +49,6 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
 /**
  * Store Step to the file system. It pushes the following Step properties to the created
  * file stream:
- * Store Step to the file system. It pushes the following Step properties to the created
- * file stream:
  *
  * \code
  * -- type: {action, if, elseif, else, while, try, catch, end}
@@ -101,9 +99,7 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
 
 /**
  * Stores Sequence with all of its Step 's as files.
- * Stores Sequence with all of its Step 's as files.
  *
- * After storing you will find the following structure:
  * After storing you will find the following structure:
  *
  * - the sequence label is extracted to a folder name, where underneath all steps are
@@ -123,7 +119,6 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
  *  guarantee for serializing more then 1000 Step 's in alphabetical order.
  *
  * - important Step parameters are exported to the beginning of the file as Lua
- *  comments. See ::store_step(const std::filesystem::path&, const Step&) for more
  *  comments. See ::store_step(const std::filesystem::path&, const Step&) for more
  *  information.
  *
