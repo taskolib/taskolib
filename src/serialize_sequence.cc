@@ -3,6 +3,7 @@
  * \author Marcus Walla
  * \date   Created on May 06, 2022
  * \brief  Implementation of the store_sequence() free function.
+ * \brief  Implementation of the store_sequence() free function.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -135,6 +136,11 @@ void store_step(const std::filesystem::path& folder, const Step& step)
         throw Error(gul14::cat("I/O error: unable to open file (", folder.string(), ")"));
 
     stream << step; // RAII closes the stream (let the destructor do the job)
+}
+
+void serialize_step(const std::filesystem::path& folder, const Step& step)
+{
+    store_step(folder, step);
 }
 
 std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
