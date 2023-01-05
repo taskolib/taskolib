@@ -292,7 +292,7 @@ TEST_CASE("Sequence: is_running()", "[Sequence]")
     REQUIRE(not seq.is_running());
 
     Context ctx;
-    seq.execute(ctx, nullptr);
+    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
 
     REQUIRE(not seq.is_running());
 
@@ -1174,7 +1174,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         s1.set_script("a = 2");
 
         seq.push_back(s1);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 0);
     }
     SECTION("Manipulate context variable") {
@@ -1183,7 +1183,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         s1.set_used_context_variable_names(VariableNames{"a"});
 
         seq.push_back(s1);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 2);
     }
     SECTION("Hand context variable over (not)") {
@@ -1195,7 +1195,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 2);
     }
     SECTION("Hand context variable over") {
@@ -1208,7 +1208,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 4);
     }
     SECTION("Hand variable over context without initial value") {
@@ -1221,7 +1221,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 4);
     }
     SECTION("Hand bool variable over context without initial value") {
@@ -1234,7 +1234,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         CAPTURE(std::get<VarInteger>(ctx.variables["a"]));
         REQUIRE(ctx.variables["a"] == VariableValue{ VarInteger{ 4 }}); // Another variant to check variables
     }
@@ -1252,7 +1252,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s1);
         seq.push_back(s2);
         seq.push_back(s3);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         CAPTURE(std::get<VarInteger>(ctx.variables["a"]));
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 4);
         REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
@@ -1280,7 +1280,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s2);
         seq.push_back(s3);
         seq.push_back(s4);
-        seq.execute(ctx, nullptr);
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
         CAPTURE(std::get<VarInteger>(ctx.variables["a"]));
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 1);
         REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
@@ -1299,11 +1299,13 @@ TEST_CASE("execute(): complex sequence with prohibited Lua function", "[Sequence
     Sequence sequence("Complex sequence");
     sequence.push_back(step);
 
-    REQUIRE_THROWS(sequence.execute(context, nullptr));
-    REQUIRE(sequence.get_error().has_value() == true);
-    REQUIRE(sequence.get_error()->what() != ""s);
-    REQUIRE(sequence.get_error()->get_index().has_value() == true);
-    REQUIRE(sequence.get_error()->get_index().value() == 0);
+    auto maybe_error = sequence.execute(context, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error->what() != ""s);
+    REQUIRE(maybe_error->get_index().has_value() == true);
+    REQUIRE(maybe_error->get_index().value() == 0);
+
+    REQUIRE(sequence.get_error() == maybe_error);
 }
 
 TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
@@ -1326,11 +1328,14 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
     sequence.push_back(step_action1);
     sequence.push_back(step_action2);
 
-    REQUIRE_THROWS(sequence.execute(context, nullptr));
-    REQUIRE(sequence.get_error().has_value() == true);
-    REQUIRE(sequence.get_error()->what() != ""s);
-    REQUIRE(sequence.get_error()->get_index().has_value() == true);
-    REQUIRE(sequence.get_error()->get_index().value() == 0);
+    auto maybe_error = sequence.execute(context, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error->what() != ""s);
+    REQUIRE(maybe_error->get_index().has_value() == true);
+    REQUIRE(maybe_error->get_index().value() == 0);
+
+    REQUIRE(sequence.get_error() == maybe_error);
+
     REQUIRE(std::get<VarInteger>(context.variables["a"]) == 1);
 }
 
@@ -1939,11 +1944,13 @@ TEST_CASE("execute(): faulty if-else-elseif sequence", "[Sequence]")
 
     REQUIRE(sequence.get_error().has_value() == false);
 
-    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
+    auto maybe_error = sequence.execute(context, nullptr);
 
-    REQUIRE(sequence.get_error().has_value() == true);
-    REQUIRE(sequence.get_error()->what() != ""s);
-    REQUIRE(sequence.get_error()->get_index().has_value() == false);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error->what() != ""s);
+    REQUIRE(maybe_error->get_index().has_value() == false);
+
+    REQUIRE(sequence.get_error() == maybe_error);
 }
 
 TEST_CASE("execute(): while sequence", "[Sequence]")
@@ -2290,11 +2297,12 @@ TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
     Context context;
     context.variables["a"] = VarInteger{ 0 };
 
-    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
-    REQUIRE(sequence.get_error().has_value() == true);
-    REQUIRE(sequence.get_error()->what() != ""s);
-    REQUIRE(sequence.get_error()->get_index().has_value() == true);
-    REQUIRE(sequence.get_error()->get_index().value() == 5);
+    auto maybe_error = sequence.execute(context, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error->what() != ""s);
+    REQUIRE(maybe_error->get_index().has_value() == true);
+    REQUIRE(maybe_error->get_index().value() == 5);
+    REQUIRE(sequence.get_error() == maybe_error);
     REQUIRE(std::get<VarInteger>(context.variables["a"]) == 2);
 }
 
@@ -2390,7 +2398,9 @@ TEST_CASE("execute(): complex try sequence with fault", "[Sequence]")
     sequence.push_back(step_11);
 
     Context context;
-    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
+    auto maybe_error = sequence.execute(context, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+
     REQUIRE(std::get<VarInteger>(context.variables["a"]) == 2);
 }
 
@@ -2889,7 +2899,9 @@ TEST_CASE("execute(): complex sequence with misplaced if", "[Sequence]")
     sequence.push_back(step_31);
 
     Context context;
-    REQUIRE_THROWS_AS(sequence.execute(context, nullptr), Error);
+
+    auto maybe_error = sequence.execute(context, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
 }
 
 TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
@@ -2913,7 +2925,7 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     sequence.push_back(std::move(step1));
     sequence.push_back(std::move(step2));
 
-    sequence.execute(context, &comm);
+    REQUIRE(sequence.execute(context, &comm) == gul14::nullopt);
 
     // 2 sequence messages plus 4 step start/stop messages
     REQUIRE(queue.size() == 6);
@@ -3574,20 +3586,23 @@ TEST_CASE("execute(): Single step", "[Sequence]")
 
     SECTION("Index 0 (END step): Script is not executed because of the step type")
     {
-        sequence.execute(context, nullptr, 0);
+        REQUIRE(sequence.execute(context, nullptr, 0) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 0 });
     }
 
     SECTION("Index 1 (WHILE step): Script is executed")
     {
-        sequence.execute(context, nullptr, 1);
+        REQUIRE(sequence.execute(context, nullptr, 1) == gul14::nullopt);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 2 });
     }
 
     SECTION("Index 2 (ACTION step): Script is executed")
     {
-        REQUIRE_THROWS_WITH(sequence.execute(context, nullptr, 2),
-                            Contains("Action Boom"));
+        auto maybe_error = sequence.execute(context, nullptr, 2);
+        REQUIRE(maybe_error.has_value() == true);
+        REQUIRE_THAT(maybe_error->what(), Contains("Action Boom"));
+        REQUIRE(maybe_error->get_index().has_value() == true);
+        REQUIRE(maybe_error->get_index().value() == 2);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 3 });
     }
 
@@ -3632,7 +3647,7 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     seq.push_back(step_check_termination);
     seq.push_back(step_while_end);
 
-    seq.execute(ctx, &comm);
+    REQUIRE(seq.execute(ctx, &comm) == gul14::nullopt);
 
     // Both the sequence and all of its steps must show is_running() == false.
     REQUIRE(seq.is_running() == false);
@@ -3668,7 +3683,7 @@ TEST_CASE("Sequence: add step setup with variable", "[Sequence]")
     seq.push_back(step_action_2);
     seq.set_step_setup_script("preface = 'Alice calls '");
 
-    seq.execute(ctx, nullptr);
+    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice"
@@ -3695,7 +3710,7 @@ TEST_CASE("Sequence: add step setup with function", "[Sequence]")
     seq.push_back(step_action_2);
     seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
 
-    seq.execute(ctx, nullptr);
+    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and"
@@ -3733,7 +3748,7 @@ TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequ
     seq.push_back(step_action_3);
     seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
 
-    seq.execute(ctx, nullptr);
+    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
 
     REQUIRE(std::get<VarString>(ctx.variables["a"]) == "Alice calls Bob!");
     REQUIRE(std::get<VarString>(ctx.variables["b"]) == "Alice calls Charlie!");
@@ -3757,18 +3772,9 @@ TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence
            this line will fail
         )");
 
-    try
-    {
-        seq.execute(ctx, nullptr);
-    }
-    catch(const Error& e)
-    {
-        REQUIRE_THAT(e.what(), Catch::Matchers::Contains("error: [setup] 2"));
-    }
-    catch(...)
-    {
-        FAIL("Must throw Error exception");
-    }
+    auto maybe_error = seq.execute(ctx, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE_THAT(maybe_error->what(), Catch::Matchers::StartsWith("[setup] 2: syntax error"));
 }
 
 TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequence]")
@@ -3786,18 +3792,9 @@ TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequenc
     seq.push_back(step_action_1);
     seq.set_step_setup_script("preface = 'Alice'");
 
-    try
-    {
-        seq.execute(ctx, nullptr);
-    }
-    catch(const Error& e)
-    {
-        REQUIRE_THAT(e.what(), Catch::Matchers::Contains("error: 2"));
-    }
-    catch(...)
-    {
-        FAIL("Must throw Error exception");
-    }
+    auto maybe_error = seq.execute(ctx, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE_THAT(maybe_error->what(), Catch::Matchers::StartsWith("2: syntax error"));
 }
 
 TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequence]")
@@ -3816,33 +3813,21 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
     seq.push_back(step_action_1);
     seq.set_step_setup_script("preface = 'Alice'");
 
-    try
-    {
-        seq.execute(ctx, nullptr);
-    }
-    catch(const Error& e)
-    {
-        REQUIRE_THAT(e.what(), Catch::Matchers::Contains("error: 3"));
-    }
-    catch(...)
-    {
-        FAIL("Must throw Error exception");
-    }
+    auto maybe_error = seq.execute(ctx, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE_THAT(maybe_error->what(), Catch::Matchers::StartsWith("3: syntax error"));
 }
 
 TEST_CASE("Sequence: Check setter/getter function for step setup script", "[Sequence]")
 {
+    const char script[] = "a = 'Alice'\nb = 'Bob'";
+
     Sequence seq{ "test_sequence" };
-    seq.set_step_setup_script(
-        R"(preface1 = 'Alice'
-           preface2 = 'Bob'
-        )");
+    seq.set_step_setup_script(script);
 
     SECTION("Sequence::get_step_setup_script()")
     {
-        REQUIRE(seq.get_step_setup_script() ==
-        R"(preface1 = 'Alice'
-           preface2 = 'Bob')");
+        REQUIRE(seq.get_step_setup_script() == script);
     }
 
     SECTION("Context::step_setup_script")
@@ -3850,9 +3835,7 @@ TEST_CASE("Sequence: Check setter/getter function for step setup script", "[Sequ
         Context ctx;
         REQUIRE(ctx.step_setup_script.empty());
 
-        seq.execute(ctx, nullptr);
-        REQUIRE(ctx.step_setup_script ==
-        R"(preface1 = 'Alice'
-           preface2 = 'Bob')");
+        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(ctx.step_setup_script == script);
     }
 }

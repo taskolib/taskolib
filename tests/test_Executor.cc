@@ -425,7 +425,7 @@ TEST_CASE("Executor: Access context after run", "[Executor]")
         seq.modify(s, [](Step& step) { step.set_used_context_variable_names(VariableNames{ "a" }); });
 
     // Execute directly
-    seq.execute(ctx, nullptr);
+    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
     REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 11 );
 
     // Execute async
@@ -526,15 +526,9 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
     seq.push_back(step);
 
     // I. direct execution
-
-    REQUIRE_THROWS_AS(seq.execute(ctx, nullptr), task::Error);
-    try {
-        seq.execute(ctx, nullptr);
-    } catch (task::Error const& e) {
-        INFO("what is:");
-        INFO(e.what());
-        REQUIRE(gul14::contains(e.what(), "Rainbows"));
-    }
+    auto maybe_error = seq.execute(ctx, nullptr);
+    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE_THAT(maybe_error->what(), Contains("Rainbows"));
 
     // II. run async
     Executor executor{ };
