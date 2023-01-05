@@ -284,10 +284,11 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
     return return_iter;
 }
 
-void Sequence::execute(Context& context, CommChannel* comm_channel,
-                       OptionalStepIndex opt_step_index)
+gul14::optional<Error>
+Sequence::execute(Context& context, CommChannel* comm_channel,
+                  OptionalStepIndex opt_step_index)
 {
-    if (opt_step_index)
+    if (opt_step_index) // single-step execution
     {
         const auto step_index = *opt_step_index;
         const auto step_it = steps_.begin() + step_index;
@@ -295,7 +296,7 @@ void Sequence::execute(Context& context, CommChannel* comm_channel,
         if (step_index >= size())
             throw Error(cat("Invalid step index ", step_index));
 
-        handle_execution(context, comm_channel,
+        return handle_execution(context, comm_channel,
             cat("Single-step execution (", to_string(step_it->get_type()), " \"",
                 step_it->get_label(), "\")"),
             [this, step_index, step_it](Context& context, CommChannel* comm)
@@ -304,20 +305,20 @@ void Sequence::execute(Context& context, CommChannel* comm_channel,
                     step_it->execute(context, comm, step_index);
             });
     }
-    else
-    {
-        handle_execution(context, comm_channel, "Sequence",
-            [this](Context& context, CommChannel* comm)
-            {
-                check_syntax();
-                execute_range(steps_.begin(), steps_.end(), context, comm);
-            });
-    }
+
+    // full sequence execution
+    return handle_execution(context, comm_channel, "Sequence",
+        [this](Context& context, CommChannel* comm)
+        {
+            check_syntax();
+            execute_range(steps_.begin(), steps_.end(), context, comm);
+        });
 }
 
-void Sequence::handle_execution(Context& context, CommChannel* comm,
-                                gul14::string_view exec_block_name,
-                                std::function<void(Context&, CommChannel*)> runner)
+gul14::optional<Error>
+Sequence::handle_execution(Context& context, CommChannel* comm,
+                           gul14::string_view exec_block_name,
+                           std::function<void(Context&, CommChannel*)> runner)
 {
     const auto clear_is_running_at_function_exit =
         gul14::finally([this]{ is_running_ = false; });
@@ -329,9 +330,7 @@ void Sequence::handle_execution(Context& context, CommChannel* comm,
     send_message(comm, Message::Type::sequence_started, cat(exec_block_name, " started"),
                  Clock::now(), gul14::nullopt);
 
-    bool exception_thrown = false;
-    std::string exception_message;
-    OptionalStepIndex maybe_exception_index;
+    gul14::optional<Error> maybe_error;
 
     try
     {
@@ -339,26 +338,23 @@ void Sequence::handle_execution(Context& context, CommChannel* comm,
     }
     catch (const Error& e)
     {
-        exception_thrown = true;
-        exception_message = e.what();
-        maybe_exception_index = e.get_index();
+        maybe_error = e;
     }
     catch (const std::exception& e)
     {
-        exception_thrown = true;
-        exception_message = e.what();
+        maybe_error = Error{ e.what() };
     }
 
-    if (exception_thrown)
+    if (maybe_error)
     {
-        auto [msg, cause] = remove_abort_markers(exception_message);
+        auto [msg, cause] = remove_abort_markers(maybe_error->what());
 
         switch (cause)
         {
         case ErrorCause::terminated_by_script:
             send_message(comm, Message::Type::sequence_stopped, msg, Clock::now(),
-                         maybe_exception_index);
-            return; // silently return to the caller
+                         maybe_error->get_index());
+            return gul14::nullopt; // silently return to the caller
         case ErrorCause::aborted:
             msg = cat(exec_block_name, " aborted: ", msg);
             break;
@@ -368,14 +364,14 @@ void Sequence::handle_execution(Context& context, CommChannel* comm,
         }
 
         send_message(comm, Message::Type::sequence_stopped_with_error, msg, Clock::now(),
-                     maybe_exception_index);
-        set_error(Error{ msg, maybe_exception_index });
-
-        throw Error(msg);
+                     maybe_error->get_index());
     }
 
     send_message(comm, Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
                  Clock::now(), gul14::nullopt);
+
+    set_error(maybe_error);
+    return maybe_error;
 }
 
 Sequence::Iterator
