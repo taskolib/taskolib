@@ -96,6 +96,23 @@ std::istream& operator>>(std::istream& stream, Step& step);
 Step load_step(const std::filesystem::path& folder);
 
 /**
+ * Load a step setup script into the Sequence.
+ *
+ * \param folder of the Sequence.
+ * \param sequence to store the loaded step setup script.
+ * \see Sequence for step setup script.
+ */
+void load_step_setup_script(const std::filesystem::path& folder, Sequence& sequence);
+
+/**
+ * Loads a Sequence with all of the stored Step's from the folder.
+ *
+ * \param folder from which the Sequence should be loaded.
+ * \returns the loaded Sequence object.
+ */
+Sequence load_sequence(const std::filesystem::path& folder);
+
+/**
  * For description see load_step().
  *
  * \param folder from which the Step should be loaded.
@@ -111,27 +128,10 @@ Step deserialize_step(const std::filesystem::path& folder);
  * \param folder of the Sequence.
  * \param sequence to store the loaded step setup script.
  * \see Sequence for step setup script.
- */
-void load_step_setup_script(const std::filesystem::path& folder, Sequence& sequence);
-
-/**
- * Load a step setup script into the Sequence.
- *
- * \param folder of the Sequence.
- * \param sequence to store the loaded step setup script.
- * \see Sequence for step setup script.
  * \deprecated Use load_step_setup_script() instead.
  */
 [[deprecated("Use load_step_setup_script() instead.")]]
 void deserialize_step_setup_script(const std::filesystem::path& folder, Sequence& sequence);
-
-/**
- * Loads a Sequence with all of the stored Step's from the folder.
- *
- * \param folder from which the Sequence should be loaded.
- * \returns the loaded Sequence object.
- */
-Sequence load_sequence(const std::filesystem::path& folder);
 
 /**
  * Deserialize Sequence with all of the stored Step's from folder.

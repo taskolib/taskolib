@@ -81,16 +81,6 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
 void store_step(const std::filesystem::path& folder, const Step& step);
 
 /**
- * For a description see store_step().
- *
- * \param folder for the Step
- * \param step step to serialize
- * \deprecated Use store_step() instead.
- */
-[[deprecated("Use store_step() instead.")]]
-void serialize_step(const std::filesystem::path& folder, const Step& step);
-
-/**
  * Serialize parameters of Sequence to the output stream.
  *
  * No checking of any stream failure is done and should be performed by the caller.
@@ -130,6 +120,16 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
  * \param sequence to be serialized
  */
 void store_sequence(const std::filesystem::path& folder, const Sequence& sequence);
+
+/**
+ * For a description see store_step().
+ *
+ * \param folder for the Step
+ * \param step step to serialize
+ * \deprecated Use store_step() instead.
+ */
+[[deprecated("Use store_step() instead.")]]
+void serialize_step(const std::filesystem::path& folder, const Step& step);
 
 /**
  * For a description \see store_sequence().
