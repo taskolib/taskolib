@@ -37,15 +37,15 @@ namespace task {
  *
  * No checking of any stream failure is done and should be performed by the caller.
  *
- * @param stream to serialize the Step
- * @param step to serialize
- * @return passed output stream
+ * \param stream to serialize the Step
+ * \param step to serialize
+ * \return passed output stream
  */
 std::ostream& operator<<(std::ostream& stream, const Step& step);
 
 /**
- * Serialize Step to the file system. It pushes the Step properties to the
- * stream:
+ * Store Step to the file system. It pushes the following Step properties to the created
+ * file stream:
  *
  * \code
  * -- type: {action, if, elseif, else, while, try, catch, end}
@@ -75,26 +75,26 @@ std::ostream& operator<<(std::ostream& stream, const Step& step);
  *
  * The label is explicitly escaped on storing and unescaped on loading.
  *
- * @param step step to serialize
- * @param path for the Step
+ * \param folder for the Step
+ * \param step step to serialize
  */
-void serialize_step(const std::filesystem::path& path, const Step& step);
+void store_step(const std::filesystem::path& folder, const Step& step);
 
 /**
  * Serialize parameters of Sequence to the output stream.
  *
  * No checking of any stream failure is done and should be performed by the caller.
  *
- * @param stream to serialize the Step
- * @param sequence to serialize
- * @return passed output stream
+ * \param stream to serialize the Step
+ * \param sequence to serialize
+ * \return passed output stream
  */
 std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
 
 /**
- * Serialize Sequence with all of its Step 's as files.
+ * Stores Sequence with all of its Step 's as files.
  *
- * After serializing you will find the following structure:
+ * After storing you will find the following structure:
  *
  * - the sequence label is extracted to a folder name, where underneath all steps are
  *  serialized. If the label has one of the following characters they are escaped to
@@ -113,13 +113,33 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
  *  guarantee for serializing more then 1000 Step 's in alphabetical order.
  *
  * - important Step parameters are exported to the beginning of the file as Lua
- *  comments. See ::serialize_step(const std::filesystem::path&, const Step&) for more
+ *  comments. See ::store_step(const std::filesystem::path&, const Step&) for more
  *  information.
  *
- * @param path to store Sequence
- * @param sequence to be serialized
+ * \param folder to store Sequence
+ * \param sequence to be serialized
  */
-void serialize_sequence(const std::filesystem::path& path, const Sequence& sequence);
+void store_sequence(const std::filesystem::path& folder, const Sequence& sequence);
+
+/**
+ * For a description see store_step().
+ *
+ * \param folder for the Step
+ * \param step step to serialize
+ * \deprecated Use store_step() instead.
+ */
+[[deprecated("Use store_step() instead.")]]
+void serialize_step(const std::filesystem::path& folder, const Step& step);
+
+/**
+ * For a description \see store_sequence().
+ *
+ * \param folder to store Sequence
+ * \param sequence to be serialized
+ * \deprecated Use store_sequence(const std::filesystem::path&, const Sequence&) instead.
+ */
+[[deprecated("Use store_sequence() instead.")]]
+void serialize_sequence(const std::filesystem::path& folder, const Sequence& sequence);
 
 } // namespace task
 

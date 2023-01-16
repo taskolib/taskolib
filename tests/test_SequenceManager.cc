@@ -77,8 +77,8 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
     seq_2.push_back(step_1_01);
     seq_2.push_back(step_1_02);
 
-    serialize_sequence("unit_test_2", seq_1);
-    serialize_sequence("unit_test_2", seq_2);
+    store_sequence("unit_test_2", seq_1);
+    store_sequence("unit_test_2", seq_2);
 
     // create regular file to test sequence directory loading only.
     std::fstream f("unit_test_2/some_text_file.txt", std::ios::out);
@@ -126,7 +126,7 @@ TEST_CASE("Load sequence", "[SequenceManager]")
     SECTION("Simple path")
     {
         // store sequence to the default path '.'
-        serialize_sequence(".", seq);
+        store_sequence(".", seq);
 
         SequenceManager sm{"."};
         Sequence load = sm.load_sequence(sequence_name);
@@ -140,7 +140,7 @@ TEST_CASE("Load sequence", "[SequenceManager]")
     SECTION("Complex path")
     {
         // store sequence to the default path 'unit_test'
-        serialize_sequence("unit_test", seq);
+        store_sequence("unit_test", seq);
 
         SequenceManager sm{"unit_test"};
         Sequence load = sm.load_sequence(sequence_name);
