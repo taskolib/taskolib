@@ -49,7 +49,7 @@ Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path) con
     else if (not std::filesystem::is_directory(sequence))
         throw Error(gul14::cat("File path to sequence is not a directory: ",
             sequence.string()));
-    return deserialize_sequence(sequence);
+    return task::load_sequence(sequence);
 }
 
 } // namespace task

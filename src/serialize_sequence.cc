@@ -2,7 +2,7 @@
  * \file   serialize_sequence.cc
  * \author Marcus Walla
  * \date   Created on May 06, 2022
- * \brief  Implementation of the serialize_sequence() free function.
+ * \brief  Implementation of the store_sequence() free function.
  *
  * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -33,12 +33,12 @@ namespace task {
 namespace {
 
 /// Remove Step from the file system.
-void remove_path(const std::filesystem::path& path)
+void remove_path(const std::filesystem::path& folder)
 {
     try
     {
-        if (std::filesystem::exists(path))
-            std::filesystem::remove(path); // remove previous stored step
+        if (std::filesystem::exists(folder))
+            std::filesystem::remove(folder); // remove previous stored step
     }
     catch(const std::exception& e)
     {
@@ -125,14 +125,14 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     return stream;
 }
 
-void serialize_step(const std::filesystem::path& path, const Step& step)
+void store_step(const std::filesystem::path& folder, const Step& step)
 {
-    remove_path(path);
+    remove_path(folder);
 
-    std::ofstream stream(path);
+    std::ofstream stream(folder);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", path.string(), ")"));
+        throw Error(gul14::cat("I/O error: unable to open file (", folder.string(), ")"));
 
     stream << step; // RAII closes the stream (let the destructor do the job)
 }
@@ -146,24 +146,24 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
     return stream;
 }
 
-void serialize_sequence_impl(const std::filesystem::path& path, const Sequence& seq)
+void serialize_sequence_impl(const std::filesystem::path& folder, const Sequence& seq)
 {
-    remove_path(path);
+    remove_path(folder);
 
-    std::ofstream stream(path);
+    std::ofstream stream(folder);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", path.string(), ")"));
+        throw Error(gul14::cat("I/O error: unable to open file (", folder.string(), ")"));
 
     stream << seq; // RAII closes the stream (let the destructor do the job)
 
 }
 
-void serialize_sequence(const std::filesystem::path& path, const Sequence& seq)
+void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
 {
     unsigned int idx = 0;
     const int max_digits = int( seq.size() / 10 ) + 1;
-    auto seq_path = path / escape_filename_characters(seq.get_label());
+    auto seq_path = folder / escape_filename_characters(seq.get_label());
     try
     {
         if (std::filesystem::exists(seq_path))
@@ -179,7 +179,17 @@ void serialize_sequence(const std::filesystem::path& path, const Sequence& seq)
     serialize_sequence_impl(seq_path / sequence_lua_filename, seq);
 
     for(const auto& step: seq)
-        serialize_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
+        store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
+}
+
+void serialize_step(const std::filesystem::path& folder, const Step& step)
+{
+    store_step(folder, step);
+}
+
+void serialize_sequence(const std::filesystem::path& folder, const Sequence& sequence)
+{
+    store_sequence(folder, sequence);
 }
 
 } // namespace task
