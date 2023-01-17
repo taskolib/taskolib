@@ -146,14 +146,14 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
     return stream;
 }
 
-void serialize_sequence_impl(const std::filesystem::path& folder, const Sequence& seq)
+void store_step_setup_script(const std::filesystem::path& lua_file, const Sequence& seq)
 {
-    remove_path(folder);
+    remove_path(lua_file);
 
-    std::ofstream stream(folder);
+    std::ofstream stream(lua_file);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", folder.string(), ")"));
+        throw Error(gul14::cat("I/O error: unable to open file (", lua_file.string(), ")"));
 
     stream << seq; // RAII closes the stream (let the destructor do the job)
 
@@ -176,7 +176,7 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
         throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
 
-    serialize_sequence_impl(seq_path / sequence_lua_filename, seq);
+    store_step_setup_script(seq_path / sequence_lua_filename, seq);
 
     for(const auto& step: seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
