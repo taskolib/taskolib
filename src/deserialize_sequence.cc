@@ -4,7 +4,7 @@
  * \date   Created on May 24, 2022
  * \brief  Deserialize Sequence and Steps from storage hardware.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,16 +22,18 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <chrono>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <cctype>
-#include <ctime>
-#include <set>
 #include <algorithm>
+#include <cctype>
+#include <chrono>
+#include <ctime>
+#include <fstream>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <gul14/gul.h>
+
 #include "internals.h"
 #include "taskolib/hash_string.h"
 #include "taskolib/deserialize_sequence.h"
@@ -344,7 +346,7 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
     if (not std::filesystem::exists(folder))
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
 
-    std::string step_setup_script = ""; // set an empty step setup script
+    std::string step_setup_script;
 
     auto stream = std::ifstream(folder / sequence_lua_filename);
     if (stream.good())

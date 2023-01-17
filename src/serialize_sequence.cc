@@ -4,7 +4,7 @@
  * \date   Created on May 06, 2022
  * \brief  Implementation of the store_sequence() free function.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -125,14 +125,14 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     return stream;
 }
 
-void store_step(const std::filesystem::path& folder, const Step& step)
+void store_step(const std::filesystem::path& lua_file, const Step& step)
 {
-    remove_path(folder);
+    remove_path(lua_file);
 
-    std::ofstream stream(folder);
+    std::ofstream stream(lua_file);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", folder.string(), ")"));
+        throw Error(gul14::cat("I/O error: unable to open file (", lua_file.string(), ")"));
 
     stream << step; // RAII closes the stream (let the destructor do the job)
 }
