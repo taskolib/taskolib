@@ -121,26 +121,6 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
  */
 void store_sequence(const std::filesystem::path& folder, const Sequence& sequence);
 
-/**
- * For a description see store_step().
- *
- * \param folder for the Step
- * \param step step to serialize
- * \deprecated Use store_step() instead.
- */
-[[deprecated("Use store_step() instead.")]]
-void serialize_step(const std::filesystem::path& folder, const Step& step);
-
-/**
- * For a description \see store_sequence().
- *
- * \param folder to store Sequence
- * \param sequence to be serialized
- * \deprecated Use store_sequence(const std::filesystem::path&, const Sequence&) instead.
- */
-[[deprecated("Use store_sequence() instead.")]]
-void serialize_sequence(const std::filesystem::path& folder, const Sequence& sequence);
-
 } // namespace task
 
 #endif
