@@ -382,7 +382,7 @@ Sequence load_sequence(const std::filesystem::path& folder)
             [](const auto& lhs, const auto& rhs) -> bool
             { return lhs.filename() < rhs.filename(); });
 
-        for(auto entry: steps)
+        for (const auto& entry : steps)
             seq.push_back(load_step(entry));
     }
 
