@@ -1,12 +1,15 @@
 <map id="VariableName.cc" name="VariableName.cc">
-<area shape="rect" id="node1" title="Implementation of the VariableName class." alt="" coords="173,5,294,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,80,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="104,80,165,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="190,80,277,107"/>
-<area shape="rect" id="node5" href="$Error_8h.html" title="Definition of the Error exception class." alt="" coords="301,80,419,107"/>
-<area shape="rect" id="node7" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="455,80,627,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="314,155,393,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="417,155,495,181"/>
-<area shape="rect" id="node9" title=" " alt="" coords="519,155,574,181"/>
-<area shape="rect" id="node10" title=" " alt="" coords="598,155,730,181"/>
+<area shape="rect" id="node1" title="Implementation of the VariableName class." alt="" coords="186,5,318,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,91,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="115,80,181,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="205,80,299,107"/>
+<area shape="rect" id="node5" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="324,80,484,107"/>
+<area shape="rect" id="node11" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="525,80,707,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="197,229,264,256"/>
+<area shape="rect" id="node7" title=" " alt="" coords="215,155,302,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="505,155,564,181"/>
+<area shape="rect" id="node9" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="327,155,481,181"/>
+<area shape="rect" id="node10" title=" " alt="" coords="341,229,467,256"/>
+<area shape="rect" id="node12" title=" " alt="" coords="589,155,675,181"/>
+<area shape="rect" id="node13" title=" " alt="" coords="699,155,847,181"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="internals.h" name="internals.h">
-<area shape="rect" id="node1" title="Declaration of internal constants." alt="" coords="129,5,211,32"/>
-<area shape="rect" id="node2" href="$internals_8cc.html" title="Definition of internal constants." alt="" coords="5,80,95,107"/>
-<area shape="rect" id="node3" href="$lua__details_8cc.html" title="Implementation of free functions dealing with LUA specifics." alt="" coords="119,80,221,107"/>
-<area shape="rect" id="node4" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="246,80,345,107"/>
+<area shape="rect" id="node1" title="Declaration of internal constants and functions." alt="" coords="406,5,497,32"/>
+<area shape="rect" id="node2" href="$deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="5,80,185,107"/>
+<area shape="rect" id="node3" href="$internals_8cc.html" title="Definition of internal constants and functions." alt="" coords="209,80,307,107"/>
+<area shape="rect" id="node4" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="331,80,441,107"/>
+<area shape="rect" id="node5" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="465,80,568,107"/>
+<area shape="rect" id="node6" href="$serialize__sequence_8cc.html" title="Implementation of the store_sequence() free function." alt="" coords="592,80,756,107"/>
+<area shape="rect" id="node7" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="781,80,850,107"/>
 </map>

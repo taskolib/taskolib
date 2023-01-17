@@ -1,4 +1,4 @@
 <map id="serialize_sequence.h" name="serialize_sequence.h">
-<area shape="rect" id="node1" title="Serialize Sequence and Steps on storage hardware." alt="" coords="9,5,153,32"/>
-<area shape="rect" id="node2" href="$serialize__sequence_8cc.html" title="Implementation of the serialize_sequence() free function." alt="" coords="5,80,156,107"/>
+<area shape="rect" id="node1" title="Serialize Sequence and Steps on storage hardware." alt="" coords="8,5,167,32"/>
+<area shape="rect" id="node2" href="$serialize__sequence_8cc.html" title="Implementation of the store_sequence() free function." alt="" coords="5,80,169,107"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="task::Error" name="task::Error">
-<area shape="rect" id="node1" title="A generic exception class carrying a message string." alt="" coords="26,131,109,208"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,129,83"/>
+<area shape="rect" id="node1" title="An exception class carrying an error message and, optionally, the index of the step in which the erro..." alt="" coords="19,131,130,237"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,144,83"/>
 </map>
