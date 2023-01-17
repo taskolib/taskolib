@@ -182,14 +182,4 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 }
 
-void serialize_step(const std::filesystem::path& folder, const Step& step)
-{
-    store_step(folder, step);
-}
-
-void serialize_sequence(const std::filesystem::path& folder, const Sequence& sequence)
-{
-    store_sequence(folder, sequence);
-}
-
 } // namespace task

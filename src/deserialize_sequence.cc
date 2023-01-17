@@ -326,13 +326,13 @@ std::istream& operator>>(std::istream& stream, Step& step)
     return stream;
 }
 
-Step load_step(const std::filesystem::path& folder)
+Step load_step(const std::filesystem::path& lua_file)
 {
     Step step{};
-    std::ifstream stream(folder);
+    std::ifstream stream(lua_file);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file '", folder.string(), "'"));
+        throw Error(gul14::cat("I/O error: unable to open file '", lua_file.string(), "'"));
 
     stream >> step; // RAII closes the stream (let the destructor do the job)
 
@@ -385,21 +385,6 @@ Sequence load_sequence(const std::filesystem::path& folder)
     }
 
     return seq;
-}
-
-Step deserialize_step(const std::filesystem::path& folder)
-{
-    return load_step(folder);
-}
-
-void deserialize_step_setup_script(const std::filesystem::path& folder, Sequence& sequence)
-{
-    return load_step_setup_script(folder, sequence);
-}
-
-Sequence deserialize_sequence(const std::filesystem::path& folder)
-{
-    return load_sequence(folder);
 }
 
 } // namespace task

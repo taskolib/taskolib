@@ -44,19 +44,22 @@ namespace task {
 std::istream& operator>>(std::istream& stream, Step& step);
 
 /**
- * Extracts and creates from \a folder a Step and returns it. The filename must be a Lua
- * script and should have the extension 'lua'.
+ * Read a Step from a file and return it.
+ *
+ * \param lua_file  The filename from which to read the step. The file must be a Lua
+ *                  script and should have the extension 'lua'.
  *
  * It will throw an Error exception if an I/O error occurs on the external filename object
  * or the file does not exist.
  *
- * To load a Step it must consist of the following minimum properties:
+ * Lua comments in the header of the file are used to read metadata. To load a Step, it
+ * must have at least the following properties:
  * \code
  * -- type: action \a or if \a or ...
  * -- label: < \a label \a description >
  * \endcode
  *
- * Optional are the following properties:
+ * The following properties are optional:
  * \code
  * -- use context variable names: [ \a variable1, ... ]
  * -- time of last modification: %Y-%m-%d %H:%M:%S
@@ -83,18 +86,14 @@ std::istream& operator>>(std::istream& stream, Step& step);
  *
  * The label is explicitly escaped on storing and unescaped on loading.
  *
- * \note \c '--' is a Lua comment and interpreted with special keywords to fill the Step
- * properties.
  * \note for time interpretation see <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>
  * \note if <tt>>time of last modification</tt> is not provided in the file it is set to
  * the time on loading the step.
  * \note the collection of context variable names can also be an empty list, ie. \c [] .
  *
- * \param folder from which the Step should be loaded.
- * \param folder from which the Step should be loaded.
  * \returns the deserialized Step object.
  */
-Step load_step(const std::filesystem::path& folder);
+Step load_step(const std::filesystem::path& lua_file);
 
 /**
  * Load a step setup script into the Sequence.
@@ -112,37 +111,6 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
  * \returns the loaded Sequence object.
  */
 Sequence load_sequence(const std::filesystem::path& folder);
-
-/**
- * For description see load_step().
- *
- * \param folder from which the Step should be loaded.
- * \returns the deserialized Step object.
- * \deprecated Use load_step() instead.
- */
-[[deprecated("Use load_step() instead.")]]
-Step deserialize_step(const std::filesystem::path& folder);
-
-/**
- * Load a step setup script into the Sequence.
- *
- * \param folder of the Sequence.
- * \param sequence to store the loaded step setup script.
- * \see Sequence for step setup script.
- * \deprecated Use load_step_setup_script() instead.
- */
-[[deprecated("Use load_step_setup_script() instead.")]]
-void deserialize_step_setup_script(const std::filesystem::path& folder, Sequence& sequence);
-
-/**
- * Deserialize Sequence with all of the stored Step's from folder.
- *
- * \param folder from which the Sequence should be loaded.
- * \returns the deserialized Sequence object.
- * \deprecated Use load_sequence() instead.
- */
-[[deprecated("Use load_sequence() instead.")]]
-Sequence deserialize_sequence(const std::filesystem::path& folder);
 
 } // namespace task
 
