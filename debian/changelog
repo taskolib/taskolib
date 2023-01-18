@@ -1,3 +1,9 @@
+taskolib-0-4-2 (0.4.2) unstable; urgency=low
+
+  * New version
+
+ -- Lars Froehlich <lars.froehlich@desy.de>  Wed, 04 Jan 2023 13:27:04 +0100
+
 taskolib-0-4-1 (0.4.1) unstable; urgency=low
 
   * automatically added debian changelog entry
@@ -76,7 +82,7 @@ libtaskomat-0-1-2 (0.1.2) unstable; urgency=low
 
 libtaskomat-0-1-1 (0.1.2) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Fri, 02 Sep 2022 09:56:37 +0200
 
@@ -89,7 +95,7 @@ libtaskomat-0-1-1 (0.1.1) unstable; urgency=low
 
 libtaskomat-0-1-0 (0.1.1) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Mon, 08 Aug 2022 15:22:34 +0200
 
@@ -109,7 +115,7 @@ libtaskomat-0-0-11 (0.0.11) unstable; urgency=low
 
 libtaskomat-0-0-10 (0.0.11) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Wed, 27 Jul 2022 10:50:29 +0200
 
@@ -122,7 +128,7 @@ libtaskomat-0-0-10 (0.0.10) unstable; urgency=low
 
 libtaskomat-0-0-9 (0.0.10) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Wed, 06 Jul 2022 10:14:48 +0200
 
@@ -135,7 +141,7 @@ libtaskomat-0-0-9 (0.0.9) unstable; urgency=low
 
 libtaskomat-0-0-8 (0.0.9) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Thu, 30 Jun 2022 09:19:37 +0200
 
@@ -148,7 +154,7 @@ libtaskomat-0-0-8 (0.0.8) unstable; urgency=low
 
 libtaskomat-0-0-7 (0.0.8) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Mon, 20 Jun 2022 14:44:26 +0200
 
@@ -161,7 +167,7 @@ libtaskomat-0-0-7 (0.0.7) unstable; urgency=low
 
 libtaskomat-0-0-6 (0.0.7) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Mon, 13 Jun 2022 13:12:26 +0200
 
@@ -174,7 +180,7 @@ libtaskomat-0-0-6 (0.0.6) unstable; urgency=low
 
 libtaskomat-0-0-5 (0.0.6) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Tue, 24 May 2022 09:34:00 +0200
 
@@ -187,7 +193,7 @@ libtaskomat-0-0-5 (0.0.5) unstable; urgency=low
 
 libtaskomat-0-0-4 (0.0.5) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Tue, 17 May 2022 16:39:34 +0200
 
@@ -200,7 +206,7 @@ libtaskomat-0-0-4 (0.0.4) unstable; urgency=low
 
 libtaskomat-0-0-3 (0.0.4) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Tue, 17 May 2022 14:16:21 +0200
 
@@ -213,7 +219,7 @@ libtaskomat-0-0-3 (0.0.3) unstable; urgency=low
 
 libtaskomat-0-0-2 (0.0.3) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Fri, 29 Apr 2022 11:10:36 +0200
 
@@ -226,7 +232,7 @@ libtaskomat-0-0-2 (0.0.2) unstable; urgency=low
 
 libtaskomat-0-0-1 (0.0.2) unstable; urgency=low
 
-  * new version 
+  * new version
 
  -- Lars Froehlich <lars.froehlich@desy.de>  Fri, 25 Mar 2022 15:41:48 +0100
 
