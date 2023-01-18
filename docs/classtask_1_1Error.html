@@ -47,6 +47,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classtask_1_1Error-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">task::Error Class Reference</div>  </div>
@@ -105,6 +106,15 @@ Public Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a1c674aa164f1a429579bb08f0c65d786"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">index_</a></td></tr>
 <tr class="separator:a1c674aa164f1a429579bb08f0c65d786"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a6fe803a0929830e6d8ae7a86763f14bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Error.html#a6fe803a0929830e6d8ae7a86763f14bc">operator==</a> (const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;lhs, const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;rhs) noexcept</td></tr>
+<tr class="memdesc:a6fe803a0929830e6d8ae7a86763f14bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if two <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> objects have the same content.  <a href="classtask_1_1Error.html#a6fe803a0929830e6d8ae7a86763f14bc">More...</a><br /></td></tr>
+<tr class="separator:a6fe803a0929830e6d8ae7a86763f14bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab406f83df76182dbbfe80819bcd04dd7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Error.html#ab406f83df76182dbbfe80819bcd04dd7">operator!=</a> (const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;lhs, const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;rhs) noexcept</td></tr>
+<tr class="memdesc:ab406f83df76182dbbfe80819bcd04dd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if two <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> objects have different content.  <a href="classtask_1_1Error.html#ab406f83df76182dbbfe80819bcd04dd7">More...</a><br /></td></tr>
+<tr class="separator:ab406f83df76182dbbfe80819bcd04dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a868be48cdd5bd7cc6ff62ab9511e1e69"></a>
@@ -207,7 +217,82 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">index_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a232bd4ccb619fa6d5ff6a9ecf57bbee8">task::Sequence::handle_execution()</a>.</p>
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="ab406f83df76182dbbfe80819bcd04dd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab406f83df76182dbbfe80819bcd04dd7">&#9670;&nbsp;</a></span>operator!=</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determine if two <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> objects have different content. </p>
+
+</div>
+</div>
+<a id="a6fe803a0929830e6d8ae7a86763f14bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fe803a0929830e6d8ae7a86763f14bc">&#9670;&nbsp;</a></span>operator==</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Error.html">Error</a> &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determine if two <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> objects have the same content. </p>
 
 </div>
 </div>
@@ -242,7 +327,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 17 2023 16:43:14 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jan 18 2023 15:13:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

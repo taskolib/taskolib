@@ -1,8 +1,9 @@
 <map id="exceptions.h" name="exceptions.h">
-<area shape="rect" id="node1" title="Definition of the Error exception class." alt="" coords="61,5,167,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="46,155,113,181"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,80,109,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="134,80,193,107"/>
-<area shape="rect" id="node5" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="217,80,371,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="231,155,357,181"/>
+<area shape="rect" id="node1" title="Definition of the Error exception class." alt="" coords="135,5,241,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,72,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="97,80,183,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="208,80,267,107"/>
+<area shape="rect" id="node5" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="291,80,445,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="273,155,340,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="365,155,491,181"/>
 </map>

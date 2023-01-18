@@ -54,7 +54,7 @@ $(function() {
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef TASKOLIB_EXCEPTIONS_H_</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define TASKOLIB_EXCEPTIONS_H_</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;cstring&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
@@ -77,26 +77,39 @@ $(function() {
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classtask_1_1Error.html#a00e1ae9a53ae4208cfe4dec0778f6be3">   86</a></span>&#160;    <a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> <a class="code" href="classtask_1_1Error.html#a00e1ae9a53ae4208cfe4dec0778f6be3">get_index</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">index_</a>; }</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">   89</a></span>&#160;    <a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> <a class="code" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">index_</a>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;};</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// namespace task</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classtask_1_1Error.html#a6fe803a0929830e6d8ae7a86763f14bc">   89</a></span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classtask_1_1Error.html#a6fe803a0929830e6d8ae7a86763f14bc">operator==</a>(<span class="keyword">const</span> <a class="code" href="classtask_1_1Error.html">Error</a>&amp; lhs, <span class="keyword">const</span> <a class="code" href="classtask_1_1Error.html">Error</a>&amp; rhs) noexcept</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">return</span> (std::strcmp(lhs.what(), rhs.what()) == 0)</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            &amp;&amp; lhs.index_ == rhs.index_;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classtask_1_1Error.html#ab406f83df76182dbbfe80819bcd04dd7">   96</a></span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classtask_1_1Error.html#ab406f83df76182dbbfe80819bcd04dd7">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classtask_1_1Error.html">Error</a>&amp; lhs, <span class="keyword">const</span> <a class="code" href="classtask_1_1Error.html">Error</a>&amp; rhs) noexcept</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">return</span> !(lhs == rhs);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">  102</a></span>&#160;    <a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> <a class="code" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">index_</a>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;};</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;} <span class="comment">// namespace task</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aStepIndex_8h_html"><div class="ttname"><a href="StepIndex_8h.html">StepIndex.h</a></div><div class="ttdoc">Declaration of the StepIndex type.</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html"><div class="ttname"><a href="classtask_1_1Error.html">task::Error</a></div><div class="ttdoc">An exception class carrying an error message and, optionally, the index of the step in which the erro...</div><div class="ttdef"><b>Definition:</b> exceptions.h:73</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_a00e1ae9a53ae4208cfe4dec0778f6be3"><div class="ttname"><a href="classtask_1_1Error.html#a00e1ae9a53ae4208cfe4dec0778f6be3">task::Error::get_index</a></div><div class="ttdeci">OptionalStepIndex get_index() const</div><div class="ttdoc">Return the associated step index.</div><div class="ttdef"><b>Definition:</b> exceptions.h:86</div></div>
-<div class="ttc" id="aclasstask_1_1Error_html_a1c674aa164f1a429579bb08f0c65d786"><div class="ttname"><a href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">task::Error::index_</a></div><div class="ttdeci">OptionalStepIndex index_</div><div class="ttdef"><b>Definition:</b> exceptions.h:89</div></div>
+<div class="ttc" id="aclasstask_1_1Error_html_a1c674aa164f1a429579bb08f0c65d786"><div class="ttname"><a href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">task::Error::index_</a></div><div class="ttdeci">OptionalStepIndex index_</div><div class="ttdef"><b>Definition:</b> exceptions.h:102</div></div>
+<div class="ttc" id="aclasstask_1_1Error_html_a6fe803a0929830e6d8ae7a86763f14bc"><div class="ttname"><a href="classtask_1_1Error.html#a6fe803a0929830e6d8ae7a86763f14bc">task::Error::operator==</a></div><div class="ttdeci">friend bool operator==(const Error &amp;lhs, const Error &amp;rhs) noexcept</div><div class="ttdoc">Determine if two Error objects have the same content.</div><div class="ttdef"><b>Definition:</b> exceptions.h:89</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_a868be48cdd5bd7cc6ff62ab9511e1e69"><div class="ttname"><a href="classtask_1_1Error.html#a868be48cdd5bd7cc6ff62ab9511e1e69">task::Error::Error</a></div><div class="ttdeci">Error(const std::string &amp;msg, OptionalStepIndex opt_step_index=gul14::nullopt)</div><div class="ttdef"><b>Definition:</b> exceptions.h:75</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_aa841f2fd90807d602d8a958be80e0777"><div class="ttname"><a href="classtask_1_1Error.html#aa841f2fd90807d602d8a958be80e0777">task::Error::Error</a></div><div class="ttdeci">Error(const char *msg, OptionalStepIndex opt_step_index=gul14::nullopt)</div><div class="ttdef"><b>Definition:</b> exceptions.h:80</div></div>
+<div class="ttc" id="aclasstask_1_1Error_html_ab406f83df76182dbbfe80819bcd04dd7"><div class="ttname"><a href="classtask_1_1Error.html#ab406f83df76182dbbfe80819bcd04dd7">task::Error::operator!=</a></div><div class="ttdeci">friend bool operator!=(const Error &amp;lhs, const Error &amp;rhs) noexcept</div><div class="ttdoc">Determine if two Error objects have different content.</div><div class="ttdef"><b>Definition:</b> exceptions.h:96</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> VariableName.h:154</div></div>
 <div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:36</div></div>
 <div class="ttc" id="anamespacetask_html_a9cc5a1e6b225d929c30234e08b8a2e68"><div class="ttname"><a href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">task::OptionalStepIndex</a></div><div class="ttdeci">gul14::optional&lt; StepIndex &gt; OptionalStepIndex</div><div class="ttdoc">An optional step index (gul14::optional&lt;StepIndex&gt;).</div><div class="ttdef"><b>Definition:</b> StepIndex.h:37</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 17 2023 16:43:14 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jan 18 2023 15:13:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
