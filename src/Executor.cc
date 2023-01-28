@@ -65,7 +65,7 @@ void print_to_message_queue(const std::string& text, OptionalStepIndex idx,
 void log_error_to_message_queue(const std::string& text, OptionalStepIndex idx,
                                 CommChannel* comm_channel)
 {
-    send_message(comm_channel, Message::Type::log_error, text, Clock::now(), idx);
+    send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
 }
 
 } // anonymous namespace
@@ -170,10 +170,6 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::output:
             if (context_.print_function)
                 context_.print_function(msg.get_text(), step_idx, nullptr);
-            break;
-        case Message::Type::log_error:
-            if (context_.log_error_function)
-                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::sequence_started:
             break;
