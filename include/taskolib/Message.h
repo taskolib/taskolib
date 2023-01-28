@@ -48,7 +48,6 @@ public:
     enum class Type
     {
         output, ///< a message string that was output by a step via print()
-        log_info, ///< a log entry of informational character
         log_warning, ///< a log entry carrying some kind of warning
         log_error, ///< a log entry carrying an error message
         sequence_started, ///< a sequence has been started
@@ -61,10 +60,10 @@ public:
     };
 
 private:
-    static constexpr std::array<char const*, static_cast<int>(Type::undefined) + 1> type_description_ =
+    static constexpr std::array<char const*, static_cast<int>(Type::undefined) + 1>
+    type_description_ =
     {
         "output",
-        "log_info",
         "log_warning",
         "log_error",
         "sequence_started",

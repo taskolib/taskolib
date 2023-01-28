@@ -62,12 +62,6 @@ void print_to_message_queue(const std::string& text, OptionalStepIndex idx,
     send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
 }
 
-void log_info_to_message_queue(const std::string& text, OptionalStepIndex idx,
-                               CommChannel* comm_channel)
-{
-    send_message(comm_channel, Message::Type::log_info, text, Clock::now(), idx);
-}
-
 void log_warning_to_message_queue(const std::string& text, OptionalStepIndex idx,
                                   CommChannel* comm_channel)
 {
@@ -134,7 +128,6 @@ void Executor::launch_async_execution(Sequence& sequence, Context context,
 
     // Redirect the output functions used by the parallel thread to the message queue
     context.print_function = print_to_message_queue;
-    context.log_info_function = log_info_to_message_queue;
     context.log_warning_function = log_warning_to_message_queue;
     context.log_error_function = log_error_to_message_queue;
 
@@ -184,10 +177,6 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::output:
             if (context_.print_function)
                 context_.print_function(msg.get_text(), step_idx, nullptr);
-            break;
-        case Message::Type::log_info:
-            if (context_.log_info_function)
-                context_.log_info_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::log_warning:
             if (context_.log_warning_function)
