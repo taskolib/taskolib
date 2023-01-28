@@ -4,7 +4,7 @@
  * \date   Created on May 30, 2022
  * \brief  Implementation of the Executor class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -60,12 +60,6 @@ void print_to_message_queue(const std::string& text, OptionalStepIndex idx,
                             CommChannel* comm_channel)
 {
     send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
-}
-
-void log_warning_to_message_queue(const std::string& text, OptionalStepIndex idx,
-                                  CommChannel* comm_channel)
-{
-    send_message(comm_channel, Message::Type::log_warning, text, Clock::now(), idx);
 }
 
 void log_error_to_message_queue(const std::string& text, OptionalStepIndex idx,
@@ -128,7 +122,6 @@ void Executor::launch_async_execution(Sequence& sequence, Context context,
 
     // Redirect the output functions used by the parallel thread to the message queue
     context.print_function = print_to_message_queue;
-    context.log_warning_function = log_warning_to_message_queue;
     context.log_error_function = log_error_to_message_queue;
 
     future_ = std::async(std::launch::async, execute_sequence, sequence,
@@ -177,10 +170,6 @@ bool Executor::update(Sequence& sequence)
         case Message::Type::output:
             if (context_.print_function)
                 context_.print_function(msg.get_text(), step_idx, nullptr);
-            break;
-        case Message::Type::log_warning:
-            if (context_.log_warning_function)
-                context_.log_warning_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::log_error:
             if (context_.log_error_function)

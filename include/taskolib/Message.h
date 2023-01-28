@@ -48,7 +48,6 @@ public:
     enum class Type
     {
         output, ///< a message string that was output by a step via print()
-        log_warning, ///< a log entry carrying some kind of warning
         log_error, ///< a log entry carrying an error message
         sequence_started, ///< a sequence has been started
         sequence_stopped, ///< a sequence has stopped regularly
@@ -64,7 +63,6 @@ private:
     type_description_ =
     {
         "output",
-        "log_warning",
         "log_error",
         "sequence_started",
         "sequence_stopped",
