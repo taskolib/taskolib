@@ -51,9 +51,9 @@ TEST_CASE("Message: Constructors", "[Message]")
     const TimePoint t0 = Clock::now();
 
     Message a;
-    Message b(Message::Type::log_error, "Test", t0, 42);
+    Message b(Message::Type::output, "Test", t0, 42);
 
-    REQUIRE(b.get_type() == Message::Type::log_error);
+    REQUIRE(b.get_type() == Message::Type::output);
     REQUIRE(b.get_text() == "Test");
     REQUIRE(b.get_timestamp() == t0);
     REQUIRE(b.get_index().has_value());
@@ -145,8 +145,8 @@ TEST_CASE("Message: set_type()", "[Message]")
     REQUIRE(&msg.set_type(Message::Type::step_started) == &msg);
     REQUIRE(msg.get_type() == Message::Type::step_started);
 
-    msg.set_type(Message::Type::log_error);
-    REQUIRE(msg.get_type() == Message::Type::log_error);
+    msg.set_type(Message::Type::output);
+    REQUIRE(msg.get_type() == Message::Type::output);
 }
 
 TEST_CASE("Message: Dump to stream", "[Message]")
