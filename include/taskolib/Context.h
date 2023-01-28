@@ -115,9 +115,6 @@ struct Context
     /// A callback that is invoked every time the script uses print().
     OutputCallback print_function = print_to_stdout;
 
-    /// A callback that is invoked for informational log messages.
-    OutputCallback log_info_function = print_info_to_stdout;
-
     /// A callback that is invoked for warning log messages.
     OutputCallback log_warning_function = print_warning_to_stdout;
 
