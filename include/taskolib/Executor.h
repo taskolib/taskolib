@@ -4,7 +4,7 @@
  * \date   Created on May 30, 2022
  * \brief  Declaration of the Executor class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -80,9 +80,6 @@ namespace task {
  *
  *     /// A callback that is invoked every time the script uses print().
  *     OutputCallback print_function = print_to_stdout;
- *
- *     /// A callback that is invoked for warning log messages.
- *     OutputCallback log_warning_function = print_warning_to_stdout;
  *
  *     /// A callback that is invoked for error log messages.
  *     OutputCallback log_error_function = print_error_to_stdout;

@@ -4,7 +4,7 @@
  * \date   Created on December 20, 2021
  * \brief  Declaration of the Context and VariableValue types.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -114,9 +114,6 @@ struct Context
 
     /// A callback that is invoked every time the script uses print().
     OutputCallback print_function = print_to_stdout;
-
-    /// A callback that is invoked for warning log messages.
-    OutputCallback log_warning_function = print_warning_to_stdout;
 
     /// A callback that is invoked for error log messages.
     OutputCallback log_error_function = print_error_to_stdout;
