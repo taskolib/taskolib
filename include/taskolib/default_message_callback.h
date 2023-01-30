@@ -1,10 +1,10 @@
 /**
- * \file   console.h
+ * \file   default_message_callback.h
  * \author Lars Froehlich
  * \date   Created on June 22, 2022
- * \brief  Declaration of several functions for console output.
+ * \brief  Declaration of the default_message_callback() function.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -27,28 +27,18 @@
 
 #include <string>
 
-#include "taskolib/StepIndex.h"
 #include "taskolib/Message.h"
 
 namespace task {
 
 struct CommChannel;
 
-/// Print a string to stdout.
-void print_to_stdout(const std::string& str, OptionalStepIndex,
-                     CommChannel* comm_channel);
-
-/// Print a string to stdout with an "INFO: " prefix.
-void print_info_to_stdout(const std::string& str, OptionalStepIndex,
-                          CommChannel* comm_channel);
-
-/// Print a string to stdout with a "WARNING: " prefix.
-void print_warning_to_stdout(const std::string& str, OptionalStepIndex,
-                             CommChannel* comm_channel);
-
-/// Print a string to stdout with an "ERROR: " prefix.
-void print_error_to_stdout(const std::string& str, OptionalStepIndex,
-                           CommChannel* comm_channel);
+/**
+ * Default callback function for messages.
+ *
+ * It sends "output" messages to stdout. All other message types are ignored.
+ */
+void default_message_callback(const Message& msg);
 
 } // namespace task
 
