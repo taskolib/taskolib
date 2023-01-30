@@ -1,5 +1,5 @@
 sources = files(
-    'console.cc',
+    'default_message_callback.cc',
     'deserialize_sequence.cc',
     'execute_lua_script.cc',
     'Executor.cc',

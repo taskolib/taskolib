@@ -1,8 +1,8 @@
 # Headers to be installed under ${prefix}/include/
 public_headers = [
    'taskolib/CommChannel.h',
-   'taskolib/console.h',
    'taskolib/Context.h',
+   'taskolib/default_message_callback.h',
    'taskolib/deserialize_sequence.h',
    'taskolib/exceptions.h',
    'taskolib/execute_lua_script.h',
