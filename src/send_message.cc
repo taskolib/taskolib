@@ -1,8 +1,8 @@
 /**
- * \file   test_CommChannel.cc
+ * \file   send_message.cc
  * \author Lars Froehlich
- * \date   Created on June 8, 2022
- * \brief  Test suite for the CommChannel struct.
+ * \date   Created on January 30, 2023, based on older code
+ * \brief  Declaration of the send_message() function.
  *
  * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -22,18 +22,23 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <type_traits>
+#include "send_message.h"
 
-#include <gul14/catch.h>
+namespace task {
 
-#include "taskolib/CommChannel.h"
-
-using namespace task;
-
-TEST_CASE("CommChannel: Constructor", "[CommChannel]")
+void send_message(Message::Type type, gul14::string_view text, TimePoint timestamp,
+                  OptionalStepIndex index, const Context& context,
+                  CommChannel* comm_channel)
 {
-    static_assert(std::is_default_constructible_v<CommChannel>,
-        "CommChannel is default-constructible");
+    Message msg{ type, std::string(text), timestamp, index };
 
-    CommChannel c;
+    if (context.message_callback_function)
+        context.message_callback_function(msg);
+
+    if (comm_channel == nullptr)
+        return;
+
+    comm_channel->queue_.push(std::move(msg));
 }
+
+} // namespace task

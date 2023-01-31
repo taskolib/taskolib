@@ -10,6 +10,7 @@ test_src = files(
     'test_lua_details.cc',
     'test_main.cc',
     'test_Message.cc',
+    'test_send_message.cc',
     'test_Sequence.cc',
     'test_SequenceManager.cc',
     'test_serialize_sequence.cc',

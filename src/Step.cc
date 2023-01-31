@@ -4,7 +4,7 @@
  * \date   Created on December 7, 2021
  * \brief  Implementation of the Step class.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -28,6 +28,7 @@
 
 #include "internals.h"
 #include "lua_details.h"
+#include "send_message.h"
 #include "sol/sol.hpp"
 #include "taskolib/exceptions.h"
 #include "taskolib/execute_lua_script.h"
@@ -113,13 +114,13 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     sol::state lua;
 
     open_safe_library_subset(lua);
-    install_custom_commands(lua, context);
+    install_custom_commands(lua);
 
     if (context.step_setup_function)
         context.step_setup_function(lua);
 
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(),
-                                                 opt_step_index, comm);
+                                                 opt_step_index, context, comm);
 
     if (executes_script(get_type()) and not context.step_setup_script.empty())
     {
@@ -167,25 +168,25 @@ bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index)
 
     set_time_of_last_execution(now);
     set_running(true);
-    send_message(comm, Message::Type::step_started, "Step started", now, index);
+    send_message(Message::Type::step_started, "Step started", now, index, context, comm);
 
     try
     {
         const bool result = execute_impl(context, comm, index);
 
-        send_message(comm, Message::Type::step_stopped,
+        send_message(Message::Type::step_stopped,
             requires_bool_return_value(get_type())
                 ? cat("Step finished (logical result: ", result ? "true" : "false", ')')
                 : "Step finished"s,
-            Clock::now(), index);
+            Clock::now(), index, context, comm);
 
         return result;
     }
     catch(const std::exception& e)
     {
         auto [msg, _] = remove_abort_markers(e.what());
-        send_message(comm, Message::Type::step_stopped_with_error, msg, Clock::now(),
-                     index);
+        send_message(Message::Type::step_stopped_with_error, msg, Clock::now(), index,
+                     context, comm);
         throw Error(e.what(), index);
     }
 }
