@@ -33,7 +33,8 @@
 
 using namespace std::literals;
 using namespace task;
-using namespace Catch::Matchers;
+using Catch::Matchers::Contains;
+using Catch::Matchers::StartsWith;
 
 TEST_CASE("Step: Default constructor", "[Step]")
 {
@@ -888,10 +889,11 @@ TEST_CASE("execute(): print function", "[Step]")
     std::string output;
 
     Context context;
-    context.print_function =
-        [&output](const std::string& str, OptionalStepIndex, CommChannel*)
+    context.message_callback_function =
+        [&output](const Message& msg)
         {
-            output += str;
+            if (msg.get_type() == Message::Type::output)
+                output += msg.get_text();
         };
 
     Step step;

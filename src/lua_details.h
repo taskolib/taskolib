@@ -4,7 +4,7 @@
  * \date   Created on June 15, 2022
  * \brief  Declaration of free functions dealing with Lua specifics.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -102,11 +102,6 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
     std::chrono::milliseconds timeout, OptionalStepIndex step_idx,
     CommChannel* comm_channel);
 
-/// Create a print() function for Lua that wraps a print callback from the Context.
-std::function<void(sol::this_state, sol::variadic_args)>
-make_print_fct(
-    std::function<void(const std::string&, OptionalStepIndex, CommChannel*)> print_fct);
-
 // Open a safe subset of the Lua standard libraries in the given Lua state.
 //
 // This opens the math, string, table, and UTF8 libraries. The base library is also
@@ -116,8 +111,9 @@ make_print_fct(
 // \endcode
 void open_safe_library_subset(sol::state& lua);
 
-// Print a string to the (virtual) console.
-void print_fct(const std::string& text, sol::this_state sol);
+// An equivalent to Lua's print() function that stringifies and concatenates its arguments
+// and finally sends a message of type Message::Type::output with the result.
+void print_fct(sol::this_state, sol::variadic_args);
 
 // Pause execution for the specified time, observing timeouts and termination requests.
 void sleep_fct(double seconds, sol::this_state sol);
