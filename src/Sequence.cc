@@ -367,9 +367,11 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
         send_message(Message::Type::sequence_stopped_with_error, msg, Clock::now(),
                      maybe_error->get_index(), context, comm);
     }
-
-    send_message(Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
-                 Clock::now(), gul14::nullopt, context, comm);
+    else
+    {
+        send_message(Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
+                     Clock::now(), gul14::nullopt, context, comm);
+    }
 
     set_error(maybe_error);
     return maybe_error;
