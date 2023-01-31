@@ -389,7 +389,7 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
 
     Context context;
     context.message_callback_function =
-        [&output](const Message& msg)
+        [&output](const Message& msg) -> void
         {
             if (msg.get_type() == Message::Type::output)
                 output += msg.get_text();
@@ -544,4 +544,82 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
 
     REQUIRE(seq.get_error().has_value() == true);
     REQUIRE_THAT(seq.get_error()->what(), Contains("Rainbows"));
+}
+
+TEST_CASE("Executor: Message callbacks", "[execute_sequence]")
+{
+    std::string str;
+
+    Context context;
+    context.message_callback_function = [&str](const Message& msg) -> void
+        {
+            switch (msg.get_type())
+            {
+            case Message::Type::output:
+                str += ("[OUTPUT(" + msg.get_text() + ")]"); break;
+            case Message::Type::sequence_started:
+                str += "[SEQ_START]"; break;
+            case Message::Type::sequence_stopped:
+                str += "[SEQ_STOP]"; break;
+            case Message::Type::sequence_stopped_with_error:
+                str += "[SEQ_STOP_ERR]"; break;
+            case Message::Type::step_started:
+                str += "[STEP_START]"; break;
+            case Message::Type::step_stopped:
+                str += "[STEP_STOP]"; break;
+            case Message::Type::step_stopped_with_error:
+                str += "[STEP_STOP_ERR]"; break;
+            case Message::Type::undefined:
+                throw Error("Undefined message type");
+            }
+        };
+
+    Sequence sequence{ "test_sequence" };
+    Executor executor;
+
+    SECTION("Sequence ending successfully")
+    {
+        Step step1{ Step::type_action };
+        step1.set_script("print('Rio Grande')");
+
+        Step step2{ Step::type_action };
+        step2.set_script("a = 2");
+
+        sequence.push_back(std::move(step1));
+        sequence.push_back(std::move(step2));
+
+        executor.run_asynchronously(sequence, context);
+
+        while (executor.update(sequence))
+            gul14::sleep(5ms);
+
+        REQUIRE(str ==
+            "[SEQ_START]"
+                "[STEP_START][OUTPUT(Rio Grande\n)][STEP_STOP]"
+                "[STEP_START][STEP_STOP]"
+            "[SEQ_STOP]");
+    }
+
+    SECTION("Sequence ending with error")
+    {
+        Step step1{ Step::type_action };
+        step1.set_script("print('Rio Lobo')");
+
+        Step step2{ Step::type_action };
+        step2.set_script("boom()");
+
+        sequence.push_back(std::move(step1));
+        sequence.push_back(std::move(step2));
+
+        executor.run_asynchronously(sequence, context);
+
+        while (executor.update(sequence))
+            gul14::sleep(5ms);
+
+        REQUIRE(str ==
+            "[SEQ_START]"
+                "[STEP_START][OUTPUT(Rio Lobo\n)][STEP_STOP]"
+                "[STEP_START][STEP_STOP_ERR]"
+            "[SEQ_STOP_ERR]");
+    }
 }
