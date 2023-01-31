@@ -4,7 +4,7 @@
  * \date   Created on May 30, 2022
  * \brief  Test suite for the Executor class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -29,7 +29,7 @@
 
 using namespace task;
 using namespace std::literals;
-using namespace Catch::Matchers;
+using Catch::Matchers::Contains;
 
 TEST_CASE("Executor: Constructor", "[Executor]")
 {
@@ -122,7 +122,7 @@ TEST_CASE("Executor: run_asynchronously()", "[Executor]")
 TEST_CASE("Executor: run_asynchronously(), failing sequence", "[Executor]")
 {
     Context context;
-    context.log_error_function = nullptr;
+    context.message_callback_function = nullptr;
 
     Step step(Step::type_action);
     step.set_script("not valid Lua");
@@ -158,7 +158,7 @@ TEST_CASE("Executor: run_asynchronously(), failing sequence", "[Executor]")
 TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
 {
     Context context;
-    context.log_error_function = nullptr; // disable console output
+    context.message_callback_function = nullptr;
 
     Step step1{ Step::type_action };
     step1.set_script("a = 1; error('Waldeinsamkeit')").set_used_context_variable_names(VariableNames{ "a" });
@@ -252,7 +252,7 @@ TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
 TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
 {
     Context context;
-    context.log_error_function = nullptr; // suppress error output on console
+    context.message_callback_function = nullptr; // suppress output on console
 
     Sequence sequence{ "test_sequence" };
     sequence.push_back(Step{ Step::type_while }.set_script("return true"));
@@ -278,7 +278,7 @@ TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
 TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
 {
     Context context;
-    context.log_error_function = nullptr; // suppress error output on console
+    context.message_callback_function = nullptr; // suppress console output
 
     Sequence sequence{ "test_sequence" };
     sequence.push_back(Step{ Step::type_while }.set_script("return true"));
@@ -297,7 +297,7 @@ TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
 TEST_CASE("Executor: cancel() within Lua sleep()", "[Executor]")
 {
     Context context;
-    context.log_error_function = nullptr; // suppress error output on console
+    context.message_callback_function = nullptr; // suppress console output
 
     Step step(Step::type_action);
     step.set_script("sleep(2)");
@@ -332,7 +332,7 @@ TEST_CASE("Executor: cancel() within Lua sleep()", "[Executor]")
 TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
 {
     Context context;
-    context.log_error_function = nullptr; // suppress error output on console
+    context.message_callback_function = nullptr; // suppress console output
 
     Step step_while{ Step::type_while };
     step_while.set_script("return true");
@@ -388,10 +388,11 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
     std::string output;
 
     Context context;
-    context.print_function =
-        [&output](const std::string& str, OptionalStepIndex, CommChannel*)
+    context.message_callback_function =
+        [&output](const Message& msg)
         {
-            output += str;
+            if (msg.get_type() == Message::Type::output)
+                output += msg.get_text();
         };
 
     Step step( Step::type_action );
@@ -441,7 +442,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
     "[Executor]")
 {
     Context ctx;
-    ctx.log_error_function = nullptr;
+    ctx.message_callback_function = nullptr;
 
     Sequence seq{ "test_sequence" };
 
@@ -513,7 +514,7 @@ auto lua_testfun(sol::this_state s) -> sol::object
 TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
 {
     Context ctx;
-    ctx.log_error_function = nullptr;
+    ctx.message_callback_function = nullptr; // suppress console output
 
     ctx.step_setup_function = [](sol::state& s) {
         s.set_function("testfun", &lua_testfun);

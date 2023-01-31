@@ -184,7 +184,7 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
 void install_custom_commands(sol::state& lua, const Context& context)
 {
     auto globals = lua.globals();
-    globals["print"] = make_print_fct(context.print_function);
+    globals["print"] = print_fct;
     globals["sleep"] = sleep_fct;
     globals["terminate_sequence"] =
         [](sol::this_state lua){ abort_script_with_error(lua, ""); };
@@ -219,33 +219,27 @@ void open_safe_library_subset(sol::state& lua)
     globals["require"] = sol::nil;
 }
 
-std::function<void(sol::this_state, sol::variadic_args)>
-make_print_fct(
-    std::function<void(const std::string&, OptionalStepIndex, CommChannel*)> print_fct)
+void print_fct(sol::this_state sol, sol::variadic_args va)
 {
-    return
-        [print_fct = std::move(print_fct)](sol::this_state sol, sol::variadic_args va)
-        {
-            sol::state_view state{ sol };
-            auto tostring{ state["tostring"] };
+    sol::state_view state{ sol };
+    auto tostring{ state["tostring"] };
 
-            try
-            {
-                gul14::SmallVector<std::string, 8> stringified_args;
-                stringified_args.reserve(va.size());
+    try
+    {
+        gul14::SmallVector<std::string, 8> stringified_args;
+        stringified_args.reserve(va.size());
 
-                for (auto v : va)
-                    stringified_args.push_back(tostring(v));
+        for (auto v : va)
+            stringified_args.push_back(tostring(v));
 
-                print_fct(gul14::join(stringified_args, "\t") + "\n",
-                          get_step_idx_from_registry(sol),
-                          get_comm_channel_ptr_from_registry(sol));
-            }
-            catch (const Error& e)
-            {
-                abort_script_with_error(sol, e.what());
-            }
-        };
+        send_message(get_comm_channel_ptr_from_registry(sol), Message::Type::output,
+                     gul14::join(stringified_args, "\t") + "\n", Clock::now(),
+                     get_step_idx_from_registry(sol));
+    }
+    catch (const Error& e)
+    {
+        abort_script_with_error(sol, e.what());
+    }
 }
 
 void sleep_fct(double seconds, sol::this_state sol)

@@ -56,18 +56,6 @@ VariableTable execute_sequence(Sequence sequence, Context context,
     return context.variables;
 }
 
-void print_to_message_queue(const std::string& text, OptionalStepIndex idx,
-                            CommChannel* comm_channel)
-{
-    send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
-}
-
-void log_error_to_message_queue(const std::string& text, OptionalStepIndex idx,
-                                CommChannel* comm_channel)
-{
-    send_message(comm_channel, Message::Type::output, text, Clock::now(), idx);
-}
-
 } // anonymous namespace
 
 
@@ -120,9 +108,8 @@ void Executor::launch_async_execution(Sequence& sequence, Context context,
     // Store a copy of the context for its local print and logging functions
     context_ = context;
 
-    // Redirect the output functions used by the parallel thread to the message queue
-    context.print_function = print_to_message_queue;
-    context.log_error_function = log_error_to_message_queue;
+    // Disable any message callbacks in the worker thread
+    context.message_callback_function = nullptr;
 
     future_ = std::async(std::launch::async, execute_sequence, sequence,
                          std::move(context), comm_channel_, step_index);
@@ -165,22 +152,21 @@ bool Executor::update(Sequence& sequence)
                 sequence.set_running(was_running);
             };
 
+        if (context_.message_callback_function)
+            context_.message_callback_function(msg);
+
         switch (msg.get_type())
         {
         case Message::Type::output:
-            if (context_.print_function)
-                context_.print_function(msg.get_text(), step_idx, nullptr);
-            break;
+            break; // only triggers callback
         case Message::Type::sequence_started:
-            break;
+            break; // only triggers callback
         case Message::Type::sequence_stopped:
             sequence.set_running(false);
             break;
         case Message::Type::sequence_stopped_with_error:
             sequence.set_running(false);
             sequence.set_error(Error{ msg.get_text(), msg.get_index() });
-            if (context_.log_error_function)
-                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         case Message::Type::step_started:
             modify_step([ts = msg.get_timestamp()](Step& s)
@@ -194,8 +180,6 @@ bool Executor::update(Sequence& sequence)
             break;
         case Message::Type::step_stopped_with_error:
             modify_step([](Step& s) { s.set_running(false); });
-            if (context_.log_error_function)
-                context_.log_error_function(msg.get_text(), step_idx, nullptr);
             break;
         default:
             throw Error(cat("Unknown message type ", static_cast<int>(msg.get_type())));
