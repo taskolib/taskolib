@@ -2,9 +2,9 @@
  * \file   CommChannel.h
  * \author Lars Froehlich
  * \date   Created on June 8, 2022
- * \brief  Declaration of the CommChannel struct and of the send_message() function.
+ * \brief  Declaration of the CommChannel struct.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -27,11 +27,8 @@
 
 #include <atomic>
 
-#include <gul14/string_view.h>
-
 #include "taskolib/LockedQueue.h"
 #include "taskolib/Message.h"
-#include "taskolib/StepIndex.h"
 
 namespace task {
 
@@ -47,33 +44,6 @@ struct CommChannel
     LockedQueue<Message> queue_{ 32 };
     std::atomic<bool> immediate_termination_requested_{ false };
 };
-
-/**
- * Enqueue a message in the given communication channel.
- *
- * \param comm_channel  Pointer to the communication channel. If this is null, the
- *                   function does nothing.
- * \param type       Message type (see Message::Type)
- * \param text       Message text
- * \param timestamp  Timestamp of the message
- * \param index      An optional index (of a Step in its parent Sequence)
- *
- * \code
- * send_message(comm_channel, type, text, timestamp, index);
- * // ... is equivalent to:
- * if (comm_channel)
- *     comm_channel->queue_.push(Message(type, text, timestamp, index));
- * \endcode
- */
-inline
-void send_message(CommChannel* comm_channel, Message::Type type, gul14::string_view text,
-                  TimePoint timestamp, OptionalStepIndex index)
-{
-    if (comm_channel == nullptr)
-        return;
-
-    comm_channel->queue_.push(Message(type, std::string(text), timestamp, index));
-}
 
 } // namespace task
 

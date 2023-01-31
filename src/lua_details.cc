@@ -4,7 +4,7 @@
  * \date   Created on June 15, 2022
  * \brief  Implementation of free functions dealing with Lua specifics.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -28,6 +28,7 @@
 
 #include "internals.h"
 #include "lua_details.h"
+#include "send_message.h"
 #include "taskolib/CommChannel.h"
 #include "taskolib/exceptions.h"
 
@@ -35,16 +36,18 @@ using gul14::cat;
 
 namespace {
 
+static const char abort_error_message_key[] =
+    "TASKOLIB_AB_END";
+static const char comm_channel_key[] =
+    "TASKOLIB_COMM_CH";
+static const char context_key[] =
+    "TASKOLIB_CONTEXT";
 static const char step_index_key[] =
     "TASKOLIB_STP_INDEX";
 static const char step_timeout_ms_since_epoch_key[] =
     "TASKOLIB_STP_TO_MS";
 static const char step_timeout_s_key[] =
     "TASKOLIB_STP_TO_S";
-static const char comm_channel_key[] =
-    "TASKOLIB_COMM_CH";
-static const char abort_error_message_key[] =
-    "TASKOLIB_AB_END";
 
 } // anonymous namespace
 
@@ -126,6 +129,20 @@ CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
     return *opt_comm_channel_ptr;
 }
 
+const Context& get_context_from_registry(lua_State* lua_state)
+{
+    sol::state_view lua(lua_state);
+    const auto registry = lua.registry();
+
+    sol::optional<const Context*> opt_context_ptr = registry[context_key];
+    if (not opt_context_ptr.has_value())
+        throw Error(cat(context_key, " not found in Lua registry"));
+    if (*opt_context_ptr == nullptr)
+        throw Error(cat(context_key, " in Lua registry contains null pointer"));
+
+    return *(opt_context_ptr.value());
+}
+
 OptionalStepIndex get_step_idx_from_registry(lua_State* lua_state)
 {
     sol::state_view lua(lua_state);
@@ -181,7 +198,7 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
     luaL_error(lua_state, err_msg.c_str());
 }
 
-void install_custom_commands(sol::state& lua, const Context& context)
+void install_custom_commands(sol::state& lua)
 {
     auto globals = lua.globals();
     globals["print"] = print_fct;
@@ -192,13 +209,14 @@ void install_custom_commands(sol::state& lua, const Context& context)
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
     std::chrono::milliseconds timeout, OptionalStepIndex step_idx,
-    CommChannel* comm_channel)
+    const Context& context, CommChannel* comm_channel)
 {
     auto registry = lua.registry();
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
     registry[step_timeout_ms_since_epoch_key] = get_ms_since_epoch(now, timeout);
     registry[step_index_key] = step_idx ? static_cast<LuaInteger>(*step_idx) : LuaInteger{ -1 };
     registry[comm_channel_key] = comm_channel;
+    registry[context_key] = &context;
 
     // Install a hook that is called after every 100 Lua instructions
     lua_sethook(lua, hook_check_timeout_and_termination_request, LUA_MASKCOUNT, 100);
@@ -232,9 +250,10 @@ void print_fct(sol::this_state sol, sol::variadic_args va)
         for (auto v : va)
             stringified_args.push_back(tostring(v));
 
-        send_message(get_comm_channel_ptr_from_registry(sol), Message::Type::output,
-                     gul14::join(stringified_args, "\t") + "\n", Clock::now(),
-                     get_step_idx_from_registry(sol));
+        send_message(Message::Type::output, gul14::join(stringified_args, "\t") + "\n",
+                     Clock::now(), get_step_idx_from_registry(sol),
+                     get_context_from_registry(sol),
+                     get_comm_channel_ptr_from_registry(sol));
     }
     catch (const Error& e)
     {

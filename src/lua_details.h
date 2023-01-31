@@ -59,6 +59,14 @@ void check_script_timeout(lua_State* lua_state);
 CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state);
 
 /**
+ * Retrieve a reference to the used Context from the Lua registry.
+ *
+ * \exception Error is thrown if the appropriate registry key is not found or if it
+ *            contains a null pointer.
+ */
+const Context& get_context_from_registry(lua_State* lua_state);
+
+/**
  * Get the index of the currently executed Step from the Lua registry.
  *
  * This function has three different outcomes:
@@ -93,13 +101,13 @@ void hook_check_timeout_and_termination_request(lua_State* lua_state, lua_Debug*
  * sleep() -- wait for a given number of seconds
  * \endcode
  */
-void install_custom_commands(sol::state& lua, const Context& context);
+void install_custom_commands(sol::state& lua);
 
 // Install hooks that check for timeouts and immediate termination requests while a Lua
 // script is being executed. If one of both occurs, the script terminates with an error
 // message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
-    std::chrono::milliseconds timeout, OptionalStepIndex step_idx,
+    std::chrono::milliseconds timeout, OptionalStepIndex step_idx, const Context& context,
     CommChannel* comm_channel);
 
 // Open a safe subset of the Lua standard libraries in the given Lua state.

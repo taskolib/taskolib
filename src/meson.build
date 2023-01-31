@@ -5,6 +5,7 @@ sources = files(
     'Executor.cc',
     'internals.cc',
     'lua_details.cc',
+    'send_message.cc',
     'Sequence.cc',
     'SequenceManager.cc',
     'serialize_sequence.cc',

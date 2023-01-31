@@ -4,7 +4,7 @@
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -31,6 +31,7 @@
 #include <gul14/trim.h>
 
 #include "internals.h"
+#include "send_message.h"
 #include "taskolib/exceptions.h"
 #include "taskolib/Sequence.h"
 #include "taskolib/Step.h"
@@ -327,8 +328,8 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
 
     context.step_setup_script = step_setup_script_;
 
-    send_message(comm, Message::Type::sequence_started, cat(exec_block_name, " started"),
-                 Clock::now(), gul14::nullopt);
+    send_message(Message::Type::sequence_started, cat(exec_block_name, " started"),
+                 Clock::now(), gul14::nullopt, context, comm);
 
     gul14::optional<Error> maybe_error;
 
@@ -352,8 +353,8 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
         switch (cause)
         {
         case ErrorCause::terminated_by_script:
-            send_message(comm, Message::Type::sequence_stopped, msg, Clock::now(),
-                         maybe_error->get_index());
+            send_message(Message::Type::sequence_stopped, msg, Clock::now(),
+                         maybe_error->get_index(), context, comm);
             return gul14::nullopt; // silently return to the caller
         case ErrorCause::aborted:
             msg = cat(exec_block_name, " aborted: ", msg);
@@ -363,12 +364,12 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
             break;
         }
 
-        send_message(comm, Message::Type::sequence_stopped_with_error, msg, Clock::now(),
-                     maybe_error->get_index());
+        send_message(Message::Type::sequence_stopped_with_error, msg, Clock::now(),
+                     maybe_error->get_index(), context, comm);
     }
 
-    send_message(comm, Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
-                 Clock::now(), gul14::nullopt);
+    send_message(Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
+                 Clock::now(), gul14::nullopt, context, comm);
 
     set_error(maybe_error);
     return maybe_error;
