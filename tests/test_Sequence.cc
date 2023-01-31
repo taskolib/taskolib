@@ -4,7 +4,7 @@
  * \date   Created on February 8, 2022
  * \brief  Test suite for the the Sequence class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,11 +24,12 @@
 
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
+
 #include "taskolib/Sequence.h"
 
-using namespace Catch::Matchers;
 using namespace std::literals;
 using namespace task;
+using Catch::Matchers::Contains;
 
 TEST_CASE("Sequence: Constructor without descriptive label", "[Sequence]")
 {
@@ -2965,6 +2966,77 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     REQUIRE(msg.get_type() == Message::Type::sequence_stopped);
     REQUIRE(msg.get_timestamp() >= t0);
     REQUIRE(msg.get_timestamp() - t0 < 1s);
+}
+
+TEST_CASE("execute_sequence(): Message callbacks", "[execute_sequence]")
+{
+    std::string str;
+
+    Context context;
+    context.message_callback_function = [&str](const Message& msg) -> void
+        {
+            switch (msg.get_type())
+            {
+            case Message::Type::output:
+                str += ("[OUTPUT(" + msg.get_text() + ")]"); break;
+            case Message::Type::sequence_started:
+                str += "[SEQ_START]"; break;
+            case Message::Type::sequence_stopped:
+                str += "[SEQ_STOP]"; break;
+            case Message::Type::sequence_stopped_with_error:
+                str += "[SEQ_STOP_ERR]"; break;
+            case Message::Type::step_started:
+                str += "[STEP_START]"; break;
+            case Message::Type::step_stopped:
+                str += "[STEP_STOP]"; break;
+            case Message::Type::step_stopped_with_error:
+                str += "[STEP_STOP_ERR]"; break;
+            case Message::Type::undefined:
+                throw Error("Undefined message type");
+            }
+        };
+
+    Sequence sequence{ "test_sequence" };
+
+    SECTION("Sequence ending successfully")
+    {
+        Step step1{ Step::type_action };
+        step1.set_script("print('American River')");
+
+        Step step2{ Step::type_action };
+        step2.set_script("a = 2");
+
+        sequence.push_back(std::move(step1));
+        sequence.push_back(std::move(step2));
+
+        REQUIRE(sequence.execute(context, nullptr) == gul14::nullopt);
+
+        REQUIRE(str ==
+            "[SEQ_START]"
+                "[STEP_START][OUTPUT(American River\n)][STEP_STOP]"
+                "[STEP_START][STEP_STOP]"
+            "[SEQ_STOP]");
+    }
+
+    SECTION("Sequence ending with error")
+    {
+        Step step1{ Step::type_action };
+        step1.set_script("print('Coyote Creek')");
+
+        Step step2{ Step::type_action };
+        step2.set_script("boom()");
+
+        sequence.push_back(std::move(step1));
+        sequence.push_back(std::move(step2));
+
+        REQUIRE(sequence.execute(context, nullptr) != gul14::nullopt);
+
+        REQUIRE(str ==
+            "[SEQ_START]"
+                "[STEP_START][OUTPUT(Coyote Creek\n)][STEP_STOP]"
+                "[STEP_START][STEP_STOP_ERR]"
+            "[SEQ_STOP_ERR]");
+    }
 }
 
 TEST_CASE("execute(): if-elseif-else sequence with disable", "[Sequence]")
