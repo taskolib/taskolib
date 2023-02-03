@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.4.2</span>
    </div>
   </td>
  </tr>
@@ -56,50 +56,31 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;gul14/string_view.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="LockedQueue_8h.html">taskolib/LockedQueue.h</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Message_8h.html">taskolib/Message.h</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="StepIndex_8h.html">taskolib/StepIndex.h</a>&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="namespacetask.html">   36</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetask.html">task</a> {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structtask_1_1CommChannel.html">   45</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structtask_1_1CommChannel.html">CommChannel</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">   47</a></span>&#160;    <a class="code" href="classtask_1_1LockedQueue.html">LockedQueue&lt;Message&gt;</a> <a class="code" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">queue_</a>{ 32 };</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="structtask_1_1CommChannel.html#ac4876956043a0dd617c39698a8816d15">   48</a></span>&#160;    std::atomic&lt;bool&gt; <a class="code" href="structtask_1_1CommChannel.html#ac4876956043a0dd617c39698a8816d15">immediate_termination_requested_</a>{ <span class="keyword">false</span> };</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">inline</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">   69</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">send_message</a>(<a class="code" href="structtask_1_1CommChannel.html">CommChannel</a>* comm_channel, <a class="code" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a> type, gul14::string_view text,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                  <a class="code" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> timestamp, <a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index)</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (comm_channel == <span class="keyword">nullptr</span>)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    comm_channel-&gt;<a class="code" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">queue_</a>.push(<a class="code" href="classtask_1_1Message.html">Message</a>(type, std::string(text), timestamp, index));</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;} <span class="comment">// namespace task</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="LockedQueue_8h.html">taskolib/LockedQueue.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Message_8h.html">taskolib/Message.h</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="namespacetask.html">   33</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetask.html">task</a> {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="structtask_1_1CommChannel.html">   42</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structtask_1_1CommChannel.html">CommChannel</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">   44</a></span>&#160;    <a class="code" href="classtask_1_1LockedQueue.html">LockedQueue&lt;Message&gt;</a> <a class="code" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">queue_</a>{ 32 };</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structtask_1_1CommChannel.html#ac4876956043a0dd617c39698a8816d15">   45</a></span>&#160;    std::atomic&lt;bool&gt; <a class="code" href="structtask_1_1CommChannel.html#ac4876956043a0dd617c39698a8816d15">immediate_termination_requested_</a>{ <span class="keyword">false</span> };</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;};</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;} <span class="comment">// namespace task</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aLockedQueue_8h_html"><div class="ttname"><a href="LockedQueue_8h.html">LockedQueue.h</a></div><div class="ttdoc">Declaration of the LockedQueue class.</div></div>
 <div class="ttc" id="aMessage_8h_html"><div class="ttname"><a href="Message_8h.html">Message.h</a></div><div class="ttdoc">Declaration of the Message class.</div></div>
-<div class="ttc" id="aStepIndex_8h_html"><div class="ttname"><a href="StepIndex_8h.html">StepIndex.h</a></div><div class="ttdoc">Declaration of the StepIndex type.</div></div>
 <div class="ttc" id="aclasstask_1_1LockedQueue_html"><div class="ttname"><a href="classtask_1_1LockedQueue.html">task::LockedQueue</a></div><div class="ttdoc">A thread-safe locking message queue.</div><div class="ttdef"><b>Definition:</b> LockedQueue.h:66</div></div>
-<div class="ttc" id="aclasstask_1_1Message_html"><div class="ttname"><a href="classtask_1_1Message.html">task::Message</a></div><div class="ttdoc">A message carrying some text, a timestamp, and a type, to be transported with a message queue between...</div><div class="ttdef"><b>Definition:</b> Message.h:45</div></div>
-<div class="ttc" id="aclasstask_1_1Message_html_a4815e8e0b100ea8f309a03856ad81cd4"><div class="ttname"><a href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">task::Message::Type</a></div><div class="ttdeci">Type</div><div class="ttdoc">The type of this message.</div><div class="ttdef"><b>Definition:</b> Message.h:49</div></div>
-<div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:36</div></div>
-<div class="ttc" id="anamespacetask_html_a5cced3774f9abf086f0d2992d2a8064f"><div class="ttname"><a href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message</a></div><div class="ttdeci">void send_message(CommChannel *comm_channel, Message::Type type, gul14::string_view text, TimePoint timestamp, OptionalStepIndex index)</div><div class="ttdoc">Enqueue a message in the given communication channel.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:69</div></div>
-<div class="ttc" id="anamespacetask_html_a9cc5a1e6b225d929c30234e08b8a2e68"><div class="ttname"><a href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">task::OptionalStepIndex</a></div><div class="ttdeci">gul14::optional&lt; StepIndex &gt; OptionalStepIndex</div><div class="ttdoc">An optional step index (gul14::optional&lt;StepIndex&gt;).</div><div class="ttdef"><b>Definition:</b> StepIndex.h:37</div></div>
-<div class="ttc" id="anamespacetask_html_acc0d5ac00c79dac8125ed175e9d6ae5c"><div class="ttname"><a href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">task::TimePoint</a></div><div class="ttdeci">std::chrono::time_point&lt; Clock &gt; TimePoint</div><div class="ttdef"><b>Definition:</b> time_types.h:34</div></div>
-<div class="ttc" id="astructtask_1_1CommChannel_html"><div class="ttname"><a href="structtask_1_1CommChannel.html">task::CommChannel</a></div><div class="ttdoc">A struct combining a message queue and several atomic flags.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:46</div></div>
-<div class="ttc" id="astructtask_1_1CommChannel_html_ac4876956043a0dd617c39698a8816d15"><div class="ttname"><a href="structtask_1_1CommChannel.html#ac4876956043a0dd617c39698a8816d15">task::CommChannel::immediate_termination_requested_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; immediate_termination_requested_</div><div class="ttdef"><b>Definition:</b> CommChannel.h:48</div></div>
-<div class="ttc" id="astructtask_1_1CommChannel_html_adc29bf8699812fc89aa6eaeed512449c"><div class="ttname"><a href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">task::CommChannel::queue_</a></div><div class="ttdeci">LockedQueue&lt; Message &gt; queue_</div><div class="ttdef"><b>Definition:</b> CommChannel.h:47</div></div>
+<div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:33</div></div>
+<div class="ttc" id="astructtask_1_1CommChannel_html"><div class="ttname"><a href="structtask_1_1CommChannel.html">task::CommChannel</a></div><div class="ttdoc">A struct combining a message queue and several atomic flags.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:43</div></div>
+<div class="ttc" id="astructtask_1_1CommChannel_html_ac4876956043a0dd617c39698a8816d15"><div class="ttname"><a href="structtask_1_1CommChannel.html#ac4876956043a0dd617c39698a8816d15">task::CommChannel::immediate_termination_requested_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; immediate_termination_requested_</div><div class="ttdef"><b>Definition:</b> CommChannel.h:45</div></div>
+<div class="ttc" id="astructtask_1_1CommChannel_html_adc29bf8699812fc89aa6eaeed512449c"><div class="ttname"><a href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">task::CommChannel::queue_</a></div><div class="ttdeci">LockedQueue&lt; Message &gt; queue_</div><div class="ttdef"><b>Definition:</b> CommChannel.h:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 18 2023 15:13:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

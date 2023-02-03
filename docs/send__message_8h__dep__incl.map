@@ -1,0 +1,7 @@
+<map id="send_message.h" name="send_message.h">
+<area shape="rect" id="node1" title="Declaration of the send_message() function." alt="" coords="215,5,346,32"/>
+<area shape="rect" id="node2" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="5,80,116,107"/>
+<area shape="rect" id="node3" href="$send__message_8cc.html" title="Declaration of the send_message() function." alt="" coords="140,80,277,107"/>
+<area shape="rect" id="node4" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="301,80,404,107"/>
+<area shape="rect" id="node5" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="429,80,498,107"/>
+</map>

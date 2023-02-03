@@ -1,43 +1,43 @@
 <map id="deserialize_sequence.h" name="deserialize_sequence.h">
-<area shape="rect" id="node1" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="999,5,1174,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="447,155,537,181"/>
-<area shape="rect" id="node3" title=" " alt="" coords="1363,80,1443,107"/>
-<area shape="rect" id="node4" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="562,155,681,181"/>
-<area shape="rect" id="node37" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="1187,80,1339,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="23,528,89,555"/>
-<area shape="rect" id="node6" title=" " alt="" coords="600,229,643,256"/>
-<area shape="rect" id="node7" title=" " alt="" coords="576,528,635,555"/>
-<area shape="rect" id="node8" href="$CommChannel_8h.html" title="Declaration of the CommChannel struct and of the send_message() function." alt="" coords="1647,304,1833,331"/>
-<area shape="rect" id="node23" href="$time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="93,453,256,480"/>
-<area shape="rect" id="node24" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1030,229,1170,256"/>
-<area shape="rect" id="node30" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="831,304,1012,331"/>
-<area shape="rect" id="node31" href="$Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="309,229,451,256"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1776,379,1843,405"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1553,379,1701,405"/>
-<area shape="rect" id="node11" href="$LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="1917,379,2093,405"/>
-<area shape="rect" id="node16" href="$Message_8h.html" title="Declaration of the Message class." alt="" coords="919,379,1065,405"/>
-<area shape="rect" id="node21" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="1437,453,1592,480"/>
-<area shape="rect" id="node12" title=" " alt="" coords="1743,453,1886,480"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1911,453,1975,480"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1642,528,1769,555"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1999,453,2155,480"/>
-<area shape="rect" id="node17" title=" " alt="" coords="964,453,1020,480"/>
-<area shape="rect" id="node18" title=" " alt="" coords="1044,453,1121,480"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1146,453,1222,480"/>
-<area shape="rect" id="node20" title=" " alt="" coords="820,453,940,480"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1481,528,1548,555"/>
-<area shape="rect" id="node25" title=" " alt="" coords="1191,379,1278,405"/>
-<area shape="rect" id="node26" title=" " alt="" coords="1138,304,1262,331"/>
-<area shape="rect" id="node27" title=" " alt="" coords="1286,304,1354,331"/>
-<area shape="rect" id="node28" title=" " alt="" coords="1378,304,1470,331"/>
-<area shape="rect" id="node29" href="$console_8h.html" title="Declaration of several functions for console output." alt="" coords="668,304,807,331"/>
-<area shape="rect" id="node32" title=" " alt="" coords="213,304,275,331"/>
-<area shape="rect" id="node33" title=" " alt="" coords="484,304,543,331"/>
-<area shape="rect" id="node34" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="300,304,460,331"/>
-<area shape="rect" id="node35" title=" " alt="" coords="364,379,431,405"/>
-<area shape="rect" id="node36" title=" " alt="" coords="455,379,542,405"/>
-<area shape="rect" id="node38" title=" " alt="" coords="1401,155,1487,181"/>
-<area shape="rect" id="node39" title=" " alt="" coords="1511,155,1574,181"/>
-<area shape="rect" id="node40" title=" " alt="" coords="1598,155,1693,181"/>
-<area shape="rect" id="node41" title=" " alt="" coords="1717,155,1843,181"/>
+<area shape="rect" id="node1" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="597,5,771,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="209,155,300,181"/>
+<area shape="rect" id="node3" title=" " alt="" coords="885,80,965,107"/>
+<area shape="rect" id="node4" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="325,155,443,181"/>
+<area shape="rect" id="node37" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="709,80,861,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="23,543,89,569"/>
+<area shape="rect" id="node6" title=" " alt="" coords="165,229,208,256"/>
+<area shape="rect" id="node7" title=" " alt="" coords="629,543,688,569"/>
+<area shape="rect" id="node8" href="$CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="722,311,907,338"/>
+<area shape="rect" id="node22" href="$time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="93,468,256,495"/>
+<area shape="rect" id="node23" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1230,229,1370,256"/>
+<area shape="rect" id="node29" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1145,311,1327,338"/>
+<area shape="rect" id="node31" href="$Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="301,229,443,256"/>
+<area shape="rect" id="node9" title=" " alt="" coords="772,393,839,420"/>
+<area shape="rect" id="node10" href="$LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="972,393,1148,420"/>
+<area shape="rect" id="node15" href="$Message_8h.html" title="Declaration of the Message class." alt="" coords="1324,393,1471,420"/>
+<area shape="rect" id="node11" title=" " alt="" coords="861,468,1003,495"/>
+<area shape="rect" id="node12" title=" " alt="" coords="1028,468,1092,495"/>
+<area shape="rect" id="node13" title=" " alt="" coords="1778,543,1905,569"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1117,468,1273,495"/>
+<area shape="rect" id="node16" title=" " alt="" coords="1593,468,1649,495"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1673,468,1751,495"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1349,468,1425,495"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1449,468,1569,495"/>
+<area shape="rect" id="node20" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="1825,468,1980,495"/>
+<area shape="rect" id="node21" title=" " alt="" coords="1929,543,1996,569"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1698,393,1785,420"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1402,311,1526,338"/>
+<area shape="rect" id="node26" title=" " alt="" coords="1550,311,1618,338"/>
+<area shape="rect" id="node27" title=" " alt="" coords="1642,311,1734,338"/>
+<area shape="rect" id="node28" href="$default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="932,304,1121,345"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1506,393,1654,420"/>
+<area shape="rect" id="node32" title=" " alt="" coords="266,311,329,338"/>
+<area shape="rect" id="node33" title=" " alt="" coords="537,311,596,338"/>
+<area shape="rect" id="node34" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="353,311,513,338"/>
+<area shape="rect" id="node35" title=" " alt="" coords="500,393,567,420"/>
+<area shape="rect" id="node36" title=" " alt="" coords="338,393,425,420"/>
+<area shape="rect" id="node38" title=" " alt="" coords="823,155,908,181"/>
+<area shape="rect" id="node39" title=" " alt="" coords="933,155,995,181"/>
+<area shape="rect" id="node40" title=" " alt="" coords="1019,155,1114,181"/>
+<area shape="rect" id="node41" title=" " alt="" coords="1139,155,1264,181"/>
 </map>

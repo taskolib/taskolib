@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.4.2</span>
    </div>
   </td>
  </tr>
@@ -55,11 +55,24 @@ $(function() {
 <div class="textblock"><p>A context stores information that influences the execution of steps and sequences, namely: </p>
 <ul>
 <li>A list of variables that can be im-/exported into steps.</li>
-<li>An initialization function that is called on a Lua state before a step is executed.</li>
-<li>Several callbacks that are invoked when a script calls print() or when the engine produces log output.</li>
+<li>An initialization function (in C++) that is called on a Lua state before a step is executed.</li>
+<li>A step setup script (in Lua) that is executed before a step is executed. Global variables and functions defined in this step setup script can be accessed by the Lua script in the step. When a sequence is executed, this step setup script is overwritten with the one from the sequence.</li>
+<li>A callback that is invoked whenever a message is being processed by the execution engine (see below for details).</li>
 </ul>
-<p>Global variables and functions defined in the step setup script can be accessed.</p>
-<p>Be aware that step setup script is overwritten with the content of the sequence setup script during its execution. </p>
+<h3><a class="el" href="classtask_1_1Message.html" title="A message carrying some text, a timestamp, and a type, to be transported with a message queue between...">Message</a> callback function</h3>
+<p>The <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> contains a message_callback_function that is called once for each message that is being processed by the execution engine in the main thread. By default, this function will send the output of the Lua "print()" command and error messages to stdout (see <a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7" title="Default callback function for messages.">default_message_callback()</a>). However, message_callback_function can also be set to nullptr (to disable any special behavior) or to a custom function: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> my_message_callback(<span class="keyword">const</span> Message&amp; msg)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">if</span> (msg.get_type() == <a class="code" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d">Message::Type::output</a>)</div>
+<div class="line">        send_to_console(msg.get_text());</div>
+<div class="line">    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (msg.get_type() == <a class="code" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">Message::Type::sequence_stopped_with_error</a>)</div>
+<div class="line">        show_alert_box(msg.get_text());</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">Context context;</div>
+<div class="line">context.message_callback_function = my_message_callback;</div>
+<div class="ttc" id="aclasstask_1_1Message_html_a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d"><div class="ttname"><a href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d">task::Message::Type::output</a></div><div class="ttdeci">@ output</div><div class="ttdoc">a message string that was output by a step via print()</div></div>
+<div class="ttc" id="aclasstask_1_1Message_html_a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5"><div class="ttname"><a href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">task::Message::Type::sequence_stopped_with_error</a></div><div class="ttdeci">@ sequence_stopped_with_error</div><div class="ttdoc">a sequence has been stopped because of an error</div></div>
+</div><!-- fragment --><p> The callback function receives a reference to the message that is being processed. If a sequence is executed in the current thread (e.g. via <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55" title="Execute the sequence (or just one of its steps) within a given context.">Sequence::execute()</a>), the callback is executed whenever a message is generated. If the sequence is handed to an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> for parallel execution, the callback is run whenever the main thread has received the message (i.e. typically within <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">Executor::update()</a>). Callbacks are never executed on the worker thread. </p>
 </div>
 <p><code>#include &lt;<a class="el" href="Context_8h_source.html">Context.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -74,89 +87,26 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3bf1fe7546f0a81a0ae43f666a0fefea"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(sol::state &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">step_setup_function</a></td></tr>
 <tr class="memdesc:a3bf1fe7546f0a81a0ae43f666a0fefea"><td class="mdescLeft">&#160;</td><td class="mdescRight">An initialization function that is called on a Lua state before a step is executed.  <a href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">More...</a><br /></td></tr>
 <tr class="separator:a3bf1fe7546f0a81a0ae43f666a0fefea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13c7e33d3b88611fe8453ebe9b9c27d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">print_function</a> = <a class="el" href="namespacetask.html#a8645c20643eec20318f602c266edbd48">print_to_stdout</a></td></tr>
-<tr class="memdesc:a13c7e33d3b88611fe8453ebe9b9c27d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked every time the script uses print().  <a href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">More...</a><br /></td></tr>
-<tr class="separator:a13c7e33d3b88611fe8453ebe9b9c27d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c37bfb946bd7a46ca0cb66270dc18f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a4c37bfb946bd7a46ca0cb66270dc18f5">log_info_function</a> = <a class="el" href="namespacetask.html#ac71f52027c266027fa13ba4254a099b2">print_info_to_stdout</a></td></tr>
-<tr class="memdesc:a4c37bfb946bd7a46ca0cb66270dc18f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked for informational log messages.  <a href="structtask_1_1Context.html#a4c37bfb946bd7a46ca0cb66270dc18f5">More...</a><br /></td></tr>
-<tr class="separator:a4c37bfb946bd7a46ca0cb66270dc18f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b48a3a862f9550b7e1fc42359861ce2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a8b48a3a862f9550b7e1fc42359861ce2">log_warning_function</a> = <a class="el" href="namespacetask.html#a72de984988dbdaf9e8b708ed94e3178f">print_warning_to_stdout</a></td></tr>
-<tr class="memdesc:a8b48a3a862f9550b7e1fc42359861ce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked for warning log messages.  <a href="structtask_1_1Context.html#a8b48a3a862f9550b7e1fc42359861ce2">More...</a><br /></td></tr>
-<tr class="separator:a8b48a3a862f9550b7e1fc42359861ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c5c2cc1d1078d95a0cd5307ea488079"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a8c5c2cc1d1078d95a0cd5307ea488079">log_error_function</a> = <a class="el" href="namespacetask.html#ac3bf3008693dfafa8523bc0fd1c96ac8">print_error_to_stdout</a></td></tr>
-<tr class="memdesc:a8c5c2cc1d1078d95a0cd5307ea488079"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked for error log messages.  <a href="structtask_1_1Context.html#a8c5c2cc1d1078d95a0cd5307ea488079">More...</a><br /></td></tr>
-<tr class="separator:a8c5c2cc1d1078d95a0cd5307ea488079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a427411724ef16e9f4402f6e6961b5a56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a6a925d38472ee434739fcf16e7cf27b6">MessageCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1Context.html#a427411724ef16e9f4402f6e6961b5a56">message_callback_function</a> = <a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7">default_message_callback</a></td></tr>
+<tr class="memdesc:a427411724ef16e9f4402f6e6961b5a56"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback (or "hook") function that is invoked whenever a message is processed during the execution of a sequence.  <a href="structtask_1_1Context.html#a427411724ef16e9f4402f6e6961b5a56">More...</a><br /></td></tr>
+<tr class="separator:a427411724ef16e9f4402f6e6961b5a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8c5c2cc1d1078d95a0cd5307ea488079"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c5c2cc1d1078d95a0cd5307ea488079">&#9670;&nbsp;</a></span>log_error_function</h2>
+<a id="a427411724ef16e9f4402f6e6961b5a56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a427411724ef16e9f4402f6e6961b5a56">&#9670;&nbsp;</a></span>message_callback_function</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> task::Context::log_error_function = <a class="el" href="namespacetask.html#ac3bf3008693dfafa8523bc0fd1c96ac8">print_error_to_stdout</a></td>
+          <td class="memname"><a class="el" href="namespacetask.html#a6a925d38472ee434739fcf16e7cf27b6">MessageCallback</a> task::Context::message_callback_function = <a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7">default_message_callback</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>A callback that is invoked for error log messages. </p>
+<p>A callback (or "hook") function that is invoked whenever a message is processed during the execution of a sequence. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
-
-</div>
-</div>
-<a id="a4c37bfb946bd7a46ca0cb66270dc18f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c37bfb946bd7a46ca0cb66270dc18f5">&#9670;&nbsp;</a></span>log_info_function</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> task::Context::log_info_function = <a class="el" href="namespacetask.html#ac71f52027c266027fa13ba4254a099b2">print_info_to_stdout</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A callback that is invoked for informational log messages. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
-
-</div>
-</div>
-<a id="a8b48a3a862f9550b7e1fc42359861ce2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b48a3a862f9550b7e1fc42359861ce2">&#9670;&nbsp;</a></span>log_warning_function</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> task::Context::log_warning_function = <a class="el" href="namespacetask.html#a72de984988dbdaf9e8b708ed94e3178f">print_warning_to_stdout</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A callback that is invoked for warning log messages. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
-
-</div>
-</div>
-<a id="a13c7e33d3b88611fe8453ebe9b9c27d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13c7e33d3b88611fe8453ebe9b9c27d5">&#9670;&nbsp;</a></span>print_function</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> task::Context::print_function = <a class="el" href="namespacetask.html#a8645c20643eec20318f602c266edbd48">print_to_stdout</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A callback that is invoked every time the script uses print(). </p>
-
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">task::install_custom_commands()</a>, <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, <a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">task::send_message()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
 
 </div>
 </div>
@@ -221,7 +171,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 18 2023 15:13:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

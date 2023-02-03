@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.4.2</span>
    </div>
   </td>
  </tr>
@@ -121,9 +121,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:af3e14e35aad905c621373efc1a722679"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#af3e14e35aad905c621373efc1a722679">VariableTable</a> = std::unordered_map&lt; <a class="el" href="classtask_1_1VariableName.html">VariableName</a>, <a class="el" href="namespacetask.html#a7be6b98a8d9103df726ba42a507767d4">VariableValue</a> &gt;</td></tr>
 <tr class="memdesc:af3e14e35aad905c621373efc1a722679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associative table that holds Lua variable names and their value.  <a href="namespacetask.html#af3e14e35aad905c621373efc1a722679">More...</a><br /></td></tr>
 <tr class="separator:af3e14e35aad905c621373efc1a722679"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fbac3e17d0a96b17417a9eff8c9da93"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">OutputCallback</a> = std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt;</td></tr>
-<tr class="memdesc:a8fbac3e17d0a96b17417a9eff8c9da93"><td class="mdescLeft">&#160;</td><td class="mdescRight">An output function accepts a string, an optional step index, and a CommChannel* as parameters.  <a href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">More...</a><br /></td></tr>
-<tr class="separator:a8fbac3e17d0a96b17417a9eff8c9da93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a925d38472ee434739fcf16e7cf27b6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6a925d38472ee434739fcf16e7cf27b6">MessageCallback</a> = std::function&lt; void(const <a class="el" href="classtask_1_1Message.html">Message</a> &amp;)&gt;</td></tr>
+<tr class="memdesc:a6a925d38472ee434739fcf16e7cf27b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A message callback function receives a <a class="el" href="classtask_1_1Message.html" title="A message carrying some text, a timestamp, and a type, to be transported with a message queue between...">Message</a> object as a parameter.  <a href="namespacetask.html#a6a925d38472ee434739fcf16e7cf27b6">More...</a><br /></td></tr>
+<tr class="separator:a6a925d38472ee434739fcf16e7cf27b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94cb88831b94f9f5d3f4894307efef74"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a94cb88831b94f9f5d3f4894307efef74">VariableNames</a> = std::set&lt; <a class="el" href="classtask_1_1VariableName.html">VariableName</a> &gt;</td></tr>
 <tr class="separator:a94cb88831b94f9f5d3f4894307efef74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e952d54cbd750da4c670919eb5cbdf3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6e952d54cbd750da4c670919eb5cbdf3">ExecutionSteps</a> = std::set&lt; <a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Step::Type</a> &gt;</td></tr>
@@ -150,21 +150,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5cced3774f9abf086f0d2992d2a8064f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">send_message</a> (<a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a> type, gul14::string_view text, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> timestamp, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index)</td></tr>
-<tr class="memdesc:a5cced3774f9abf086f0d2992d2a8064f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a message in the given communication channel.  <a href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">More...</a><br /></td></tr>
-<tr class="separator:a5cced3774f9abf086f0d2992d2a8064f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8645c20643eec20318f602c266edbd48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8645c20643eec20318f602c266edbd48">print_to_stdout</a> (const std::string &amp;str, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
-<tr class="memdesc:a8645c20643eec20318f602c266edbd48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a string to stdout.  <a href="namespacetask.html#a8645c20643eec20318f602c266edbd48">More...</a><br /></td></tr>
-<tr class="separator:a8645c20643eec20318f602c266edbd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac71f52027c266027fa13ba4254a099b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ac71f52027c266027fa13ba4254a099b2">print_info_to_stdout</a> (const std::string &amp;str, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
-<tr class="memdesc:ac71f52027c266027fa13ba4254a099b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a string to stdout with an "INFO: " prefix.  <a href="namespacetask.html#ac71f52027c266027fa13ba4254a099b2">More...</a><br /></td></tr>
-<tr class="separator:ac71f52027c266027fa13ba4254a099b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72de984988dbdaf9e8b708ed94e3178f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a72de984988dbdaf9e8b708ed94e3178f">print_warning_to_stdout</a> (const std::string &amp;str, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
-<tr class="memdesc:a72de984988dbdaf9e8b708ed94e3178f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a string to stdout with a "WARNING: " prefix.  <a href="namespacetask.html#a72de984988dbdaf9e8b708ed94e3178f">More...</a><br /></td></tr>
-<tr class="separator:a72de984988dbdaf9e8b708ed94e3178f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3bf3008693dfafa8523bc0fd1c96ac8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ac3bf3008693dfafa8523bc0fd1c96ac8">print_error_to_stdout</a> (const std::string &amp;str, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
-<tr class="memdesc:ac3bf3008693dfafa8523bc0fd1c96ac8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a string to stdout with an "ERROR: " prefix.  <a href="namespacetask.html#ac3bf3008693dfafa8523bc0fd1c96ac8">More...</a><br /></td></tr>
-<tr class="separator:ac3bf3008693dfafa8523bc0fd1c96ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6421ad950ed1b80aaa83d75862c30fb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7">default_message_callback</a> (const <a class="el" href="classtask_1_1Message.html">Message</a> &amp;msg)</td></tr>
+<tr class="memdesc:a6421ad950ed1b80aaa83d75862c30fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default callback function for messages.  <a href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7">More...</a><br /></td></tr>
+<tr class="separator:a6421ad950ed1b80aaa83d75862c30fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6267718d543a5b3e74455d4e78de04f3"><td class="memItemLeft" align="right" valign="top">std::istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">operator&gt;&gt;</a> (std::istream &amp;stream, <a class="el" href="classtask_1_1Step.html">Step</a> &amp;step)</td></tr>
 <tr class="memdesc:a6267718d543a5b3e74455d4e78de04f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize parameters of <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the input stream.  <a href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">More...</a><br /></td></tr>
 <tr class="separator:a6267718d543a5b3e74455d4e78de04f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -223,6 +211,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:aab787a9b84854ee2aa9a60dd2d478af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a pointer to the used <a class="el" href="structtask_1_1CommChannel.html" title="A struct combining a message queue and several atomic flags.">CommChannel</a> from the Lua registry.  <a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">More...</a><br /></td></tr>
 <tr class="separator:aab787a9b84854ee2aa9a60dd2d478af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf70ab352b40ab590afc363227d6e08c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#abf70ab352b40ab590afc363227d6e08c">get_context_from_registry</a> (lua_State *lua_state)</td></tr>
+<tr class="memdesc:abf70ab352b40ab590afc363227d6e08c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a reference to the used <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> from the Lua registry.  <a href="namespacetask.html#abf70ab352b40ab590afc363227d6e08c">More...</a><br /></td></tr>
+<tr class="separator:abf70ab352b40ab590afc363227d6e08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry</a> (lua_State *lua_state)</td></tr>
 <tr class="memdesc:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the index of the currently executed <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the Lua registry.  <a href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">More...</a><br /></td></tr>
 <tr class="separator:a1ccb3dd2dcf762c092f177671fca1d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,20 +223,20 @@ Functions</h2></td></tr>
 <tr class="separator:ace524b550971d657d53d927af82ff984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">hook_abort_with_error</a> (lua_State *lua_state, lua_Debug *)</td></tr>
 <tr class="separator:a557348559e03f8f0d208a7c2dd72ce9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b7a11a007fc8aef5ca36bb152506877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands</a> (sol::state &amp;lua, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context)</td></tr>
-<tr class="memdesc:a2b7a11a007fc8aef5ca36bb152506877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given Lua state.  <a href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">More...</a><br /></td></tr>
-<tr class="separator:a2b7a11a007fc8aef5ca36bb152506877"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook</a> (sol::state &amp;lua, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> now, std::chrono::milliseconds timeout, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> step_idx, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
-<tr class="separator:ae3c627ea1a60eec0c0f39c034db7da66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dddc142466c9fae9497a3422c4bfba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">install_custom_commands</a> (sol::state &amp;lua)</td></tr>
+<tr class="memdesc:a2dddc142466c9fae9497a3422c4bfba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install implementations for some custom functions in the given Lua state.  <a href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">More...</a><br /></td></tr>
+<tr class="separator:a2dddc142466c9fae9497a3422c4bfba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f10b2d463f1dfcea8fb631b3b67defe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6f10b2d463f1dfcea8fb631b3b67defe">install_timeout_and_termination_request_hook</a> (sol::state &amp;lua, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> now, std::chrono::milliseconds timeout, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> step_idx, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel)</td></tr>
+<tr class="separator:a6f10b2d463f1dfcea8fb631b3b67defe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1970184ef62d5b886ee123608c7e852f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">open_safe_library_subset</a> (sol::state &amp;lua)</td></tr>
 <tr class="separator:a1970184ef62d5b886ee123608c7e852f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d7b6a16753639a074892a0acf61cac2"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(sol::this_state, sol::variadic_args)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct</a> (std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt; <a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct</a>)</td></tr>
-<tr class="memdesc:a8d7b6a16753639a074892a0acf61cac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a print() function for Lua that wraps a print callback from the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">More...</a><br /></td></tr>
-<tr class="separator:a8d7b6a16753639a074892a0acf61cac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61c33a0fd8a07764875309ab4b95e9dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct</a> (sol::this_state sol, sol::variadic_args va)</td></tr>
+<tr class="separator:a61c33a0fd8a07764875309ab4b95e9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2edfc1afaf6e9d8647ac3d98aa021e40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct</a> (double seconds, sol::this_state sol)</td></tr>
 <tr class="separator:a2edfc1afaf6e9d8647ac3d98aa021e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65bd182d91456185224d296ca523b74c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct</a> (const std::string &amp;text, sol::this_state sol)</td></tr>
-<tr class="separator:a65bd182d91456185224d296ca523b74c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">send_message</a> (<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a> type, gul14::string_view text, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> timestamp, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel=nullptr)</td></tr>
+<tr class="memdesc:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the message callback and enqueue the message in the given communication channel, if any.  <a href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">More...</a><br /></td></tr>
+<tr class="separator:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e68ad338db3879022c20490a790700e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2e68ad338db3879022c20490a790700e">store_step_setup_script</a> (const std::filesystem::path &amp;lua_file, const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;seq)</td></tr>
 <tr class="separator:a2e68ad338db3879022c20490a790700e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -356,6 +347,23 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a6a925d38472ee434739fcf16e7cf27b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a925d38472ee434739fcf16e7cf27b6">&#9670;&nbsp;</a></span>MessageCallback</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetask.html#a6a925d38472ee434739fcf16e7cf27b6">task::MessageCallback</a> = typedef std::function&lt;void(const <a class="el" href="classtask_1_1Message.html">Message</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A message callback function receives a <a class="el" href="classtask_1_1Message.html" title="A message carrying some text, a timestamp, and a type, to be transported with a message queue between...">Message</a> object as a parameter. </p>
+<p>It is called on the main thread whenever a message is being processed. </p>
+
+</div>
+</div>
 <a id="a9cc5a1e6b225d929c30234e08b8a2e68"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9cc5a1e6b225d929c30234e08b8a2e68">&#9670;&nbsp;</a></span>OptionalStepIndex</h2>
 
@@ -369,23 +377,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>An optional step index (gul14::optional&lt;StepIndex&gt;). </p>
-
-</div>
-</div>
-<a id="a8fbac3e17d0a96b17417a9eff8c9da93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fbac3e17d0a96b17417a9eff8c9da93">&#9670;&nbsp;</a></span>OutputCallback</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="namespacetask.html#a8fbac3e17d0a96b17417a9eff8c9da93">task::OutputCallback</a> = typedef std::function&lt;void(const std::string&amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a>*)&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>An output function accepts a string, an optional step index, and a CommChannel* as parameters. </p>
-<p>The latter may be null to indicate that there is no associated communication channel. </p>
 
 </div>
 </div>
@@ -589,7 +580,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, and <a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">hook_abort_with_error()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>, <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands()</a>, and <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>, <a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">install_custom_commands()</a>, and <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>.</p>
 
 </div>
 </div>
@@ -634,6 +625,29 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request()</a>.</p>
+
+</div>
+</div>
+<a id="a6421ad950ed1b80aaa83d75862c30fb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6421ad950ed1b80aaa83d75862c30fb7">&#9670;&nbsp;</a></span>default_message_callback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::default_message_callback </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Message.html">Message</a> &amp;&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default callback function for messages. </p>
+<p>It sends "output" messages to stdout. All other message types are ignored. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Message.html#a843e47e920c73767362c20ac20811cd5">task::Message::get_text()</a>, <a class="el" href="classtask_1_1Message.html#aebf74d2531fd3b713f49c0e133e14726">task::Message::get_type()</a>, and <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d">task::Message::output</a>.</p>
 
 </div>
 </div>
@@ -726,7 +740,35 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, and <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, and <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>.</p>
+
+</div>
+</div>
+<a id="abf70ab352b40ab590afc363227d6e08c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf70ab352b40ab590afc363227d6e08c">&#9670;&nbsp;</a></span>get_context_from_registry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structtask_1_1Context.html">Context</a> &amp; task::get_context_from_registry </td>
+          <td>(</td>
+          <td class="paramtype">lua_State *&#160;</td>
+          <td class="paramname"><em>lua_state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve a reference to the used <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> from the Lua registry. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the appropriate registry key is not found or if it contains a null pointer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>.</p>
 
 </div>
 </div>
@@ -756,7 +798,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a6f10b2d463f1dfcea8fb631b3b67defe">install_timeout_and_termination_request_hook()</a>.</p>
 
 </div>
 </div>
@@ -789,7 +831,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>.</p>
 
 </div>
 </div>
@@ -881,12 +923,12 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, and <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ae3c627ea1a60eec0c0f39c034db7da66">install_timeout_and_termination_request_hook()</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a6f10b2d463f1dfcea8fb631b3b67defe">install_timeout_and_termination_request_hook()</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
 
 </div>
 </div>
-<a id="a2b7a11a007fc8aef5ca36bb152506877"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b7a11a007fc8aef5ca36bb152506877">&#9670;&nbsp;</a></span>install_custom_commands()</h2>
+<a id="a2dddc142466c9fae9497a3422c4bfba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dddc142466c9fae9497a3422c4bfba9">&#9670;&nbsp;</a></span>install_custom_commands()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -895,18 +937,8 @@ Variables</h2></td></tr>
           <td class="memname">void task::install_custom_commands </td>
           <td>(</td>
           <td class="paramtype">sol::state &amp;&#160;</td>
-          <td class="paramname"><em>lua</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>lua</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -916,14 +948,14 @@ Variables</h2></td></tr>
 <div class="line">           print_function callback from the given context</div>
 <div class="line">sleep() -- wait for a given number of seconds</div>
 </div><!-- fragment --> 
-<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>, <a class="el" href="structtask_1_1Context.html#a13c7e33d3b88611fe8453ebe9b9c27d5">task::Context::print_function</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>, and <a class="el" href="namespacetask.html#a2edfc1afaf6e9d8647ac3d98aa021e40">sleep_fct()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step::execute_impl()</a>.</p>
 
 </div>
 </div>
-<a id="ae3c627ea1a60eec0c0f39c034db7da66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3c627ea1a60eec0c0f39c034db7da66">&#9670;&nbsp;</a></span>install_timeout_and_termination_request_hook()</h2>
+<a id="a6f10b2d463f1dfcea8fb631b3b67defe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f10b2d463f1dfcea8fb631b3b67defe">&#9670;&nbsp;</a></span>install_timeout_and_termination_request_hook()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -951,6 +983,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
           <td class="paramname"><em>step_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1097,30 +1135,6 @@ the collection of context variable names can also be an empty list, ie. <code></
 <p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, and <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence()</a>.</p>
-
-</div>
-</div>
-<a id="a8d7b6a16753639a074892a0acf61cac2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d7b6a16753639a074892a0acf61cac2">&#9670;&nbsp;</a></span>make_print_fct()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt; void(sol::this_state, sol::variadic_args)&gt; task::make_print_fct </td>
-          <td>(</td>
-          <td class="paramtype">std::function&lt; void(const std::string &amp;, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *)&gt;&#160;</td>
-          <td class="paramname"><em>print_fct</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Create a print() function for Lua that wraps a print callback from the <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
-
-<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry()</a>, <a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry()</a>, and <a class="el" href="namespacetask.html#a65bd182d91456185224d296ca523b74c">print_fct()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands()</a>.</p>
 
 </div>
 </div>
@@ -1307,44 +1321,8 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
-<a id="ac3bf3008693dfafa8523bc0fd1c96ac8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3bf3008693dfafa8523bc0fd1c96ac8">&#9670;&nbsp;</a></span>print_error_to_stdout()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task::print_error_to_stdout </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
-          <td class="paramname"><em>comm_channel</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Print a string to stdout with an "ERROR: " prefix. </p>
-
-</div>
-</div>
-<a id="a65bd182d91456185224d296ca523b74c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65bd182d91456185224d296ca523b74c">&#9670;&nbsp;</a></span>print_fct()</h2>
+<a id="a61c33a0fd8a07764875309ab4b95e9dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61c33a0fd8a07764875309ab4b95e9dc">&#9670;&nbsp;</a></span>print_fct()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1352,14 +1330,14 @@ the collection of context variable names can also be an empty list, ie. <code></
         <tr>
           <td class="memname">void task::print_fct </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>text</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">sol::this_state&#160;</td>
-          <td class="paramname"><em>sol</em>&#160;</td>
+          <td class="paramname"><em>sol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sol::variadic_args&#160;</td>
+          <td class="paramname"><em>va</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1369,115 +1347,9 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a8d7b6a16753639a074892a0acf61cac2">make_print_fct()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error()</a>, <a class="el" href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">get_comm_channel_ptr_from_registry()</a>, <a class="el" href="namespacetask.html#abf70ab352b40ab590afc363227d6e08c">get_context_from_registry()</a>, <a class="el" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry()</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d">task::Message::output</a>, and <a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">send_message()</a>.</p>
 
-</div>
-</div>
-<a id="ac71f52027c266027fa13ba4254a099b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac71f52027c266027fa13ba4254a099b2">&#9670;&nbsp;</a></span>print_info_to_stdout()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task::print_info_to_stdout </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
-          <td class="paramname"><em>comm_channel</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Print a string to stdout with an "INFO: " prefix. </p>
-
-</div>
-</div>
-<a id="a8645c20643eec20318f602c266edbd48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8645c20643eec20318f602c266edbd48">&#9670;&nbsp;</a></span>print_to_stdout()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task::print_to_stdout </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
-          <td class="paramname"><em>comm_channel</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Print a string to stdout. </p>
-
-</div>
-</div>
-<a id="a72de984988dbdaf9e8b708ed94e3178f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72de984988dbdaf9e8b708ed94e3178f">&#9670;&nbsp;</a></span>print_warning_to_stdout()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task::print_warning_to_stdout </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
-          <td class="paramname"><em>comm_channel</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Print a string to stdout with a "WARNING: " prefix. </p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">install_custom_commands()</a>.</p>
 
 </div>
 </div>
@@ -1545,24 +1417,15 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
-<a id="a5cced3774f9abf086f0d2992d2a8064f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cced3774f9abf086f0d2992d2a8064f">&#9670;&nbsp;</a></span>send_message()</h2>
+<a id="aa3297d57e5d2ff3b328beb5d94910f4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3297d57e5d2ff3b328beb5d94910f4c">&#9670;&nbsp;</a></span>send_message()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void task::send_message </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
-          <td class="paramname"><em>comm_channel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype"><a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
@@ -1582,7 +1445,19 @@ the collection of context variable names can also be an empty list, ie. <code></
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *&#160;</td>
+          <td class="paramname"><em>comm_channel</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1590,33 +1465,24 @@ the collection of context variable names can also be an empty list, ie. <code></
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Enqueue a message in the given communication channel. </p>
+<p>Call the message callback and enqueue the message in the given communication channel, if any. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">comm_channel</td><td>Pointer to the communication channel. If this is null, the function does nothing. </td></tr>
     <tr><td class="paramname">type</td><td><a class="el" href="classtask_1_1Message.html" title="A message carrying some text, a timestamp, and a type, to be transported with a message queue between...">Message</a> type (see <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4" title="The type of this message.">Message::Type</a>) </td></tr>
     <tr><td class="paramname">text</td><td><a class="el" href="classtask_1_1Message.html" title="A message carrying some text, a timestamp, and a type, to be transported with a message queue between...">Message</a> text </td></tr>
     <tr><td class="paramname">timestamp</td><td>Timestamp of the message </td></tr>
-    <tr><td class="paramname">index</td><td>An optional index (of a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> in its parent <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>)</td></tr>
+    <tr><td class="paramname">index</td><td>An optional index (of a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> in its parent <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>) </td></tr>
+    <tr><td class="paramname">context</td><td><a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a> with a message callback function </td></tr>
+    <tr><td class="paramname">comm_channel</td><td>Pointer to the communication channel. If this is null, the function does not attempt to push the message into any message queue. </td></tr>
   </table>
   </dd>
 </dl>
-<div class="fragment"><div class="line"><a class="code" href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">send_message</a>(comm_channel, type, text, timestamp, index);</div>
-<div class="line"><span class="comment">// ... is equivalent to:</span></div>
-<div class="line"><span class="keywordflow">if</span> (comm_channel)</div>
-<div class="line">    comm_channel-&gt;queue_.push(Message(type, text, timestamp, index));</div>
-<div class="ttc" id="anamespacetask_html_a5cced3774f9abf086f0d2992d2a8064f"><div class="ttname"><a href="namespacetask.html#a5cced3774f9abf086f0d2992d2a8064f">task::send_message</a></div><div class="ttdeci">void send_message(CommChannel *comm_channel, Message::Type type, gul14::string_view text, TimePoint timestamp, OptionalStepIndex index)</div><div class="ttdoc">Enqueue a message in the given communication channel.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:69</div></div>
-</div><!-- fragment --> 
-<p class="reference">References <a class="el" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">task::CommChannel::queue_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7a1122dafe2e31be1d1b903584ad3fa9">task::Sequence::handle_execution()</a>.</p>
+<p class="reference">References <a class="el" href="structtask_1_1Context.html#a427411724ef16e9f4402f6e6961b5a56">task::Context::message_callback_function</a>, and <a class="el" href="structtask_1_1CommChannel.html#adc29bf8699812fc89aa6eaeed512449c">task::CommChannel::queue_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step::execute()</a>, <a class="el" href="classtask_1_1Sequence.html#a7a1122dafe2e31be1d1b903584ad3fa9">task::Sequence::handle_execution()</a>, and <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>.</p>
 
 </div>
 </div>
@@ -1648,7 +1514,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="namespacetask.html#ace524b550971d657d53d927af82ff984">hook_check_timeout_and_termination_request()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a2b7a11a007fc8aef5ca36bb152506877">install_custom_commands()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">install_custom_commands()</a>.</p>
 
 </div>
 </div>
@@ -1908,7 +1774,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 18 2023 15:13:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

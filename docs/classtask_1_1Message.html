@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.1</span>
+   &#160;<span id="projectnumber">0.4.2</span>
    </div>
   </td>
  </tr>
@@ -64,16 +64,12 @@ $(function() {
 Public Types</h2></td></tr>
 <tr class="memitem:a4815e8e0b100ea8f309a03856ad81cd4"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Type</a> { <br />
 &#160;&#160;<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d">output</a>
-, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4adc84b5222c41bc108a2cf0dba5f20aab">log_info</a>
-, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a8f96d746e9209c4c43229a951a56fce7">log_warning</a>
-, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a3853c3a16ac550463df569323079e5af">log_error</a>
-, <br />
-&#160;&#160;<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c">sequence_started</a>
+, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c">sequence_started</a>
 , <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4afbfb3cd476005a7cafb0ea7a1a10e6c7">sequence_stopped</a>
 , <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">sequence_stopped_with_error</a>
-, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a904785ac22c8e1355d35e50af118f839">step_started</a>
 , <br />
-&#160;&#160;<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a76f0a3d99cae77ec4b2968b7609dcc11">step_stopped</a>
+&#160;&#160;<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a904785ac22c8e1355d35e50af118f839">step_started</a>
+, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a76f0a3d99cae77ec4b2968b7609dcc11">step_stopped</a>
 , <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a87030a2e6d39db2c44379a618c46df18">step_stopped_with_error</a>
 , <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a5e543256c480ac577d30f76f9120eb74">undefined</a>
 <br />
@@ -161,12 +157,6 @@ Friends</h2></td></tr>
 <p>The type of this message. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d"></a>output&#160;</td><td class="fielddoc"><p>a message string that was output by a step via print() </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a4815e8e0b100ea8f309a03856ad81cd4adc84b5222c41bc108a2cf0dba5f20aab"></a>log_info&#160;</td><td class="fielddoc"><p>a log entry of informational character </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a4815e8e0b100ea8f309a03856ad81cd4a8f96d746e9209c4c43229a951a56fce7"></a>log_warning&#160;</td><td class="fielddoc"><p>a log entry carrying some kind of warning </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a4815e8e0b100ea8f309a03856ad81cd4a3853c3a16ac550463df569323079e5af"></a>log_error&#160;</td><td class="fielddoc"><p>a log entry carrying an error message </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c"></a>sequence_started&#160;</td><td class="fielddoc"><p>a sequence has been started </p>
 </td></tr>
@@ -324,7 +314,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1Message.html#a707fcec9ca922a43bef9af3631fb2700">text_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7">task::default_message_callback()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
 
 </div>
 </div>
@@ -386,7 +376,7 @@ Friends</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1Message.html#acc9f4832fbb6a764f5b59127cc78835a">type_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7">task::default_message_callback()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
 
 </div>
 </div>
@@ -702,9 +692,6 @@ Friends</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">    {</div>
 <div class="line">        <span class="stringliteral">&quot;output&quot;</span>,</div>
-<div class="line">        <span class="stringliteral">&quot;log_info&quot;</span>,</div>
-<div class="line">        <span class="stringliteral">&quot;log_warning&quot;</span>,</div>
-<div class="line">        <span class="stringliteral">&quot;log_error&quot;</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;sequence_started&quot;</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;sequence_stopped&quot;</span>,</div>
 <div class="line">        <span class="stringliteral">&quot;sequence_stopped_with_error&quot;</span>,</div>
@@ -722,7 +709,7 @@ Friends</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 18 2023 15:13:04 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
