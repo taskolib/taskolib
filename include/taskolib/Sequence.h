@@ -26,6 +26,7 @@
 #define TASKOLIB_SEQUENCE_H_
 
 #include <algorithm>
+#include <chrono>
 #include <filesystem>
 #include <functional>
 #include <limits>
@@ -313,6 +314,9 @@ public:
      */
     const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
 
+    /// Return the timeout duration for executing the sequence.
+    Timeout get_timeout() const { return timeout_; }
+
     /**
      * Insert the given Step into the sequence just before the specified iterator.
      *
@@ -527,6 +531,12 @@ public:
      */
     void set_step_setup_script(gul14::string_view step_setup_script);
 
+    /// Set the timeout duration for executing the sequence.
+    void set_timeout(Timeout timeout)
+    {
+        timeout_ = timeout;
+    }
+
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
@@ -540,18 +550,15 @@ private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
-    /// Sequence label.
-    std::string label_;
+    std::string label_; ///< Sequence label.
 
-    /// Step setup script.
-    std::string step_setup_script_;
+    std::string step_setup_script_; ///< Step setup script.
 
-    /// Collection of steps.
-    std::vector<Step> steps_;
+    std::vector<Step> steps_; ///< Collection of steps.
 
-    /// Flag to determine if the sequence is running.
-    bool is_running_{false};
+    bool is_running_{false}; ///< Flag to determine if the sequence is running.
 
+    Timeout timeout_{Timeout::infinity()}; ///< Timeout for sequence.
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is

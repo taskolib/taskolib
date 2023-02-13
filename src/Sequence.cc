@@ -35,6 +35,7 @@
 #include "taskolib/exceptions.h"
 #include "taskolib/Sequence.h"
 #include "taskolib/Step.h"
+#include "taskolib/time_types.h"
 
 using gul14::cat;
 
@@ -415,14 +416,31 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
     return block_end;
 }
 
+bool has_timeout(TimePoint start_time, Timeout timeout)
+{
+    auto timeout_in_ms = static_cast<std::chrono::milliseconds>(timeout).count();
+    return (Clock::now() - start_time).count() > timeout_in_ms;
+}
+
 Sequence::Iterator
 Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context,
                         CommChannel* comm)
 {
+    using std::chrono::milliseconds;
+    using std::chrono::duration;
+
     Iterator step = step_begin;
+    auto start_time = Clock::now();
 
     while (step < step_end)
     {
+        if (has_timeout(start_time, timeout_))
+        {
+            auto seconds = duration<double>(timeout_).count();
+            throw Error{gul14::cat(abort_marker, "Timeout: Sequence took more than ",
+                seconds, " s to run")};
+        }
+
         if (step->is_disabled())
         {
             ++step;
