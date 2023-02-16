@@ -439,6 +439,15 @@ Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context
             throw Error{ gul14::cat(abort_marker, "Stop on user request"),
                          static_cast<StepIndex>(step - steps_.begin()) };
         }
+        else if (context.sequence_timeout.is_elapsed())
+        {
+            auto seconds =
+                std::chrono::duration<double>(context.sequence_timeout.get_timeout())
+                .count();
+            throw Error{ gul14::cat(abort_marker, "Timeout: Sequence took more than ",
+                         seconds, " s to run",
+                         static_cast<StepIndex>(step - steps_.begin())) };
+        }
 
         switch (step->get_type())
         {
