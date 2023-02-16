@@ -43,6 +43,7 @@
 #include "taskolib/exceptions.h"
 #include "taskolib/Step.h"
 #include "taskolib/StepIndex.h"
+#include "taskolib/TimeoutTrigger.h"
 
 namespace task {
 
@@ -82,6 +83,10 @@ namespace task {
  *
  * The setup script is only executed for step types for which Step::executes_script()
  * returns true (ACTION, IF, ELSEIF, WHILE).
+ *
+ * ## Sequence timeout
+ *
+ * The sequence timeout is per default set to infinity.
  */
 class Sequence
 {
@@ -559,6 +564,7 @@ private:
     bool is_running_{false}; ///< Flag to determine if the sequence is running.
 
     Timeout timeout_{Timeout::infinity()}; ///< Timeout for sequence.
+    TimeoutTrigger timeout_trigger_;
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is

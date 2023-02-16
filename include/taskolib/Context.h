@@ -35,6 +35,7 @@
 #include "taskolib/default_message_callback.h"
 #include "taskolib/Message.h"
 #include "taskolib/StepIndex.h"
+#include "taskolib/TimeoutTrigger.h"
 #include "taskolib/VariableName.h"
 
 namespace task {
@@ -97,6 +98,8 @@ using MessageCallback = std::function<void(const Message&)>;
  *   overwritten with the one from the sequence.
  * - A callback that is invoked whenever a message is being processed by the execution
  *   engine (see below for details).
+ * - Handles a sequence timeout when executing a sequence. The timeout is implicit set by
+ *   the sequence during execution.
  *
  * <h3>Message callback function</h3>
  *
@@ -141,6 +144,9 @@ struct Context
      * during the execution of a sequence.
      */
     MessageCallback message_callback_function = default_message_callback;
+
+    /// Sequence timeout to abort the sequence with an error message when it has elapsed.
+    TimeoutTrigger sequence_timeout{};
 };
 
 } // namespace task

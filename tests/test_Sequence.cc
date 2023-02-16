@@ -3931,34 +3931,18 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
 
 TEST_CASE("Sequence: sequence timeout is lower than step timeout", "[Sequence]")
 {
-    // TODO (Marcus, 13.02.2022):
-    //
-    // Time constraints:
-    // -----------------
-    //
-    // Timeout measurement is not as accurate as it should be because the
-    // following scenario breaks the timeout conditions for a sequence:
-    //
     Step step_1{Step::type_action};
-    step_1.set_script("sleep(0.6)");
+    step_1.set_script("sleep(600)"); // time constraint: set to a very long sleep of 10min
 
     Sequence seq{"test_sequence"};
     seq.push_back(std::move(step_1));
     seq.set_timeout(500ms); // give the sequence enough time to execute the first step
-    // Consequence:
-    //
-    // Will terminate after executing the first step but not for the sequence as it was
-    // expected in the settings. This comes from the current design of executing a
-    // sequence. The control flow went to step execution where no check is made
-    // for sequence timeout.
-    //
-    // -> needs to be fixed in the next iteration.
 
     Context ctx;
     auto start = Clock::now();
     auto maybe_error = seq.execute(ctx, nullptr);
     auto end = Clock::now();
 
-    // check if executing step (sleeps 600ms!) is lower then sequence timeout (500ms+5ms)
+    // check if executing step (sleeps 10min!) is lower then sequence timeout (500ms+5ms)
     REQUIRE((end-start).count() < TimePoint(500ms + 5ms).time_since_epoch().count());
 }

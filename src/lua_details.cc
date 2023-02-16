@@ -115,6 +115,16 @@ void check_script_timeout(lua_State* lua_state)
                 cat("Timeout: Script took more than ", seconds, " s to run"));
         }
     }
+
+    const Context& context = get_context_from_registry(lua_state);
+    if (context.sequence_timeout.is_elapsed())
+    {
+        double seconds =
+            std::chrono::duration<double>(context.sequence_timeout.get_timeout())
+            .count();
+        abort_script_with_error(lua_state,
+            cat("Timeout: Sequence took more than ", seconds, " s to run"));
+    }
 }
 
 CommChannel* get_comm_channel_ptr_from_registry(lua_State* lua_state)
