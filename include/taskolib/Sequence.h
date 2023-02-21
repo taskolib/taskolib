@@ -319,6 +319,17 @@ public:
      */
     const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
 
+    /**
+     * Returns time of last execution. Will return Epoch time of January 1st 1970 on
+     * a fresh created sequence.
+     *
+     * \returns time of the last execution.
+     */
+    TimePoint get_time_of_last_execution() const
+    {
+        return timeout_trigger_.get_start_time();
+    }
+
     /// Return the timeout duration for executing the sequence.
     Timeout get_timeout() const { return timeout_; }
 

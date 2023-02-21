@@ -31,7 +31,7 @@
 namespace task {
 
 /**
- * Evaluates when a timeout is elapsed.
+ * Evaluates when the clock is elapsed.
  *
  * \code {.cpp}
  * TimeoutTrigger trigger;
@@ -39,14 +39,14 @@ namespace task {
  * while(true)
  * {
  *     if(trigger.is_elapsed()) break;
- *     gul14::sleep(10ms);
+ *     // do some stuff
  * }
  * \endcode
  */
 class TimeoutTrigger {
 private:
     Timeout timeout_{Timeout::infinity()}; ///< Timeout.
-    TimePoint start_{Clock::now()}; ///< Starting clock time used to measure the elapsed time.
+    TimePoint start_{}; ///< Starting clock time used to measure the elapsed time.
 
 public:
     /**
@@ -63,6 +63,13 @@ public:
      * \return constant timeout.
      */
     const Timeout get_timeout() const { return timeout_; }
+
+    /**
+     * Get start time.
+     *
+     * \return constant start time.
+     */
+    const TimePoint get_start_time() const { return start_; }
 
     /**
      * Evaluates if the previous set timeout elapsed.

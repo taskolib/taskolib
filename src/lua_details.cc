@@ -42,6 +42,8 @@ static const char comm_channel_key[] =
     "TASKOLIB_COMM_CH";
 static const char context_key[] =
     "TASKOLIB_CONTEXT";
+static const char sequence_timeout_ms_since_epoch_key[] =
+    "TASKOLIB_SEQ_TO_MS";
 static const char step_index_key[] =
     "TASKOLIB_STP_INDEX";
 static const char step_timeout_ms_since_epoch_key[] =
@@ -53,6 +55,14 @@ static const char step_timeout_s_key[] =
 
 
 namespace task {
+
+// A holder for a sequence timeout pointer to trigger an abort when the clock elapsed.
+TimeoutTrigger* sequence_timeout_{nullptr};
+
+void inject_sequence_timeout_to_lua_hook(TimeoutTrigger* sequence_timeout)
+{
+    sequence_timeout_ = sequence_timeout;
+}
 
 void abort_script_with_error(lua_State* lua_state, const std::string& msg)
 {
@@ -116,12 +126,12 @@ void check_script_timeout(lua_State* lua_state)
         }
     }
 
-    const Context& context = get_context_from_registry(lua_state);
-    if (context.sequence_timeout.is_elapsed())
+    sol::optional<TimeoutTrigger> sequence_timeout =
+        registry[sequence_timeout_ms_since_epoch_key];
+    if (sequence_timeout.has_value() and sequence_timeout->is_elapsed())
     {
         double seconds =
-            std::chrono::duration<double>(context.sequence_timeout.get_timeout())
-            .count();
+            std::chrono::duration<double>(sequence_timeout->get_timeout()).count();
         abort_script_with_error(lua_state,
             cat("Timeout: Sequence took more than ", seconds, " s to run"));
     }
@@ -227,6 +237,7 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
     registry[step_index_key] = step_idx ? static_cast<LuaInteger>(*step_idx) : LuaInteger{ -1 };
     registry[comm_channel_key] = comm_channel;
     registry[context_key] = &context;
+    registry[sequence_timeout_ms_since_epoch_key] = sequence_timeout_;
 
     // Install a hook that is called after every 100 Lua instructions
     lua_sethook(lua, hook_check_timeout_and_termination_request, LUA_MASKCOUNT, 100);

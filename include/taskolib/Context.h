@@ -35,7 +35,6 @@
 #include "taskolib/default_message_callback.h"
 #include "taskolib/Message.h"
 #include "taskolib/StepIndex.h"
-#include "taskolib/TimeoutTrigger.h"
 #include "taskolib/VariableName.h"
 
 namespace task {
@@ -144,9 +143,6 @@ struct Context
      * during the execution of a sequence.
      */
     MessageCallback message_callback_function = default_message_callback;
-
-    /// Sequence timeout to abort the sequence with an error message when it has elapsed.
-    TimeoutTrigger sequence_timeout{};
 };
 
 } // namespace task

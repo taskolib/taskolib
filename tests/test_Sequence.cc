@@ -3921,9 +3921,12 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
     seq.push_back(std::move(step));
 
     seq.set_timeout(100ms);
+    REQUIRE(seq.get_timeout() == 100ms);
 
     Context ctx;
+    REQUIRE(seq.get_time_of_last_execution().time_since_epoch().count() == 0L);
     auto maybe_error = seq.execute(ctx, nullptr);
+    REQUIRE(seq.get_time_of_last_execution().time_since_epoch().count() != 0L);
 
     REQUIRE(maybe_error.has_value() == true);
     REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));

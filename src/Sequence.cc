@@ -31,6 +31,7 @@
 #include <gul14/trim.h>
 
 #include "internals.h"
+#include "lua_details.h"
 #include "send_message.h"
 #include "taskolib/exceptions.h"
 #include "taskolib/Sequence.h"
@@ -313,6 +314,8 @@ Sequence::execute(Context& context, CommChannel* comm_channel,
         [this](Context& context, CommChannel* comm)
         {
             check_syntax();
+            timeout_trigger_.reset(get_timeout());
+            inject_sequence_timeout_to_lua_hook(&timeout_trigger_);
             execute_range(steps_.begin(), steps_.end(), context, comm);
         });
 }
@@ -346,6 +349,8 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
     {
         maybe_error = Error{ e.what() };
     }
+
+    inject_sequence_timeout_to_lua_hook(nullptr);
 
     if (maybe_error)
     {
@@ -424,7 +429,6 @@ Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context
     using std::chrono::duration;
 
     Iterator step = step_begin;
-    context.sequence_timeout.reset(timeout_);
 
     while (step < step_end)
     {
@@ -438,15 +442,6 @@ Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context
         {
             throw Error{ gul14::cat(abort_marker, "Stop on user request"),
                          static_cast<StepIndex>(step - steps_.begin()) };
-        }
-        else if (context.sequence_timeout.is_elapsed())
-        {
-            auto seconds =
-                std::chrono::duration<double>(context.sequence_timeout.get_timeout())
-                .count();
-            throw Error{ gul14::cat(abort_marker, "Timeout: Sequence took more than ",
-                         seconds, " s to run",
-                         static_cast<StepIndex>(step - steps_.begin())) };
         }
 
         switch (step->get_type())
