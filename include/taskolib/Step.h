@@ -33,11 +33,10 @@
 #include "taskolib/Context.h"
 #include "taskolib/time_types.h"
 #include "taskolib/Timeout.h"
+#include "taskolib/TimeoutTrigger.h"
 #include "taskolib/VariableName.h"
 
 namespace task {
-
-class Sequence; // Forward declaration of Sequence to solve circular dependency.
 
 using VariableNames = std::set<VariableName>;
 
@@ -100,8 +99,9 @@ public:
      *                        been stopped due to an error condition
      * \param opt_step_index  Optional index of the step in its parent Sequence (to be
      *                        used in exceptions and messages)
-     * \param Sequence      Pointer to a Sequence. If this is null the corresponding
-     *                      check for sequence timeout is omitted.
+     * \param sequence_timeout Pointer to a sequence timeout to determine a timeout during
+     *                      executing a step. If this is null the corresponding check for
+     *                      timeout is omitted.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -117,7 +117,7 @@ public:
      */
     bool execute(Context& context, CommChannel* comm_channel = nullptr,
                  OptionalStepIndex opt_step_index = gul14::nullopt,
-                 Sequence* sequence = nullptr);
+                 TimeoutTrigger* sequence_timeout = nullptr);
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -289,10 +289,10 @@ private:
 
     /**
      * Execute the Lua script, throwing an exception if anything goes wrong.
-     * \see execute(Context&, CommChannel*, OptionalStepIndex, Sequence*)
+     * \see execute(Context&, CommChannel*, OptionalStepIndex, TimeoutTrigger*)
      */
     bool execute_impl(Context& context, CommChannel* comm_channel
-        , OptionalStepIndex index, Sequence* sequence);
+        , OptionalStepIndex index, TimeoutTrigger* sequence_timeout);
 };
 
 /// Alias for a step type collection that executes a script.
