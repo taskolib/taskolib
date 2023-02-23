@@ -305,7 +305,7 @@ Sequence::execute(Context& context, CommChannel* comm_channel,
             [this, step_index, step_it](Context& context, CommChannel* comm)
             {
                 if (executes_script(step_it->get_type()))
-                    step_it->execute(context, comm, step_index);
+                    step_it->execute(context, comm, step_index, this);
             });
     }
 
@@ -314,8 +314,7 @@ Sequence::execute(Context& context, CommChannel* comm_channel,
         [this](Context& context, CommChannel* comm)
         {
             check_syntax();
-            timeout_trigger_.reset(get_timeout());
-            inject_sequence_timeout_to_lua_hook(&timeout_trigger_);
+            timeout_trigger_.reset();
             execute_range(steps_.begin(), steps_.end(), context, comm);
         });
 }
@@ -349,8 +348,6 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
     {
         maybe_error = Error{ e.what() };
     }
-
-    inject_sequence_timeout_to_lua_hook(nullptr);
 
     if (maybe_error)
     {
@@ -402,7 +399,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (begin->execute(context, comm, begin - steps_.begin()))
+    if (begin->execute(context, comm, begin - steps_.begin(), this))
     {
         execute_range(begin + 1, block_end, context, comm);
 
@@ -425,9 +422,6 @@ Sequence::Iterator
 Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context,
                         CommChannel* comm)
 {
-    using std::chrono::milliseconds;
-    using std::chrono::duration;
-
     Iterator step = step_begin;
 
     while (step < step_end)
@@ -468,7 +462,7 @@ Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context
                 break;
 
             case Step::type_action:
-                step->execute(context, comm, step - steps_.begin());
+                step->execute(context, comm, step - steps_.begin(), this);
                 ++step;
                 break;
 
@@ -517,7 +511,7 @@ Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (begin->execute(context, comm, begin - steps_.begin()))
+    while (begin->execute(context, comm, begin - steps_.begin(), this))
         execute_range(begin + 1, block_end, context, comm);
 
     return block_end + 1;

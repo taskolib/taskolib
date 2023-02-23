@@ -4,7 +4,7 @@
  * \date   Created on February 21, 2023
  * \brief  Test suite for the TriggerTimeout class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,13 +23,14 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <gul14/catch.h>
+#include <gul14/time_util.h>
 
 #include "taskolib/TimeoutTrigger.h"
 
 using namespace std::literals;
 using namespace task;
 
-TEST_CASE("Default constructor", "[TimeoutTrigger]")
+TEST_CASE("TimeoutTrigger: Default constructor", "[TimeoutTrigger]")
 {
     static_assert(std::is_default_constructible<TimeoutTrigger>::value,
         "TimeoutTrigger is_default_constructible");
@@ -40,7 +41,7 @@ TEST_CASE("Default constructor", "[TimeoutTrigger]")
     REQUIRE(timeout_trigger.get_start_time().time_since_epoch().count() == 0L);
 }
 
-TEST_CASE("Default copy", "[TimeoutTrigger]")
+TEST_CASE("TimeoutTrigger: Default copy", "[TimeoutTrigger]")
 {
     static_assert(std::is_copy_constructible<TimeoutTrigger>::value,
         "TimeoutTrigger is_copy_constructible");
@@ -52,7 +53,7 @@ TEST_CASE("Default copy", "[TimeoutTrigger]")
     SECTION("copy constructable")
     {
         TimeoutTrigger timeout_trigger_copy = timeout_trigger;
-        timeout_trigger_copy.reset(1ms);
+        timeout_trigger_copy.reset();
 
         REQUIRE(timeout_trigger.get_start_time().time_since_epoch().count() == 0L);
         REQUIRE(timeout_trigger_copy.get_start_time().time_since_epoch().count() != 0L);
@@ -61,10 +62,36 @@ TEST_CASE("Default copy", "[TimeoutTrigger]")
     SECTION("copy assignable")
     {
         TimeoutTrigger timeout_trigger_assigned{timeout_trigger};
-        timeout_trigger_assigned.reset(1ms);
+        timeout_trigger_assigned.reset();
 
         REQUIRE(timeout_trigger.get_start_time().time_since_epoch().count() == 0L);
         REQUIRE(timeout_trigger_assigned.get_start_time().time_since_epoch().count()
                 != 0L);
     }
+}
+
+TEST_CASE("TimeoutTrigger: get/set timeout & start time", "[TimeoutTrigger]")
+{
+    TimeoutTrigger timeout_trigger;
+
+    REQUIRE(timeout_trigger.get_timeout() == Timeout::infinity());
+
+    timeout_trigger.set_timeout(200ms);
+    REQUIRE(timeout_trigger.get_timeout() == 200ms);
+
+    auto start_time = timeout_trigger.reset();
+    REQUIRE(timeout_trigger.get_start_time() == start_time);
+}
+
+TEST_CASE("TimeoutTrigger: check elapsed timeout", "[TimeoutTrigger]")
+{
+    TimeoutTrigger timeout_trigger;
+
+    timeout_trigger.set_timeout(200ms);
+
+    gul14::sleep(100ms);
+    REQUIRE(timeout_trigger.is_elapsed() == false);
+
+    gul14::sleep(200ms);
+    REQUIRE(timeout_trigger.is_elapsed() == true);
 }

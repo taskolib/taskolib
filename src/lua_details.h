@@ -33,17 +33,13 @@
 #include "sol/sol.hpp"
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
-#include "taskolib/TimeoutTrigger.h"
+#include "taskolib/Sequence.h"
 
 namespace task {
 
 // Check that the lua lib has been build with the expected types
 static_assert(std::is_same<LuaFloat, double>::value, "Unexpected Lua-internal floating point type");
 static_assert(std::is_same<LuaInteger, long long>::value, "Unexpected Lua-internal integer type");
-
-// Inject sequence timeout to abort executing of a Lua script when the clock elapsed.
-// It is called by the sequence shortly before it is executed.
-void inject_sequence_timeout_to_lua_hook(TimeoutTrigger* sequence_timeout);
 
 // Abort the execution of the script by raising a Lua error with the given error message.
 void abort_script_with_error(lua_State* lua_state, const std::string& msg);
@@ -113,7 +109,7 @@ void install_custom_commands(sol::state& lua);
 // message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
     std::chrono::milliseconds timeout, OptionalStepIndex step_idx, const Context& context,
-    CommChannel* comm_channel);
+    CommChannel* comm_channel, Sequence* sequence);
 
 // Open a safe subset of the Lua standard libraries in the given Lua state.
 //

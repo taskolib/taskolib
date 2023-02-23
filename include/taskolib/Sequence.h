@@ -4,7 +4,7 @@
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -331,7 +331,10 @@ public:
     }
 
     /// Return the timeout duration for executing the sequence.
-    Timeout get_timeout() const { return timeout_; }
+    Timeout get_timeout() const { return timeout_trigger_.get_timeout(); }
+
+    /// Return true if the timeout is elapsed otherwise false.
+    bool is_timeout_elapsed() const { return timeout_trigger_.is_elapsed(); }
 
     /**
      * Insert the given Step into the sequence just before the specified iterator.
@@ -548,10 +551,7 @@ public:
     void set_step_setup_script(gul14::string_view step_setup_script);
 
     /// Set the timeout duration for executing the sequence.
-    void set_timeout(Timeout timeout)
-    {
-        timeout_ = timeout;
-    }
+    void set_timeout(Timeout timeout) { timeout_trigger_.set_timeout(timeout); }
 
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
@@ -574,8 +574,7 @@ private:
 
     bool is_running_{false}; ///< Flag to determine if the sequence is running.
 
-    Timeout timeout_{Timeout::infinity()}; ///< Timeout for sequence.
-    TimeoutTrigger timeout_trigger_;
+    TimeoutTrigger timeout_trigger_; ///< Logic to check for elapsed sequence timeout.
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is

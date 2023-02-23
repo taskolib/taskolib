@@ -17,7 +17,6 @@ test_src = files(
     'test_Step.cc',
     'test_time_types.cc',
     'test_Timeout.cc',
-    'test_Timeout.cc',
     'test_VariableName.cc',
 )
 

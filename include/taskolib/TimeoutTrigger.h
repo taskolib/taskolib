@@ -2,7 +2,7 @@
  * \file   TimeoutTrigger.h
  * \author Marcus Walla
  * \date   Created on February 16, 2023
- * \brief  A sequence of Steps.
+ * \brief  Logic to check if a timeout elapsed.
  *
  * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -54,8 +54,10 @@ public:
      * is used in the is_elapsed() member function.
      *
      * \param timeout to be measure with the is_elapsed() member function.
+     *
+     * \return the new created start time for checking on elapsed timeout.
      */
-    void reset(Timeout timeout) { timeout_ = timeout; start_ = Clock::now(); }
+    TimePoint reset() { start_ = Clock::now(); return start_; }
 
     /**
      * Get the timeout object.
@@ -63,6 +65,13 @@ public:
      * \return constant timeout.
      */
     const Timeout get_timeout() const { return timeout_; }
+
+    /**
+     * Set the timeout object.
+     *
+     * \param timeout to be measure with the is_elapsed() member function.
+     */
+    void set_timeout(Timeout timeout) { timeout_ = timeout; }
 
     /**
      * Get start time.
@@ -80,8 +89,9 @@ public:
      */
     bool is_elapsed() const
     {
-        auto timeout_in_ms = static_cast<Timeout::Duration>(timeout_).count();
-        return (Clock::now() - start_).count() > timeout_in_ms;
+        if (not isfinite(timeout_))
+           return false;
+        return Clock::now() - start_ > static_cast<Timeout::Duration>(timeout_);
     }
 };
 

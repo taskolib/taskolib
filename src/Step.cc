@@ -33,6 +33,7 @@
 #include "taskolib/exceptions.h"
 #include "taskolib/execute_lua_script.h"
 #include "taskolib/Step.h"
+#include "taskolib/Sequence.h"
 
 using namespace std::literals;
 using gul14::cat;
@@ -109,7 +110,7 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
 }
 
 bool Step::execute_impl(Context& context, CommChannel* comm,
-                        OptionalStepIndex opt_step_index)
+                        OptionalStepIndex opt_step_index, Sequence* sequence)
 {
     sol::state lua;
 
@@ -120,7 +121,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
         context.step_setup_function(lua);
 
     install_timeout_and_termination_request_hook(lua, Clock::now(), get_timeout(),
-                                                 opt_step_index, context, comm);
+                                                 opt_step_index, context, comm, sequence);
 
     if (executes_script(get_type()) and not context.step_setup_script.empty())
     {
@@ -160,7 +161,8 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     }
 }
 
-bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index)
+bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index,
+                 Sequence* sequence)
 {
     const auto now = Clock::now();
     const auto set_is_running_to_false_after_execution =
@@ -172,7 +174,7 @@ bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index)
 
     try
     {
-        const bool result = execute_impl(context, comm, index);
+        const bool result = execute_impl(context, comm, index, sequence);
 
         send_message(Message::Type::step_stopped,
             requires_bool_return_value(get_type())

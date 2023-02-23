@@ -4,7 +4,7 @@
  * \date   Created on November 26, 2021
  * \brief  Declaration of the Step class.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -36,6 +36,8 @@
 #include "taskolib/VariableName.h"
 
 namespace task {
+
+class Sequence; // Forward declaration of Sequence to solve circular dependency.
 
 using VariableNames = std::set<VariableName>;
 
@@ -98,6 +100,8 @@ public:
      *                        been stopped due to an error condition
      * \param opt_step_index  Optional index of the step in its parent Sequence (to be
      *                        used in exceptions and messages)
+     * \param Sequence      Pointer to a Sequence. If this is null the corresponding
+     *                      check for sequence timeout is omitted.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types
@@ -112,7 +116,8 @@ public:
      * \see For more information about step setup scripts see at Sequence.
      */
     bool execute(Context& context, CommChannel* comm_channel = nullptr,
-                 OptionalStepIndex opt_step_index = gul14::nullopt);
+                 OptionalStepIndex opt_step_index = gul14::nullopt,
+                 Sequence* sequence = nullptr);
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -284,9 +289,10 @@ private:
 
     /**
      * Execute the Lua script, throwing an exception if anything goes wrong.
-     * \see execute(Context&, CommChannel*, OptionalStepIndex)
+     * \see execute(Context&, CommChannel*, OptionalStepIndex, Sequence*)
      */
-    bool execute_impl(Context& context, CommChannel* comm_channel, OptionalStepIndex index);
+    bool execute_impl(Context& context, CommChannel* comm_channel
+        , OptionalStepIndex index, Sequence* sequence);
 };
 
 /// Alias for a step type collection that executes a script.
