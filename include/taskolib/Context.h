@@ -97,8 +97,6 @@ using MessageCallback = std::function<void(const Message&)>;
  *   overwritten with the one from the sequence.
  * - A callback that is invoked whenever a message is being processed by the execution
  *   engine (see below for details).
- * - Handles a sequence timeout when executing a sequence. The timeout is implicit set by
- *   the sequence during execution.
  *
  * <h3>Message callback function</h3>
  *
