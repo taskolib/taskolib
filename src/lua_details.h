@@ -33,7 +33,7 @@
 #include "sol/sol.hpp"
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
-#include "taskolib/Sequence.h"
+#include "taskolib/TimeoutTrigger.h"
 
 namespace task {
 
