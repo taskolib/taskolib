@@ -33,11 +33,10 @@
 #include "taskolib/Context.h"
 #include "taskolib/time_types.h"
 #include "taskolib/Timeout.h"
+#include "taskolib/TimeoutTrigger.h"
 #include "taskolib/VariableName.h"
 
 namespace task {
-
-class Sequence; // Forward declaration of Sequence to solve circular dependency.
 
 using VariableNames = std::set<VariableName>;
 
@@ -117,7 +116,7 @@ public:
      */
     bool execute(Context& context, CommChannel* comm_channel = nullptr,
                  OptionalStepIndex opt_step_index = gul14::nullopt,
-                 Sequence* sequence = nullptr);
+                 TimeoutTrigger* sequence_timeout = nullptr);
 
     /**
      * Retrieve the names of the variables that should be im-/exported to and from the
@@ -289,10 +288,10 @@ private:
 
     /**
      * Execute the Lua script, throwing an exception if anything goes wrong.
-     * \see execute(Context&, CommChannel*, OptionalStepIndex, Sequence*)
+     * \see execute(Context&, CommChannel*, OptionalStepIndex, TimeoutTrigger*)
      */
     bool execute_impl(Context& context, CommChannel* comm_channel
-        , OptionalStepIndex index, Sequence* sequence);
+        , OptionalStepIndex index, TimeoutTrigger* sequence_timeout);
 };
 
 /// Alias for a step type collection that executes a script.

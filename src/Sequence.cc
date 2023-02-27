@@ -305,7 +305,7 @@ Sequence::execute(Context& context, CommChannel* comm_channel,
             [this, step_index, step_it](Context& context, CommChannel* comm)
             {
                 if (executes_script(step_it->get_type()))
-                    step_it->execute(context, comm, step_index, this);
+                    step_it->execute(context, comm, step_index, &timeout_trigger_);
             });
     }
 
@@ -399,7 +399,7 @@ Sequence::execute_if_or_elseif_block(Iterator begin, Iterator end, Context& cont
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    if (begin->execute(context, comm, begin - steps_.begin(), this))
+    if (begin->execute(context, comm, begin - steps_.begin(), &timeout_trigger_))
     {
         execute_range(begin + 1, block_end, context, comm);
 
@@ -462,7 +462,7 @@ Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context
                 break;
 
             case Step::type_action:
-                step->execute(context, comm, step - steps_.begin(), this);
+                step->execute(context, comm, step - steps_.begin(), &timeout_trigger_);
                 ++step;
                 break;
 
@@ -511,7 +511,7 @@ Sequence::execute_while_block(Iterator begin, Iterator end, Context& context,
     const auto block_end = find_end_of_indented_block(
         begin + 1, end, begin->get_indentation_level() + 1);
 
-    while (begin->execute(context, comm, begin - steps_.begin(), this))
+    while (begin->execute(context, comm, begin - steps_.begin(), &timeout_trigger_))
         execute_range(begin + 1, block_end, context, comm);
 
     return block_end + 1;
