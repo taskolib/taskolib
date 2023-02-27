@@ -99,8 +99,9 @@ public:
      *                        been stopped due to an error condition
      * \param opt_step_index  Optional index of the step in its parent Sequence (to be
      *                        used in exceptions and messages)
-     * \param Sequence      Pointer to a Sequence. If this is null the corresponding
-     *                      check for sequence timeout is omitted.
+     * \param sequence_timeout Pointer to a sequence timeout to determine a timeout during
+     *                      executing a step. If this is null the corresponding check for
+     *                      timeout is omitted.
      *
      * \return If the step type requires a boolean return value (IF, ELSEIF, WHILE), this
      *         function returns the return value of the script. For other step types

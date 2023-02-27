@@ -56,14 +56,6 @@ static const char step_timeout_s_key[] =
 
 namespace task {
 
-// A holder for a sequence timeout pointer to trigger an abort when the clock elapsed.
-TimeoutTrigger* sequence_timeout_{nullptr};
-
-void inject_sequence_timeout_to_lua_hook(TimeoutTrigger* sequence_timeout)
-{
-    sequence_timeout_ = sequence_timeout;
-}
-
 void abort_script_with_error(lua_State* lua_state, const std::string& msg)
 {
     sol::state_view lua(lua_state);
