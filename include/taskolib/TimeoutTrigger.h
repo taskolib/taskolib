@@ -79,7 +79,7 @@ public:
     TimePoint get_start_time() const { return start_; }
 
     /**
-     * Evaluates if the previous set timeout elapsed.
+     * Evaluates if the timeout elapsed.
      *
      * \return true when the time elapsed.
      * \return false when still accurate and in the time interval.
