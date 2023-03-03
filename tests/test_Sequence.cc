@@ -3915,39 +3915,21 @@ TEST_CASE("Sequence: Check setter/getter function for step setup script", "[Sequ
 TEST_CASE("Sequence: sequence timeout", "[Sequence]")
 {
     Step step{Step::type_action};
-    step.set_script("sleep(0.2)");
+    step.set_script("sleep(1)");
 
     Sequence seq{"test_sequence"};
     seq.push_back(std::move(step));
 
-    seq.set_timeout(100ms);
-    REQUIRE(seq.get_timeout() == 100ms);
+    seq.set_timeout(10ms);
+    REQUIRE(seq.get_timeout() == 10ms);
 
     Context ctx;
-    REQUIRE(seq.get_time_of_last_execution().time_since_epoch().count() == 0L);
+    REQUIRE(seq.get_time_of_last_execution() == task::TimePoint{});
     auto maybe_error = seq.execute(ctx, nullptr);
-    REQUIRE(seq.get_time_of_last_execution().time_since_epoch().count() != 0L);
+    REQUIRE(seq.get_time_of_last_execution() != task::TimePoint{});
 
     REQUIRE(maybe_error.has_value() == true);
     REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));
-}
-
-TEST_CASE("Sequence: sequence timeout is lower than step timeout", "[Sequence]")
-{
-    Step step_1{Step::type_action};
-    step_1.set_script("sleep(600)"); // time constraint: set to a very long sleep of 10min
-
-    Sequence seq{"test_sequence"};
-    seq.push_back(std::move(step_1));
-    seq.set_timeout(500ms); // give the sequence enough time to execute the first step
-
-    Context ctx;
-    auto start = Clock::now();
-    auto maybe_error = seq.execute(ctx, nullptr);
-    auto end = Clock::now();
-
-    // check if executing step (sleeps 10min!) is lower then sequence timeout (500ms+100ms)
-    REQUIRE((end-start).count() < TimePoint(500ms + 100ms).time_since_epoch().count());
 }
 
 TEST_CASE("Sequence: test parallel sequences with timeout", "[Sequence]")

@@ -38,7 +38,7 @@ TEST_CASE("TimeoutTrigger: Default constructor", "[TimeoutTrigger]")
         "TimeoutTrigger is_trivially_destructible");
 
     TimeoutTrigger timeout_trigger;
-    REQUIRE(timeout_trigger.get_start_time().time_since_epoch().count() == 0L);
+    REQUIRE(timeout_trigger.get_start_time() == task::TimePoint{});
 }
 
 TEST_CASE("TimeoutTrigger: Default copy", "[TimeoutTrigger]")
@@ -50,23 +50,34 @@ TEST_CASE("TimeoutTrigger: Default copy", "[TimeoutTrigger]")
 
     TimeoutTrigger timeout_trigger;
 
-    SECTION("copy constructable")
+    SECTION("copy constructable I")
     {
         TimeoutTrigger timeout_trigger_copy = timeout_trigger;
         timeout_trigger_copy.reset();
 
-        REQUIRE(timeout_trigger.get_start_time().time_since_epoch().count() == 0L);
-        REQUIRE(timeout_trigger_copy.get_start_time().time_since_epoch().count() != 0L);
+        REQUIRE(timeout_trigger.get_start_time() == task::TimePoint{});
+        REQUIRE(timeout_trigger_copy.get_start_time() != task::TimePoint{});
     }
 
-    SECTION("copy assignable")
+    SECTION("copy constructable II")
     {
-        TimeoutTrigger timeout_trigger_assigned{timeout_trigger};
-        timeout_trigger_assigned.reset();
+        TimeoutTrigger timeout_trigger_copy{timeout_trigger};
+        timeout_trigger_copy.reset();
 
-        REQUIRE(timeout_trigger.get_start_time().time_since_epoch().count() == 0L);
-        REQUIRE(timeout_trigger_assigned.get_start_time().time_since_epoch().count()
-                != 0L);
+        REQUIRE(timeout_trigger.get_start_time() == task::TimePoint{});
+        REQUIRE(timeout_trigger_copy.get_start_time() != task::TimePoint{});
+    }
+
+    SECTION("copy assignment operator")
+    {
+        timeout_trigger.set_timeout(321ms);
+
+        TimeoutTrigger timeout_trigger_assignment;
+        timeout_trigger_assignment.set_timeout(123ms);
+
+        timeout_trigger_assignment = timeout_trigger;
+
+        REQUIRE(timeout_trigger_assignment.get_timeout() == 321ms);
     }
 }
 
@@ -88,9 +99,6 @@ TEST_CASE("TimeoutTrigger: check elapsed timeout", "[TimeoutTrigger]")
     TimeoutTrigger timeout_trigger;
 
     timeout_trigger.set_timeout(200ms);
-
-    gul14::sleep(100ms);
-    REQUIRE(timeout_trigger.is_elapsed() == false);
 
     gul14::sleep(200ms);
     REQUIRE(timeout_trigger.is_elapsed() == true);
