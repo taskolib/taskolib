@@ -50,24 +50,22 @@ private:
 
 public:
     /**
-     * When invoked resets the start time of the internal clock and sets the timeout that
-     * is used in the is_elapsed() member function.
-     *
-     * \param timeout to be measure with the is_elapsed() member function.
+     * Reset the timeout start time to the current time. The timeout duration remains
+     * unchanged.
      *
      * \return the new created start time for checking on elapsed timeout.
      */
     TimePoint reset() { start_ = Clock::now(); return start_; }
 
     /**
-     * Get the timeout object.
+     * Get the timeout duration.
      *
      * \return constant timeout.
      */
     const Timeout get_timeout() const { return timeout_; }
 
     /**
-     * Set the timeout object.
+     * Set the timeout duration.
      *
      * \param timeout to be measure with the is_elapsed() member function.
      */
@@ -78,7 +76,7 @@ public:
      *
      * \return constant start time.
      */
-    const TimePoint get_start_time() const { return start_; }
+    TimePoint get_start_time() const { return start_; }
 
     /**
      * Evaluates if the previous set timeout elapsed.
