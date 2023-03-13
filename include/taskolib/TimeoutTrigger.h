@@ -35,13 +35,16 @@ namespace task {
  *
  * \code {.cpp}
  * TimeoutTrigger trigger;
- * trigger.reset(100ms);
+ * trigger.set_timeout(1s);
  * while(true)
  * {
  *     if(trigger.is_elapsed()) break;
  *     // do some stuff
  * }
  * \endcode
+ *
+ * \note This class is not thread-safe. To make it thread-safe you have to add a mutex to
+ * synchronize resources with multiple threads.
  */
 class TimeoutTrigger {
 private:
@@ -74,16 +77,17 @@ public:
     /**
      * Get start time.
      *
-     * \return constant start time.
+     * \return start time of the clock.
+     * \see reset()
      */
     TimePoint get_start_time() const { return start_; }
 
     /**
-     * Evaluates if the timeout elapsed.
+     * Evaluates if a timeout elapsed.
      *
      * \return true when the time elapsed.
      * \return false when still accurate and in the time interval.
-     * \see reset(Timeout) for setting timeout.
+     * \see reset()
      */
     bool is_elapsed() const
     {

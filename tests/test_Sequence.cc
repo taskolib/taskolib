@@ -3931,39 +3931,3 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
     REQUIRE(maybe_error.has_value() == true);
     REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));
 }
-
-TEST_CASE("Sequence: test parallel sequences with timeout", "[Sequence]")
-{
-    Step step_1_1{Step::type_action};
-    step_1_1.set_script("sleep(500)");
-
-    Sequence seq_1{"test_sequence_1"};
-    seq_1.push_back(std::move(step_1_1));
-    seq_1.set_timeout(500ms); // sequence 1: timeout of 500ms
-
-    Step step_2_1{Step::type_action};
-    step_2_1.set_script("sleep(500)");
-
-    Sequence seq_2{"test_sequence_2"};
-    seq_2.push_back(std::move(step_2_1));
-    seq_2.set_timeout(500ms); // sequence 2: timeout of 500ms
-
-    Context ctx_1;
-    Context ctx_2;
-
-    std::thread t1([&seq_1, &ctx_1]() {
-        seq_1.set_timeout(std::move(Timeout{250ms})); // sequence 1: reset to 250ms!
-        auto maybe_error = seq_1.execute(ctx_1, nullptr);
-    });
-    std::thread t2([&seq_2, &ctx_2]() {
-        auto maybe_error = seq_2.execute(ctx_2, nullptr);
-    });
-
-    gul14::sleep(350ms);
-
-    REQUIRE(seq_1.is_timeout_elapsed() == true);
-    REQUIRE(seq_2.is_timeout_elapsed() == false);
-
-    t1.join();
-    t2.join();
-}
