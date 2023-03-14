@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.2</span>
+   &#160;<span id="projectnumber">0.5.0</span>
    </div>
   </td>
  </tr>
@@ -53,8 +53,8 @@ $(function() {
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1Step.html#a7b6c9eb3ad90efaef0ccb08e9bf1a7a7">copy_used_variables_from_context_to_lua</a>(const Context &amp;context, sol::state &amp;lua)</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr><td class="entry"><a class="el" href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">copy_used_variables_from_lua_to_context</a>(const sol::state &amp;lua, Context &amp;context)</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">execute</a>(Context &amp;context, CommChannel *comm_channel=nullptr, OptionalStepIndex opt_step_index=gul14::nullopt)</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">execute_impl</a>(Context &amp;context, CommChannel *comm_channel, OptionalStepIndex index)</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classtask_1_1Step.html#ad16fd23a3b451c85c83ac81790e546c4">execute</a>(Context &amp;context, CommChannel *comm_channel=nullptr, OptionalStepIndex opt_step_index=gul14::nullopt, TimeoutTrigger *sequence_timeout=nullptr)</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">execute_impl</a>(Context &amp;context, CommChannel *comm_channel, OptionalStepIndex index, TimeoutTrigger *sequence_timeout)</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1Step.html#a341f86383d76857c4b9f6d598182b681">get_indentation_level</a>() const noexcept</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classtask_1_1Step.html#a72a8522a7cade223be1acdd1cf50428e">get_label</a>() const</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1Step.html#a8efc866ad8e341fff4cc2f7fd12434cb">get_script</a>() const</td><td class="entry"><a class="el" href="classtask_1_1Step.html">task::Step</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
@@ -100,7 +100,7 @@ $(function() {
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Mar 14 2023 14:20:33 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

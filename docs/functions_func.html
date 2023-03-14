@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.2</span>
+   &#160;<span id="projectnumber">0.5.0</span>
    </div>
   </td>
  </tr>
@@ -121,7 +121,7 @@ $(function() {
 </li>
 <li>execute()
 : <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55">task::Sequence</a>
-, <a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">task::Step</a>
+, <a class="el" href="classtask_1_1Step.html#ad16fd23a3b451c85c83ac81790e546c4">task::Step</a>
 </li>
 <li>execute_else_block()
 : <a class="el" href="classtask_1_1Sequence.html#a35dd0cb1383202046e41b8c5b6075a13">task::Sequence</a>
@@ -130,7 +130,7 @@ $(function() {
 : <a class="el" href="classtask_1_1Sequence.html#ab674c873ea6700ba034c4f4a32f20e16">task::Sequence</a>
 </li>
 <li>execute_impl()
-: <a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">task::Step</a>
+: <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step</a>
 </li>
 <li>execute_range()
 : <a class="el" href="classtask_1_1Sequence.html#af37a6ecadb025f85690c15d680e4c1a1">task::Sequence</a>
@@ -188,6 +188,9 @@ $(function() {
 <li>get_sequence_names()
 : <a class="el" href="classtask_1_1SequenceManager.html#acce2cf9d1b2b1c4d5d87e9f4093bcfa3">task::SequenceManager</a>
 </li>
+<li>get_start_time()
+: <a class="el" href="classtask_1_1TimeoutTrigger.html#aa81a4c388e518eddb448f5b7ca0c81d9">task::TimeoutTrigger</a>
+</li>
 <li>get_step_setup_script()
 : <a class="el" href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00">task::Sequence</a>
 </li>
@@ -195,13 +198,16 @@ $(function() {
 : <a class="el" href="classtask_1_1Message.html#a843e47e920c73767362c20ac20811cd5">task::Message</a>
 </li>
 <li>get_time_of_last_execution()
-: <a class="el" href="classtask_1_1Step.html#a07150f0d3373f67cc709cab7208e407d">task::Step</a>
+: <a class="el" href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a">task::Sequence</a>
+, <a class="el" href="classtask_1_1Step.html#a07150f0d3373f67cc709cab7208e407d">task::Step</a>
 </li>
 <li>get_time_of_last_modification()
 : <a class="el" href="classtask_1_1Step.html#aba452f58a7dddc0de47091d877f4daeb">task::Step</a>
 </li>
 <li>get_timeout()
-: <a class="el" href="classtask_1_1Step.html#a132d88f025cb41b15ed50b9917b23747">task::Step</a>
+: <a class="el" href="classtask_1_1Sequence.html#a13e7536da87d1b09756f8eed40fb47e3">task::Sequence</a>
+, <a class="el" href="classtask_1_1Step.html#a132d88f025cb41b15ed50b9917b23747">task::Step</a>
+, <a class="el" href="classtask_1_1TimeoutTrigger.html#a4049d8307d2238df3c75591cbc37738b">task::TimeoutTrigger</a>
 </li>
 <li>get_timestamp()
 : <a class="el" href="classtask_1_1Message.html#a3839f4c820cfc2d8350b4164d40e313c">task::Message</a>
@@ -239,9 +245,15 @@ $(function() {
 <li>is_disabled()
 : <a class="el" href="classtask_1_1Step.html#ac4f0f6d8a8361a59ebe7be98e4bb9dc7">task::Step</a>
 </li>
+<li>is_elapsed()
+: <a class="el" href="classtask_1_1TimeoutTrigger.html#a9443564a39c4894402193a8d94391378">task::TimeoutTrigger</a>
+</li>
 <li>is_running()
 : <a class="el" href="classtask_1_1Sequence.html#a49499874ef52b9e6baa5f42485996864">task::Sequence</a>
 , <a class="el" href="classtask_1_1Step.html#a741d8e3931674fbd0ed94a781c6f9929">task::Step</a>
+</li>
+<li>is_timeout_elapsed()
+: <a class="el" href="classtask_1_1Sequence.html#ac8009df569644cc248d2d769f30d38ad">task::Sequence</a>
 </li>
 </ul>
 
@@ -327,6 +339,9 @@ $(function() {
 <li>rend()
 : <a class="el" href="classtask_1_1Sequence.html#a308ae77701dc9fb19a49f33fbc7b7fd1">task::Sequence</a>
 </li>
+<li>reset()
+: <a class="el" href="classtask_1_1TimeoutTrigger.html#a07b477b14f6a7822e353bb61dc85ad02">task::TimeoutTrigger</a>
+</li>
 <li>run_asynchronously()
 : <a class="el" href="classtask_1_1Executor.html#a7bf9edf1cbe3e6008b3a69c6d46b63ca">task::Executor</a>
 </li>
@@ -379,7 +394,9 @@ $(function() {
 : <a class="el" href="classtask_1_1Step.html#a277e32b2aaa43d487a37629b09e8062e">task::Step</a>
 </li>
 <li>set_timeout()
-: <a class="el" href="classtask_1_1Step.html#af7fe836ded0cf092ecea80620f0e20a7">task::Step</a>
+: <a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">task::Sequence</a>
+, <a class="el" href="classtask_1_1Step.html#af7fe836ded0cf092ecea80620f0e20a7">task::Step</a>
+, <a class="el" href="classtask_1_1TimeoutTrigger.html#a5a1720c796dec894906f525f3550473c">task::TimeoutTrigger</a>
 </li>
 <li>set_timestamp()
 : <a class="el" href="classtask_1_1Message.html#ad2bdc4858068710cf303fd00f46103f6">task::Message</a>
@@ -449,7 +466,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Mar 14 2023 14:20:33 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

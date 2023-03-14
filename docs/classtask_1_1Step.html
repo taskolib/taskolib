@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.4.2</span>
+   &#160;<span id="projectnumber">0.5.0</span>
    </div>
   </td>
  </tr>
@@ -83,9 +83,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8e7699c74d2208008516eefa3490b118"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a8e7699c74d2208008516eefa3490b118">Step</a> (<a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fd">Type</a> type=<a class="el" href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fda39cc3eb41e1d417d6e0ac4a98befe1bd">type_action</a>)</td></tr>
 <tr class="memdesc:a8e7699c74d2208008516eefa3490b118"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> of a certain type.  <a href="classtask_1_1Step.html#a8e7699c74d2208008516eefa3490b118">More...</a><br /></td></tr>
 <tr class="separator:a8e7699c74d2208008516eefa3490b118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4752dae24293720c6d86bd12b48499e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">execute</a> (<a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel=nullptr, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> opt_step_index=gul14::nullopt)</td></tr>
-<tr class="memdesc:a4752dae24293720c6d86bd12b48499e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the step script within the given context, sending status information to a message queue.  <a href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7">More...</a><br /></td></tr>
-<tr class="separator:a4752dae24293720c6d86bd12b48499e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad16fd23a3b451c85c83ac81790e546c4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#ad16fd23a3b451c85c83ac81790e546c4">execute</a> (<a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel=nullptr, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> opt_step_index=gul14::nullopt, <a class="el" href="classtask_1_1TimeoutTrigger.html">TimeoutTrigger</a> *sequence_timeout=nullptr)</td></tr>
+<tr class="memdesc:ad16fd23a3b451c85c83ac81790e546c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the step script within the given context, sending status information to a message queue.  <a href="classtask_1_1Step.html#ad16fd23a3b451c85c83ac81790e546c4">More...</a><br /></td></tr>
+<tr class="separator:ad16fd23a3b451c85c83ac81790e546c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa91f9591a0f743beaea0c04be7f1e1e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetask.html#a94cb88831b94f9f5d3f4894307efef74">VariableNames</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#afa91f9591a0f743beaea0c04be7f1e1e">get_used_context_variable_names</a> () const</td></tr>
 <tr class="memdesc:afa91f9591a0f743beaea0c04be7f1e1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the names of the variables that should be im-/exported to and from the context.  <a href="classtask_1_1Step.html#afa91f9591a0f743beaea0c04be7f1e1e">More...</a><br /></td></tr>
 <tr class="separator:afa91f9591a0f743beaea0c04be7f1e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,9 +163,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">copy_used_variables_from_lua_to_context</a> (const sol::state &amp;lua, <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context)</td></tr>
 <tr class="memdesc:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the variables listed in used_context_variable_names_ from a Lua state into the given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>.  <a href="classtask_1_1Step.html#a8fe26c7928e9aa6bac5b99c009cdcab1">More...</a><br /></td></tr>
 <tr class="separator:a8fe26c7928e9aa6bac5b99c009cdcab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44b367f575ca24f542da3eca0854a778"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">execute_impl</a> (<a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index)</td></tr>
-<tr class="memdesc:a44b367f575ca24f542da3eca0854a778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the Lua script, throwing an exception if anything goes wrong.  <a href="classtask_1_1Step.html#a44b367f575ca24f542da3eca0854a778">More...</a><br /></td></tr>
-<tr class="separator:a44b367f575ca24f542da3eca0854a778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a126879f0acf150f43a8e0f115cfcd263"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">execute_impl</a> (<a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index, <a class="el" href="classtask_1_1TimeoutTrigger.html">TimeoutTrigger</a> *sequence_timeout)</td></tr>
+<tr class="memdesc:a126879f0acf150f43a8e0f115cfcd263"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the Lua script, throwing an exception if anything goes wrong.  <a href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">More...</a><br /></td></tr>
+<tr class="separator:a126879f0acf150f43a8e0f115cfcd263"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -327,8 +327,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4752dae24293720c6d86bd12b48499e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4752dae24293720c6d86bd12b48499e7">&#9670;&nbsp;</a></span>execute()</h2>
+<a id="ad16fd23a3b451c85c83ac81790e546c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad16fd23a3b451c85c83ac81790e546c4">&#9670;&nbsp;</a></span>execute()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -349,7 +349,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname"><em>opt_step_index</em> = <code>gul14::nullopt</code>&#160;</td>
+          <td class="paramname"><em>opt_step_index</em> = <code>gul14::nullopt</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1TimeoutTrigger.html">TimeoutTrigger</a> *&#160;</td>
+          <td class="paramname"><em>sequence_timeout</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -378,7 +384,8 @@ Private Attributes</h2></td></tr>
 <li>A message of type step_stopped_with_error when the step has been stopped due to an error condition </li>
 </ul>
 </td></tr>
-    <tr><td class="paramname">opt_step_index</td><td>Optional index of the step in its parent <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> (to be used in exceptions and messages)</td></tr>
+    <tr><td class="paramname">opt_step_index</td><td>Optional index of the step in its parent <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> (to be used in exceptions and messages) </td></tr>
+    <tr><td class="paramname">sequence_timeout</td><td>Pointer to a sequence timeout to determine a timeout during executing a step. If this is null the corresponding check for timeout is omitted.</td></tr>
   </table>
   </dd>
 </dl>
@@ -395,8 +402,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a44b367f575ca24f542da3eca0854a778"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44b367f575ca24f542da3eca0854a778">&#9670;&nbsp;</a></span>execute_impl()</h2>
+<a id="a126879f0acf150f43a8e0f115cfcd263"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a126879f0acf150f43a8e0f115cfcd263">&#9670;&nbsp;</a></span>execute_impl()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +427,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a>&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1TimeoutTrigger.html">TimeoutTrigger</a> *&#160;</td>
+          <td class="paramname"><em>sequence_timeout</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -436,9 +449,9 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Execute the Lua script, throwing an exception if anything goes wrong. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Step.html#a4752dae24293720c6d86bd12b48499e7" title="Execute the step script within the given context, sending status information to a message queue.">execute(Context&amp;, CommChannel*, OptionalStepIndex)</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Step.html#ad16fd23a3b451c85c83ac81790e546c4" title="Execute the step script within the given context, sending status information to a message queue.">execute(Context&amp;, CommChannel*, OptionalStepIndex, TimeoutTrigger*)</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">task::execute_lua_script()</a>, <a class="el" href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">task::executes_script()</a>, <a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">task::install_custom_commands()</a>, <a class="el" href="namespacetask.html#a6f10b2d463f1dfcea8fb631b3b67defe">task::install_timeout_and_termination_request_hook()</a>, <a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">task::open_safe_library_subset()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, <a class="el" href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">task::Context::step_setup_function</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">task::execute_lua_script()</a>, <a class="el" href="namespacetask.html#a08abad536dcb1cd470dfc361f73817dc">task::executes_script()</a>, <a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">task::install_custom_commands()</a>, <a class="el" href="namespacetask.html#a7a2f55a77a523c6df3999f736e4598e3">task::install_timeout_and_termination_request_hook()</a>, <a class="el" href="namespacetask.html#a1970184ef62d5b886ee123608c7e852f">task::open_safe_library_subset()</a>, <a class="el" href="namespacetask.html#a94406da649401007df03cb8eead6ae6e">task::requires_bool_return_value()</a>, <a class="el" href="structtask_1_1Context.html#a3bf1fe7546f0a81a0ae43f666a0fefea">task::Context::step_setup_function</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
 </div>
 </div>
@@ -537,7 +550,7 @@ Private Attributes</h2></td></tr>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Fast, but str_ref will dangle if my_step goes out of scope</span></div>
 <div class="line"><span class="keyword">const</span> std::string&amp; str_ref = my_step.get_script();</div>
-<div class="ttc" id="aclasstask_1_1Step_html_a8e7699c74d2208008516eefa3490b118"><div class="ttname"><a href="classtask_1_1Step.html#a8e7699c74d2208008516eefa3490b118">task::Step::Step</a></div><div class="ttdeci">Step(Type type=type_action)</div><div class="ttdoc">Construct a Step of a certain type.</div><div class="ttdef"><b>Definition:</b> Step.h:66</div></div>
+<div class="ttc" id="aclasstask_1_1Step_html_a8e7699c74d2208008516eefa3490b118"><div class="ttname"><a href="classtask_1_1Step.html#a8e7699c74d2208008516eefa3490b118">task::Step::Step</a></div><div class="ttdeci">Step(Type type=type_action)</div><div class="ttdoc">Construct a Step of a certain type.</div><div class="ttdef"><b>Definition:</b> Step.h:67</div></div>
 </div><!-- fragment --> </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Step.html#aaa1cfb19a0da45e870cb63977c8e99a6">script_</a>.</p>
@@ -1285,7 +1298,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 3 2023 16:39:52 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Mar 14 2023 14:20:33 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
