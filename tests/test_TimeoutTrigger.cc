@@ -1,5 +1,5 @@
 /**
- * \file   test_TriggerTimeout.cc
+ * \file   test_TimeoutTrigger.cc
  * \author Marcus Walla
  * \date   Created on February 21, 2023
  * \brief  Test suite for the TriggerTimeout class.
@@ -50,18 +50,9 @@ TEST_CASE("TimeoutTrigger: Default copy", "[TimeoutTrigger]")
 
     TimeoutTrigger timeout_trigger;
 
-    SECTION("copy constructable I")
+    SECTION("copy constructable")
     {
         TimeoutTrigger timeout_trigger_copy = timeout_trigger;
-        timeout_trigger_copy.reset();
-
-        REQUIRE(timeout_trigger.get_start_time() == task::TimePoint{});
-        REQUIRE(timeout_trigger_copy.get_start_time() != task::TimePoint{});
-    }
-
-    SECTION("copy constructable II")
-    {
-        TimeoutTrigger timeout_trigger_copy{timeout_trigger};
         timeout_trigger_copy.reset();
 
         REQUIRE(timeout_trigger.get_start_time() == task::TimePoint{});
@@ -100,6 +91,6 @@ TEST_CASE("TimeoutTrigger: check elapsed timeout", "[TimeoutTrigger]")
 
     timeout_trigger.set_timeout(200ms);
 
-    gul14::sleep(200ms);
+    gul14::sleep(10ms);
     REQUIRE(timeout_trigger.is_elapsed() == true);
 }
