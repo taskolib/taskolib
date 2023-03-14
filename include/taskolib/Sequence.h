@@ -4,7 +4,7 @@
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,6 +26,7 @@
 #define TASKOLIB_SEQUENCE_H_
 
 #include <algorithm>
+#include <chrono>
 #include <filesystem>
 #include <functional>
 #include <limits>
@@ -42,6 +43,7 @@
 #include "taskolib/exceptions.h"
 #include "taskolib/Step.h"
 #include "taskolib/StepIndex.h"
+#include "taskolib/TimeoutTrigger.h"
 
 namespace task {
 
@@ -81,6 +83,10 @@ namespace task {
  *
  * The setup script is only executed for step types for which Step::executes_script()
  * returns true (ACTION, IF, ELSEIF, WHILE).
+ *
+ * ## Sequence timeout
+ *
+ * The sequence timeout is per default set to infinity.
  */
 class Sequence
 {
@@ -314,6 +320,22 @@ public:
     const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
 
     /**
+     * Returns time of last execution. It returns TimePoint{} on a fresh created sequence.
+     *
+     * \returns time of the last execution.
+     */
+    TimePoint get_time_of_last_execution() const
+    {
+        return timeout_trigger_.get_start_time();
+    }
+
+    /// Return the timeout duration for executing the sequence.
+    Timeout get_timeout() const { return timeout_trigger_.get_timeout(); }
+
+    /// Return true if the timeout is elapsed otherwise false.
+    bool is_timeout_elapsed() const { return timeout_trigger_.is_elapsed(); }
+
+    /**
      * Insert the given Step into the sequence just before the specified iterator.
      *
      * This can trigger a reallocation that invalidates all iterators.
@@ -527,6 +549,9 @@ public:
      */
     void set_step_setup_script(gul14::string_view step_setup_script);
 
+    /// Set the timeout duration for executing the sequence.
+    void set_timeout(Timeout timeout) { timeout_trigger_.set_timeout(timeout); }
+
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
@@ -540,18 +565,15 @@ private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
-    /// Sequence label.
-    std::string label_;
+    std::string label_; ///< Sequence label.
 
-    /// Step setup script.
-    std::string step_setup_script_;
+    std::string step_setup_script_; ///< Step setup script.
 
-    /// Collection of steps.
-    std::vector<Step> steps_;
+    std::vector<Step> steps_; ///< Collection of steps.
 
-    /// Flag to determine if the sequence is running.
-    bool is_running_{false};
+    bool is_running_{false}; ///< Flag to determine if the sequence is running.
 
+    TimeoutTrigger timeout_trigger_; ///< Logic to check for elapsed sequence timeout.
 
     /**
      * Check the sequence for syntactic consistency and throw an exception if an error is

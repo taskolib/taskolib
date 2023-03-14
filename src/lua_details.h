@@ -33,6 +33,7 @@
 #include "sol/sol.hpp"
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
+#include "taskolib/TimeoutTrigger.h"
 
 namespace task {
 
@@ -108,7 +109,7 @@ void install_custom_commands(sol::state& lua);
 // message that contains the abort marker.
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
     std::chrono::milliseconds timeout, OptionalStepIndex step_idx, const Context& context,
-    CommChannel* comm_channel);
+    CommChannel* comm_channel, TimeoutTrigger* sequence_timeout);
 
 // Open a safe subset of the Lua standard libraries in the given Lua state.
 //

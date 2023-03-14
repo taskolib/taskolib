@@ -42,6 +42,8 @@ static const char comm_channel_key[] =
     "TASKOLIB_COMM_CH";
 static const char context_key[] =
     "TASKOLIB_CONTEXT";
+static const char sequence_timeout_key[] =
+    "TASKOLIB_SEQ_TO_MS";
 static const char step_index_key[] =
     "TASKOLIB_STP_INDEX";
 static const char step_timeout_ms_since_epoch_key[] =
@@ -114,6 +116,18 @@ void check_script_timeout(lua_State* lua_state)
             abort_script_with_error(lua_state,
                 cat("Timeout: Script took more than ", seconds, " s to run"));
         }
+    }
+
+    sol::optional<TimeoutTrigger*> opt_sequence_timeout_ptr =
+        registry[sequence_timeout_key];
+    if (    opt_sequence_timeout_ptr.has_value()
+        and opt_sequence_timeout_ptr.value() != nullptr
+        and opt_sequence_timeout_ptr.value()->is_elapsed())
+    {
+        double seconds = std::chrono::duration<double>(
+            opt_sequence_timeout_ptr.value()->get_timeout()).count();
+        abort_script_with_error(lua_state,
+            cat("Timeout: Sequence took more than ", seconds, " s to run"));
     }
 }
 
@@ -209,7 +223,7 @@ void install_custom_commands(sol::state& lua)
 
 void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now,
     std::chrono::milliseconds timeout, OptionalStepIndex step_idx,
-    const Context& context, CommChannel* comm_channel)
+    const Context& context, CommChannel* comm_channel, TimeoutTrigger* sequence_timeout)
 {
     auto registry = lua.registry();
     registry[step_timeout_s_key] = std::chrono::duration<double>(timeout).count();
@@ -217,6 +231,7 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
     registry[step_index_key] = step_idx ? static_cast<LuaInteger>(*step_idx) : LuaInteger{ -1 };
     registry[comm_channel_key] = comm_channel;
     registry[context_key] = &context;
+    registry[sequence_timeout_key] = sequence_timeout;
 
     // Install a hook that is called after every 100 Lua instructions
     lua_sethook(lua, hook_check_timeout_and_termination_request, LUA_MASKCOUNT, 100);
