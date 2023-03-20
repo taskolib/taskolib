@@ -183,9 +183,8 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
 }
 
 
-void remove_sequence(const std::filesystem::path& folder, const Sequence& seq)
+void remove_sequence(const std::filesystem::path& seq_path)
 {
-    auto seq_path = folder / escape_filename_characters(seq.get_label());
     try
     {
         if (std::filesystem::exists(seq_path))
