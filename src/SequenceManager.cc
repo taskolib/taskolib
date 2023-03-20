@@ -22,9 +22,12 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+
+
 #include <algorithm>
 #include "taskolib/SequenceManager.h"
 #include "taskolib/deserialize_sequence.h"
+#include "taskolib/serialize_sequence.h"
 
 namespace task {
 
@@ -43,13 +46,36 @@ SequenceManager::PathList SequenceManager::get_sequence_names() const
 Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path) const
 {
     auto sequence = path_/sequence_path;
+    check_sequence(sequence_path);
+    return task::load_sequence(sequence);
+}
+
+void SequenceManager::check_sequence(std::filesystem::path sequence) const
+{
     if (not std::filesystem::exists(sequence))
         throw Error(gul14::cat("Sequence file path does not exist: ",
             sequence.string()));
     else if (not std::filesystem::is_directory(sequence))
         throw Error(gul14::cat("File path to sequence is not a directory: ",
             sequence.string()));
-    return task::load_sequence(sequence);
+}
+
+void SequenceManager::rename_sequence(std::filesystem::path sequence_path, std::string new_name)
+{
+    auto sequence = path_/sequence_path;
+    check_sequence(sequence);
+    Sequence my_sequence = load_sequence(sequence);
+    my_sequence.set_label(new_name);
+    remove_sequence(sequence);
+    task::store_sequence(sequence, my_sequence);
+
+}
+
+
+void SequenceManager::remove_sequence(std::filesystem::path sequence_path)
+{
+    //sequence_path = sequence_path / escape_filename_characters(old_sequence.get_label());
+    task::remove_sequence(sequence_path);
 }
 
 } // namespace task
