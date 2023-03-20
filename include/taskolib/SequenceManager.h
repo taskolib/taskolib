@@ -30,6 +30,7 @@
 #include <string>
 #include <gul14/string_view.h>
 #include "taskolib/Sequence.h"
+#include "GitWrapper.h"
 
 namespace task {
 
@@ -99,11 +100,35 @@ public:
      */
     Sequence load_sequence(std::filesystem::path sequence_path) const;
 
+
+    /**
+     * Delete sequence specified in path to sequence
+     *
+     * \param sequence_path path to sequence.
+     *
+     * \exception throws Error if removal was unsucessful
+     */
+    void remove_sequence(std::filesystem::path sequence_path);
+
+
+    /**
+     * Loads sequence on the sequence file path.
+     *
+     * \param sequence_path path to sequence.
+     *
+     * \return deserialized sequence.
+     *
+     * \exception throws Error if renaming was unsuccessful
+     */
+    void rename_sequence(std::filesystem::path sequence_path, std::string new_name);
+
 private:
     /// Root path to the sequences
     std::filesystem::path path_;
+    void check_sequence(std::filesystem::path sequence_path) const;
+
 };
 
 } // namespace task
 
-#endif
+//#endif
