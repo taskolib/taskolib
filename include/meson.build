@@ -20,6 +20,7 @@ public_headers = [
    'taskolib/time_types.h',
    'taskolib/Timeout.h',
    'taskolib/VariableName.h',
+   'taskolib/GitWrapper.h'
 ]
 install_headers(files(public_headers),
     subdir: 'taskolib',
