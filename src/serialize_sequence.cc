@@ -182,4 +182,19 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 }
 
+
+void remove_sequence(const std::filesystem::path& folder, const Sequence& seq)
+{
+    auto seq_path = folder / escape_filename_characters(seq.get_label());
+    try
+    {
+        if (std::filesystem::exists(seq_path))
+            std::filesystem::remove_all(seq_path); // remove previous storage
+    }
+    catch(const std::exception& e)
+    {
+        auto err = errno;
+        throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
+    }
+}
 } // namespace task
