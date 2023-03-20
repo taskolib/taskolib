@@ -12,4 +12,5 @@ sources = files(
     'Step.cc',
     'time_types.cc',
     'VariableName.cc',
+    'GitWrapper.cc'
 )

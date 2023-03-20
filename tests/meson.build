@@ -18,6 +18,7 @@ test_src = files(
     'test_time_types.cc',
     'test_Timeout.cc',
     'test_VariableName.cc',
+    'test_GitWrapper.cc'
 )
 
 # The tests are executed in the build dir to avoid pollution of the git repository with
