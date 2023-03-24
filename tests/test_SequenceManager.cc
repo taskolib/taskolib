@@ -151,3 +151,48 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(result);
     }
 }
+
+
+TEST_CASE("Remove Repository", "[SequenceManager]")
+{
+    // prepare first sequence for test
+    Step step_1_01{Step::type_while};
+    step_1_01.set_label("while");
+    step_1_01.set_script("return i < 10");
+
+    Step step_1_02{Step::type_action};
+    step_1_02.set_label("action");
+    step_1_02.set_script("i = i + 1");
+
+    Sequence seq_1{"unit_test_3"};
+    seq_1.push_back(step_1_01);
+    seq_1.push_back(step_1_02);
+
+    // prepare second sequence for test
+    Step step_2_01{Step::type_while};
+    step_2_01.set_label("while");
+    step_2_01.set_script("return i < 10");
+
+    Step step_2_02{Step::type_action};
+    step_2_02.set_label("action");
+    step_2_02.set_script("i = i + 1");
+
+    Sequence seq_2{"unit_test_4"};
+    seq_2.push_back(step_1_01);
+    seq_2.push_back(step_1_02);
+
+    store_sequence("sequences", seq_1);
+    store_sequence("sequences", seq_2);
+
+    SequenceManager sm{"sequences"};
+
+    // TODO: How to test this?
+
+    // remove one sequences and make new commit
+    sm.remove_sequence("unit_test_4");
+
+
+    // remove everything and come back to git with one initial commit
+    sm.remove_repository();
+
+}
