@@ -68,12 +68,7 @@ public:
      *
      * \exception throws Error exception if path is empty.
      */
-    explicit SequenceManager(std::filesystem::path path)
-    {
-        if (path.empty())
-            throw Error("Root sequences path must not be empty.");
-        path_ = path;
-    }
+    explicit SequenceManager(std::filesystem::path path);
 
     /**
      * Returns the root path of the serialized sequences.
@@ -120,15 +115,19 @@ public:
      *
      * \exception throws Error if renaming was unsuccessful
      */
-    void rename_sequence(std::filesystem::path sequence_path, std::string new_name);
+    void rename_sequence(std::filesystem::path sequence_path, const std::string& new_name);
+
+
+    void remove_repository();
 
 private:
     /// Root path to the sequences
     std::filesystem::path path_;
+    LibGit lg_;
     void check_sequence(std::filesystem::path sequence_path) const;
 
 };
 
 } // namespace task
 
-//#endif
+#endif
