@@ -31,11 +31,18 @@
 
 namespace task {
 
+SequenceManager::SequenceManager(std::filesystem::path path): lg_{path}
+{
+    if (path.empty())
+        throw Error("Root sequences path must not be empty.");
+    path_ = path;
+}
+
 SequenceManager::PathList SequenceManager::get_sequence_names() const
 {
     PathList sequences;
     for (auto const& entry : std::filesystem::directory_iterator{path_})
-        if (entry.is_directory())
+        if (entry.is_directory() && entry != path_ / ".git")
             sequences.push_back(entry.path());
 
     std::sort(sequences.begin(), sequences.end());
@@ -60,7 +67,7 @@ void SequenceManager::check_sequence(std::filesystem::path sequence) const
             sequence.string()));
 }
 
-void SequenceManager::rename_sequence(std::filesystem::path sequence_path, std::string new_name)
+void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const std::string& new_name)
 {
     auto sequence = path_/sequence_path;
     check_sequence(sequence);
@@ -75,7 +82,18 @@ void SequenceManager::rename_sequence(std::filesystem::path sequence_path, std::
 void SequenceManager::remove_sequence(std::filesystem::path sequence_path)
 {
     //sequence_path = sequence_path / escape_filename_characters(old_sequence.get_label());
-    task::remove_sequence(sequence_path);
+    //task::remove_sequence(sequence_path);
+
+    lg_.libgit_remove_sequence(sequence_path);
+}
+
+void SequenceManager::remove_repository()
+{
+    // delete all seuqnces and git related files
+    std::filesystem::remove_all(path_);
+
+    // reinitialize Libgit object
+    lg_= LibGit{path_};
 }
 
 } // namespace task
