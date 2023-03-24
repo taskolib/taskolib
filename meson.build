@@ -69,6 +69,7 @@ deps = [
     dependency('threads'),
     gul_dep.partial_dependency(compile_args : true, includes : true),
     lua_dep,
+    dependency('libgit2')
 ]
 
 lib = both_libraries(meson.project_name(),
