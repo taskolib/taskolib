@@ -188,7 +188,7 @@ void remove_sequence(const std::filesystem::path& seq_path)
     try
     {
         if (std::filesystem::exists(seq_path))
-            std::filesystem::remove_all(seq_path); // remove previous storage
+            std::filesystem::remove_all(seq_path);
     }
     catch(const std::exception& e)
     {
