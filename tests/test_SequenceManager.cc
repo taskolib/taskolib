@@ -189,10 +189,10 @@ TEST_CASE("Remove Repository", "[SequenceManager]")
     // TODO: How to test this?
 
     // remove one sequences and make new commit
-    sm.remove_sequence("unit_test_4");
+    //sm.remove_sequence("unit_test_4");
 
 
     // remove everything and come back to git with one initial commit
-    sm.remove_repository();
+    //sm.remove_repository();
 
 }

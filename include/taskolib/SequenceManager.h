@@ -117,7 +117,9 @@ public:
      */
     void rename_sequence(std::filesystem::path sequence_path, const std::string& new_name);
 
-
+    /**
+     * Reset the repository by deleting all files from path_ and reinitialiszing the LibGit Wrapper lg_
+    */
     void remove_repository();
 
 private:
