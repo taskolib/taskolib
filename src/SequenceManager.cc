@@ -79,17 +79,16 @@ void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const
 }
 
 
-void SequenceManager::remove_sequence(std::filesystem::path sequence_path)
+void SequenceManager::remove_sequence(std::filesystem::path sequence_name)
 {
-    //sequence_path = sequence_path / escape_filename_characters(old_sequence.get_label());
-    //task::remove_sequence(sequence_path);
-
-    lg_.libgit_remove_sequence(sequence_path);
+    lg_.libgit_remove_sequence(sequence_name);
+    lg_.libgit_add();
+    lg_.libgit_commit("remove " + sequence_name.string());
 }
 
 void SequenceManager::remove_repository()
 {
-    // delete all seuqnces and git related files
+    // delete all sequences and git related files
     std::filesystem::remove_all(path_);
 
     // reinitialize Libgit object
