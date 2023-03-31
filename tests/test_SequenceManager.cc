@@ -40,6 +40,8 @@ TEST_CASE("Construct SequenceManager with path", "[SequenceManager]")
         REQUIRE(not sm.get_path().empty());
         REQUIRE(sm.get_path() == "./another/path/to/sequences");
     }
+
+    std::filesystem::remove_all("another");
 }
 
 TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
@@ -47,6 +49,8 @@ TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
     SequenceManager s{SequenceManager("unit_test")};
     REQUIRE(not s.get_path().empty());
     REQUIRE(s.get_path() == "unit_test");
+
+    std::filesystem::remove_all("unit_test");
 }
 
 TEST_CASE("Get sequence names", "[SequenceManager]")
@@ -93,6 +97,8 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
 
     // check for loading sequence directories only (and not any arbritray regular file)
     REQUIRE_THROWS_AS(sm.load_sequence("unit_test_2/some_text_file.txt"), Error);
+
+    std::filesystem::remove_all("unit_test_2");
 }
 
 TEST_CASE("Load sequence", "[SequenceManager]")
@@ -135,6 +141,7 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(load.size() == seq.size());
         auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
         REQUIRE(result);
+
     }
 
     SECTION("Complex path")
@@ -149,7 +156,10 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(load.size() == seq.size());
         auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
         REQUIRE(result);
+
+        std::filesystem::remove_all("unit_test");
     }
+
 }
 
 
@@ -186,13 +196,11 @@ TEST_CASE("Remove Repository", "[SequenceManager]")
 
     SequenceManager sm{"sequences"};
 
-    // TODO: How to test this?
-
-    // remove one sequences and make new commit
-    //sm.remove_sequence("unit_test_4");
-
+    // TODO: fix remove_repository
 
     // remove everything and come back to git with one initial commit
     //sm.remove_repository();
+
+
 
 }

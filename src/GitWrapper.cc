@@ -6,6 +6,12 @@
 #include <vector>
 
 
+int print_matched_cb(const char *path, const char *matched_pathspec, void *payload)
+{
+  return 0;
+}
+
+
 LibGit::LibGit(std::filesystem::path file_path)
 {
     //init libgit library
@@ -60,10 +66,12 @@ git_repository* LibGit::get_repo()
 void LibGit::libgit_init(std::filesystem::path file_path)
 {
     // create repository
-    git_repository_init(&repo_, file_path.c_str(), false);
+    //3rd argument: false so that .git folder is created in given path
+    int error = git_repository_init(&repo_, file_path.c_str(), false);
+    if (error) throw task::Error(gul14::cat("Git init failed."));
 
     // create signature
-    int error = git_signature_default(&my_signature_, repo_);
+    error = git_signature_default(&my_signature_, repo_);
     if (error==GIT_ENOTFOUND) git_signature_new(&my_signature_, "Taskomat", "taskomat@desy.de", 123456789, 0);
 
     // stage files in directory
@@ -77,28 +85,29 @@ void LibGit::libgit_commit_initial()
 {
     // prepare gitlib data types
     git_index *index;
-	git_oid tree_id, commit_id;
-	git_tree *tree;
+    git_oid tree_id, commit_id;
+    git_tree *tree;
 
     // get tree structure for commit
     git_repository_index(&index, repo_);
-	git_index_write_tree(&tree_id, index);
+	  git_index_write_tree(&tree_id, index);
     git_tree_lookup(&tree, repo_, &tree_id);
 
     // commit
     git_commit_create_v(
-		&commit_id,
+		    &commit_id,
         repo_,
         "HEAD",
         my_signature_,
         my_signature_,
-		"UTF-8",
+		    "UTF-8",
         "Initial commit",
         tree,
-        0);
+        0
+        );
 
     //cleanup
-	git_index_free(index);
+	  git_index_free(index);
     git_tree_free(tree);
 }
 
@@ -111,12 +120,12 @@ void LibGit::libgit_commit(std::string commit_message)
 
     //define types for commit call
     git_index *index;
-	git_oid tree_id, commit_id;
-	git_tree *tree;
+    git_oid tree_id, commit_id;
+    git_tree *tree;
 
     // get tree
     git_repository_index(&index, repo_);
-	git_index_write_tree(&tree_id, index);
+	  git_index_write_tree(&tree_id, index);
     git_tree_lookup(&tree, repo_, &tree_id);
 
     // create commit
@@ -149,10 +158,12 @@ void LibGit::libgit_add()
 {
     //load index of last commit
     git_index *gindex;
+    git_oid tree;
+    //git_index_matched_path_cb matched_cb = NULL;
     git_repository_index(&gindex, repo_);
 
     //transform filesystem::path into char*
-    std::string my_path = repo_path_ / "*";
+    std::string my_path = repo_path_/"*";
     char *path = new char[my_path.length()+1];
     strcpy(path, my_path.c_str());
 
@@ -160,14 +171,23 @@ void LibGit::libgit_add()
     char *paths[] = {path};
     git_strarray array = {paths, 1};
 
+    
+    //add all
+    int error = git_index_add_all(gindex, &array, GIT_INDEX_ADD_DEFAULT, &print_matched_cb, NULL);
+    if (error) throw task::Error(gul14::cat("Cannot stage files."));
+    // update all
+    git_index_update_all(gindex, &array, NULL, NULL);
+    if (error) throw task::Error(gul14::cat("Cannot update files."));
+
+    //int error = git_index_add_bypath(gindex, "unit_test_1");
+    //if (error) throw task::Error(gul14::cat("Cannot stage files."));
+
     // remove now useless char*
     delete [] path;
 
-    //add all
-    git_index_add_all(gindex, &array, 0, NULL, NULL);
-
     // save addition
     git_index_write(gindex);
+    git_index_write_tree(&tree, gindex);
 
     //cleanup pointer
     git_index_free(gindex);
@@ -180,14 +200,23 @@ void LibGit::libgit_remove_sequence(std::filesystem::path seq_directory)
 {
     //load index of last commit
     git_index *gindex;
+    git_oid tree;
     git_repository_index(&gindex, repo_);
 
     // delete sequence
-    std::filesystem::remove_all(repo_path_ / seq_directory);
+    //std::filesystem::remove_all(repo_path_ / seq_directory);
 
-    // remove the sequence from git
-    int error = git_index_remove_bypath(gindex, seq_directory.c_str());
-    if (error) throw task::Error(gul14::cat("Cannot remove repository."));
+    //remove files from directory
+    int error = git_index_remove_directory(gindex, seq_directory.c_str(), 0);
+    if (error) throw task::Error(gul14::cat("Cannot remove sequence files."));
+    // remove sequence directory from git
+    error = git_index_remove_bypath(gindex, seq_directory.c_str());
+    if (error) throw task::Error(gul14::cat("Cannot remove sequence directory."));
+
+    git_index_write(gindex);
+    git_index_write_tree(&tree, gindex);
+
+    
 
     // freeup pointer
     git_index_free(gindex);
@@ -227,20 +256,18 @@ git_commit* LibGit::libgit_get_commit() const
 std::vector<std::array<std::string, 3>> LibGit::collect_status(git_status_list *status) const
 {
   // get number of submodules
-  const size_t maxi = git_status_list_entrycount(status);
-  std::cout << maxi;
+  const size_t nr_entries = git_status_list_entrycount(status);
 
   // declare status holding vector for each submodule
-  std::vector<std::array<std::string, 3>> return_array;
+  std::vector<std::array<std::string, 3>> return_array; //TODO: struct statt array
   std::array<std::string, 3> elm;
 
-
-  const git_status_entry *s = NULL;
-  const char *old_path = NULL;
-  const char *new_path = NULL;
-
-  for (size_t i = 0; i < maxi; ++i)
+  for (size_t i = 0; i < nr_entries; ++i)
   {
+    const git_status_entry *s = NULL;
+    const char *old_path = NULL;
+    const char *new_path = NULL;
+
     std::string istatus = "";
     std::string wstatus = "";
 
@@ -289,7 +316,7 @@ std::vector<std::array<std::string, 3>> LibGit::collect_status(git_status_list *
       new_path = s->head_to_index->new_file.path;
 
       if (old_path && new_path && strcmp(old_path, new_path))
-        elm[0] = std::string{old_path} + std::string{" -> "} + std::string{new_path};
+        elm[0] = std::string{old_path} + std::string{" -> "} + std::string{new_path}; //TODO: use gul14
       else
         elm[0] = old_path ? std::string{old_path} : std::string{new_path};
 
@@ -361,10 +388,12 @@ std::vector<std::array<std::string, 3>> LibGit::collect_status(git_status_list *
 
       continue;
     }
+
+    delete [] old_path;
+    delete [] new_path;
   }
 
-  delete [] old_path;
-  delete [] new_path;
+
 
   return return_array;
 }
@@ -373,15 +402,15 @@ std::vector<std::array<std::string, 3>> LibGit::libgit_status() const
 {
     // declare necessary variables
     git_status_list *my_status;
-    git_status_options *status_opt;
+    git_status_options status_opt;
 
     // init options with default values (= no args)
-    git_status_init_options(status_opt, GIT_STATUS_OPTIONS_VERSION);
+    int error = git_status_init_options(&status_opt, GIT_STATUS_OPTIONS_VERSION);
+    if (error) throw task::Error(gul14::cat("Cannot init status options."));
 
     // fill C-type status pointer
-    git_status_list_new(&my_status, repo_, status_opt);
-
-    //delete [] status_opt;
+    error = git_status_list_new(&my_status, repo_, &status_opt);
+    if (error) throw task::Error(gul14::cat("Cannot init status."));
 
     // translate status pointer to redable status information
     std::vector<std::array<std::string, 3>> status_arr = collect_status(my_status);
