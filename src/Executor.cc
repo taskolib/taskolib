@@ -31,6 +31,7 @@
 using gul14::cat;
 using namespace std::literals;
 
+
 namespace task {
 
 namespace {
