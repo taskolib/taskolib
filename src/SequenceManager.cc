@@ -67,14 +67,26 @@ void SequenceManager::check_sequence(std::filesystem::path sequence) const
             sequence.string()));
 }
 
+void SequenceManager::create_sequence(std::string name)
+{
+    Sequence seq{name};
+    task::store_sequence(path_/name, seq);
+    lg_.libgit_add();
+    lg_.libgit_commit("create sequence " + name);
+}
+
 void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const std::string& new_name)
 {
     auto sequence = path_/sequence_path;
     check_sequence(sequence);
     Sequence my_sequence = load_sequence(sequence);
+    const std::string old_name = my_sequence.get_label();
     my_sequence.set_label(new_name);
-    remove_sequence(sequence);
     task::store_sequence(sequence, my_sequence);
+    remove_sequence(sequence);
+    
+    lg_.libgit_add();
+    lg_.libgit_commit("rename " + old_name + " to " + new_name);
 
 }
 
