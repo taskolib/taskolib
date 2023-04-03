@@ -29,6 +29,9 @@
 #include "taskolib/GitObjectWrapper.h"
 #include <vector>
 
+
+
+
 /**
  * A class to wrap used methods from C-Library libgit2
  * 
@@ -64,7 +67,7 @@ public:
      * \note this function is solely for Unittest purposes
      * \return message of last commit (=HEAD)
     */
-    std::string get_last_commit_message() const;
+    std::string get_last_commit_message();
 
     /**
      * Commit staged changes to the master branch of the git repository
@@ -84,20 +87,20 @@ public:
     void libgit_remove_sequence(std::filesystem::path seq_directory);
 
     /// returns current git
-    std::vector<std::array<std::string, 3>> libgit_status() const;
+    std::vector<std::array<std::string, 3>> libgit_status();
 
     /// Destructor
     ~LibGit();
 
 private:
     /// Pointer which holds all infos of the active repository
-    git_repository *repo_{ nullptr };
+    GitRepositoryPtr repo_{ nullptr };
 
     /// path to the repository (for taskomat .../sequences/)
     std::filesystem::path repo_path_;
 
     /// signature used in commits
-    git_signature *my_signature_{ nullptr };
+    GitSignaturePtr my_signature_{ nullptr };
 
     /**
      * initialize a new git repository and commit all files in its path
@@ -123,9 +126,9 @@ private:
      * 
      * \return C-type commit object
     */
-    git_commit* libgit_get_commit(int count) const;
-    git_commit* libgit_get_commit(const std::string& ref) const;
-    git_commit* libgit_get_commit() const;
+    git_commit* libgit_get_commit(int count);
+    git_commit* libgit_get_commit(const std::string& ref);
+    git_commit* libgit_get_commit();
 
     /**
      * Translate all status information for each submodule into String
@@ -139,5 +142,7 @@ private:
      *  :array[2] - Change status [new file, deleted, renamed, typechanged, modified, unchanged, ignored, untracked]
     */
     std::vector<std::array<std::string, 3>> collect_status(git_status_list *status) const;
+
+    void libgit_update();
 
 };
