@@ -117,6 +117,14 @@ public:
      */
     void rename_sequence(std::filesystem::path sequence_path, const std::string& new_name);
 
+
+    /**
+     * Create an empty sequence and store it at given path
+     * 
+     * \param name: sequence name
+    */
+   void create_sequence(std::string name);
+
     /**
      * Reset the repository by deleting all files from path_ and reinitialiszing the LibGit Wrapper lg_
     */
