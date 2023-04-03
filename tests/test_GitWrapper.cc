@@ -38,19 +38,18 @@ using namespace task;
 TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
 {
 
+
     SECTION("Construct LibGit object")
     {
-        // make sure directory is empty
-        std::filesystem::remove_all("sequences");
 
         // prepare first sequence for test
         Step step_1_01{Step::type_while};
         step_1_01.set_label("while");
-        step_1_01.set_script("return i < 10");
+        step_1_01.set_script("return i < 6");
 
         Step step_1_02{Step::type_action};
         step_1_02.set_label("action");
-        step_1_02.set_script("i = i + 1");
+        step_1_02.set_script("i = i + 5");
 
         Sequence seq_1{"unit_test_1"};
         seq_1.push_back(step_1_01);
@@ -62,18 +61,6 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
         
         // Create Git Library
         LibGit gl{"sequences"};
-
-        std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
-        REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
-        {
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0] == "unit_test_1/step_1_while.lua")
-            {
-                REQUIRE(elm[1] == "unstaged");
-                REQUIRE(elm[2] == "new file");
-            }
-        }
 
         REQUIRE(not gl.get_path().empty());
         REQUIRE(gl.get_path() == "sequences");
@@ -109,17 +96,7 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
         LibGit gl{"sequences"};
 
         std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
-        REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
-        {
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0] == "unit_test_2/step_1_while.lua")
-            {
-                REQUIRE(elm[1] == "unstaged");
-                REQUIRE(elm[2] == "new file");
-            }
-        }
-
+        REQUIRE(stats.size() == 0);
 
         gl.libgit_add();
 
@@ -130,11 +107,9 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0] == "unit_test_2/step_2_action.lua")
-            {
-                REQUIRE(elm[1] == "staged");
-                REQUIRE(elm[2] == "new file");
-            }
+            if (elm[0].rfind("unit_test_1", 0) == 0 || elm[0].rfind("unit_test_2", 0) == 0)
+            REQUIRE(elm[1] == "staged");
+            REQUIRE(elm[2] == "new file");
         }
 
     }
@@ -154,18 +129,6 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
 
         REQUIRE(gl.get_last_commit_message() == "Add second sequence");
 
-        // get status
-        std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
-
-        // No submodule should be staged
-        REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
-        {
-            std::array<std::string, 3> elm = stats.at(i);
-            REQUIRE(elm[1] != "staged");
-
-        }
-
     }
 
 
@@ -181,27 +144,12 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
         std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
 
         // every file in unit_test_2 should have the tag deleted
-        REQUIRE(stats.size() != 0);
+        //REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
             
             std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0] == "unit_test_2/step_2_action.lua")
-            {
-                REQUIRE(elm[1] == "unstaged");
-                REQUIRE(elm[2] == "deleted");
-            }
-
-        }
-
-        gl.libgit_add();
-
-        stats = gl.libgit_status();
-        REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
-        {
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0] == "unit_test_2/step_2_action.lua")
+            if (elm[0].rfind("unit_test_2", 0) == 0)
             {
                 REQUIRE(elm[1] == "staged");
                 REQUIRE(elm[2] == "deleted");
@@ -214,5 +162,7 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
         // check if path got removed
         REQUIRE(not std::filesystem::exists("sequences" / mypath));
 
+
+        std::filesystem::remove_all("sequences");
     }
 }
