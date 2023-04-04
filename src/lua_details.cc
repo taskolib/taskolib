@@ -240,7 +240,7 @@ void install_timeout_and_termination_request_hook(sol::state& lua, TimePoint now
 void open_safe_library_subset(sol::state& lua)
 {
     lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::table,
-                       sol::lib::utf8);
+                       sol::lib::utf8, sol::lib::os);
 
     auto globals = lua.globals();
     globals["collectgarbage"] = sol::nil;
@@ -250,6 +250,11 @@ void open_safe_library_subset(sol::state& lua)
     globals["loadfile"] = sol::nil;
     globals["print"] = sol::nil;
     globals["require"] = sol::nil;
+    lua["os"] = lua.create_table_with(
+        "date", lua["os"]["date"],
+        "time", lua["os"]["time"],
+        "difftime", lua["os"]["difftime"]
+    );
 }
 
 void print_fct(sol::this_state sol, sol::variadic_args va)
