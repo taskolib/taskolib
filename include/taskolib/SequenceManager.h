@@ -30,7 +30,7 @@
 #include <string>
 #include <gul14/string_view.h>
 #include "taskolib/Sequence.h"
-#include "GitWrapper.h"
+#include "GitRepository.h"
 
 namespace task {
 
@@ -123,17 +123,17 @@ public:
      * 
      * \param name: sequence name
     */
-   void create_sequence(std::string name);
+   void create_sequence(const std::string& name);
 
     /**
-     * Reset the repository by deleting all files from path_ and reinitialiszing the LibGit Wrapper lg_
+     * Reset the repository by deleting all files from path_ and reinitialiszing the GitRepository Wrapper lg_
     */
     void remove_repository();
 
 private:
     /// Root path to the sequences
     std::filesystem::path path_;
-    LibGit lg_;
+    GitRepository lg_;
     void check_sequence(std::filesystem::path sequence_path) const;
 
 };
