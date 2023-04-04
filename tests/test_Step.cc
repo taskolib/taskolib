@@ -809,6 +809,18 @@ TEST_CASE("execute(): External commands on Lua scripts", "[Step]")
     }
 }
 
+TEST_CASE("execute(): Use some functions from os library", "[Step]")
+{
+    Context context;
+    Step step;
+    step.set_used_context_variable_names(VariableNames{ "a" });
+
+    step.set_script("a = os.date()");
+    REQUIRE_NOTHROW(step.execute(context));
+    INFO(std::get<VarString>(context.variables["a"]));
+    // To check output insert this: REQUIRE(1 == 0);
+}
+
 TEST_CASE("execute(): Lua initialization function", "[Step]")
 {
     Context context;
