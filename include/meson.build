@@ -8,6 +8,8 @@ public_headers = [
    'taskolib/execute_lua_script.h',
    'taskolib/Executor.h',
    'taskolib/format.h',
+   'taskolib/GitObjectWrapper.h',
+   'taskolib/GitRepository.h',
    'taskolib/hash_string.h',
    'taskolib/LockedQueue.h',
    'taskolib/Message.h',
@@ -19,8 +21,7 @@ public_headers = [
    'taskolib/taskolib.h',
    'taskolib/time_types.h',
    'taskolib/Timeout.h',
-   'taskolib/VariableName.h',
-   'taskolib/GitWrapper.h'
+   'taskolib/VariableName.h'
 ]
 install_headers(files(public_headers),
     subdir: 'taskolib',

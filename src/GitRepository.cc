@@ -1,12 +1,39 @@
+/**
+ * \file   GitRepository.cc
+ * \author Sven-Jannik Wöhnert
+ * \date   Created on March 20, 2023
+ * \brief  Wrapper for C-Package libgit2
+ *
+ * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 2.1 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// SPDX-License-Identifier: LGPL-2.1-or-later
+
+
+
 #include <git2.h>
-#include "taskolib/GitWrapper.h"
+#include "taskolib/GitRepository.h"
 #include "taskolib/exceptions.h"
 #include "gul14/cat.h"
 #include <iostream>
 #include <vector>
 
+namespace task {
 
-LibGit::LibGit(std::filesystem::path file_path)
+GitRepository::GitRepository(std::filesystem::path file_path)
 {
     //init libgit library
     git_libgit2_init();
@@ -36,29 +63,29 @@ LibGit::LibGit(std::filesystem::path file_path)
 
 
 
-LibGit::~LibGit()
+GitRepository::~GitRepository()
 {
     repo_.reset();
     git_libgit2_shutdown();
 }
 
-std::string LibGit::get_last_commit_message()
+std::string GitRepository::get_last_commit_message()
 {
     const git_commit *commit = libgit_get_commit();
     return std::string(git_commit_message(commit));
 }
 
-std::filesystem::path LibGit::get_path() const
+std::filesystem::path GitRepository::get_path() const
 {
     return repo_path_;
 }
 
-git_repository* LibGit::get_repo()
+git_repository* GitRepository::get_repo()
 {
     return repo_.get();
 }
 
-void LibGit::libgit_update()
+void GitRepository::libgit_update()
 {
   GitIndexPtr index;
 
@@ -72,7 +99,7 @@ void LibGit::libgit_update()
 }
 
 
-void LibGit::libgit_init(std::filesystem::path file_path)
+void GitRepository::libgit_init(std::filesystem::path file_path)
 {
     // create repository
     //3rd argument: false so that .git folder is created in given path
@@ -93,7 +120,7 @@ void LibGit::libgit_init(std::filesystem::path file_path)
 
 
 
-void LibGit::libgit_commit_initial()
+void GitRepository::libgit_commit_initial()
 {
     // prepare gitlib data types
     GitIndexPtr index;
@@ -121,7 +148,7 @@ void LibGit::libgit_commit_initial()
 }
 
 
-void LibGit::libgit_commit(std::string commit_message)
+void GitRepository::libgit_commit(const std::string& commit_message)
 {
 
     //get HEAD commit
@@ -156,7 +183,7 @@ void LibGit::libgit_commit(std::string commit_message)
 }
 
 
-void LibGit::libgit_add()
+void GitRepository::libgit_add()
 {
     //load index of last commit
     GitIndexPtr gindex;
@@ -175,7 +202,7 @@ void LibGit::libgit_add()
 }
 
 
-void LibGit::libgit_remove_sequence(std::filesystem::path seq_directory)
+void GitRepository::libgit_remove_sequence(std::filesystem::path seq_directory)
 {
     //load index of last commit
     GitIndexPtr gindex;
@@ -198,12 +225,12 @@ void LibGit::libgit_remove_sequence(std::filesystem::path seq_directory)
 
 
 
-git_commit* LibGit::libgit_get_commit(int count)
+git_commit* GitRepository::libgit_get_commit(int count)
 {
     std::string ref = "HEAD^" + std::to_string(count);
     return libgit_get_commit(ref);
 }
-git_commit* LibGit::libgit_get_commit(const std::string& ref)
+git_commit* GitRepository::libgit_get_commit(const std::string& ref)
 {
     git_commit * commit;
     git_oid oid_parent_commit;
@@ -219,14 +246,14 @@ git_commit* LibGit::libgit_get_commit(const std::string& ref)
     return commit;
 
 }
-git_commit* LibGit::libgit_get_commit()
+git_commit* GitRepository::libgit_get_commit()
 {
     return libgit_get_commit(std::string{"HEAD"});
 
 }
 
 
-std::vector<std::array<std::string, 3>> LibGit::collect_status(git_status_list *status) const
+std::vector<std::array<std::string, 3>> GitRepository::collect_status(git_status_list *status) const
 {
   // get number of submodules
   const size_t nr_entries = git_status_list_entrycount(status);
@@ -375,7 +402,7 @@ std::vector<std::array<std::string, 3>> LibGit::collect_status(git_status_list *
   return return_array;
 }
 
-std::vector<std::array<std::string, 3>> LibGit::libgit_status()
+std::vector<std::array<std::string, 3>> GitRepository::libgit_status()
 {
     // declare necessary variables
     git_status_list *my_status;
@@ -399,3 +426,30 @@ std::vector<std::array<std::string, 3>> LibGit::libgit_status()
     
     return status_arr;
 }
+
+
+std::vector <int> GitRepository::libgit_add_files(std::vector<std::filesystem::path> filepaths)
+{
+      //load index of last commit
+    GitIndexPtr gindex;
+    git_repository_index(gindex.getptr(), repo_.get());
+
+    size_t v_len = filepaths.size();
+
+    //iterate and add every file bypath
+    std::vector <int> error_list;
+    for (size_t i = 0; i < v_len; i++)
+    {
+      char *filepath = nullptr;
+      strcpy(filepath, filepaths[i].c_str());
+      int error = git_index_add_bypath(gindex.get(), filepath);
+      if (error) error_list.push_back(i);
+    }
+
+    // save addition
+    git_index_write(gindex.get());
+
+    return error_list;
+}
+
+} //namespace task

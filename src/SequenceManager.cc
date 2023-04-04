@@ -67,7 +67,7 @@ void SequenceManager::check_sequence(std::filesystem::path sequence) const
             sequence.string()));
 }
 
-void SequenceManager::create_sequence(std::string name)
+void SequenceManager::create_sequence(const std::string& name)
 {
     Sequence seq{name};
     task::store_sequence(path_/name, seq);
@@ -100,11 +100,13 @@ void SequenceManager::remove_sequence(std::filesystem::path sequence_name)
 
 void SequenceManager::remove_repository()
 {
+    //TODO: Delete function?
+    
     // delete all sequences and git related files
     std::filesystem::remove_all(path_);
 
     // reinitialize Libgit object
-    lg_= LibGit{path_};
+    //lg_ = GitRepository{path_};
 }
 
 } // namespace task

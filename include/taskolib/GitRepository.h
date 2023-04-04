@@ -1,5 +1,5 @@
 /**
- * \file   GitWrapper.h
+ * \file   GitRepository.h
  * \author Sven-Jannik Wöhnert
  * \date   Created on March 20, 2023
  * \brief  Wrapper for C-Package libgit2
@@ -29,7 +29,7 @@
 #include "taskolib/GitObjectWrapper.h"
 #include <vector>
 
-
+namespace task {
 
 
 /**
@@ -42,7 +42,7 @@
  * git functions which are not implemented in this class will be
  * implemented in case of necessity
 */
-class LibGit
+class GitRepository
 {
 public:
 
@@ -51,7 +51,7 @@ public:
      * \param file_path: path to "sequences"-folder (or customized directory)
      *
      */
-    explicit LibGit(std::filesystem::path file_path);
+    explicit GitRepository(std::filesystem::path file_path);
 
     /// returns member variable, which is the root dir of the git repository
     std::filesystem::path get_path() const;
@@ -61,6 +61,11 @@ public:
 
     /// stage all new and changed files in the repository environment
     void libgit_add();
+
+    /**
+     * 
+    */
+   std::vector <int> libgit_add_files(std::vector<std::filesystem::path> filepaths);
 
     /**
      * return the commit message of ther HEAD commit
@@ -73,7 +78,7 @@ public:
      * Commit staged changes to the master branch of the git repository
      * \param commit_message: customized message for the commit
     */
-    void libgit_commit(std::string commit_message);
+    void libgit_commit(const std::string& commit_message);
 
     /**
      * Deletes seq_repository and all files within
@@ -90,7 +95,7 @@ public:
     std::vector<std::array<std::string, 3>> libgit_status();
 
     /// Destructor
-    ~LibGit();
+    ~GitRepository();
 
 private:
     /// Pointer which holds all infos of the active repository
@@ -146,3 +151,5 @@ private:
     void libgit_update();
 
 };
+
+} // namespace task
