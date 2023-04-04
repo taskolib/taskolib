@@ -108,8 +108,10 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         {
             std::array<std::string, 3> elm = stats.at(i);
             if (elm[0].rfind("unit_test_1", 0) == 0 || elm[0].rfind("unit_test_2", 0) == 0)
-            REQUIRE(elm[1] == "staged");
-            REQUIRE(elm[2] == "new file");
+            {
+                REQUIRE(elm[1] == "staged");
+                REQUIRE(elm[2] == "new file");
+            }
         }
 
     }
@@ -128,6 +130,59 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         gl.libgit_commit("Add second sequence");
 
         REQUIRE(gl.get_last_commit_message() == "Add second sequence");
+
+    }
+
+    SECTION("Add by path")
+    {
+        GitRepository gl{"sequences"};
+
+        // change unit_test_2
+        Step step_2_01{Step::type_while};
+        step_2_01.set_label("while");
+        step_2_01.set_script("return i >= 10");
+
+        Step step_2_02{Step::type_action};
+        step_2_02.set_label("action");
+        step_2_02.set_script("print('hello')");
+
+        Sequence seq_2{"unit_test_1"};
+        seq_2.push_back(step_2_01);
+        seq_2.push_back(step_2_02);
+
+        store_sequence("sequences", seq_2);
+
+        std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
+        REQUIRE(stats.size() != 0);
+        for (size_t i =0; i < stats.size(); i++)
+        {
+            std::array<std::string, 3> elm = stats.at(i);
+            if (elm[0].rfind("unit_test_1/step", 0) == 0)
+            {
+                REQUIRE(elm[1] == "unstaged");
+                REQUIRE(elm[2] == "modified");
+            }
+        }
+
+        auto ret = gl.libgit_add_files({"unit_test_1/step_2_action.lua"});
+
+        stats = gl.libgit_status();
+        REQUIRE(stats.size() != 0);
+        for (size_t i =0; i < stats.size(); i++)
+        {
+            std::array<std::string, 3> elm = stats.at(i);
+            if (elm[0].rfind("unit_test_1/step_1", 0) == 0)
+            {
+                REQUIRE(elm[1] == "unstaged");
+                REQUIRE(elm[2] == "modified");
+            }
+            else if (elm[0].rfind("unit_test_1/step_2", 0) == 0)
+            {
+                REQUIRE(elm[1] == "staged");
+                REQUIRE(elm[2] == "modified");
+            }
+        }
+
 
     }
 

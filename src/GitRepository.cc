@@ -51,7 +51,7 @@ GitRepository::GitRepository(std::filesystem::path file_path)
     else
     {
         // update status of all files 
-        libgit_update();
+        //libgit_update();
 
         // intialize the signature
         int error = git_signature_default(my_signature_.getptr(), repo_.get());
@@ -408,9 +408,6 @@ std::vector<std::array<std::string, 3>> GitRepository::libgit_status()
     git_status_list *my_status;
     git_status_options status_opt;
 
-    // update files
-    libgit_update();
-
     // init options with default values (= no args)
     int error = git_status_init_options(&status_opt, GIT_STATUS_OPT_INCLUDE_UNTRACKED);// & GIT_STATUS_OPT_INCLUDE_IGNORED);
     if (error) throw task::Error(gul14::cat("Cannot init status options."));
@@ -440,9 +437,7 @@ std::vector <int> GitRepository::libgit_add_files(std::vector<std::filesystem::p
     std::vector <int> error_list;
     for (size_t i = 0; i < v_len; i++)
     {
-      char *filepath = nullptr;
-      strcpy(filepath, filepaths[i].c_str());
-      int error = git_index_add_bypath(gindex.get(), filepath);
+      int error = git_index_add_bypath(gindex.get(), filepaths[i].c_str());
       if (error) error_list.push_back(i);
     }
 
