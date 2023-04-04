@@ -4,7 +4,7 @@ test_src = files(
     'test_Context.cc',
     'test_exceptions.cc',
     'test_Executor.cc',
-    #'tests/test_format.cc' needs fmt{} library
+    'test_GitRepository.cc',
     'test_internals.cc',
     'test_LockedQueue.cc',
     'test_lua_details.cc',
@@ -17,8 +17,8 @@ test_src = files(
     'test_Step.cc',
     'test_time_types.cc',
     'test_Timeout.cc',
-    'test_VariableName.cc',
-    'test_GitWrapper.cc'
+    'test_VariableName.cc'
+    #'tests/test_format.cc' needs fmt{} library
 )
 
 # The tests are executed in the build dir to avoid pollution of the git repository with

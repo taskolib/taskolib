@@ -1,5 +1,32 @@
+/**
+ * \file   GitObjectWrapper.h
+ * \author Sven-Jannik Wöhnert
+ * \date   Created on March 20, 2023
+ * \brief  Wrapper for data types defined in libgit2
+ *
+ * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 2.1 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// SPDX-License-Identifier: LGPL-2.1-or-later
+
+
 #include <git2.h>
 #include <utility>
+
+namespace task {
 
 /**
  * A wrapper to handle the raw C pointer of git_repository
@@ -9,22 +36,16 @@ class GitRepositoryPtr
 {
 public:
     // empty
-    //GitRepositoryPtr(){}
+    GitRepositoryPtr(){}
 
     // normal
     GitRepositoryPtr(git_repository* repo): repo_{repo} {};
-
-    // copy constructor
-    GitRepositoryPtr(const GitRepositoryPtr& gl): GitRepositoryPtr{gl.repo_} {};
 
     // move constructor
     GitRepositoryPtr(GitRepositoryPtr&& gl): repo_{std::exchange(gl.repo_, nullptr)} {};
 
     // destructor
     ~GitRepositoryPtr(){ git_repository_free(repo_); };
-
-    // copy assignment
-    GitRepositoryPtr& operator=(const GitRepositoryPtr& gl) {return *this = GitRepositoryPtr{gl};};
 
     // move assignment
     GitRepositoryPtr& operator=(GitRepositoryPtr&& gl) noexcept
@@ -48,7 +69,7 @@ public:
 
 
 private:
-    git_repository* repo_;    
+    git_repository* repo_ = nullptr;    
 };
 
 
@@ -58,22 +79,16 @@ class GitSignaturePtr
 public:
 
     // empty
-    //GitSignaturePtr(){}
+    GitSignaturePtr(){}
 
     // normal
     GitSignaturePtr(git_signature* signature): signature_{signature} {};
-
-    // copy constructor
-    GitSignaturePtr(const GitSignaturePtr& gl): GitSignaturePtr{gl.signature_} {};
 
     // move constructor
     GitSignaturePtr(GitSignaturePtr&& gl): signature_{std::exchange(gl.signature_, nullptr)} {};
 
     // destructor
     ~GitSignaturePtr(){ git_signature_free(signature_); };
-
-    // copy assignment
-    GitSignaturePtr& operator=(const GitSignaturePtr& gl) {return *this = GitSignaturePtr{gl};};
 
     // move assignment
     GitSignaturePtr& operator=(GitSignaturePtr&& gl) noexcept
@@ -90,7 +105,7 @@ public:
 
 
 private:
-    git_signature* signature_;    
+    git_signature* signature_ = nullptr;    
 };
 
 
@@ -133,7 +148,7 @@ public:
 
 
 private:
-    git_index* gindex_{nullptr};    
+    git_index* gindex_ = nullptr;    
 };
 
 
@@ -148,17 +163,11 @@ public:
     // normal
     GitTreePtr(git_tree* tree): tree_{tree} {};
 
-    // copy constructor
-    GitTreePtr(const GitTreePtr& gl): GitTreePtr{gl.tree_} {};
-
     // move constructor
     GitTreePtr(GitTreePtr&& gl): tree_{std::exchange(gl.tree_, nullptr)} {};
 
     // destructor
     ~GitTreePtr(){ git_tree_free(tree_); };
-
-    // copy assignment
-    GitTreePtr& operator=(const GitTreePtr& gl) {return *this = GitTreePtr{gl};};
 
     // move assignment
     GitTreePtr& operator=(GitTreePtr&& gl) noexcept
@@ -176,5 +185,7 @@ public:
 
 
 private:
-    git_tree* tree_{nullptr};    
+    git_tree* tree_ = nullptr;    
 };
+
+} //namespace task

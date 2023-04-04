@@ -3,6 +3,7 @@ sources = files(
     'deserialize_sequence.cc',
     'execute_lua_script.cc',
     'Executor.cc',
+    'GitRepository.cc',
     'internals.cc',
     'lua_details.cc',
     'send_message.cc',
@@ -11,6 +12,5 @@ sources = files(
     'serialize_sequence.cc',
     'Step.cc',
     'time_types.cc',
-    'VariableName.cc',
-    'GitWrapper.cc'
+    'VariableName.cc'
 )

@@ -25,7 +25,7 @@
 
 #include <git2.h>
 #include <gul14/catch.h>
-#include "taskolib/GitWrapper.h"
+#include "taskolib/GitRepository.h"
 #include "taskolib/serialize_sequence.h"
 #include "taskolib/Step.h"
 #include "taskolib/Sequence.h"
@@ -35,11 +35,11 @@ using namespace task;
 
 
 
-TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
+TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 {
 
 
-    SECTION("Construct LibGit object")
+    SECTION("Construct GitRepository object")
     {
 
         // prepare first sequence for test
@@ -60,7 +60,7 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
 
         
         // Create Git Library
-        LibGit gl{"sequences"};
+        GitRepository gl{"sequences"};
 
         REQUIRE(not gl.get_path().empty());
         REQUIRE(gl.get_path() == "sequences");
@@ -93,7 +93,7 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
         store_sequence("sequences", seq_2);
 
         // Create Git Library
-        LibGit gl{"sequences"};
+        GitRepository gl{"sequences"};
 
         std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
         REQUIRE(stats.size() == 0);
@@ -118,7 +118,7 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
     SECTION("Commit")
     {
         // Create Git Library
-        LibGit gl{"sequences"};
+        GitRepository gl{"sequences"};
         
         
         // Check if repo_ can be found again
@@ -135,7 +135,7 @@ TEST_CASE("LibGit Wrapper Test all", "[GitWrapper]")
     SECTION("Delete Sequence")
     {
         // Create Git Library
-        LibGit gl{"sequences"};
+        GitRepository gl{"sequences"};
         
         std::filesystem::path mypath = "unit_test_2";
 
