@@ -214,10 +214,9 @@ void hook_abort_with_error(lua_State* lua_state, lua_Debug*)
 
 void install_custom_commands(sol::state& lua)
 {
-    auto globals = lua.globals();
-    globals["print"] = print_fct;
-    globals["sleep"] = sleep_fct;
-    globals["terminate_sequence"] =
+    lua["print"] = print_fct;
+    lua["sleep"] = sleep_fct;
+    lua["terminate_sequence"] =
         [](sol::this_state lua){ abort_script_with_error(lua, ""); };
 }
 
@@ -242,14 +241,13 @@ void open_safe_library_subset(sol::state& lua)
     lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::table,
                        sol::lib::utf8, sol::lib::os);
 
-    auto globals = lua.globals();
-    globals["collectgarbage"] = sol::nil;
-    globals["debug"] = sol::nil;
-    globals["dofile"] = sol::nil;
-    globals["load"] = sol::nil;
-    globals["loadfile"] = sol::nil;
-    globals["print"] = sol::nil;
-    globals["require"] = sol::nil;
+    lua["collectgarbage"] = sol::nil;
+    lua["debug"] = sol::nil;
+    lua["dofile"] = sol::nil;
+    lua["load"] = sol::nil;
+    lua["loadfile"] = sol::nil;
+    lua["print"] = sol::nil;
+    lua["require"] = sol::nil;
     lua["os"] = lua.create_table_with(
         "date", lua["os"]["date"],
         "time", lua["os"]["time"],
