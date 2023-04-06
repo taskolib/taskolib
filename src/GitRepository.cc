@@ -66,6 +66,7 @@ GitRepository::GitRepository(std::filesystem::path file_path)
 GitRepository::~GitRepository()
 {
     repo_.reset();
+    my_signature_.reset();
     git_libgit2_shutdown();
 }
 
