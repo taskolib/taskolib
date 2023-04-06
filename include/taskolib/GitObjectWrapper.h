@@ -28,173 +28,6 @@
 #include <typeinfo>
 
 
-
-/**
- * A wrapper to handle the raw C pointer of git_repository
-**/
-
-/*
-class GitRepositoryPtr
-
-{
-public:
-    // empty
-    GitRepositoryPtr(){}
-
-    // normal
-    GitRepositoryPtr(git_repository* repo): repo_{repo} {};
-
-    // move constructor
-    GitRepositoryPtr(GitRepositoryPtr&& gl): repo_{std::exchange(gl.repo_, nullptr)} {};
-
-    // destructor
-    ~GitRepositoryPtr(){ git_repository_free(repo_); };
-
-    // move assignment
-    GitRepositoryPtr& operator=(GitRepositoryPtr&& gl) noexcept
-    {
-        std::swap(repo_, gl.repo_);
-        return *this;
-    }
-
-    git_repository** getptr() {return &repo_;};
-
-    void reset()
-    {
-        git_repository_free(repo_);
-        repo_ = nullptr;
-    }
-
-
-    //getter
-    git_repository* get() {return repo_;} ;
-    const git_repository* get() const {return repo_;} ;
-
-
-private:
-    git_repository* repo_ = nullptr;    
-};
-
-
-class GitSignaturePtr
-
-{
-public:
-
-    // empty
-    GitSignaturePtr(){}
-
-    // normal
-    GitSignaturePtr(git_signature* signature): signature_{signature} {};
-
-    // move constructor
-    GitSignaturePtr(GitSignaturePtr&& gl): signature_{std::exchange(gl.signature_, nullptr)} {};
-
-    // destructor
-    ~GitSignaturePtr(){ git_signature_free(signature_); };
-
-    // move assignment
-    GitSignaturePtr& operator=(GitSignaturePtr&& gl) noexcept
-    {
-        std::swap(signature_, gl.signature_);
-        return *this;
-    }
-
-    git_signature** getptr() {return &signature_;};
-
-
-    //getter
-    git_signature* get() {return signature_;} ;
-
-
-private:
-    git_signature* signature_ = nullptr;    
-};
-
-
-class GitIndexPtr
-
-{
-public:
-
-    // empty
-    GitIndexPtr(){}
-
-    // normal
-    GitIndexPtr(git_index* gindex): gindex_{gindex} {};
-
-    // copy constructor
-    GitIndexPtr(const GitIndexPtr& gl): GitIndexPtr{gl.gindex_} {};
-
-    // move constructor
-    GitIndexPtr(GitIndexPtr&& gl): gindex_{std::exchange(gl.gindex_, nullptr)} {};
-
-    // destructor
-    ~GitIndexPtr(){ git_index_free(gindex_); };
-
-    // copy assignment
-    GitIndexPtr& operator=(const GitIndexPtr& gl) {return *this = GitIndexPtr{gl};};
-
-    // move assignment
-    GitIndexPtr& operator=(GitIndexPtr&& gl) noexcept
-    {
-        std::swap(gindex_, gl.gindex_);
-        return *this;
-    }
-
-    git_index** getptr() {return &gindex_;};
-
-
-    //getter
-    git_index* get() {return gindex_;} ;
-    const git_index* get() const {return gindex_;} ;
-
-
-private:
-    git_index* gindex_ = nullptr;    
-};
-
-
-class GitTreePtr
-
-{
-public:
-
-    // empty
-    GitTreePtr(){};
-    
-    // normal
-    GitTreePtr(git_tree* tree): tree_{tree} {};
-
-    // move constructor
-    GitTreePtr(GitTreePtr&& gl): tree_{std::exchange(gl.tree_, nullptr)} {};
-
-    // destructor
-    ~GitTreePtr(){ git_tree_free(tree_); };
-
-    // move assignment
-    GitTreePtr& operator=(GitTreePtr&& gl) noexcept
-    {
-        std::swap(tree_, gl.tree_);
-        return *this;
-    }
-
-    git_tree** getptr() {return &tree_;};
-
-
-    //getter
-    git_tree* get() {return tree_;} ;
-    const git_tree* get() const {return tree_;} ;
-
-
-private:
-    git_tree* tree_ = nullptr;    
-};
-
-} //namespace task
-
-*/
-
 namespace task {
 
 // free C-type pointer (overload)
@@ -204,7 +37,11 @@ void free_lg_ptr(git_index* index);
 void free_lg_ptr(git_repository* repo);
 
 
-
+/**
+ * Template class wrapper for all libgit2 pointer types starting with git_{a-z} *
+ * Copy methods are excluded to prevejnt double ownership of said pointer.
+ * 
+*/
 template <class T>
 class LgObject
 {
@@ -228,6 +65,7 @@ public:
         return *this;
     }
 
+    // function for member variables of GitRepository object
     void reset()
     {
         free_lg_ptr(val_);
