@@ -87,7 +87,7 @@ git_repository* GitRepository::get_repo()
 
 void GitRepository::libgit_update()
 {
-  GitIndexPtr index;
+  LgObject<git_index*> index;
 
   char *paths[] = {const_cast<char*>("*")};
   git_strarray array = {paths, 1};
@@ -123,9 +123,9 @@ void GitRepository::libgit_init(std::filesystem::path file_path)
 void GitRepository::libgit_commit_initial()
 {
     // prepare gitlib data types
-    GitIndexPtr index;
+    LgObject<git_index*> index;
     git_oid tree_id, commit_id;
-    GitTreePtr tree;
+    LgObject<git_tree*> tree;
 
     // get tree structure for commit
     git_repository_index(index.getptr(), repo_.get());
@@ -155,9 +155,9 @@ void GitRepository::libgit_commit(const std::string& commit_message)
     const git_commit* parent_commit = libgit_get_commit();
 
     //define types for commit call
-    GitIndexPtr index;
+    LgObject<git_index*> index;
     git_oid tree_id, commit_id;
-    GitTreePtr tree;
+    LgObject<git_tree*> tree;
 
     // get tree
     git_repository_index(index.getptr(), repo_.get());
@@ -186,7 +186,7 @@ void GitRepository::libgit_commit(const std::string& commit_message)
 void GitRepository::libgit_add()
 {
     //load index of last commit
-    GitIndexPtr gindex;
+    LgObject<git_index*> gindex;
     git_repository_index(gindex.getptr(), repo_.get());
 
     char *paths[] = {const_cast<char*>("*")};
@@ -205,7 +205,7 @@ void GitRepository::libgit_add()
 void GitRepository::libgit_remove_sequence(std::filesystem::path seq_directory)
 {
     //load index of last commit
-    GitIndexPtr gindex;
+    LgObject<git_index*> gindex;
     git_repository_index(gindex.getptr(), repo_.get());
 
     //remove files from directory
@@ -428,7 +428,7 @@ std::vector<std::array<std::string, 3>> GitRepository::libgit_status()
 std::vector <int> GitRepository::libgit_add_files(std::vector<std::filesystem::path> filepaths)
 {
       //load index of last commit
-    GitIndexPtr gindex;
+    LgObject<git_index*> gindex;
     git_repository_index(gindex.getptr(), repo_.get());
 
     size_t v_len = filepaths.size();

@@ -25,12 +25,15 @@
 
 #include <git2.h>
 #include <utility>
+#include <typeinfo>
 
-namespace task {
+
 
 /**
  * A wrapper to handle the raw C pointer of git_repository
 **/
+
+/*
 class GitRepositoryPtr
 
 {
@@ -189,3 +192,58 @@ private:
 };
 
 } //namespace task
+
+*/
+
+namespace task {
+
+// free C-type pointer (overload)
+void free_lg_ptr(git_tree* tree);
+void free_lg_ptr(git_signature* signature);
+void free_lg_ptr(git_index* index);
+void free_lg_ptr(git_repository* repo);
+
+
+
+template <class T>
+class LgObject
+{
+public:
+    // empty
+    LgObject(){};
+    
+    // normal
+    LgObject(T val): val_{val} {};
+
+    // move constructor
+    LgObject(LgObject&& lg): val_{std::exchange(lg.val_, nullptr)} {};
+
+    // destructor
+    ~LgObject(){ free_lg_ptr(val_); };
+
+    // move assignment
+    LgObject& operator=(LgObject&& lg) noexcept
+    {
+        std::swap(val_, lg.val_);
+        return *this;
+    }
+
+    void reset()
+    {
+        free_lg_ptr(val_);
+        val_ = nullptr;
+    }
+
+    // get pointer
+    T* getptr() {return &val_;};
+
+    //getter
+    T get() {return val_;} ;
+    const T get() const {return val_;} ;
+
+private:
+    T val_ = nullptr;
+};
+
+
+}
