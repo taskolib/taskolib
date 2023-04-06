@@ -99,13 +99,13 @@ public:
 
 private:
     /// Pointer which holds all infos of the active repository
-    GitRepositoryPtr repo_{ nullptr };
+    LgObject<git_repository*> repo_{ nullptr };
 
     /// path to the repository (for taskomat .../sequences/)
     std::filesystem::path repo_path_;
 
     /// signature used in commits
-    GitSignaturePtr my_signature_{ nullptr };
+    LgObject<git_signature*> my_signature_{ nullptr };
 
     /**
      * initialize a new git repository and commit all files in its path
