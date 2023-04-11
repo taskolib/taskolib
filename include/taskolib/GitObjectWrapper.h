@@ -26,54 +26,63 @@
 #include <git2.h>
 #include <utility>
 #include <typeinfo>
+#include <string>
 
 
 namespace task {
 
 // free C-type pointer (overload)
-void free_lg_ptr(git_tree* tree);
-void free_lg_ptr(git_signature* signature);
-void free_lg_ptr(git_index* index);
-void free_lg_ptr(git_repository* repo);
+void free_libgit_ptr(git_tree* tree);
+void free_libgit_ptr(git_signature* signature);
+void free_libgit_ptr(git_index* index);
+void free_libgit_ptr(git_repository* repo);
+void free_libgit_ptr(git_remote* remote);
 
 
 /**
- * Template class wrapper for all libgit2 pointer types starting with git_{a-z} *
- * Copy methods are excluded to prevejnt double ownership of said pointer.
+ * Template class wrapper for all libgit2 pointer types starting with git_{a-z}*.
+ * Copy methods are excluded to prevent double ownership of said pointer.
  * 
+ * \class T: types like git_remote*, git_tree*, git_commit*, ...
 */
 template <class T>
-class LgObject
+class LibGitPointer
 {
 public:
-    // empty
-    LgObject(){};
+    /// (default) Default-construct an LibGitPointer. The managed pointer is NULL.
+    LibGitPointer(){};
     
-    // normal
-    LgObject(T val): val_{val} {};
+    /// (construct by value) Construct a LibGitPointer via a C-pointer from libgit2.
+    LibGitPointer(T val): val_{val} {};
 
-    // move constructor
-    LgObject(LgObject&& lg): val_{std::exchange(lg.val_, nullptr)} {};
+    /// (move constructor) Move a C-pointer from an existing LibGitPointer to a new one.
+    LibGitPointer(LibGitPointer&& lg): val_{std::exchange(lg.val_, nullptr)} {};
 
-    // destructor
-    ~LgObject(){ free_lg_ptr(val_); };
+    /// (destructor) Destruct the Object by freeing the C-type pointer with a libgit function.
+    ~LibGitPointer(){ free_libgit_ptr(val_); };
 
-    // move assignment
-    LgObject& operator=(LgObject&& lg) noexcept
+    // (move assignment) swap C-type pointer bewteen objects.
+    LibGitPointer& operator=(LibGitPointer&& lg) noexcept
     {
         std::swap(val_, lg.val_);
         return *this;
     }
 
+    /// (copy constructor) Shall not be used to prevent double ownership of pointer.
+    LibGitPointer(const LibGitPointer&) = delete;
+
+    // (copy assignment) Shall not be used to prevent double ownership of pointer.
+    LibGitPointer& operator=(const LibGitPointer&) = delete;
+
     // function for member variables of GitRepository object
     void reset()
     {
-        free_lg_ptr(val_);
+        free_libgit_ptr(val_);
         val_ = nullptr;
     }
 
     // get pointer
-    T* getptr() {return &val_;};
+    //T* getptr() {return &val_;};
 
     //getter
     T get() {return val_;} ;
@@ -82,6 +91,24 @@ public:
 private:
     T val_ = nullptr;
 };
+
+
+
+
+/*
+ * Function wrappers for libgit2 functions which manipulates pointers.
+ * (Which take double pointers as parameters)
+*/
+
+LibGitPointer<git_repository*> repository_open   (const std::string& repo_path);
+LibGitPointer<git_repository*> repository_init   (const std::string& repo_path, bool is_bare);
+LibGitPointer<git_index*>      repository_index  (git_repository* repo);
+LibGitPointer<git_signature*>  signature_default (git_repository* repo);
+LibGitPointer<git_signature*>  signature_new     (const std::string& name, const std::string& email,
+                                                  int time, int offset);
+LibGitPointer<git_tree*>       tree_lookup       (git_repository* repo, git_oid tree_id);
+
+
 
 
 }
