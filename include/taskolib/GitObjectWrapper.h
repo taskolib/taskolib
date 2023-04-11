@@ -61,7 +61,7 @@ public:
     /// (destructor) Destruct the Object by freeing the C-type pointer with a libgit function.
     ~LibGitPointer(){ free_libgit_ptr(val_); };
 
-    // (move assignment) swap C-type pointer bewteen objects.
+    /// (move assignment) swap C-type pointer bewteen objects.
     LibGitPointer& operator=(LibGitPointer&& lg) noexcept
     {
         std::swap(val_, lg.val_);
@@ -71,20 +71,17 @@ public:
     /// (copy constructor) Shall not be used to prevent double ownership of pointer.
     LibGitPointer(const LibGitPointer&) = delete;
 
-    // (copy assignment) Shall not be used to prevent double ownership of pointer.
+    /// (copy assignment) Shall not be used to prevent double ownership of pointer.
     LibGitPointer& operator=(const LibGitPointer&) = delete;
 
-    // function for member variables of GitRepository object
+    /// function for member variables of GitRepository object
     void reset()
     {
         free_libgit_ptr(val_);
         val_ = nullptr;
     }
 
-    // get pointer
-    //T* getptr() {return &val_;};
-
-    //getter
+    /// getter functions for const and non-const
     T get() {return val_;} ;
     const T get() const {return val_;} ;
 
@@ -93,13 +90,12 @@ private:
 };
 
 
-
-
-/*
+/**
  * Function wrappers for libgit2 functions which manipulates pointers.
  * (Which take double pointers as parameters)
+ * \note for documentation see the associated libgit2 function
+ *       name: "git_FUNCTIONNAME"
 */
-
 LibGitPointer<git_repository*> repository_open   (const std::string& repo_path);
 LibGitPointer<git_repository*> repository_init   (const std::string& repo_path, bool is_bare);
 LibGitPointer<git_index*>      repository_index  (git_repository* repo);
@@ -107,8 +103,4 @@ LibGitPointer<git_signature*>  signature_default (git_repository* repo);
 LibGitPointer<git_signature*>  signature_new     (const std::string& name, const std::string& email,
                                                   int time, int offset);
 LibGitPointer<git_tree*>       tree_lookup       (git_repository* repo, git_oid tree_id);
-
-
-
-
 }
