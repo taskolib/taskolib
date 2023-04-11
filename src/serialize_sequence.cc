@@ -170,6 +170,10 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
             std::filesystem::remove_all(seq_path); // remove previous storage
         std::filesystem::create_directories(seq_path);
     }
+    catch(const std::filesystem::filesystem_error& io_err)
+    {
+        throw Error(gul14::cat("I/O error: ", io_err.what()));
+    }
     catch(const std::exception& e)
     {
         auto err = errno;
@@ -189,6 +193,10 @@ void remove_sequence(const std::filesystem::path& seq_path)
     {
         if (std::filesystem::exists(seq_path))
             std::filesystem::remove_all(seq_path);
+    }
+    catch(const std::filesystem::filesystem_error& io_err)
+    {
+        throw Error(gul14::cat("I/O error: ", io_err.what()));
     }
     catch(const std::exception& e)
     {

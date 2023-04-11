@@ -95,22 +95,22 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         // Create Git Library
         GitRepository gl{"sequences"};
 
-        std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
+        std::vector<filestatus> stats = gl.status();
         REQUIRE(stats.size() == 0);
 
-        gl.libgit_add();
+        gl.add();
 
-        stats = gl.libgit_status();
+        stats = gl.status();
 
         // new submodules from unit_test_2 should be in stage mode
         REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0].rfind("unit_test_1", 0) == 0 || elm[0].rfind("unit_test_2", 0) == 0)
+            filestatus elm = stats.at(i);
+            if (elm.path_name.rfind("unit_test_1", 0) == 0 || elm.path_name.rfind("unit_test_2", 0) == 0)
             {
-                REQUIRE(elm[1] == "staged");
-                REQUIRE(elm[2] == "new file");
+                REQUIRE(elm.handling == "staged");
+                REQUIRE(elm.changes == "new file");
             }
         }
 
@@ -126,8 +126,8 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         // Check if repo_ can be found again
         REQUIRE(gl.get_last_commit_message() == "Initial commit");
 
-        gl.libgit_add(); // add unit_test_2
-        gl.libgit_commit("Add second sequence");
+        gl.add(); // add unit_test_2
+        gl.commit("Add second sequence");
 
         REQUIRE(gl.get_last_commit_message() == "Add second sequence");
 
@@ -152,34 +152,34 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         store_sequence("sequences", seq_2);
 
-        std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
+        std::vector<filestatus> stats = gl.status();
         REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0].rfind("unit_test_1/step", 0) == 0)
+            filestatus elm = stats.at(i);
+            if (elm.path_name.rfind("unit_test_1/step", 0) == 0)
             {
-                REQUIRE(elm[1] == "unstaged");
-                REQUIRE(elm[2] == "modified");
+                REQUIRE(elm.handling == "unstaged");
+                REQUIRE(elm.changes == "modified");
             }
         }
 
-        auto ret = gl.libgit_add_files({"unit_test_1/step_2_action.lua"});
+        auto ret = gl.add_files({"unit_test_1/step_2_action.lua"});
 
-        stats = gl.libgit_status();
+        stats = gl.status();
         REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0].rfind("unit_test_1/step_1", 0) == 0)
+            filestatus elm = stats.at(i);
+            if (elm.path_name.rfind("unit_test_1/step_1", 0) == 0)
             {
-                REQUIRE(elm[1] == "unstaged");
-                REQUIRE(elm[2] == "modified");
+                REQUIRE(elm.handling == "unstaged");
+                REQUIRE(elm.changes == "modified");
             }
-            else if (elm[0].rfind("unit_test_1/step_2", 0) == 0)
+            else if (elm.path_name.rfind("unit_test_1/step_2", 0) == 0)
             {
-                REQUIRE(elm[1] == "staged");
-                REQUIRE(elm[2] == "modified");
+                REQUIRE(elm.handling == "staged");
+                REQUIRE(elm.changes == "modified");
             }
         }
 
@@ -194,25 +194,25 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         
         std::filesystem::path mypath = "unit_test_2";
 
-        gl.libgit_remove_sequence(mypath);
+        gl.remove_sequence(mypath);
 
-        std::vector<std::array<std::string, 3>> stats = gl.libgit_status();
+        std::vector<filestatus> stats = gl.status();
 
         // every file in unit_test_2 should have the tag deleted
         //REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
             
-            std::array<std::string, 3> elm = stats.at(i);
-            if (elm[0].rfind("unit_test_2", 0) == 0)
+            filestatus elm = stats.at(i);
+            if (elm.path_name.rfind("unit_test_2", 0) == 0)
             {
-                REQUIRE(elm[1] == "staged");
-                REQUIRE(elm[2] == "deleted");
+                REQUIRE(elm.handling == "staged");
+                REQUIRE(elm.changes == "deleted");
             }
 
         }
 
-        gl.libgit_commit("remove sequence");
+        gl.commit("remove sequence");
 
         // check if path got removed
         REQUIRE(not std::filesystem::exists("sequences" / mypath));

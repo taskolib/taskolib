@@ -71,8 +71,8 @@ void SequenceManager::create_sequence(const std::string& name)
 {
     Sequence seq{name};
     task::store_sequence(path_/name, seq);
-    lg_.libgit_add();
-    lg_.libgit_commit("create sequence " + name);
+    lg_.add();
+    lg_.commit("create sequence " + name);
 }
 
 void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const std::string& new_name)
@@ -85,17 +85,17 @@ void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const
     task::store_sequence(sequence, my_sequence);
     remove_sequence(sequence);
     
-    lg_.libgit_add();
-    lg_.libgit_commit("rename " + old_name + " to " + new_name);
+    lg_.add();
+    lg_.commit("rename " + old_name + " to " + new_name);
 
 }
 
 
 void SequenceManager::remove_sequence(std::filesystem::path sequence_name)
 {
-    lg_.libgit_remove_sequence(sequence_name);
-    lg_.libgit_add();
-    lg_.libgit_commit("remove " + sequence_name.string());
+    lg_.remove_sequence(sequence_name);
+    lg_.add();
+    lg_.commit("remove " + sequence_name.string());
 }
 
 void SequenceManager::remove_repository()

@@ -31,9 +31,23 @@
 
 namespace task {
 
+/**
+ * Struct to express the git status for one file
+ * \param path_name:  relative path to file.
+ *                    If the path changed this value will
+ *                    have the shape "OLD_NAME -> NEW_NAME"
+ * \param handling:   Handling status [unchanged, unstaged, staged, untracked, ignored]
+ * \param changes:    Change status [new file, deleted, renamed, typechanged, modified, unchanged, ignored, untracked]
+ */
+typedef struct
+{
+    std::string path_name;
+    std::string handling;
+    std::string changes;
+} filestatus;
 
 /**
- * A class to wrap used methods from C-Library libgit2
+ * A class to wrap used methods from C-Library libgit2.
  * 
  * This class is necessary to handle C-pointers in a way that
  * C++ programmers using this class do not have to think about them.
@@ -41,102 +55,104 @@ namespace task {
  * This class does not reflect the full libgit2 library.
  * git functions which are not implemented in this class will be
  * implemented in case of necessity
-*/
+ */
 class GitRepository
 {
 public:
 
     /**
-     * Constructor which specifies the root dir of the git repository
+     * Constructor which specifies the root dir of the git repository.
      * \param file_path: path to "sequences"-folder (or customized directory)
-     *
      */
     explicit GitRepository(std::filesystem::path file_path);
 
-    /// returns member variable, which is the root dir of the git repository
+    /// returns member variable, which is the root dir of the git repository.
     std::filesystem::path get_path() const;
 
-    /// returns a C-type pointer to the current loaded repository
+    /// returns a C-type pointer to the current loaded repository.
     git_repository* get_repo();
 
-    /// stage all new and changed files in the repository environment
-    void libgit_add();
+    /// stage all new and changed files in the repository environment.
+    void add();
 
     /**
-     * 
-    */
-   std::vector <int> libgit_add_files(std::vector<std::filesystem::path> filepaths);
+     * Stage specific files listed in filepaths.
+     * \param filepaths: list of files. Either relative to repository root or absolute.
+     * \return list of indices. An index from the filepaths vector is returned if
+     *          the staging of the file failed. Returns an empty vector if all
+     *          files were staged successfully.
+     */
+   std::vector <int> add_files(std::vector<std::filesystem::path> filepaths);
 
     /**
-     * return the commit message of ther HEAD commit
+     * return the commit message of ther HEAD commit.
      * \note this function is solely for Unittest purposes
      * \return message of last commit (=HEAD)
-    */
+     */
     std::string get_last_commit_message();
 
     /**
-     * Commit staged changes to the master branch of the git repository
+     * Commit staged changes to the master branch of the git repository.
      * \param commit_message: customized message for the commit
-    */
-    void libgit_commit(const std::string& commit_message);
+     */
+    void commit(const std::string& commit_message);
 
     /**
-     * Deletes seq_repository and all files within
+     * Deletes seq_repository and all files within.
      * \param seq_directory: directory holding sequence
-     * 
      * \attention seq_directory is a relative path with repo_path_ as root
      *            if the sequence to be deleted is in "sequences/"
      *            then set seq_directory = SEQUENCE_NAME
-     * 
-    */
-    void libgit_remove_sequence(std::filesystem::path seq_directory);
+     */
+    void remove_sequence(std::filesystem::path seq_directory);
 
-    /// returns current git
-    std::vector<std::array<std::string, 3>> libgit_status();
+    /**
+     * returns current git status.
+     * \return vector of file status for each file.
+     */ 
+    std::vector<filestatus> status();
 
     /// Destructor
     ~GitRepository();
 
 private:
-    /// Pointer which holds all infos of the active repository
-    LgObject<git_repository*> repo_{ nullptr };
+    /// Pointer which holds all infos of the active repository.
+    LibGitPointer<git_repository*> repo_{ nullptr };
 
-    /// path to the repository (for taskomat .../sequences/)
+    /// path to the repository (for taskomat .../sequences/).
     std::filesystem::path repo_path_;
 
-    /// signature used in commits
-    LgObject<git_signature*> my_signature_{ nullptr };
+    /// signature used in commits.
+    LibGitPointer<git_signature*> my_signature_{ nullptr };
 
     /**
-     * initialize a new git repository and commit all files in its path
-     * 
+     * initialize a new git repository and commit all files in its path.
      * \note This is a private member function because git repository init 
      *       should be done by an LibGit Object Initialization
-    */
-    void libgit_init(std::filesystem::path file_path);
+     */
+    void init(std::filesystem::path file_path);
 
     /**
-     * Make the first commit. Function is called by libgit_init
-     * Function slightly differs from libgit_commit because in this case,
-     * there is no previous commit to dock on.
-     * 
+     * Make the first commit. Function is called by init.
+     * \note slightly differs from commit because in this case,
+     *       there is no previous commit to dock on.
     */
-    void libgit_commit_initial();
+    void commit_initial();
 
     /**
-     * Get a specific commit
+     * Get a specific commit.
      * \param None: Get the Head commit
      * \param ref: Use Hex string identifier to find a commit
      * \param count: Jump back NUMBER of commits behind HEAD
      * 
      * \return C-type commit object
     */
-    git_commit* libgit_get_commit(int count);
-    git_commit* libgit_get_commit(const std::string& ref);
-    git_commit* libgit_get_commit();
+    git_commit* get_commit(int count);
+    git_commit* get_commit(const std::string& ref);
+    git_commit* get_commit();
 
     /**
-     * Translate all status information for each submodule into String
+     * Translate all status information for each submodule into String.
      * 
      * \param status: C-type status of all submodules from libgit
      * 
@@ -146,9 +162,13 @@ private:
      *  :array[1] - Handling status [unchanged, unstaged, staged, untracked, ignored]
      *  :array[2] - Change status [new file, deleted, renamed, typechanged, modified, unchanged, ignored, untracked]
     */
-    std::vector<std::array<std::string, 3>> collect_status(git_status_list *status) const;
+    std::vector<filestatus> collect_status(git_status_list *status) const;
 
-    void libgit_update();
+    /** Update the tracked files in the repository.
+     * This member function stages all changes of already tracked
+     * files in the repository.
+    */
+    void update();
 
 };
 
