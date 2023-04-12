@@ -31,7 +31,7 @@
 
 namespace task {
 
-SequenceManager::SequenceManager(std::filesystem::path path): lg_{path}
+SequenceManager::SequenceManager(std::filesystem::path path): git_repo_{path}
 {
     if (path.empty())
         throw Error("Root sequences path must not be empty.");
@@ -71,8 +71,8 @@ void SequenceManager::create_sequence(const std::string& name)
 {
     Sequence seq{name};
     task::store_sequence(path_/name, seq);
-    lg_.add();
-    lg_.commit("create sequence " + name);
+    git_repo_.add();
+    git_repo_.commit("create sequence " + name);
 }
 
 void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const std::string& new_name)
@@ -85,20 +85,23 @@ void SequenceManager::rename_sequence(std::filesystem::path sequence_path, const
     task::store_sequence(sequence, my_sequence);
     remove_sequence(sequence);
     
-    lg_.add();
-    lg_.commit("rename " + old_name + " to " + new_name);
+    git_repo_.add();
+    git_repo_.commit("rename " + old_name + " to " + new_name);
 
 }
 
 
 void SequenceManager::remove_sequence(std::filesystem::path sequence_name)
 {
-    lg_.remove_sequence(sequence_name);
-    lg_.add();
-    lg_.commit("remove " + sequence_name.string());
+    // check if relative path is an existing directory
+    check_sequence(path_ / sequence_name);
+    
+    git_repo_.remove_directory(sequence_name);
+    git_repo_.add();
+    git_repo_.commit("remove " + sequence_name.string());
 }
 
-void SequenceManager::remove_repository()
+void SequenceManager::remove_all_sequences_and_repository()
 {
     //TODO: Delete function?
     
@@ -106,7 +109,7 @@ void SequenceManager::remove_repository()
     std::filesystem::remove_all(path_);
 
     // reinitialize Libgit object
-    //lg_ = GitRepository{path_};
+    //git_repo_ = GitRepository{path_};
 }
 
 } // namespace task

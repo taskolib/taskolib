@@ -95,7 +95,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         // Create Git Library
         GitRepository gl{"sequences"};
 
-        std::vector<filestatus> stats = gl.status();
+        std::vector<FileStatus> stats = gl.status();
         REQUIRE(stats.size() == 0);
 
         gl.add();
@@ -106,7 +106,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
-            filestatus elm = stats.at(i);
+            FileStatus elm = stats.at(i);
             if (elm.path_name.rfind("unit_test_1", 0) == 0 || elm.path_name.rfind("unit_test_2", 0) == 0)
             {
                 REQUIRE(elm.handling == "staged");
@@ -152,11 +152,11 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         store_sequence("sequences", seq_2);
 
-        std::vector<filestatus> stats = gl.status();
+        std::vector<FileStatus> stats = gl.status();
         REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
-            filestatus elm = stats.at(i);
+            FileStatus elm = stats.at(i);
             if (elm.path_name.rfind("unit_test_1/step", 0) == 0)
             {
                 REQUIRE(elm.handling == "unstaged");
@@ -170,7 +170,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
-            filestatus elm = stats.at(i);
+            FileStatus elm = stats.at(i);
             if (elm.path_name.rfind("unit_test_1/step_1", 0) == 0)
             {
                 REQUIRE(elm.handling == "unstaged");
@@ -194,16 +194,16 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         
         std::filesystem::path mypath = "unit_test_2";
 
-        gl.remove_sequence(mypath);
+        gl.remove_directory(mypath);
 
-        std::vector<filestatus> stats = gl.status();
+        std::vector<FileStatus> stats = gl.status();
 
         // every file in unit_test_2 should have the tag deleted
         //REQUIRE(stats.size() != 0);
         for (size_t i =0; i < stats.size(); i++)
         {
             
-            filestatus elm = stats.at(i);
+            FileStatus elm = stats.at(i);
             if (elm.path_name.rfind("unit_test_2", 0) == 0)
             {
                 REQUIRE(elm.handling == "staged");

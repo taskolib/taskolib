@@ -196,10 +196,10 @@ TEST_CASE("Remove Repository", "[SequenceManager]")
 
     //SequenceManager sm{"sequences"};
 
-    // TODO: fix remove_repository
+    // TODO: fix remove_all_sequences_and_repository
 
     // remove everything and come back to git with one initial commit
-    //sm.remove_repository();
+    //sm.remove_all_sequences_and_repository();
 
     std::filesystem::remove_all("sequences");
 

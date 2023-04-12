@@ -187,12 +187,12 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
 }
 
 
-void remove_sequence(const std::filesystem::path& seq_path)
+void remove_sequence(const std::filesystem::path& folder)
 {
     try
     {
-        if (std::filesystem::exists(seq_path))
-            std::filesystem::remove_all(seq_path);
+        if (std::filesystem::exists(folder))
+            std::filesystem::remove_all(folder);
     }
     catch(const std::filesystem::filesystem_error& io_err)
     {
