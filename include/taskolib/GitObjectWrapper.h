@@ -37,13 +37,14 @@ void free_libgit_ptr(git_signature* signature);
 void free_libgit_ptr(git_index* index);
 void free_libgit_ptr(git_repository* repo);
 void free_libgit_ptr(git_remote* remote);
+void free_libgit_ptr(git_commit* commit);
 
 
 /**
  * Template class wrapper for all libgit2 pointer types starting with git_{a-z}*.
  * Copy methods are excluded to prevent double ownership of said pointer.
  * 
- * \class T: types like git_remote*, git_tree*, git_commit*, ...
+ * \tparam T: A pointer type like git_remote*, git_tree*, git_commit*, ...
 */
 template <class T>
 class LibGitPointer
@@ -53,7 +54,7 @@ public:
     LibGitPointer(){};
     
     /// (construct by value) Construct a LibGitPointer via a C-pointer from libgit2.
-    LibGitPointer(T val): val_{val} {};
+    LibGitPointer(T *val): val_{val} {};
 
     /// (move constructor) Move a C-pointer from an existing LibGitPointer to a new one.
     LibGitPointer(LibGitPointer&& lg): val_{std::exchange(lg.val_, nullptr)} {};
@@ -61,10 +62,11 @@ public:
     /// (destructor) Destruct the Object by freeing the C-type pointer with a libgit function.
     ~LibGitPointer(){ free_libgit_ptr(val_); };
 
-    /// (move assignment) swap C-type pointer bewteen objects.
+    /// (move assignment) move value from other object to this object
     LibGitPointer& operator=(LibGitPointer&& lg) noexcept
     {
-        std::swap(val_, lg.val_);
+        val_ = std::move(lg.val_);
+        lg.val_ = nullptr;
         return *this;
     }
 
@@ -82,25 +84,70 @@ public:
     }
 
     /// getter functions for const and non-const
-    T get() {return val_;} ;
-    const T get() const {return val_;} ;
+    T* get() {return val_;} ;
+    const T* get() const {return val_;};
 
 private:
-    T val_ = nullptr;
+    T *val_ = nullptr;
 };
 
 
+//TODO: This works in doxygen according to documentation
 /**
  * Function wrappers for libgit2 functions which manipulates pointers.
  * (Which take double pointers as parameters)
  * \note for documentation see the associated libgit2 function
  *       name: "git_FUNCTIONNAME"
+ * \defgroup lgptrfunc Group of wrapped libgit2 functions
+ * \{
+ */
+
+/**
+ * Returns an existing repository
+ * \param repo_path absolute or relative path from executable
+ * \return Wrapper of a git_repository*
 */
-LibGitPointer<git_repository*> repository_open   (const std::string& repo_path);
-LibGitPointer<git_repository*> repository_init   (const std::string& repo_path, bool is_bare);
-LibGitPointer<git_index*>      repository_index  (git_repository* repo);
-LibGitPointer<git_signature*>  signature_default (git_repository* repo);
-LibGitPointer<git_signature*>  signature_new     (const std::string& name, const std::string& email,
+LibGitPointer<git_repository> repository_open   (const std::string& repo_path);
+
+
+/**
+ * Returns a fresh initialized repository
+ * \param repo_path absolute or relative path from executable
+ * \return Wrapper of a git_repository*
+*/
+LibGitPointer<git_repository> repository_init   (const std::string& repo_path, bool is_bare);
+
+/**
+ * Returns the current index of a repository
+ * \param repo C-type repository
+ * \return Wrapper of a git_index*
+*/
+LibGitPointer<git_index>      repository_index  (git_repository* repo);
+
+/**
+ * Generates a signature from system values (already collected by the C-type repository)
+ * \param repo_path absolute or relative path from executable
+ * \return Wrapper of a git_signature*
+*/
+LibGitPointer<git_signature>  signature_default (git_repository* repo);
+/**
+ * Generates a signature from given parameters
+ * \param name User name who creates the commit
+ * \param email E-mail of the user
+ * \param time timestamp
+ * \param offset timezone adjustment for the timezone
+ * \return Wrapper of a git_signature*
+*/
+LibGitPointer<git_signature>  signature_new     (const std::string& name, const std::string& email,
                                                   int time, int offset);
-LibGitPointer<git_tree*>       tree_lookup       (git_repository* repo, git_oid tree_id);
+
+
+/**
+ * Collects the current tree of the git repository
+ * \param repo C-type repository
+ * \param tree_id identity number of the active tree
+ * \return Wrapper of a git_signature*
+*/
+LibGitPointer<git_tree>       tree_lookup       (git_repository* repo, git_oid tree_id);
+/** \}*/
 }

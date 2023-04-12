@@ -141,7 +141,6 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(load.size() == seq.size());
         auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
         REQUIRE(result);
-
     }
 
     SECTION("Complex path")
@@ -158,6 +157,7 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(result);
 
         std::filesystem::remove_all("unit_test");
+        std::filesystem::remove_all("test.seq");
     }
 
 }
@@ -196,10 +196,10 @@ TEST_CASE("Remove Repository", "[SequenceManager]")
 
     //SequenceManager sm{"sequences"};
 
-    // TODO: fix remove_repository
+    // TODO: fix remove_all_sequences_and_repository
 
     // remove everything and come back to git with one initial commit
-    //sm.remove_repository();
+    //sm.remove_all_sequences_and_repository();
 
     std::filesystem::remove_all("sequences");
 

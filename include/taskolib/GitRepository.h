@@ -33,18 +33,13 @@ namespace task {
 
 /**
  * Struct to express the git status for one file
- * \param path_name:  relative path to file.
- *                    If the path changed this value will
- *                    have the shape "OLD_NAME -> NEW_NAME"
- * \param handling:   Handling status [unchanged, unstaged, staged, untracked, ignored]
- * \param changes:    Change status [new file, deleted, renamed, typechanged, modified, unchanged, ignored, untracked]
  */
-typedef struct
+struct FileStatus
 {
-    std::string path_name;
-    std::string handling;
-    std::string changes;
-} filestatus;
+    std::string path_name; ///relative path to file. If the path changed this value will have the shape "OLD_NAME -> NEW_NAME".
+    std::string handling;  ///Handling status of file [unchanged, unstaged, staged, untracked, ignored]
+    std::string changes;   ///Change status of file [new file, deleted, renamed, typechanged, modified, unchanged, ignored, untracked]
+};
 
 /**
  * A class to wrap used methods from C-Library libgit2.
@@ -82,10 +77,10 @@ public:
      *          the staging of the file failed. Returns an empty vector if all
      *          files were staged successfully.
      */
-   std::vector <int> add_files(std::vector<std::filesystem::path> filepaths);
+   std::vector <int> add_files(const std::vector<std::filesystem::path>& filepaths);
 
     /**
-     * return the commit message of ther HEAD commit.
+     * return the commit message of the HEAD commit.
      * \note this function is solely for Unittest purposes
      * \return message of last commit (=HEAD)
      */
@@ -104,26 +99,26 @@ public:
      *            if the sequence to be deleted is in "sequences/"
      *            then set seq_directory = SEQUENCE_NAME
      */
-    void remove_sequence(std::filesystem::path seq_directory);
+    void remove_directory(std::filesystem::path seq_directory);
 
     /**
      * returns current git status.
      * \return vector of file status for each file.
      */ 
-    std::vector<filestatus> status();
+    std::vector<FileStatus> status();
 
     /// Destructor
     ~GitRepository();
 
 private:
     /// Pointer which holds all infos of the active repository.
-    LibGitPointer<git_repository*> repo_{ nullptr };
+    LibGitPointer<git_repository> repo_;
 
     /// path to the repository (for taskomat .../sequences/).
     std::filesystem::path repo_path_;
 
     /// signature used in commits.
-    LibGitPointer<git_signature*> my_signature_{ nullptr };
+    LibGitPointer<git_signature> my_signature_;
 
     /**
      * initialize a new git repository and commit all files in its path.
@@ -162,7 +157,7 @@ private:
      *  :array[1] - Handling status [unchanged, unstaged, staged, untracked, ignored]
      *  :array[2] - Change status [new file, deleted, renamed, typechanged, modified, unchanged, ignored, untracked]
     */
-    std::vector<filestatus> collect_status(git_status_list *status) const;
+    std::vector<FileStatus> collect_status(git_status_list *status) const;
 
     /** Update the tracked files in the repository.
      * This member function stages all changes of already tracked

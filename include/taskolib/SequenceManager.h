@@ -100,6 +100,7 @@ public:
      * Delete sequence specified in path to sequence
      *
      * \param sequence_path path to sequence.
+     * \note sequence_path must be relative to path_
      *
      * \exception throws Error if removal was unsucessful
      */
@@ -107,11 +108,11 @@ public:
 
 
     /**
-     * Loads sequence on the sequence file path.
+     * Rename sequence on the sequence file path.
      *
      * \param sequence_path path to sequence.
-     *
-     * \return deserialized sequence.
+     * \note sequence_path must be relative to path_
+     * \param new_name new name of sequence
      *
      * \exception throws Error if renaming was unsuccessful
      */
@@ -126,14 +127,14 @@ public:
    void create_sequence(const std::string& name);
 
     /**
-     * Reset the repository by deleting all files from path_ and reinitialiszing the GitRepository Wrapper lg_
+     * Reset the repository by deleting all files from path_ and reinitialiszing the GitRepository Wrapper git_repo_
     */
-    void remove_repository();
+    void remove_all_sequences_and_repository();
 
 private:
     /// Root path to the sequences
     std::filesystem::path path_;
-    GitRepository lg_;
+    GitRepository git_repo_;
     void check_sequence(std::filesystem::path sequence_path) const;
 
 };
