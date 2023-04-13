@@ -141,7 +141,6 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(load.size() == seq.size());
         auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
         REQUIRE(result);
-
     }
 
     SECTION("Complex path")
@@ -158,6 +157,7 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(result);
 
         std::filesystem::remove_all("unit_test");
+        std::filesystem::remove_all("test.seq");
     }
 
 }
