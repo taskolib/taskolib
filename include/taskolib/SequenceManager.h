@@ -127,7 +127,7 @@ public:
    void create_sequence(const std::string& name);
 
     /**
-     * Reset the repository by deleting all files from path_ and reinitialiszing the GitRepository Wrapper git_repo_
+     * Reset the repository by deleting all files from the base path and reinitialising the git repository
     */
     void remove_all_sequences_and_repository();
 
