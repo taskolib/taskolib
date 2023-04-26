@@ -25,12 +25,14 @@
 #ifndef TASKOLIB_SEQUENCEMANAGER_H_
 #define TASKOLIB_SEQUENCEMANAGER_H_
 
-#include <vector>
 #include <filesystem>
+#include <vector>
 #include <string>
+
 #include <gul14/string_view.h>
-#include "taskolib/Sequence.h"
+
 #include "GitRepository.h"
+#include "taskolib/Sequence.h"
 
 namespace task {
 
@@ -84,6 +86,13 @@ public:
      */
     PathList get_sequence_names() const;
 
+
+    /**
+     * Return status of GitRepository object
+     * \return GitRepository object
+    */
+    std::vector<FileStatus> get_repository_status();
+
     /**
      * Loads sequence on the sequence file path.
      *
@@ -127,7 +136,7 @@ public:
    void create_sequence(const std::string& name);
 
     /**
-     * Reset the repository by deleting all files from the base path and reinitialising the git repository
+     * Reset the repository by recursively deleting all files from the base path and reinitialising the git repository
     */
     void remove_all_sequences_and_repository();
 

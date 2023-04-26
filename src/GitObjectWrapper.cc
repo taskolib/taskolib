@@ -1,4 +1,5 @@
 #include <git2.h>
+
 #include "taskolib/GitObjectWrapper.h"
 
 namespace task {
@@ -80,7 +81,7 @@ LibGitPointer<git_tree>       tree_lookup       (git_repository* repo, git_oid t
     return LibGitPointer(tree);
 }
 
-LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git_status_options status_opt)
+LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git_status_options& status_opt)
 {
     git_status_list *status;
     if (git_status_list_new(&status, repo, &status_opt))

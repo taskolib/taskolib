@@ -22,11 +22,10 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-
-
 #include <algorithm>
-#include "taskolib/SequenceManager.h"
+
 #include "taskolib/deserialize_sequence.h"
+#include "taskolib/SequenceManager.h"
 #include "taskolib/serialize_sequence.h"
 
 namespace task {
@@ -103,13 +102,16 @@ void SequenceManager::remove_sequence(std::filesystem::path sequence_name)
 
 void SequenceManager::remove_all_sequences_and_repository()
 {
-    //TODO: Delete function?
-    
     // delete all sequences and git related files
     std::filesystem::remove_all(path_);
 
     // reinitialize Libgit object
-    //git_repo_ = GitRepository{path_};
+    git_repo_.reset_repo();
+}
+
+std::vector<FileStatus> SequenceManager::get_repository_status()
+{
+    return git_repo_.status();
 }
 
 } // namespace task

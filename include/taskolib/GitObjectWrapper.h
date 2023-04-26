@@ -22,11 +22,11 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <string>
+#include <typeinfo>
+#include <utility>
 
 #include <git2.h>
-#include <utility>
-#include <typeinfo>
-#include <string>
 
 
 namespace task {
@@ -157,10 +157,10 @@ LibGitPointer<git_signature>  signature_new     (const std::string& name, const 
 LibGitPointer<git_tree>       tree_lookup       (git_repository* repo, git_oid tree_id);
 
 /**
- * Create a new status list which conatins status_list_entry* elements
+ * Create a new status list which contains status_list_entry* elements
  * \param repo C-type repository
  * \param status_opt struct of status options
 */
-LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git_status_options status_opt);
+LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git_status_options& status_opt);
 /** \}*/
 }

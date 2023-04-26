@@ -22,12 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <filesystem>
+#include <string>
+#include <vector>
 
 #include <git2.h>
-#include <string>
-#include <filesystem>
+
 #include "taskolib/GitObjectWrapper.h"
-#include <vector>
 
 namespace task {
 
@@ -61,10 +62,15 @@ public:
      */
     explicit GitRepository(const std::filesystem::path& file_path);
 
+    /**
+     * reset all knowledge this object knows about the repository and load the knowledge again.
+     */
+    void reset_repo();
+
     /// returns member variable, which is the root dir of the git repository.
     std::filesystem::path get_path() const;
 
-    /// returns a C-type pointer to the current loaded repository.
+    /// returns a non-owning raw pointer to the current repository.
     git_repository* get_repo();
 
     /// stage all new and changed files and folders in the repository directory.
@@ -81,7 +87,6 @@ public:
 
     /**
      * return the commit message of the HEAD commit.
-     * \note this function is solely for Unittest purposes
      * \return message of last commit (=HEAD)
      */
     std::string get_last_commit_message();
@@ -97,10 +102,15 @@ public:
      * \param directory: directory holding sequence
      * \attention directory is a relative path within repo_path_
      */
-    void remove_directory(std::filesystem::path directory);
+    void remove_directory(const std::filesystem::path& directory);
 
     /**
      * returns current git status.
+     * This includes unchanged, untracked and ingnored files and directories.
+     * Each files status is represented by
+     * -- file name
+     * -- change status (has the file changed)
+     * -- handling status (what git will do with it)
      * \return vector of file status for each file.
      */ 
     std::vector<FileStatus> status();
@@ -123,34 +133,40 @@ private:
      * \note This is a private member function because git repository init 
      *       should be done by an LibGit Object Initialization
      */
-    void init(std::filesystem::path file_path);
+    void init(const std::filesystem::path& file_path);
 
     /**
      * Make the first commit. Function is called by init.
      * \note slightly differs from commit because in this case,
      *       there is no previous commit to dock on.
-    */
+     */
     void commit_initial();
 
     /**
      * Get a specific commit.
-     * \param None: Get the Head commit
-     * \param ref: Use Hex string identifier to find a commit
      * \param count: Jump back NUMBER of commits behind HEAD
-     * 
      * \return C-type commit object
-    */
+     */
     LibGitPointer<git_commit> get_commit(int count);
+
+    /**
+     * Get a specific commit.
+     * \param ref: Use Hex string identifier to find a commit
+     * \return C-type commit object
+     */
     LibGitPointer<git_commit> get_commit(const std::string& ref);
+
+    /**
+     * Get the HEAD commit.
+     * \return C-type commit object
+     */    
     LibGitPointer<git_commit> get_commit();
 
     /**
      * Translate all status information for each submodule into String.
-     * 
      * \param status: C-type status of all submodules from libgit
-     * 
      * \return A vector of dynamic length which contains a status struct 
-    */
+     */
     std::vector<FileStatus> collect_status(LibGitPointer<git_status_list>& status) const;
 
     /** Update the tracked files in the repository.
@@ -166,7 +182,7 @@ private:
      * \param s status of the file. A struct which contains flags about every possible state
      * \return true if file is unstaged (and filestats initialized), else false
      */
-    static bool check_filestatus_for_unstaged(FileStatus& filestats, const git_status_entry* s);
+    static bool is_unstaged(FileStatus& filestats, const git_status_entry* s);
 
     /**
      * check if the file from the status entry is not unstaged and collect the status in filestats.
@@ -175,7 +191,7 @@ private:
      * \param s status of the file. A struct which contains flags about every possible state
      * \return true if file is staged (and filestats initialized), else false
      */
-    static bool check_filestatus_for_staged(FileStatus& filestats, const git_status_entry* s);
+    static bool is_staged(FileStatus& filestats, const git_status_entry* s);
 
 };
 

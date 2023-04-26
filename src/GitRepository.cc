@@ -22,14 +22,15 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-
-
-#include <git2.h>
-#include "taskolib/GitRepository.h"
-#include "taskolib/exceptions.h"
-#include "gul14/cat.h"
 #include <iostream>
 #include <vector>
+
+#include <git2.h>
+
+#include "gul14/cat.h"
+#include "taskolib/exceptions.h"
+#include "taskolib/GitRepository.h"
+
 
 namespace task {
 
@@ -42,19 +43,8 @@ GitRepository::GitRepository(const std::filesystem::path& file_path)
     //init member variables
     repo_path_ = file_path;
 
-    // if repository does not exist
-    repo_=repository_open(repo_path_);
-    if (repo_.get() == nullptr) 
-    {
-        // initialize everything
-        init(file_path);
-    }
-    else
-    {
-        // intialize the signature
-        my_signature_ = signature_default(repo_.get());
-        if (my_signature_.get() == nullptr) my_signature_ = signature_new("Taskomat", "taskomat@desy.de", 123456789, 0);
-    }
+    // init or reload repository
+    init(file_path);
 }
 
 
@@ -63,6 +53,15 @@ GitRepository::~GitRepository()
     repo_.reset();
     my_signature_.reset();
     git_libgit2_shutdown();
+}
+
+void GitRepository::reset_repo()
+{
+    repo_.reset();
+    my_signature_.reset();
+
+    // initialize repo and signature again
+    init(repo_path_);
 }
 
 std::string GitRepository::get_last_commit_message()
@@ -94,22 +93,36 @@ void GitRepository::update()
 }
 
 
-void GitRepository::init(std::filesystem::path file_path)
+void GitRepository::init(const std::filesystem::path& file_path)
 {
-    // create repository
-    //3rd argument: false so that .git folder is created in given path
-    repo_ = repository_init(file_path.c_str(), false);
-    if (repo_.get()==nullptr) throw task::Error("Git init failed.");
+    repo_=repository_open(repo_path_);
 
-    // create signature
-    my_signature_ = signature_default(repo_.get());
-    if (my_signature_.get()==nullptr) signature_new("Taskomat", "taskomat@desy.de", 123456789, 0);
+    // if repository does not exist
+    if (repo_.get() == nullptr) 
+    {
+        // create repository
+        //3rd argument: false so that .git folder is created in given path
+        repo_ = repository_init(file_path.c_str(), false);
+        if (repo_.get()==nullptr) throw task::Error("Git init failed.");
 
-    // update files in directory
-    update();
+        // create signature
+        my_signature_ = signature_default(repo_.get());
+        if (my_signature_.get()==nullptr) signature_new("Taskomat", "taskomat@desy.de", 123456789, 0);
 
-    // make initial commit
-    commit_initial();
+        // update files in directory
+        update();
+
+        // make initial commit
+        commit_initial();
+    }
+    // if repository already exists
+    else
+    {
+        // intialize the signature
+        my_signature_ = signature_default(repo_.get());
+        if (my_signature_.get() == nullptr) my_signature_ = signature_new("Taskomat", "taskomat@desy.de", 123456789, 0);
+    }
+
 }
 
 
@@ -121,7 +134,7 @@ void GitRepository::commit_initial()
     
     // write tree
     repository_index(repo_.get());
-	  git_index_write_tree(&tree_id, index.get());
+	git_index_write_tree(&tree_id, index.get());
 
     // get tree structure for commit
     LibGitPointer<git_tree> tree{tree_lookup(repo_.get(), tree_id)};
@@ -153,7 +166,7 @@ void GitRepository::commit(const std::string& commit_message)
     git_oid tree_id, commit_id;
     
     // get tree
-	git_index_write_tree(&tree_id, index.get());
+    git_index_write_tree(&tree_id, index.get());
     LibGitPointer<git_tree> tree{tree_lookup(repo_.get(), tree_id)};
 
     // create commit
@@ -191,7 +204,7 @@ void GitRepository::add()
 }
 
 
-void GitRepository::remove_directory(std::filesystem::path seq_directory)
+void GitRepository::remove_directory(const std::filesystem::path& seq_directory)
 {
     //load index of last commit
     LibGitPointer<git_index> gindex{repository_index(repo_.get())};
@@ -199,12 +212,12 @@ void GitRepository::remove_directory(std::filesystem::path seq_directory)
     //remove files from directory
     int error = git_index_remove_directory(gindex.get(), seq_directory.c_str(), 0);
     if (error) throw task::Error("Cannot remove sequence files.");
+
     // remove sequence directory from git
     error = git_index_remove_bypath(gindex.get(), (std::string(seq_directory)+"/").c_str());
     if (error) throw task::Error("Cannot remove sequence directory.");
 
     git_index_write(gindex.get());
-    //git_index_write_tree(&tree, gindex.get());
 
     // delete sequence
     std::filesystem::remove_all(repo_path_ / seq_directory);
@@ -236,7 +249,7 @@ LibGitPointer<git_commit> GitRepository::get_commit()
     return get_commit(std::string{"HEAD"});
 }
 
-bool GitRepository::check_filestatus_for_unstaged(FileStatus& filestats, const git_status_entry* s)
+bool GitRepository::is_unstaged(FileStatus& filestats, const git_status_entry* s)
 {
     std::string wstatus = "";
 
@@ -269,7 +282,7 @@ bool GitRepository::check_filestatus_for_unstaged(FileStatus& filestats, const g
 }
 
 
-bool GitRepository::check_filestatus_for_staged(FileStatus& filestats, const git_status_entry* s)
+bool GitRepository::is_staged(FileStatus& filestats, const git_status_entry* s)
 {
     std::string istatus = "";
 
@@ -344,7 +357,7 @@ std::vector<FileStatus> GitRepository::collect_status(LibGitPointer<git_status_l
         // list files which were touched but stil are unchanged
         //#####################################################
         
-        if (check_filestatus_for_unstaged(filestats, s))
+        if (is_unstaged(filestats, s))
         {
             return_array.push_back(filestats);
             continue;
@@ -354,7 +367,7 @@ std::vector<FileStatus> GitRepository::collect_status(LibGitPointer<git_status_l
         //############################################
 
         
-        if (check_filestatus_for_staged(filestats, s))
+        if (is_staged(filestats, s))
         {
             return_array.push_back(filestats);
             continue;
@@ -386,9 +399,6 @@ std::vector<FileStatus> GitRepository::collect_status(LibGitPointer<git_status_l
 
             continue;
         }
-
-        delete [] old_path;
-        delete [] new_path;
     }
     return return_array;
 }
