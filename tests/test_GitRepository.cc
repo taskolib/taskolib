@@ -34,6 +34,7 @@
 #include <fstream>
 
 using namespace task;
+using namespace git;
 
 
 /**

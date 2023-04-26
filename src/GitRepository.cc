@@ -32,7 +32,7 @@
 #include "taskolib/GitRepository.h"
 
 
-namespace task {
+namespace git {
 
 
 GitRepository::GitRepository(const std::filesystem::path& file_path)
