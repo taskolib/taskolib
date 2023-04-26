@@ -25,13 +25,10 @@
 #ifndef TASKOLIB_SEQUENCEMANAGER_H_
 #define TASKOLIB_SEQUENCEMANAGER_H_
 
-#include <filesystem>
 #include <vector>
+#include <filesystem>
 #include <string>
-
 #include <gul14/string_view.h>
-
-#include "GitRepository.h"
 #include "taskolib/Sequence.h"
 
 namespace task {
@@ -70,7 +67,12 @@ public:
      *
      * \exception throws Error exception if path is empty.
      */
-    explicit SequenceManager(std::filesystem::path path);
+    explicit SequenceManager(std::filesystem::path path)
+    {
+        if (path.empty())
+            throw Error("Root sequences path must not be empty.");
+        path_ = path;
+    }
 
     /**
      * Returns the root path of the serialized sequences.
@@ -86,13 +88,6 @@ public:
      */
     PathList get_sequence_names() const;
 
-
-    /**
-     * Return status of GitRepository object
-     * \return GitRepository object
-    */
-    std::vector<FileStatus> get_repository_status();
-
     /**
      * Loads sequence on the sequence file path.
      *
@@ -104,48 +99,9 @@ public:
      */
     Sequence load_sequence(std::filesystem::path sequence_path) const;
 
-
-    /**
-     * Delete sequence specified in path to sequence
-     *
-     * \param sequence_path path to sequence.
-     * \note sequence_path must be relative to path_
-     *
-     * \exception throws Error if removal was unsucessful
-     */
-    void remove_sequence(std::filesystem::path sequence_path);
-
-
-    /**
-     * Rename sequence on the sequence file path.
-     *
-     * \param sequence_path path to sequence.
-     * \note sequence_path must be relative to path_
-     * \param new_name new name of sequence
-     *
-     * \exception throws Error if renaming was unsuccessful
-     */
-    void rename_sequence(std::filesystem::path sequence_path, const std::string& new_name);
-
-
-    /**
-     * Create an empty sequence and store it at given path
-     * 
-     * \param name: sequence name
-    */
-   void create_sequence(const std::string& name);
-
-    /**
-     * Reset the repository by recursively deleting all files from the base path and reinitialising the git repository
-    */
-    void remove_all_sequences_and_repository();
-
 private:
     /// Root path to the sequences
     std::filesystem::path path_;
-    GitRepository git_repo_;
-    void check_sequence(std::filesystem::path sequence_path) const;
-
 };
 
 } // namespace task

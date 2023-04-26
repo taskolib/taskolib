@@ -40,8 +40,6 @@ TEST_CASE("Construct SequenceManager with path", "[SequenceManager]")
         REQUIRE(not sm.get_path().empty());
         REQUIRE(sm.get_path() == "./another/path/to/sequences");
     }
-
-    std::filesystem::remove_all("another");
 }
 
 TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
@@ -49,8 +47,6 @@ TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
     SequenceManager s{SequenceManager("unit_test")};
     REQUIRE(not s.get_path().empty());
     REQUIRE(s.get_path() == "unit_test");
-
-    std::filesystem::remove_all("unit_test");
 }
 
 TEST_CASE("Get sequence names", "[SequenceManager]")
@@ -97,8 +93,6 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
 
     // check for loading sequence directories only (and not any arbritray regular file)
     REQUIRE_THROWS_AS(sm.load_sequence("unit_test_2/some_text_file.txt"), Error);
-
-    std::filesystem::remove_all("unit_test_2");
 }
 
 TEST_CASE("Load sequence", "[SequenceManager]")
@@ -155,73 +149,5 @@ TEST_CASE("Load sequence", "[SequenceManager]")
         REQUIRE(load.size() == seq.size());
         auto result = std::equal(load.begin(), load.end(), seq.begin(), check);
         REQUIRE(result);
-
-        std::filesystem::remove_all("unit_test");
-        std::filesystem::remove_all("test.seq");
     }
-
-}
-
-TEST_CASE("Create Sequence", "[SequenceManager]")
-{
-    // TODO
-}
-
-TEST_CASE("Rename Sequence", "[SequenceManager]")
-{
-    // TODO
-}
-
-
-TEST_CASE("Remove Repository", "[SequenceManager]")
-{
-    // prepare first sequence for test
-    Step step_1_01{Step::type_while};
-    step_1_01.set_label("while");
-    step_1_01.set_script("return i < 10");
-
-    Step step_1_02{Step::type_action};
-    step_1_02.set_label("action");
-    step_1_02.set_script("i = i + 1");
-
-    Sequence seq_1{"unit_test_3"};
-    seq_1.push_back(step_1_01);
-    seq_1.push_back(step_1_02);
-
-    store_sequence("sequences", seq_1);
-
-    SequenceManager sm{"sequences"};
-
-    auto stats = sm.get_repository_status();
-
-    for (size_t i =0; i < stats.size(); i++)
-    {
-        FileStatus elm = stats.at(i);
-        REQUIRE (elm.changes != "new file");
-    }
-
-    sm.create_sequence("unit_test_4");
-
-    stats = sm.get_repository_status();
-
-    for (size_t i =0; i < stats.size(); i++)
-    {
-        FileStatus elm = stats.at(i);
-        REQUIRE (elm.changes != "new file");
-    }
-
-
-    // remove everything and come back to git with one initial commit
-    sm.remove_all_sequences_and_repository();
-
-    stats = sm.get_repository_status();
-
-    for (size_t i =0; i < stats.size(); i++)
-    {
-        FileStatus elm = stats.at(i);
-        REQUIRE (elm.changes != "new file");
-    }
-
-    //std::filesystem::remove_all("sequences");
-
 }
