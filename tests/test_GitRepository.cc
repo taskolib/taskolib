@@ -25,6 +25,7 @@
 
 #include <git2.h>
 #include <gul14/catch.h>
+#include <gul14/substring_checks.h>
 #include "taskolib/GitRepository.h"
 #include "taskolib/serialize_sequence.h"
 #include "taskolib/Step.h"
@@ -90,7 +91,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
 
     /**
-     * Check the general stag function "add".
+     * Check the general staging function "add".
      * 1) Load existing repository (in contrast to initialize in first section)
      * 2) Create files after repository loading (in contrast to first section)
      * 3) Check if files appear as untracked
@@ -108,7 +109,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_1", 0) == 0 || elm.path_name.rfind("unit_test_2", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "untracked");
                 REQUIRE(elm.changes == "untracked");
@@ -124,7 +125,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_1", 0) == 0 || elm.path_name.rfind("unit_test_2", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "new file");
@@ -152,7 +153,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_1", 0) == 0 || elm.path_name.rfind("unit_test_2", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "new file");
@@ -166,10 +167,10 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         stats = gl.status();
         REQUIRE(stats.size() != 0);
-              for (size_t i =0; i < stats.size(); i++)
+        for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_1", 0) == 0 || elm.path_name.rfind("unit_test_2", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
@@ -198,12 +199,12 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_1/file", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_1/file"))
             {
                 REQUIRE(elm.handling == "unstaged");
                 REQUIRE(elm.changes == "modified");
             }
-            else if (elm.path_name.rfind("unit_test_2/file", 0) == 0)
+            else if (gul14::ends_with(elm.path_name, "unit_test_2/file"))
             {
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
@@ -220,17 +221,17 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_1/file0", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_1/file0"))
             {
                 REQUIRE(elm.handling == "unstaged");
                 REQUIRE(elm.changes == "modified");
             }
-            else if (elm.path_name.rfind("unit_test_1/file1", 0) == 0)
+            else if (gul14::ends_with(elm.path_name, "unit_test_1/file1"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "modified");
             }
-            else if (elm.path_name.rfind("unit_test_2/file", 0) == 0)
+            else if (gul14::ends_with(elm.path_name, "unit_test_2/file"))
             {
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
@@ -263,7 +264,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         {
             
             FileStatus elm = stats.at(i);
-            if (elm.path_name.rfind("unit_test_2", 0) == 0)
+            if (gul14::ends_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "deleted");
@@ -279,7 +280,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            REQUIRE (elm.path_name.rfind("unit_test_2/file", 0) != 0);
+            REQUIRE (gul14::ends_with(elm.path_name, "unit_test_12/file"));
         }
 
         // check if path got removed
