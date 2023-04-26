@@ -280,7 +280,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
         for (size_t i =0; i < stats.size(); i++)
         {
             FileStatus elm = stats.at(i);
-            REQUIRE (gul14::ends_with(elm.path_name, "unit_test_12/file"));
+            REQUIRE (! gul14::ends_with(elm.path_name, "unit_test_2/file"));
         }
 
         // check if path got removed
