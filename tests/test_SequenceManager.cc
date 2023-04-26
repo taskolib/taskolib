@@ -162,6 +162,16 @@ TEST_CASE("Load sequence", "[SequenceManager]")
 
 }
 
+TEST_CASE("Create Sequence", "[SequenceManager]")
+{
+    // TODO
+}
+
+TEST_CASE("Rename Sequence", "[SequenceManager]")
+{
+    // TODO
+}
+
 
 TEST_CASE("Remove Repository", "[SequenceManager]")
 {
@@ -178,29 +188,40 @@ TEST_CASE("Remove Repository", "[SequenceManager]")
     seq_1.push_back(step_1_01);
     seq_1.push_back(step_1_02);
 
-    // prepare second sequence for test
-    Step step_2_01{Step::type_while};
-    step_2_01.set_label("while");
-    step_2_01.set_script("return i < 10");
-
-    Step step_2_02{Step::type_action};
-    step_2_02.set_label("action");
-    step_2_02.set_script("i = i + 1");
-
-    Sequence seq_2{"unit_test_4"};
-    seq_2.push_back(step_1_01);
-    seq_2.push_back(step_1_02);
-
     store_sequence("sequences", seq_1);
-    store_sequence("sequences", seq_2);
 
-    //SequenceManager sm{"sequences"};
+    SequenceManager sm{"sequences"};
 
-    // TODO: fix remove_all_sequences_and_repository
+    auto stats = sm.get_repository_status();
+
+    for (size_t i =0; i < stats.size(); i++)
+    {
+        FileStatus elm = stats.at(i);
+        REQUIRE (elm.changes != "new file");
+    }
+
+    sm.create_sequence("unit_test_4");
+
+    stats = sm.get_repository_status();
+
+    for (size_t i =0; i < stats.size(); i++)
+    {
+        FileStatus elm = stats.at(i);
+        REQUIRE (elm.changes != "new file");
+    }
+
 
     // remove everything and come back to git with one initial commit
-    //sm.remove_all_sequences_and_repository();
+    sm.remove_all_sequences_and_repository();
 
-    std::filesystem::remove_all("sequences");
+    stats = sm.get_repository_status();
+
+    for (size_t i =0; i < stats.size(); i++)
+    {
+        FileStatus elm = stats.at(i);
+        REQUIRE (elm.changes != "new file");
+    }
+
+    //std::filesystem::remove_all("sequences");
 
 }
