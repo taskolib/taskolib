@@ -45,29 +45,29 @@ void free_libgit_ptr(git_status_list* status);
  * Template class wrapper for all libgit2 pointer types starting with git_{a-z}*.
  * Copy methods are excluded to prevent double ownership of said pointer.
  * 
- * \tparam T: A dereferencing from a pointer type like git_remote*, git_tree*, git_commit*, ...
+ * \tparam T: A dereferencing from a pointer type like git_remote*, git_tree*,
+ *            git_commit*, ...
 */
 template <class T>
 class LibGitPointer
 {
 public:
     /// (default) Default-construct an LibGitPointer. The managed pointer is NULL.
-    LibGitPointer(){};
+    LibGitPointer(){}
     
     /// (construct by value) Construct a LibGitPointer via a C-pointer from libgit2.
-    LibGitPointer(T *val): val_{val} {};
+    LibGitPointer(T *val): val_{val} {}
 
     /// (move constructor) Move a C-pointer from an existing LibGitPointer to a new one.
-    LibGitPointer(LibGitPointer&& lg): val_{std::exchange(lg.val_, nullptr)} {};
+    LibGitPointer(LibGitPointer&& lg): val_{std::exchange(lg.val_, nullptr)} {}
 
     /// (destructor) Destruct the Object by freeing the C-type pointer with a libgit function.
-    ~LibGitPointer(){ free_libgit_ptr(val_); };
+    ~LibGitPointer(){ free_libgit_ptr(val_); }
 
-    /// (move assignment) move value from other object to this object
+    /// (move assignment) move value from other object to this object.
     LibGitPointer& operator=(LibGitPointer&& lg) noexcept
     {
-        val_ = std::move(lg.val_);
-        lg.val_ = nullptr;
+        val_ = std::exchange(lg.val_, nullptr);
         return *this;
     }
 
@@ -78,9 +78,9 @@ public:
     LibGitPointer& operator=(const LibGitPointer&) = delete;
 
     /**
-     * function to free member variables of GitRepository object before deconstruction of their owner.
+     * Function to free member variables of GitRepository object before deconstruction of their owner.
      * necessary because they have to be freed before the libgit2 environment deconstruction, see:
-     * git_libgit2_shutdow()
+     * git_libgit2_shutdown()
      */
     void reset()
     {
@@ -163,4 +163,5 @@ LibGitPointer<git_tree>       tree_lookup       (git_repository* repo, git_oid t
 */
 LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git_status_options& status_opt);
 /** \}*/
-}
+
+} // namespace git

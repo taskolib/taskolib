@@ -101,7 +101,7 @@ void GitRepository::init(const std::filesystem::path& file_path)
     if (repo_.get() == nullptr) 
     {
         // create repository
-        //3rd argument: false so that .git folder is created in given path
+        //2nd argument: false so that .git folder is created in given path
         repo_ = repository_init(file_path.c_str(), false);
         if (repo_.get()==nullptr) throw task::Error("Git init failed.");
 
