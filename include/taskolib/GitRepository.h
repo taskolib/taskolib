@@ -63,17 +63,17 @@ public:
     explicit GitRepository(const std::filesystem::path& file_path);
 
     /**
-     * reset all knowledge this object knows about the repository and load the knowledge again.
+     * Reset all knowledge this object knows about the repository and load the knowledge again.
      */
     void reset_repo();
 
-    /// returns member variable, which is the root dir of the git repository.
+    /// Returns member variable, which is the root dir of the git repository.
     std::filesystem::path get_path() const;
 
-    /// returns a non-owning raw pointer to the current repository.
+    /// Returns a non-owning raw pointer to the current repository.
     git_repository* get_repo();
 
-    /// stage all new and changed files and folders in the repository directory.
+    /// Stage all new and changed files and folders in the repository directory.
     void add();
 
     /**
@@ -86,7 +86,7 @@ public:
    std::vector <int> add_files(const std::vector<std::filesystem::path>& filepaths);
 
     /**
-     * return the commit message of the HEAD commit.
+     * Return the commit message of the HEAD commit.
      * \return message of last commit (=HEAD)
      */
     std::string get_last_commit_message();
@@ -105,7 +105,7 @@ public:
     void remove_directory(const std::filesystem::path& directory);
 
     /**
-     * returns current git status.
+     * Returns current git status.
      * This includes unchanged, untracked and ingnored files and directories.
      * Each files status is represented by
      * -- file name
@@ -122,14 +122,14 @@ private:
     /// Pointer which holds all infos of the active repository.
     LibGitPointer<git_repository> repo_;
 
-    /// path to the repository.
+    /// Path to the repository.
     std::filesystem::path repo_path_;
 
-    /// signature used in commits.
+    /// Signature used in commits.
     LibGitPointer<git_signature> my_signature_;
 
     /**
-     * initialize a new git repository and commit all files in its path.
+     * Initialize a new git repository and commit all files in its path.
      * \note This is a private member function because git repository init 
      *       should be done by an LibGit Object Initialization
      */
@@ -176,7 +176,7 @@ private:
     void update();
 
     /**
-     * check if the file from the status entry is not staged and collect the status in filestats.
+     * Check if the file from the status entry is not staged and collect the status in filestats.
      * \note this function is solely called by collect_status. It has no other purpose.
      * \param filestats a structure which will be filled with the status of the file if the file is unstaged
      * \param s status of the file. A struct which contains flags about every possible state
@@ -185,7 +185,7 @@ private:
     static bool is_unstaged(FileStatus& filestats, const git_status_entry* s);
 
     /**
-     * check if the file from the status entry is not unstaged and collect the status in filestats.
+     * Check if the file from the status entry is not unstaged and collect the status in filestats.
      * \note this function is solely called by collect_status. It has no other purpose.
      * \param filestats a structure which will be filled with the status of the file if the file is staged
      * \param s status of the file. A struct which contains flags about every possible state
@@ -195,4 +195,4 @@ private:
 
 };
 
-} // namespace task
+} // namespace git

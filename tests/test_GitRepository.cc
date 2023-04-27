@@ -107,10 +107,9 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         std::vector<FileStatus> stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
+            if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "untracked");
                 REQUIRE(elm.changes == "untracked");
@@ -123,10 +122,9 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // new submodules from unit_test_2 should be in stage mode
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
+            if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "new file");
@@ -151,10 +149,9 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // new submodules from unit_test_2 should be still in stage mode
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
+            if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "new file");
@@ -168,10 +165,9 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_1") || gul14::ends_with(elm.path_name, "unit_test_2"))
+            if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
@@ -197,15 +193,14 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         std::vector<FileStatus> stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_1/file"))
+            if (gul14::starts_with(elm.path_name, "unit_test_1/file"))
             {
                 REQUIRE(elm.handling == "unstaged");
                 REQUIRE(elm.changes == "modified");
             }
-            else if (gul14::ends_with(elm.path_name, "unit_test_2/file"))
+            else if (gul14::starts_with(elm.path_name, "unit_test_2/file"))
             {
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
@@ -219,20 +214,19 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_1/file0"))
+            if (gul14::starts_with(elm.path_name, "unit_test_1/file0"))
             {
                 REQUIRE(elm.handling == "unstaged");
                 REQUIRE(elm.changes == "modified");
             }
-            else if (gul14::ends_with(elm.path_name, "unit_test_1/file1"))
+            else if (gul14::starts_with(elm.path_name, "unit_test_1/file1"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "modified");
             }
-            else if (gul14::ends_with(elm.path_name, "unit_test_2/file"))
+            else if (gul14::starts_with(elm.path_name, "unit_test_2/file"))
             {
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
@@ -261,11 +255,9 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // every file in unit_test_2 should have the tag deleted
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            
-            FileStatus elm = stats.at(i);
-            if (gul14::ends_with(elm.path_name, "unit_test_2"))
+            if (gul14::starts_with(elm.path_name, "unit_test_2"))
             {
                 REQUIRE(elm.handling == "staged");
                 REQUIRE(elm.changes == "deleted");
@@ -278,10 +270,9 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // check if files are removed from repository status
         REQUIRE(stats.size() != 0);
-        for (size_t i =0; i < stats.size(); i++)
+        for(auto elm: stats)
         {
-            FileStatus elm = stats.at(i);
-            REQUIRE (! gul14::ends_with(elm.path_name, "unit_test_2/file"));
+            REQUIRE (! gul14::starts_with(elm.path_name, "unit_test_2/file"));
         }
 
         // check if path got removed
