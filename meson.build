@@ -93,7 +93,7 @@ pkg.generate(lib,
     version : libno,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
-    requires : [ 'libgul14' ],
+    requires : [ 'libgul14', 'libgit2' ],
     subdirs : [ '', 'taskolib' / 'sol' + sol_version, 'taskolib' / 'lua' + lua_version, ],
 )
 
