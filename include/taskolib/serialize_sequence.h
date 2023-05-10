@@ -118,16 +118,6 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
  */
 void store_sequence(const std::filesystem::path& folder, const Sequence& sequence);
 
-
-/**
- * Removes the Sequence by deleting the folder
- *
- *
- * \param folder  in which the Sequence is stored
- * \param sequence  the Sequence that should be removed
- */
-void remove_sequence(const std::filesystem::path& seq_path);
-
 } // namespace task
 
 #endif
