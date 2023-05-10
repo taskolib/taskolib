@@ -163,6 +163,11 @@ private:
     LibGitPointer<git_commit> get_commit();
 
     /**
+     * Load a git signature or create a default signature
+    */
+   void make_signature();
+
+    /**
      * Translate all status information for each submodule into String.
      * \param status: C-type status of all submodules from libgit
      * \return A vector of dynamic length which contains a status struct 

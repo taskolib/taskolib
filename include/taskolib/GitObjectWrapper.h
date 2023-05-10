@@ -118,6 +118,7 @@ LibGitPointer<git_repository> repository_open   (const std::string& repo_path);
 /**
  * Return a fresh initialized repository.
  * \param repo_path absolute or relative path from executable
+ * \param is_bare if true, a git repo is created at repo_path. Else, .git is created in repo_path.
  * \return Wrapper of a git_repository*
 */
 LibGitPointer<git_repository> repository_init   (const std::string& repo_path, bool is_bare);
@@ -145,7 +146,7 @@ LibGitPointer<git_signature>  signature_default (git_repository* repo);
  * \return Wrapper of a git_signature*
 */
 LibGitPointer<git_signature>  signature_new     (const std::string& name, const std::string& email,
-                                                  int time, int offset);
+                                                  time_t time, int offset);
 
 
 /**

@@ -66,7 +66,7 @@ LibGitPointer<git_signature>  signature_default (git_repository* repo)
     return LibGitPointer(signature);
 }
 LibGitPointer<git_signature>  signature_new     (const std::string& name, const std::string& email,
-                                                  int time, int offset)
+                                                  time_t time, int offset)
 {
     git_signature *signature;
     if (git_signature_new(&signature, name.c_str(), email.c_str(), time, offset))
