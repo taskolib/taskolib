@@ -44,10 +44,10 @@ struct FileStatus
 
 /**
  * A class to wrap used methods from C-Library libgit2.
- * 
+ *
  * This class is necessary to handle C-pointers in a way that
  * C++ programmers using this class do not have to think about them.
- * 
+ *
  * This class does not reflect the full libgit2 library.
  * git functions which are not implemented in this class will be
  * implemented in case of necessity
@@ -112,7 +112,7 @@ public:
      * -- change status (has the file changed)
      * -- handling status (what git will do with it)
      * \return vector of file status for each file.
-     */ 
+     */
     std::vector<FileStatus> status();
 
     /// Destructor
@@ -130,7 +130,7 @@ private:
 
     /**
      * Initialize a new git repository and commit all files in its path.
-     * \note This is a private member function because git repository init 
+     * \note This is a private member function because git repository init
      *       should be done by an LibGit Object Initialization
      */
     void init(const std::filesystem::path& file_path);
@@ -159,7 +159,7 @@ private:
     /**
      * Get the HEAD commit.
      * \return C-type commit object
-     */    
+     */
     LibGitPointer<git_commit> get_commit();
 
     /**
@@ -170,7 +170,7 @@ private:
     /**
      * Translate all status information for each submodule into String.
      * \param status: C-type status of all submodules from libgit
-     * \return A vector of dynamic length which contains a status struct 
+     * \return A vector of dynamic length which contains a status struct
      */
     std::vector<FileStatus> collect_status(LibGitPointer<git_status_list>& status) const;
 

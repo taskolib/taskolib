@@ -28,19 +28,17 @@
 #include <git2.h>
 
 #include "gul14/cat.h"
-#include "gul14/hexdump.h"
 #include "taskolib/exceptions.h"
 #include "taskolib/GitRepository.h"
 
 
 namespace git {
 
-
 GitRepository::GitRepository(const std::filesystem::path& file_path)
 {
     //init libgit library
     git_libgit2_init();
- 
+
     //init member variables
     repo_path_ = file_path;
 
@@ -51,9 +49,9 @@ GitRepository::GitRepository(const std::filesystem::path& file_path)
 void GitRepository::make_signature()
 {
     my_signature_ = signature_default(repo_.get());
-    if (my_signature_.get()==nullptr) my_signature_ = signature_new("Taskomat", "(none)", std::time(0), 0);
+    if (my_signature_.get()==nullptr)
+        my_signature_ = signature_new("Taskomat", "(none)", std::time(0), 0);
 }
-
 
 GitRepository::~GitRepository()
 {
@@ -99,13 +97,12 @@ void GitRepository::update()
     git_index_write(index.get());
 }
 
-
 void GitRepository::init(const std::filesystem::path& file_path)
 {
     repo_=repository_open(repo_path_);
 
     // if repository does not exist
-    if (repo_.get() == nullptr) 
+    if (repo_.get() == nullptr)
     {
         // create repository
         //2nd argument: false so that .git folder is created in given path
@@ -124,18 +121,17 @@ void GitRepository::init(const std::filesystem::path& file_path)
     // if repository already exists
     else
     {
-        // intialize the signature
+        // initialize the signature
         make_signature();
     }
 }
-
 
 void GitRepository::commit_initial()
 {
     // prepare gitlib data types
     LibGitPointer<git_index> index{repository_index(repo_.get())};
     git_oid tree_id, commit_id;
-    
+
     // write tree
     git_index_write_tree(&tree_id, index.get());
 
@@ -144,21 +140,21 @@ void GitRepository::commit_initial()
 
     // commit
     int error = git_commit_create(
-      &commit_id,
-      repo_.get(),
-      "HEAD",
-      my_signature_.get(),
-      my_signature_.get(),
-      "UTF-8",
-      "Initial commit",
-      tree.get(),
-      0,
-      nullptr
-      );
+        &commit_id,
+        repo_.get(),
+        "HEAD",
+        my_signature_.get(),
+        my_signature_.get(),
+        "UTF-8",
+        "Initial commit",
+        tree.get(),
+        0,
+        nullptr
+        );
+
     if (error)
         throw git::Error("initial commit failed");
 }
-
 
 void GitRepository::commit(const std::string& commit_message)
 {
@@ -169,7 +165,7 @@ void GitRepository::commit(const std::string& commit_message)
     //define types for commit call and get index
     LibGitPointer<git_index> index{repository_index(repo_.get())};
     git_oid tree_id, commit_id;
-    
+
     // get tree
     git_index_write_tree(&tree_id, index.get());
     LibGitPointer<git_tree> tree{tree_lookup(repo_.get(), tree_id)};
@@ -191,7 +187,6 @@ void GitRepository::commit(const std::string& commit_message)
     if (error) throw git::Error("Cannot commit.");
 }
 
-
 void GitRepository::add()
 {
     //load index of last commit
@@ -207,7 +202,6 @@ void GitRepository::add()
     // save addition
     git_index_write(gindex.get());
 }
-
 
 void GitRepository::remove_directory(const std::filesystem::path& seq_directory)
 {
@@ -228,12 +222,12 @@ void GitRepository::remove_directory(const std::filesystem::path& seq_directory)
     std::filesystem::remove_all(repo_path_ / seq_directory);
 }
 
-
 LibGitPointer<git_commit> GitRepository::get_commit(int count)
 {
     std::string ref = "HEAD^" + std::to_string(count);
     return get_commit(ref);
 }
+
 LibGitPointer<git_commit> GitRepository::get_commit(const std::string& ref)
 {
     git_commit * commit;
@@ -249,6 +243,7 @@ LibGitPointer<git_commit> GitRepository::get_commit(const std::string& ref)
 
     return commit;
 }
+
 LibGitPointer<git_commit> GitRepository::get_commit()
 {
     return get_commit(std::string{"HEAD"});
@@ -272,7 +267,6 @@ bool GitRepository::is_unstaged(FileStatus& filestats, const git_status_entry* s
         filestats.handling = "unstaged";
         filestats.changes = std::string{wstatus};
 
-
         const char *old_path = s->index_to_workdir->old_file.path;
         const char *new_path = s->index_to_workdir->new_file.path;
 
@@ -280,12 +274,11 @@ bool GitRepository::is_unstaged(FileStatus& filestats, const git_status_entry* s
             filestats.path_name = gul14::cat(old_path, " -> ", new_path);
         else
             filestats.path_name = old_path ? std::string{old_path} : std::string{new_path};
-        
+
         return true;
     }
     return false;
 }
-
 
 bool GitRepository::is_staged(FileStatus& filestats, const git_status_entry* s)
 {
@@ -304,7 +297,7 @@ bool GitRepository::is_staged(FileStatus& filestats, const git_status_entry* s)
 
     if (istatus != "")
     {
-        
+
         filestats.handling = "staged";
         filestats.changes = std::string{istatus};
 
@@ -315,12 +308,11 @@ bool GitRepository::is_staged(FileStatus& filestats, const git_status_entry* s)
             filestats.path_name = gul14::cat(old_path, " -> ", new_path);
         else
             filestats.path_name = old_path ? std::string{old_path} : std::string{new_path};
-        
+
         return true;
     }
     return false;
 }
-
 
 std::vector<FileStatus> GitRepository::collect_status(LibGitPointer<git_status_list>& status) const
 {
@@ -361,7 +353,7 @@ std::vector<FileStatus> GitRepository::collect_status(LibGitPointer<git_status_l
 
         // list files which were touched but stil are unchanged
         //#####################################################
-        
+
         if (is_unstaged(filestats, s))
         {
             return_array.push_back(filestats);
@@ -371,7 +363,7 @@ std::vector<FileStatus> GitRepository::collect_status(LibGitPointer<git_status_l
         // list files which are staged for next commit
         //############################################
 
-        
+
         if (is_staged(filestats, s))
         {
             return_array.push_back(filestats);
@@ -423,10 +415,9 @@ std::vector<FileStatus> GitRepository::status()
 
     // translate status pointer to redable status information
     std::vector<FileStatus> status_arr = collect_status(my_status);
-    
+
     return status_arr;
 }
-
 
 std::vector<int> GitRepository::add_files(const std::vector<std::filesystem::path>& filepaths)
 {
