@@ -33,6 +33,10 @@ void free_libgit_ptr(git_status_list* status)
 {
     git_status_list_free(status);
 }
+void free_libgit_ptr(git_reference* reference)
+{
+    git_reference_free(reference);
+}
 
 
 LibGitPointer<git_repository> repository_open   (const std::string& repo_path)
@@ -87,6 +91,14 @@ LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git
     if (git_status_list_new(&status, repo, &status_opt))
         status = nullptr;
     return LibGitPointer(status);
+}
+
+LibGitPointer<git_reference>   repository_head  (git_repository* repo)
+{
+    git_reference *reference;
+    if (git_repository_head(&reference, repo))
+        reference = nullptr;
+    return LibGitPointer(reference);
 }
 
 }

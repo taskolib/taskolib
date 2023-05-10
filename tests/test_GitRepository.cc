@@ -82,8 +82,8 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         REQUIRE(not gl.get_path().empty());
         REQUIRE(gl.get_path() == "sequences");
-        git_reference *temp;
-        REQUIRE(git_repository_head(&temp, gl.get_repo()) == 0);
+        LibGitPointer<git_reference> ref{repository_head(gl.get_repo())};
+        REQUIRE(ref.get() != nullptr);
         
         
         // Test if repo_ got initialized

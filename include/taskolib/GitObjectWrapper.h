@@ -39,6 +39,7 @@ void free_libgit_ptr(git_repository* repo);
 void free_libgit_ptr(git_remote* remote);
 void free_libgit_ptr(git_commit* commit);
 void free_libgit_ptr(git_status_list* status);
+void free_libgit_ptr(git_reference* reference);
 
 
 /**
@@ -161,8 +162,16 @@ LibGitPointer<git_tree>       tree_lookup       (git_repository* repo, git_oid t
  * Create a new status list which contains status_list_entry* elements
  * \param repo C-type repository
  * \param status_opt struct of status options
+ * \return Wrapper of git_status_list*
 */
 LibGitPointer<git_status_list> status_list_new  (git_repository* repo, const git_status_options& status_opt);
+
+/**
+ * Collect the reference to the repository head.
+ * \param repo C-type repository
+ * \return Wrapper of git_reference*
+ */
+LibGitPointer<git_reference>   repository_head  (git_repository* repo);
 /** \}*/
 
 } // namespace git
