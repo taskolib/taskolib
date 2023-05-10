@@ -40,13 +40,13 @@ jobs:
     - name: Install Ninja
       run: |
         sudo apt install ninja-build
+
     - name: Fetch meson version for building
       uses: robinraju/release-downloader@v1.6
       with:
         repository: "mesonbuild/meson"
         tag: "0.53.2"
         fileName: "*.tar.gz"
-
     - name: Unpack meson tar ball and remove downloaded file
       run: |
         tar -xzf meson-*.tar.gz
@@ -54,6 +54,11 @@ jobs:
     - name: Create symbolic link for Meson
       run: |
         ln -s meson-*/meson.py .
+
+    - name: Install libgit2
+      run: |
+        sudo apt install libgit2-dev
+
     - name: Configure build directories
       run: |
         ./meson.py --buildtype=release build.release
