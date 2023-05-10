@@ -47,6 +47,12 @@ GitRepository::GitRepository(const std::filesystem::path& file_path)
     init(file_path);
 }
 
+void GitRepository::make_signature()
+{
+    my_signature_ = signature_default(repo_.get());
+    if (my_signature_.get()==nullptr) signature_new("Taskomat", "(none)", std::time(0), 0);
+}
+
 
 GitRepository::~GitRepository()
 {
@@ -106,8 +112,7 @@ void GitRepository::init(const std::filesystem::path& file_path)
         if (repo_.get()==nullptr) throw git::Error("Git init failed.");
 
         // create signature
-        my_signature_ = signature_default(repo_.get());
-        if (my_signature_.get()==nullptr) signature_new("Taskomat", "taskomat@desy.de", 123456789, 0);
+        make_signature();
 
         // update files in directory
         update();
@@ -119,10 +124,8 @@ void GitRepository::init(const std::filesystem::path& file_path)
     else
     {
         // intialize the signature
-        my_signature_ = signature_default(repo_.get());
-        if (my_signature_.get() == nullptr) my_signature_ = signature_new("Taskomat", "taskomat@desy.de", 123456789, 0);
+        make_signature();
     }
-
 }
 
 
@@ -134,7 +137,7 @@ void GitRepository::commit_initial()
     
     // write tree
     repository_index(repo_.get());
-	git_index_write_tree(&tree_id, index.get());
+    git_index_write_tree(&tree_id, index.get());
 
     // get tree structure for commit
     LibGitPointer<git_tree> tree{tree_lookup(repo_.get(), tree_id)};
@@ -151,7 +154,6 @@ void GitRepository::commit_initial()
       tree.get(),
       0
       );
-
 }
 
 
