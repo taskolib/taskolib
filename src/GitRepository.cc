@@ -28,6 +28,7 @@
 #include <git2.h>
 
 #include "gul14/cat.h"
+#include "gul14/hexdump.h"
 #include "taskolib/exceptions.h"
 #include "taskolib/GitRepository.h"
 
@@ -50,7 +51,7 @@ GitRepository::GitRepository(const std::filesystem::path& file_path)
 void GitRepository::make_signature()
 {
     my_signature_ = signature_default(repo_.get());
-    if (my_signature_.get()==nullptr) signature_new("Taskomat", "(none)", std::time(0), 0);
+    if (my_signature_.get()==nullptr) my_signature_ = signature_new("Taskomat", "(none)", std::time(0), 0);
 }
 
 
@@ -136,14 +137,13 @@ void GitRepository::commit_initial()
     git_oid tree_id, commit_id;
     
     // write tree
-    repository_index(repo_.get());
     git_index_write_tree(&tree_id, index.get());
 
     // get tree structure for commit
     LibGitPointer<git_tree> tree{tree_lookup(repo_.get(), tree_id)};
 
     // commit
-    git_commit_create_v(
+    int error = git_commit_create(
       &commit_id,
       repo_.get(),
       "HEAD",
@@ -152,8 +152,11 @@ void GitRepository::commit_initial()
       "UTF-8",
       "Initial commit",
       tree.get(),
-      0
+      0,
+      nullptr
       );
+    if (error)
+        throw git::Error("initial commit failed");
 }
 
 
