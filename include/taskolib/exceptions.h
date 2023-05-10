@@ -107,8 +107,7 @@ private:
 namespace git {
 
 /**
- * An exception class carrying an error message and, optionally, the index of the step in
- * which the error occurred.
+ * An exception class carrying an error message.
  *
  * Error is used as the standard exception class by all git-related functions throughout Taskolib.
  * It can be used directly or inherited from.
@@ -122,19 +121,6 @@ namespace git {
  * {
  *     std::cerr << e.what() << "\n";
  * }
- *
- * try
- * {
- *     throw git::Error("An error has occurred", 42);
- * }
- * catch (const git::Error& e)
- * {
- *     std::cerr << e.what();
- *     auto maybe_step_index = e.get_index();
- *     if (maybe_step_index)
- *         std::cerr << ": step index " << *maybe_step_index;
- *     std::cerr << "\n";
- * }
  * \endcode
  *
  * \note
@@ -145,9 +131,7 @@ namespace git {
 class Error : public std::runtime_error
 {
 public:
-    explicit Error(const std::string& msg): std::runtime_error(msg){}
-
-    explicit Error(const char* msg): std::runtime_error(msg){}
+    using std::runtime_error::runtime_error;
 };
 
 } // namespace git
