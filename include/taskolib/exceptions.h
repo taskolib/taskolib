@@ -145,34 +145,9 @@ namespace git {
 class Error : public std::runtime_error
 {
 public:
-    explicit Error(const std::string& msg, OptionalStepIndex opt_step_index = gul14::nullopt)
-        : std::runtime_error(msg)
-        , index_{ opt_step_index }
-    {}
+    explicit Error(const std::string& msg): std::runtime_error(msg){}
 
-    explicit Error(const char* msg, OptionalStepIndex opt_step_index = gul14::nullopt)
-        : std::runtime_error(msg)
-        , index_{ opt_step_index }
-    {}
-
-    /// Return the associated step index.
-    OptionalStepIndex get_index() const { return index_; }
-
-    /// Determine if two Error objects have the same content.
-    friend bool operator==(const Error& lhs, const Error& rhs) noexcept
-    {
-        return (std::strcmp(lhs.what(), rhs.what()) == 0)
-            && lhs.index_ == rhs.index_;
-    }
-
-    /// Determine if two Error objects have different content.
-    friend bool operator!=(const Error& lhs, const Error& rhs) noexcept
-    {
-        return !(lhs == rhs);
-    }
-
-private:
-    OptionalStepIndex index_;
+    explicit Error(const char* msg): std::runtime_error(msg){}
 };
 
 } // namespace git
