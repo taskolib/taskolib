@@ -103,7 +103,7 @@ void GitRepository::init(const std::filesystem::path& file_path)
         // create repository
         //2nd argument: false so that .git folder is created in given path
         repo_ = repository_init(file_path.c_str(), false);
-        if (repo_.get()==nullptr) throw task::Error("Git init failed.");
+        if (repo_.get()==nullptr) throw git::Error("Git init failed.");
 
         // create signature
         my_signature_ = signature_default(repo_.get());
@@ -183,7 +183,7 @@ void GitRepository::commit(const std::string& commit_message)
         &raw_commit
     );
 
-    if (error) throw task::Error("Cannot commit.");
+    if (error) throw git::Error("Cannot commit.");
 }
 
 
@@ -197,7 +197,7 @@ void GitRepository::add()
 
     //add all
     int error = git_index_add_all(gindex.get(), &array, GIT_INDEX_ADD_DEFAULT, nullptr, nullptr);
-    if (error) throw task::Error("Cannot stage files.");
+    if (error) throw git::Error("Cannot stage files.");
 
     // save addition
     git_index_write(gindex.get());
@@ -211,11 +211,11 @@ void GitRepository::remove_directory(const std::filesystem::path& seq_directory)
 
     //remove files from directory
     int error = git_index_remove_directory(gindex.get(), seq_directory.c_str(), 0);
-    if (error) throw task::Error("Cannot remove sequence files.");
+    if (error) throw git::Error("Cannot remove sequence files.");
 
     // remove sequence directory from git
     error = git_index_remove_bypath(gindex.get(), (std::string(seq_directory)+"/").c_str());
-    if (error) throw task::Error("Cannot remove sequence directory.");
+    if (error) throw git::Error("Cannot remove sequence directory.");
 
     git_index_write(gindex.get());
 
@@ -236,11 +236,11 @@ LibGitPointer<git_commit> GitRepository::get_commit(const std::string& ref)
 
     // resolve HEAD into a SHA1
     int error = git_reference_name_to_id( &oid_parent_commit, repo_.get(), ref.c_str());
-    if (error) throw task::Error("Cannot find HEAD of branch.");
+    if (error) throw git::Error("Cannot find HEAD of branch.");
 
     // find commit object by commit ID
     error = git_commit_lookup( &commit, repo_.get(), &oid_parent_commit );
-    if (error) throw task::Error("Cannot find HEAD of branch.");
+    if (error) throw git::Error("Cannot find HEAD of branch.");
 
     return commit;
 }
@@ -414,7 +414,7 @@ std::vector<FileStatus> GitRepository::status()
 
     // fill C-type status pointer
     LibGitPointer<git_status_list> my_status{status_list_new(repo_.get(), status_opt)};
-    if (my_status.get() == nullptr) throw task::Error("Cannot init status.");
+    if (my_status.get() == nullptr) throw git::Error("Cannot init status.");
 
     // translate status pointer to redable status information
     std::vector<FileStatus> status_arr = collect_status(my_status);
