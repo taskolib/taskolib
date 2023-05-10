@@ -38,4 +38,14 @@ using OptionalStepIndex = gul14::optional<StepIndex>;
 
 } // namespace task
 
+namespace git {
+
+/// A type for storing the index of a Step in a Sequence.
+using StepIndex = std::uint16_t;
+
+/// An optional step index (gul14::optional<StepIndex>).
+using OptionalStepIndex = gul14::optional<StepIndex>;
+
+} // namespace git
+
 #endif

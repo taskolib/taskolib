@@ -102,6 +102,79 @@ private:
     OptionalStepIndex index_;
 };
 
-} // namespace task
+} // namespace git
+
+namespace git {
+
+/**
+ * An exception class carrying an error message and, optionally, the index of the step in
+ * which the error occurred.
+ *
+ * Error is used as the standard exception class by all git-related functions throughout Taskolib.
+ * It can be used directly or inherited from.
+ *
+ * \code
+ * try
+ * {
+ *     throw git::Error("An error has occurred");
+ * }
+ * catch (const git::Error& e)
+ * {
+ *     std::cerr << e.what() << "\n";
+ * }
+ *
+ * try
+ * {
+ *     throw git::Error("An error has occurred", 42);
+ * }
+ * catch (const git::Error& e)
+ * {
+ *     std::cerr << e.what();
+ *     auto maybe_step_index = e.get_index();
+ *     if (maybe_step_index)
+ *         std::cerr << ": step index " << *maybe_step_index;
+ *     std::cerr << "\n";
+ * }
+ * \endcode
+ *
+ * \note
+ * git::Error is derived from std::runtime_error. It can therefore be caught by
+ * `catch (const std::exception&)`, `catch (const std::runtime_error&)`, and
+ * `catch (const git::Error&)`.
+ */
+class Error : public std::runtime_error
+{
+public:
+    explicit Error(const std::string& msg, OptionalStepIndex opt_step_index = gul14::nullopt)
+        : std::runtime_error(msg)
+        , index_{ opt_step_index }
+    {}
+
+    explicit Error(const char* msg, OptionalStepIndex opt_step_index = gul14::nullopt)
+        : std::runtime_error(msg)
+        , index_{ opt_step_index }
+    {}
+
+    /// Return the associated step index.
+    OptionalStepIndex get_index() const { return index_; }
+
+    /// Determine if two Error objects have the same content.
+    friend bool operator==(const Error& lhs, const Error& rhs) noexcept
+    {
+        return (std::strcmp(lhs.what(), rhs.what()) == 0)
+            && lhs.index_ == rhs.index_;
+    }
+
+    /// Determine if two Error objects have different content.
+    friend bool operator!=(const Error& lhs, const Error& rhs) noexcept
+    {
+        return !(lhs == rhs);
+    }
+
+private:
+    OptionalStepIndex index_;
+};
+
+} // namespace git
 
 #endif
