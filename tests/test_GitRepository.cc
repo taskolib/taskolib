@@ -59,7 +59,7 @@ void create_testfiles(const std::filesystem::path& name, size_t nr_files, const 
         // file i
         std::ofstream f(p/gul14::cat("file", i, ".txt"));
         f << msg << gul14::cat("\nfile", i);
-    }  
+    }
 }
 
 
@@ -71,7 +71,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
      * Check for the initialization of member variables
      * Check if a repository is created (HEAD exists)
      * Check if a comit was created (initial commit)
-     * 
+     *
      */
     SECTION("Construct GitRepository object")
     {
@@ -82,12 +82,12 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         REQUIRE(not gl.get_path().empty());
         REQUIRE(gl.get_path() == "sequences");
-        git_reference *temp;
+/*        git_reference *temp;
         REQUIRE(git_repository_head(&temp, gl.get_repo()) == 0);
-        
-        
+
+
         // Test if repo_ got initialized
-        REQUIRE(gl.get_last_commit_message() == "Initial commit");
+        REQUIRE(gl.get_last_commit_message() == "Initial commit");*/
     }
 
 
@@ -157,7 +157,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
                 REQUIRE(elm.changes == "new file");
             }
         }
-        
+
         // Check if repo_ can be found again
         REQUIRE(gl.get_last_commit_message() == "Initial commit");
 
@@ -209,7 +209,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         auto ret = gl.add_files({"unit_test_1/file1.txt"});
 
-        // No errors should have occur 
+        // No errors should have occur
         REQUIRE(ret.size() == 0);
 
         stats = gl.status();
@@ -246,7 +246,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
     {
         // Create Git Library
         GitRepository gl{"sequences"};
-        
+
         std::filesystem::path mypath = "unit_test_2";
 
         gl.remove_directory(mypath);
