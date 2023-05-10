@@ -107,7 +107,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         std::vector<FileStatus> stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
@@ -122,7 +122,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // new submodules from unit_test_2 should be in stage mode
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
@@ -149,7 +149,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // new submodules from unit_test_2 should be still in stage mode
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
@@ -165,7 +165,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_1") || gul14::starts_with(elm.path_name, "unit_test_2"))
             {
@@ -193,7 +193,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         std::vector<FileStatus> stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_1/file"))
             {
@@ -214,7 +214,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         stats = gl.status();
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_1/file0"))
             {
@@ -255,7 +255,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // every file in unit_test_2 should have the tag deleted
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             if (gul14::starts_with(elm.path_name, "unit_test_2"))
             {
@@ -270,7 +270,7 @@ TEST_CASE("GitRepository Wrapper Test all", "[GitWrapper]")
 
         // check if files are removed from repository status
         REQUIRE(stats.size() != 0);
-        for(auto elm: stats)
+        for(const auto& elm: stats)
         {
             REQUIRE (! gul14::starts_with(elm.path_name, "unit_test_2/file"));
         }
