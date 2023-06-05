@@ -4,7 +4,7 @@
  * \date   Created on August 30, 2022
  * \brief  Definition of internal constants and functions.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,6 +24,7 @@
 
 #include <gul14/cat.h>
 #include <gul14/join_split.h>
+#include <gul14/replace.h>
 #include <gul14/SmallVector.h>
 
 #include "internals.h"
@@ -31,6 +32,15 @@
 namespace task {
 
 const gul14::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
+
+std::string beautify_message(gul14::string_view msg)
+{
+    // Replace the Lua stack trace header with a more friendly one including a big UTF-8
+    // bullet point ("black circle") that visually separates the main message text from
+    // the stack trace.
+    return gul14::replace(msg, "\nstack traceback:\n",
+        u8"\n\u25cf Stack traceback:\n");
+}
 
 std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message)
 {
@@ -43,14 +53,14 @@ std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error
     {
     case 0: // impossible
     case 1: // no marker
-        msg = std::string(error_message);
-        return std::make_pair(msg, ErrorCause::uncaught_error);
+        return std::make_pair(beautify_message(error_message),
+            ErrorCause::uncaught_error);
     case 2: // one marker
-        msg = gul14::cat(tokens[0], tokens[1]);
+        msg = beautify_message(gul14::cat(tokens[0], tokens[1]));
         break;
     case 3: // The real error message is between the first 2 abort markers.
     default:
-        msg = std::string(tokens[1]);
+        msg = beautify_message(tokens[1]);
     }
 
     if (msg.empty()) {

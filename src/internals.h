@@ -44,7 +44,8 @@ extern const gul14::string_view abort_marker;
 enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
 
 /**
- * Remove abort markers from the given error message and determine the cause of the error.
+ * Remove abort markers from the given error message, beautify it, and determine the cause
+ * of the error.
  *
  * If at least two abort markers are present, the message is truncated to the text between
  * the first two of these markers. Otherwise, all markers are simply removed.
@@ -60,6 +61,10 @@ enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
  *     by the running script. The error message is set to a corresponding explanation
  *     ("Script called terminate_sequence()") and ErrorCause::terminated_by_script is
  *     returned.
+ *
+ * If the message contains a Lua stack trace, the function highlights its start by
+ * including a UTF-8 bullet point symbol to visually separate the main message text from
+ * the stack trace.
  *
  * \returns a pair consisting of the (possibly) modified error message and of an
  *          ErrorCause.
