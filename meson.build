@@ -69,7 +69,6 @@ deps = [
     dependency('threads'),
     gul_dep.partial_dependency(compile_args : true, includes : true),
     lua_dep,
-    dependency('libgit2')
 ]
 
 lib = both_libraries(meson.project_name(),
@@ -93,7 +92,7 @@ pkg.generate(lib,
     version : libno,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
-    requires : [ 'libgul14', 'libgit2' ],
+    requires : [ 'libgul14' ],
     subdirs : [ '', 'taskolib' / 'sol' + sol_version, 'taskolib' / 'lua' + lua_version, ],
 )
 
