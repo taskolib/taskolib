@@ -8,8 +8,6 @@ public_headers = [
    'taskolib/execute_lua_script.h',
    'taskolib/Executor.h',
    'taskolib/format.h',
-   'taskolib/GitObjectWrapper.h',
-   'taskolib/GitRepository.h',
    'taskolib/hash_string.h',
    'taskolib/LockedQueue.h',
    'taskolib/Message.h',

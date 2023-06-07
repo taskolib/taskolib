@@ -3,8 +3,6 @@ sources = files(
     'deserialize_sequence.cc',
     'execute_lua_script.cc',
     'Executor.cc',
-    'GitObjectWrapper.cc',
-    'GitRepository.cc',
     'internals.cc',
     'lua_details.cc',
     'send_message.cc',

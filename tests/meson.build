@@ -4,7 +4,6 @@ test_src = files(
     'test_Context.cc',
     'test_exceptions.cc',
     'test_Executor.cc',
-    'test_GitRepository.cc',
     'test_internals.cc',
     'test_LockedQueue.cc',
     'test_lua_details.cc',
