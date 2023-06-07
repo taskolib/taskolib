@@ -92,21 +92,10 @@ $(function() {
 <div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">  102</a></span>&#160;    <a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> <a class="code" href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">index_</a>;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;};</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;} <span class="comment">// namespace git</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;} <span class="comment">// namespace task</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="namespacegit.html">  107</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacegit.html">git</a> {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="classgit_1_1Error.html">  131</a></span>&#160;<span class="keyword">class </span><a class="code" href="classgit_1_1Error.html">Error</a> : <span class="keyword">public</span> std::runtime_error</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;{</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">using</span> std::runtime_error::runtime_error;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;};</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;} <span class="comment">// namespace git</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aStepIndex_8h_html"><div class="ttname"><a href="StepIndex_8h.html">StepIndex.h</a></div><div class="ttdoc">Declaration of the StepIndex type.</div></div>
-<div class="ttc" id="aclassgit_1_1Error_html"><div class="ttname"><a href="classgit_1_1Error.html">git::Error</a></div><div class="ttdoc">An exception class carrying an error message.</div><div class="ttdef"><b>Definition:</b> exceptions.h:132</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html"><div class="ttname"><a href="classtask_1_1Error.html">task::Error</a></div><div class="ttdoc">An exception class carrying an error message and, optionally, the index of the step in which the erro...</div><div class="ttdef"><b>Definition:</b> exceptions.h:73</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_a00e1ae9a53ae4208cfe4dec0778f6be3"><div class="ttname"><a href="classtask_1_1Error.html#a00e1ae9a53ae4208cfe4dec0778f6be3">task::Error::get_index</a></div><div class="ttdeci">OptionalStepIndex get_index() const</div><div class="ttdoc">Return the associated step index.</div><div class="ttdef"><b>Definition:</b> exceptions.h:86</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_a1c674aa164f1a429579bb08f0c65d786"><div class="ttname"><a href="classtask_1_1Error.html#a1c674aa164f1a429579bb08f0c65d786">task::Error::index_</a></div><div class="ttdeci">OptionalStepIndex index_</div><div class="ttdef"><b>Definition:</b> exceptions.h:102</div></div>
@@ -114,14 +103,13 @@ $(function() {
 <div class="ttc" id="aclasstask_1_1Error_html_a868be48cdd5bd7cc6ff62ab9511e1e69"><div class="ttname"><a href="classtask_1_1Error.html#a868be48cdd5bd7cc6ff62ab9511e1e69">task::Error::Error</a></div><div class="ttdeci">Error(const std::string &amp;msg, OptionalStepIndex opt_step_index=gul14::nullopt)</div><div class="ttdef"><b>Definition:</b> exceptions.h:75</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_aa841f2fd90807d602d8a958be80e0777"><div class="ttname"><a href="classtask_1_1Error.html#aa841f2fd90807d602d8a958be80e0777">task::Error::Error</a></div><div class="ttdeci">Error(const char *msg, OptionalStepIndex opt_step_index=gul14::nullopt)</div><div class="ttdef"><b>Definition:</b> exceptions.h:80</div></div>
 <div class="ttc" id="aclasstask_1_1Error_html_ab406f83df76182dbbfe80819bcd04dd7"><div class="ttname"><a href="classtask_1_1Error.html#ab406f83df76182dbbfe80819bcd04dd7">task::Error::operator!=</a></div><div class="ttdeci">friend bool operator!=(const Error &amp;lhs, const Error &amp;rhs) noexcept</div><div class="ttdoc">Determine if two Error objects have different content.</div><div class="ttdef"><b>Definition:</b> exceptions.h:96</div></div>
-<div class="ttc" id="anamespacegit_html"><div class="ttname"><a href="namespacegit.html">git</a></div><div class="ttdef"><b>Definition:</b> exceptions.h:107</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> VariableName.h:154</div></div>
 <div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:33</div></div>
 <div class="ttc" id="anamespacetask_html_a9cc5a1e6b225d929c30234e08b8a2e68"><div class="ttname"><a href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">task::OptionalStepIndex</a></div><div class="ttdeci">gul14::optional&lt; StepIndex &gt; OptionalStepIndex</div><div class="ttdoc">An optional step index (gul14::optional&lt;StepIndex&gt;).</div><div class="ttdef"><b>Definition:</b> StepIndex.h:37</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 10 2023 15:32:05 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jun 7 2023 14:13:01 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
