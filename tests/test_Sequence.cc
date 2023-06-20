@@ -3931,3 +3931,13 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
     REQUIRE(maybe_error.has_value() == true);
     REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));
 }
+
+TEST_CASE("Sequence: add maintainer", "[Sequence]")
+{
+    Sequence seq{"test_sequence"};
+
+    REQUIRE("" == seq.get_maintainers());
+
+    seq.set_maintainers("John Doe");
+    REQUIRE("John Doe" == seq.get_maintainers());
+}

@@ -346,6 +346,7 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
     if (not std::filesystem::exists(folder))
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
 
+    std::string maintainers;
     std::string step_setup_script;
 
     auto stream = std::ifstream(folder / sequence_lua_filename);
@@ -353,9 +354,20 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
     {
         std::string line;
         while(std::getline(stream, line, '\n'))
+        {
+            if (gul14::starts_with(line, "-- maintainers:"))
+            {
+                // assumption: maintainers exists
+                maintainers +=
+                    ((not maintainers.empty())
+                        ? ", " + gul14::trim(line.substr(15))
+                        : gul14::trim(line.substr(15)));
+            }
             step_setup_script += (line + '\n');
+        }
     }
 
+    sequence.set_maintainers(gul14::string_view(maintainers));
     sequence.set_step_setup_script(step_setup_script);
 }
 

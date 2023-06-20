@@ -690,6 +690,14 @@ void Sequence::set_label(gul14::string_view label)
     label_.assign(label.begin(), label.end());
 }
 
+void Sequence::set_maintainers(gul14::string_view maintainers)
+{
+    // remove trailing whitespaces
+    maintainers = gul14::trim_right_sv(maintainers);
+
+    maintainers_.assign(maintainers.begin(), maintainers.end());
+}
+
 void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
 {
     throw_if_running();
