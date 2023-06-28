@@ -543,12 +543,14 @@ public:
     /**
      * Add one or more maintainers to the sequence. You are free to choose what ever you
      * can use to identify the maintainer. You can also type more than one maintainer
-     * where they should be separated with comma or semicolon. The main maintainer should
-     * be enclose with square brackets:
+     * where they can be separated with comma or semicolon. For example:
      *
-     *      "[John Doe] john.doe@universe.org; Bob Smith boby@milkyway.edu"
+     *      "John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
      *
      * \param maintainers  One ore more maintainers of the sequence.
+     *
+     * \exception Does not accept control characters in the maintainer names itself.
+     *            Before the check is done it is trimmed at the beginning and end.
      */
     void set_maintainers(gul14::string_view maintainers);
 

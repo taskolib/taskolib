@@ -30,6 +30,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include <gul14/gul.h>
@@ -190,22 +191,26 @@ void extract_time_of_last_execution(gul14::string_view extract, Step& step)
     step.set_time_of_last_execution(extract_time("time of last execution", extract));
 }
 
-void extract_timeout(gul14::string_view extract, Step& step)
+template<typename Component>
+void extract_timeout(gul14::string_view extract, Component& c)
 {
     auto start_timeout = extract.find_first_not_of(" \t");
     if (start_timeout == std::string::npos)
         throw Error(gul14::cat("timeout: unable to parse ('", extract, "')"));
 
+    // check if template Component has member function Component::set_timeout
+    static_assert(std::is_member_function_pointer_v<decltype(&Component::set_timeout)>);
+
     auto timeout = gul14::trim(extract.substr(start_timeout));
     if ("infinite" == timeout)
     {
-        step.set_timeout(Timeout::infinity());
+        c.set_timeout(Timeout::infinity());
     }
     else
     {
         try
         {
-            step.set_timeout(Timeout{ std::chrono::milliseconds(std::stoull(timeout)) });
+            c.set_timeout(Timeout{std::chrono::milliseconds(std::stoull(timeout))});
         }
         catch(...) // catch any exception from std::stoull (Step::set_timeout is nothrow).
         {
@@ -222,6 +227,11 @@ void extract_disabled(gul14::string_view extract, Step& step)
     if (ss.fail())
         throw Error("disabled: unknown value, expect true or false");
     step.set_disabled(val);
+}
+
+void extract_maintainers(gul14::string_view extract, Sequence& sequence)
+{
+    sequence.set_maintainers(extract);
 }
 
 } // namespace anonymous
@@ -287,7 +297,7 @@ std::istream& operator>>(std::istream& stream, Step& step)
                 break;
 
             case "timeout"_sh:
-                extract_timeout(remaining_line, step_internal);
+                extract_timeout<Step>(remaining_line, step_internal);
                 break;
 
             case "disabled"_sh:
@@ -346,7 +356,6 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
     if (not std::filesystem::exists(folder))
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
 
-    std::string maintainers;
     std::string step_setup_script;
 
     auto stream = std::ifstream(folder / sequence_lua_filename);
@@ -355,19 +364,17 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
         std::string line;
         while(std::getline(stream, line, '\n'))
         {
-            if (gul14::starts_with(line, "-- maintainers:"))
-            {
-                // assumption: maintainers exists
-                maintainers +=
-                    ((not maintainers.empty())
-                        ? ", " + gul14::trim(line.substr(15))
-                        : gul14::trim(line.substr(15)));
-            }
-            step_setup_script += (line + '\n');
+            auto keyword = gul14::trim_left_sv(line);
+
+            if (gul14::starts_with(keyword, "-- maintainers:"))
+                extract_maintainers(keyword.substr(15), sequence);
+            else if (gul14::starts_with(keyword, "-- timeout:"))
+                extract_timeout<Sequence>(keyword.substr(11), sequence);
+            else
+                step_setup_script += (line + '\n');
         }
     }
 
-    sequence.set_maintainers(gul14::string_view(maintainers));
     sequence.set_step_setup_script(step_setup_script);
 }
 

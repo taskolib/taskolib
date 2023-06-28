@@ -660,7 +660,7 @@ TEST_CASE("serialize_sequence: sequence with step setup script", "[serialize_seq
     REQUIRE(seq_deserialized.empty()); // no Step's loaded
 }
 
-TEST_CASE("serialize_sequence: sequence with maintainers", "[serialize_sequence]")
+TEST_CASE("serialize_sequence: sequence maintainers & timeout", "[serialize_sequence]")
 {
 
     std::string seq_label{"test sequence with maintainers"};
@@ -669,13 +669,36 @@ TEST_CASE("serialize_sequence: sequence with maintainers", "[serialize_sequence]
                                                              // sequence
 
     Sequence seq{seq_label};
-    seq.set_maintainers("[John Doe] john.doe@universe.org; Bob Smith boby@milkyway.edu");
-    store_sequence(temp_dir, seq);
 
-    Sequence seq_deserialized{seq_label};
+    SECTION("maintainer & 1min timeout")
+    {
+        seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
+        seq.set_timeout(task::Timeout{1min});
 
-    std::filesystem::path path{temp_dir + '/' + seq_label};
-    load_step_setup_script(path, seq_deserialized);
-    REQUIRE("[John Doe] john.doe@universe.org; Bob Smith boby@milkyway.edu"
-        == seq_deserialized.get_maintainers());
+        store_sequence(temp_dir, seq);
+
+        Sequence seq_deserialized{seq_label};
+
+        std::filesystem::path path{temp_dir + '/' + seq_label};
+        load_step_setup_script(path, seq_deserialized);
+
+        REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
+            == seq_deserialized.get_maintainers());
+        REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
+    }
+
+    SECTION("maintainer with whitespaces & infinite timeout")
+    {
+        seq.set_maintainers("\t  John   Doe;   Bob Smith boby@milkyway.edu \b");
+
+        store_sequence(temp_dir, seq);
+
+        Sequence seq_deserialized{seq_label};
+
+        std::filesystem::path path{temp_dir + '/' + seq_label};
+        load_step_setup_script(path, seq_deserialized);
+
+        REQUIRE("John   Doe;   Bob Smith boby@milkyway.edu" == seq_deserialized.get_maintainers());
+        REQUIRE(task::Timeout::infinity() == seq_deserialized.get_timeout());
+    }
 }

@@ -3932,12 +3932,31 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
     REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));
 }
 
+#include <gul14/trim.h>
+
 TEST_CASE("Sequence: add maintainer", "[Sequence]")
 {
     Sequence seq{"test_sequence"};
 
     REQUIRE("" == seq.get_maintainers());
 
-    seq.set_maintainers("John Doe");
+    seq.set_maintainers("");
+    REQUIRE("" == seq.get_maintainers());
+
+    seq.set_maintainers("Jane Doe");
+    REQUIRE("Jane Doe" == seq.get_maintainers());
+
+
+    seq.set_maintainers(" \t\vJohn Doe");
     REQUIRE("John Doe" == seq.get_maintainers());
+
+    REQUIRE(gul14::string_view("John Doe") == gul14::trim_sv("John Doe        "));
+
+    seq.set_maintainers("John Doe        ");
+    REQUIRE("John Doe" == seq.get_maintainers());
+
+    REQUIRE_THROWS_AS(seq.set_maintainers("John\t\v\f Doe"), Error);
+    REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\nJane Doe"), Error);
+    REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\rJane Doe"), Error);
+    REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\vJane Doe"), Error);
 }

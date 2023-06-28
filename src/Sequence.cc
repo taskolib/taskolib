@@ -692,8 +692,13 @@ void Sequence::set_label(gul14::string_view label)
 
 void Sequence::set_maintainers(gul14::string_view maintainers)
 {
-    // remove trailing whitespaces
-    maintainers = gul14::trim_right_sv(maintainers);
+    maintainers = gul14::trim_sv(maintainers);
+
+    auto count = std::count_if(maintainers.cbegin(), maintainers.cend(),
+                            [](unsigned char c) -> bool
+                            { return std::iscntrl(c); });
+    if (count > 0)
+        throw Error("Maintainer should not contain any control character.");
 
     maintainers_.assign(maintainers.begin(), maintainers.end());
 }

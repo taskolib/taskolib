@@ -146,7 +146,7 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
     return stream;
 }
 
-void store_sequence_parameter(const std::filesystem::path& lua_file, const Sequence& seq)
+void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequence& seq)
 {
     remove_path(lua_file);
 
@@ -158,8 +158,13 @@ void store_sequence_parameter(const std::filesystem::path& lua_file, const Seque
     if (not seq.get_maintainers().empty())
         stream << "-- maintainers: " << seq.get_maintainers() << '\n';
 
-    stream << seq; // RAII closes the stream (let the destructor do the job)
+    stream << "-- timeout: ";
+    if (!isfinite(seq.get_timeout()))
+        stream << "infinite\n";
+    else
+        stream << static_cast<std::chrono::milliseconds>(seq.get_timeout()).count() << '\n';
 
+    stream << seq; // RAII closes the stream (let the destructor do the job)
 }
 
 void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
@@ -183,7 +188,7 @@ void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
         throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
     }
 
-    store_sequence_parameter(seq_path / sequence_lua_filename, seq);
+    store_sequence_parameters(seq_path / sequence_lua_filename, seq);
 
     for(const auto& step: seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
