@@ -655,7 +655,7 @@ TEST_CASE("serialize_sequence: sequence with step setup script", "[serialize_seq
     seq_deserialized.set_step_setup_script("b = 'Should break the test!'");
 
     std::filesystem::path path{temp_dir + '/' + seq_label};
-    store_sequence_parameters(path, seq_deserialized);
+    load_sequence_parameters(path, seq_deserialized);
     REQUIRE(seq_deserialized.get_step_setup_script() == "a = 'Bob is alive'");
     REQUIRE(seq_deserialized.empty()); // no Step's loaded
 }
@@ -680,7 +680,7 @@ TEST_CASE("serialize_sequence: sequence maintainers & timeout", "[serialize_sequ
         Sequence seq_deserialized{seq_label};
 
         std::filesystem::path path{temp_dir + '/' + seq_label};
-        store_sequence_parameters(path, seq_deserialized);
+        load_sequence_parameters(path, seq_deserialized);
 
         REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
             == seq_deserialized.get_maintainers());
@@ -696,7 +696,7 @@ TEST_CASE("serialize_sequence: sequence maintainers & timeout", "[serialize_sequ
         Sequence seq_deserialized{seq_label};
 
         std::filesystem::path path{temp_dir + '/' + seq_label};
-        store_sequence_parameters(path, seq_deserialized);
+        load_sequence_parameters(path, seq_deserialized);
 
         REQUIRE("John   Doe;   Bob Smith boby@milkyway.edu" == seq_deserialized.get_maintainers());
         REQUIRE(task::Timeout::infinity() == seq_deserialized.get_timeout());

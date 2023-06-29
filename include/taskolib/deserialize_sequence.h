@@ -96,13 +96,13 @@ std::istream& operator>>(std::istream& stream, Step& step);
 Step load_step(const std::filesystem::path& lua_file);
 
 /**
- * Load a step setup script into the Sequence.
+ * Load parameters into the Sequence.
  *
  * \param folder of the Sequence.
  * \param sequence to store the loaded step setup script.
  * \see Sequence for step setup script.
  */
-void store_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence);
+void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence);
 
 /**
  * Loads a Sequence with all of the stored Step's from the folder.

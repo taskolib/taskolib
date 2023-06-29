@@ -351,7 +351,7 @@ Step load_step(const std::filesystem::path& lua_file)
     return step;
 }
 
-void store_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence)
+void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence)
 {
     if (not std::filesystem::exists(folder))
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
@@ -386,7 +386,7 @@ Sequence load_sequence(const std::filesystem::path& folder)
     auto label = unescape_filename_characters(folder.filename().string());
     Sequence seq{label};
 
-    store_sequence_parameters(folder, seq);
+    load_sequence_parameters(folder, seq);
 
     std::vector<std::filesystem::path> steps;
     for (auto const& entry : std::filesystem::directory_iterator{folder})
