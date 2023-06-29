@@ -592,7 +592,7 @@ private:
 
     std::string label_; ///< Sequence label.
 
-    std::string maintainers_{""}; ///< One or more maintainers.
+    std::string maintainers_; ///< One or more maintainers.
 
     std::string step_setup_script_; ///< Step setup script.
 
