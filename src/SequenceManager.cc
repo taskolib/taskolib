@@ -4,7 +4,7 @@
  * \date   Created on July 22, 2022
  * \brief  Manage and control sequences.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,6 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <algorithm>
+
 #include "taskolib/SequenceManager.h"
 #include "taskolib/deserialize_sequence.h"
 
@@ -32,8 +33,10 @@ SequenceManager::PathList SequenceManager::get_sequence_names() const
 {
     PathList sequences;
     for (auto const& entry : std::filesystem::directory_iterator{path_})
-        if (entry.is_directory())
+    {
+        if (entry.is_directory() and entry.path().filename() != ".git")
             sequences.push_back(entry.path());
+    }
 
     std::sort(sequences.begin(), sequences.end());
 

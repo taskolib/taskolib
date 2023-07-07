@@ -4,7 +4,7 @@
  * \date   Created on July 22, 2022
  * \brief  Test suite for the SequenceManager class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,10 +22,12 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/catch.h>
-#include <utility>
 #include <algorithm>
 #include <fstream>
+#include <utility>
+
+#include <gul14/catch.h>
+
 #include "taskolib/SequenceManager.h"
 #include "taskolib/serialize_sequence.h"
 
@@ -51,6 +53,8 @@ TEST_CASE("Move SequenceManager constructor", "[SequenceManager]")
 
 TEST_CASE("Get sequence names", "[SequenceManager]")
 {
+    std::filesystem::remove_all("unit_test_2");
+
     // prepare first sequence for test
     Step step_1_01{Step::type_while};
     step_1_01.set_label("while");
@@ -83,6 +87,9 @@ TEST_CASE("Get sequence names", "[SequenceManager]")
     // create regular file to test sequence directory loading only.
     std::fstream f("unit_test_2/some_text_file.txt", std::ios::out);
     f.close();
+
+    // create a ".git" repository to test that it is not listed as a sequence
+    std::filesystem::create_directory("unit_test_2/.git");
 
     SequenceManager sm{"unit_test_2"};
     auto sequence_paths = sm.get_sequence_names();
