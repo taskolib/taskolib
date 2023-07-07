@@ -549,8 +549,7 @@ public:
      *
      * \param maintainers  One ore more maintainers of the sequence.
      *
-     * \exception Does not accept control characters in the maintainer names itself.
-     *            Before the check is done it is trimmed at the beginning and end.
+     * \exception Error is thrown if control characters are detected.
      */
     void set_maintainers(gul14::string_view maintainers);
 

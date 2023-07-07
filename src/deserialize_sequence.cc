@@ -191,28 +191,24 @@ void extract_time_of_last_execution(gul14::string_view extract, Step& step)
     step.set_time_of_last_execution(extract_time("time of last execution", extract));
 }
 
-template<typename Component>
-void extract_timeout(gul14::string_view extract, Component& c)
+Timeout parse_timeout(gul14::string_view extract)
 {
     auto start_timeout = extract.find_first_not_of(" \t");
     if (start_timeout == std::string::npos)
         throw Error(gul14::cat("timeout: unable to parse ('", extract, "')"));
 
-    // check if template Component has member function Component::set_timeout
-    static_assert(std::is_member_function_pointer_v<decltype(&Component::set_timeout)>);
-
     auto timeout = gul14::trim(extract.substr(start_timeout));
     if ("infinite" == timeout)
     {
-        c.set_timeout(Timeout::infinity());
+        return Timeout::infinity();
     }
     else
     {
         try
         {
-            c.set_timeout(Timeout{std::chrono::milliseconds(std::stoull(timeout))});
+            return Timeout{std::chrono::milliseconds(std::stoull(timeout))};
         }
-        catch(...) // catch any exception from std::stoull (Step::set_timeout is nothrow).
+        catch(...) // catch any exception from std::stoull (Component::set_timeout throws)
         {
             throw Error(gul14::cat("timeout: unable to parse number ('", timeout, "')"));
         }
@@ -297,7 +293,7 @@ std::istream& operator>>(std::istream& stream, Step& step)
                 break;
 
             case "timeout"_sh:
-                extract_timeout<Step>(remaining_line, step_internal);
+                step_internal.set_timeout(parse_timeout(remaining_line));
                 break;
 
             case "disabled"_sh:
@@ -369,7 +365,7 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
             if (gul14::starts_with(keyword, "-- maintainers:"))
                 extract_maintainers(keyword.substr(15), sequence);
             else if (gul14::starts_with(keyword, "-- timeout:"))
-                extract_timeout<Sequence>(keyword.substr(11), sequence);
+                sequence.set_timeout(parse_timeout(keyword.substr(11)));
             else
                 step_setup_script += (line + '\n');
         }
