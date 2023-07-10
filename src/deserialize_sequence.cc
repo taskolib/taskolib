@@ -30,7 +30,6 @@
 #include <set>
 #include <sstream>
 #include <string>
-#include <type_traits>
 #include <vector>
 
 #include <gul14/gul.h>
@@ -225,11 +224,6 @@ void extract_disabled(gul14::string_view extract, Step& step)
     step.set_disabled(val);
 }
 
-void extract_maintainers(gul14::string_view extract, Sequence& sequence)
-{
-    sequence.set_maintainers(extract);
-}
-
 } // namespace anonymous
 
 std::istream& operator>>(std::istream& stream, Step& step)
@@ -363,7 +357,7 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
             auto keyword = gul14::trim_left_sv(line);
 
             if (gul14::starts_with(keyword, "-- maintainers:"))
-                extract_maintainers(keyword.substr(15), sequence);
+                sequence.set_maintainers(keyword.substr(15));
             else if (gul14::starts_with(keyword, "-- timeout:"))
                 sequence.set_timeout(parse_timeout(keyword.substr(11)));
             else
