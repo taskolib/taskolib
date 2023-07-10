@@ -190,7 +190,7 @@ void extract_time_of_last_execution(gul14::string_view extract, Step& step)
     step.set_time_of_last_execution(extract_time("time of last execution", extract));
 }
 
-void extract_timeout(gul14::string_view extract, Step& step)
+Timeout parse_timeout(gul14::string_view extract)
 {
     auto start_timeout = extract.find_first_not_of(" \t");
     if (start_timeout == std::string::npos)
@@ -199,15 +199,15 @@ void extract_timeout(gul14::string_view extract, Step& step)
     auto timeout = gul14::trim(extract.substr(start_timeout));
     if ("infinite" == timeout)
     {
-        step.set_timeout(Timeout::infinity());
+        return Timeout::infinity();
     }
     else
     {
         try
         {
-            step.set_timeout(Timeout{ std::chrono::milliseconds(std::stoull(timeout)) });
+            return Timeout{std::chrono::milliseconds(std::stoull(timeout))};
         }
-        catch(...) // catch any exception from std::stoull (Step::set_timeout is nothrow).
+        catch(...) // catch any exception from std::stoull (Component::set_timeout throws)
         {
             throw Error(gul14::cat("timeout: unable to parse number ('", timeout, "')"));
         }
@@ -287,7 +287,7 @@ std::istream& operator>>(std::istream& stream, Step& step)
                 break;
 
             case "timeout"_sh:
-                extract_timeout(remaining_line, step_internal);
+                step_internal.set_timeout(parse_timeout(remaining_line));
                 break;
 
             case "disabled"_sh:
@@ -341,7 +341,7 @@ Step load_step(const std::filesystem::path& lua_file)
     return step;
 }
 
-void load_step_setup_script(const std::filesystem::path& folder, Sequence& sequence)
+void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence)
 {
     if (not std::filesystem::exists(folder))
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
@@ -353,7 +353,16 @@ void load_step_setup_script(const std::filesystem::path& folder, Sequence& seque
     {
         std::string line;
         while(std::getline(stream, line, '\n'))
-            step_setup_script += (line + '\n');
+        {
+            auto keyword = gul14::trim_left_sv(line);
+
+            if (gul14::starts_with(keyword, "-- maintainers:"))
+                sequence.set_maintainers(keyword.substr(15));
+            else if (gul14::starts_with(keyword, "-- timeout:"))
+                sequence.set_timeout(parse_timeout(keyword.substr(11)));
+            else
+                step_setup_script += (line + '\n');
+        }
     }
 
     sequence.set_step_setup_script(step_setup_script);
@@ -367,7 +376,7 @@ Sequence load_sequence(const std::filesystem::path& folder)
     auto label = unescape_filename_characters(folder.filename().string());
     Sequence seq{label};
 
-    load_step_setup_script(folder, seq);
+    load_sequence_parameters(folder, seq);
 
     std::vector<std::filesystem::path> steps;
     for (auto const& entry : std::filesystem::directory_iterator{folder})

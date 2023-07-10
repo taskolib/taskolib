@@ -87,6 +87,10 @@ namespace task {
  * ## Sequence timeout
  *
  * The sequence timeout is per default set to infinity.
+ *
+ * ## Maintainer
+ *
+ * The sequence can have one or more maintainers. Per default the maintainer is empty.
  */
 class Sequence
 {
@@ -313,6 +317,13 @@ public:
     const std::string& get_label() const noexcept { return label_; }
 
     /**
+     * Return the maintainers of the sequence.
+     *
+     * \returns the maintainers of the sequence.
+     */
+    const std::string& get_maintainers() const noexcept { return maintainers_; }
+
+    /**
      * Get the step setup script.
      *
      * \returns the step setup script.
@@ -530,6 +541,19 @@ public:
     void set_label(gul14::string_view label);
 
     /**
+     * Add one or more maintainers to the sequence. You are free to choose what ever you
+     * can use to identify the maintainer. You can also type more than one maintainer
+     * where they can be separated with comma or semicolon. For example:
+     *
+     *      "John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
+     *
+     * \param maintainers  One ore more maintainers of the sequence.
+     *
+     * \exception Error is thrown if control characters are detected.
+     */
+    void set_maintainers(gul14::string_view maintainers);
+
+    /**
      * Set the sequence into the state "is running" (true) or "is not running" (false).
      *
      * \note
@@ -566,6 +590,8 @@ private:
     std::string indentation_error_;
 
     std::string label_; ///< Sequence label.
+
+    std::string maintainers_; ///< One or more maintainers.
 
     std::string step_setup_script_; ///< Step setup script.
 

@@ -690,6 +690,19 @@ void Sequence::set_label(gul14::string_view label)
     label_.assign(label.begin(), label.end());
 }
 
+void Sequence::set_maintainers(gul14::string_view maintainers)
+{
+    maintainers = gul14::trim_sv(maintainers);
+
+    auto count = std::count_if(maintainers.cbegin(), maintainers.cend(),
+                            [](unsigned char c) -> bool
+                            { return std::iscntrl(c); });
+    if (count > 0)
+        throw Error("Maintainer should not contain any control character.");
+
+    maintainers_.assign(maintainers.begin(), maintainers.end());
+}
+
 void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
 {
     throw_if_running();
