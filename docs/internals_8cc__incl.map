@@ -1,10 +1,11 @@
 <map id="internals.cc" name="internals.cc">
-<area shape="rect" id="node1" title="Definition of internal constants and functions." alt="" coords="225,5,323,32"/>
+<area shape="rect" id="node1" title="Definition of internal constants and functions." alt="" coords="295,5,392,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,80,100,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="125,80,258,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="283,80,433,107"/>
-<area shape="rect" id="node5" href="$internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="458,80,549,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="390,155,449,181"/>
-<area shape="rect" id="node7" title=" " alt="" coords="473,155,533,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="557,155,705,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="282,80,405,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="429,80,580,107"/>
+<area shape="rect" id="node6" href="$internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="605,80,695,107"/>
+<area shape="rect" id="node7" title=" " alt="" coords="537,155,595,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="620,155,680,181"/>
+<area shape="rect" id="node9" title=" " alt="" coords="704,155,852,181"/>
 </map>

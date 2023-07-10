@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.2</span>
    </div>
   </td>
  </tr>
@@ -162,9 +162,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a82114c3fc93381449488afc662ff88ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Step.html">Step</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">load_step</a> (const std::filesystem::path &amp;lua_file)</td></tr>
 <tr class="memdesc:a82114c3fc93381449488afc662ff88ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from a file and return it.  <a href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">More...</a><br /></td></tr>
 <tr class="separator:a82114c3fc93381449488afc662ff88ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2918f99439e2f0705b36dc82d686c93b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2918f99439e2f0705b36dc82d686c93b">load_step_setup_script</a> (const std::filesystem::path &amp;folder, <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
-<tr class="memdesc:a2918f99439e2f0705b36dc82d686c93b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a step setup script into the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>.  <a href="namespacetask.html#a2918f99439e2f0705b36dc82d686c93b">More...</a><br /></td></tr>
-<tr class="separator:a2918f99439e2f0705b36dc82d686c93b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eeedb324f13bee35b988881a6806d82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">load_sequence_parameters</a> (const std::filesystem::path &amp;folder, <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
+<tr class="memdesc:a5eeedb324f13bee35b988881a6806d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load sequence parameters like the step setup script and the sequence timeout.  <a href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">More...</a><br /></td></tr>
+<tr class="separator:a5eeedb324f13bee35b988881a6806d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac32d1dd524a788593956a85f44d68a0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence</a> (const std::filesystem::path &amp;folder)</td></tr>
 <tr class="memdesc:ac32d1dd524a788593956a85f44d68a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> with all of the stored <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a>'s from the folder.  <a href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">More...</a><br /></td></tr>
 <tr class="separator:ac32d1dd524a788593956a85f44d68a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,8 +202,10 @@ Functions</h2></td></tr>
 <tr class="separator:a77a3adfb97957bfee85dbc4a0a5ea371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8a13e460561c228be4437ac6e92a4f8"><td class="memItemLeft" align="right" valign="top">std::time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa8a13e460561c228be4437ac6e92a4f8">timegm</a> (const std::tm &amp;t)</td></tr>
 <tr class="separator:aa8a13e460561c228be4437ac6e92a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e6bf3c71399243d4bcea6e6788d83bc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1e6bf3c71399243d4bcea6e6788d83bc">beautify_message</a> (gul14::string_view msg)</td></tr>
+<tr class="separator:a1e6bf3c71399243d4bcea6e6788d83bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfba3503e0ced28341fcfe37f25eb244"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers</a> (gul14::string_view error_message)</td></tr>
-<tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
+<tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message, beautify it, and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
 <tr class="separator:adfba3503e0ced28341fcfe37f25eb244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error</a> (lua_State *lua_state, const std::string &amp;msg)</td></tr>
 <tr class="separator:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -240,8 +242,8 @@ Functions</h2></td></tr>
 <tr class="memitem:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">send_message</a> (<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a> type, gul14::string_view text, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> timestamp, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel=nullptr)</td></tr>
 <tr class="memdesc:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the message callback and enqueue the message in the given communication channel, if any.  <a href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">More...</a><br /></td></tr>
 <tr class="separator:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e68ad338db3879022c20490a790700e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2e68ad338db3879022c20490a790700e">store_step_setup_script</a> (const std::filesystem::path &amp;lua_file, const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;seq)</td></tr>
-<tr class="separator:a2e68ad338db3879022c20490a790700e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa883a2a495601e09399da5b2bdd887d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa883a2a495601e09399da5b2bdd887d5">store_sequence_parameters</a> (const std::filesystem::path &amp;lua_file, const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;seq)</td></tr>
+<tr class="separator:aa883a2a495601e09399da5b2bdd887d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -584,6 +586,26 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, and <a class="el" href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">hook_abort_with_error()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request()</a>, <a class="el" href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">check_script_timeout()</a>, <a class="el" href="namespacetask.html#a2dddc142466c9fae9497a3422c4bfba9">install_custom_commands()</a>, and <a class="el" href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">print_fct()</a>.</p>
+
+</div>
+</div>
+<a id="a1e6bf3c71399243d4bcea6e6788d83bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e6bf3c71399243d4bcea6e6788d83bc">&#9670;&nbsp;</a></span>beautify_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task::beautify_message </td>
+          <td>(</td>
+          <td class="paramtype">gul14::string_view&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers()</a>.</p>
 
 </div>
 </div>
@@ -1044,9 +1066,51 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the loaded <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> object. </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">load_step()</a>, and <a class="el" href="namespacetask.html#a2918f99439e2f0705b36dc82d686c93b">load_step_setup_script()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">load_sequence_parameters()</a>, and <a class="el" href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">load_step()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a48adcbdcc8cf7e351e63c449a1931049">task::SequenceManager::load_sequence()</a>.</p>
+
+</div>
+</div>
+<a id="a5eeedb324f13bee35b988881a6806d82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eeedb324f13bee35b988881a6806d82">&#9670;&nbsp;</a></span>load_sequence_parameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::load_sequence_parameters </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>folder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load sequence parameters like the step setup script and the sequence timeout. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">folder</td><td>of the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>. </td></tr>
+    <tr><td class="paramname">sequence</td><td>to store the loaded step setup script. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> for step setup script. </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808">task::Sequence::set_maintainers()</a>, <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">task::Sequence::set_timeout()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1100,48 +1164,6 @@ if <code>&gt;time of last modification</code> is not provided in the file it is 
 <dd>
 the collection of context variable names can also be an empty list, ie. <code></code>[] .</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>the deserialized <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> object. </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence()</a>.</p>
-
-</div>
-</div>
-<a id="a2918f99439e2f0705b36dc82d686c93b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2918f99439e2f0705b36dc82d686c93b">&#9670;&nbsp;</a></span>load_step_setup_script()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task::load_step_setup_script </td>
-          <td>(</td>
-          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
-          <td class="paramname"><em>folder</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
-          <td class="paramname"><em>sequence</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Load a step setup script into the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">folder</td><td>of the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a>. </td></tr>
-    <tr><td class="paramname">sequence</td><td>to store the loaded step setup script. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> for step setup script. </dd></dl>
-
-<p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, and <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence()</a>.</p>
 
@@ -1326,7 +1348,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>passed input stream </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#aee945ef7a60605fe4bbb79f54f4d93d0">hash_djb2a()</a>, <a class="el" href="classtask_1_1Step.html#aaa01eaf139e91add89f808f2883855e4">task::Step::set_script()</a>, and <a class="el" href="classtask_1_1Step.html#a277e32b2aaa43d487a37629b09e8062e">task::Step::set_time_of_last_modification()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#aee945ef7a60605fe4bbb79f54f4d93d0">hash_djb2a()</a>, <a class="el" href="classtask_1_1Step.html#aaa01eaf139e91add89f808f2883855e4">task::Step::set_script()</a>, <a class="el" href="classtask_1_1Step.html#a277e32b2aaa43d487a37629b09e8062e">task::Step::set_time_of_last_modification()</a>, and <a class="el" href="classtask_1_1Step.html#af7fe836ded0cf092ecea80620f0e20a7">task::Step::set_timeout()</a>.</p>
 
 </div>
 </div>
@@ -1378,7 +1400,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p>Remove abort markers from the given error message and determine the cause of the error. </p>
+<p>Remove abort markers from the given error message, beautify it, and determine the cause of the error. </p>
 <p>If at least two abort markers are present, the message is truncated to the text between the first two of these markers. Otherwise, all markers are simply removed.</p>
 <p>The cause of the error is determined as follows:</p><ul>
 <li>If no marker was present, the message describes a "normal" error and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">ErrorCause::uncaught_error</a> is returned.</li>
@@ -1388,9 +1410,10 @@ the collection of context variable names can also be an empty list, ie. <code></
 </ul>
 </li>
 </ul>
+<p>If the message contains a Lua stack trace, the function highlights its start by including a UTF-8 bullet point symbol to visually separate the main message text from the stack trace.</p>
 <dl class="section return"><dt>Returns</dt><dd>a pair consisting of the (possibly) modified error message and of an ErrorCause. </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a7bef6a9def7c1bf4e524f19e5e201907">abort_marker</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>, <a class="el" href="namespacetask.html#a1e6bf3c71399243d4bcea6e6788d83bc">beautify_message()</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#ad16fd23a3b451c85c83ac81790e546c4">task::Step::execute()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7a1122dafe2e31be1d1b903584ad3fa9">task::Sequence::handle_execution()</a>.</p>
 
@@ -1570,7 +1593,39 @@ the collection of context variable names can also be an empty list, ie. <code></
 </li>
 </ul>
 
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ad2c6281b29b351dc92a491ae0e0858a9">task::Sequence::get_label()</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>, <a class="el" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">store_step()</a>, and <a class="el" href="namespacetask.html#a2e68ad338db3879022c20490a790700e">store_step_setup_script()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ad2c6281b29b351dc92a491ae0e0858a9">task::Sequence::get_label()</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>, <a class="el" href="namespacetask.html#aa883a2a495601e09399da5b2bdd887d5">store_sequence_parameters()</a>, and <a class="el" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">store_step()</a>.</p>
+
+</div>
+</div>
+<a id="aa883a2a495601e09399da5b2bdd887d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa883a2a495601e09399da5b2bdd887d5">&#9670;&nbsp;</a></span>store_sequence_parameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::store_sequence_parameters </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>lua_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>seq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be">task::Sequence::get_maintainers()</a>, and <a class="el" href="classtask_1_1Sequence.html#a13e7536da87d1b09756f8eed40fb47e3">task::Sequence::get_timeout()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">store_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1626,36 +1681,6 @@ the collection of context variable names can also be an empty list, ie. <code></
   </table>
   </dd>
 </dl>
-
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">store_sequence()</a>.</p>
-
-</div>
-</div>
-<a id="a2e68ad338db3879022c20490a790700e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e68ad338db3879022c20490a790700e">&#9670;&nbsp;</a></span>store_step_setup_script()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void task::store_step_setup_script </td>
-          <td>(</td>
-          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
-          <td class="paramname"><em>lua_file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
-          <td class="paramname"><em>seq</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">store_sequence()</a>.</p>
 
@@ -1776,14 +1801,14 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Define the Lua sequence filename for storing and loading Lua script. </p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a2918f99439e2f0705b36dc82d686c93b">load_step_setup_script()</a>, and <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">store_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">load_sequence_parameters()</a>, and <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">store_sequence()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 7 2023 14:13:01 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 10 2023 07:19:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

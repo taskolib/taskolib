@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.2</span>
    </div>
   </td>
  </tr>
@@ -69,7 +69,7 @@ $(function() {
 <div class="line"><span class="keywordflow">while</span> (ex.update(sequence))</div>
 <div class="line">    sleep(0.1s);</div>
 <div class="ttc" id="aclasstask_1_1Executor_html_ac778aee53d739377df9fbd88eb063e88"><div class="ttname"><a href="classtask_1_1Executor.html#ac778aee53d739377df9fbd88eb063e88">task::Executor::Executor</a></div><div class="ttdeci">Executor()</div><div class="ttdoc">Construct an Executor.</div><div class="ttdef"><b>Definition:</b> Executor.cc:62</div></div>
-<div class="ttc" id="anamespacetask_html_ac32d1dd524a788593956a85f44d68a0c"><div class="ttname"><a href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">task::load_sequence</a></div><div class="ttdeci">Sequence load_sequence(const std::filesystem::path &amp;folder)</div><div class="ttdoc">Loads a Sequence with all of the stored Step's from the folder.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:362</div></div>
+<div class="ttc" id="anamespacetask_html_ac32d1dd524a788593956a85f44d68a0c"><div class="ttname"><a href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">task::load_sequence</a></div><div class="ttdeci">Sequence load_sequence(const std::filesystem::path &amp;folder)</div><div class="ttdoc">Loads a Sequence with all of the stored Step's from the folder.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:371</div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Calling <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> in the main thread is mandatory to ensure that the sequence in the worker thread can make progress. This is because the message queue for communication between the threads has only a limited capacity, and execution is paused once it is full. Only calls to <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">update()</a> take messages out of the queue again. </dd></dl>
 </div>
 <p><code>#include &lt;<a class="el" href="Executor_8h_source.html">Executor.h</a>&gt;</code></p>
@@ -674,7 +674,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 7 2023 14:13:01 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 10 2023 07:19:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

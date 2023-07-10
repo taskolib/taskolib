@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.5.0</span>
+   &#160;<span id="projectnumber">0.5.2</span>
    </div>
   </td>
  </tr>
@@ -65,7 +65,7 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;Step <a class="code" href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">load_step</a>(<span class="keyword">const</span> std::filesystem::path&amp; lua_file);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#a2918f99439e2f0705b36dc82d686c93b">load_step_setup_script</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder, Sequence&amp; sequence);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">load_sequence_parameters</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder, Sequence&amp; sequence);</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;Sequence <a class="code" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
@@ -75,14 +75,14 @@ $(function() {
 <div class="ttc" id="aSequence_8h_html"><div class="ttname"><a href="Sequence_8h.html">Sequence.h</a></div><div class="ttdoc">A sequence of Steps.</div></div>
 <div class="ttc" id="aStep_8h_html"><div class="ttname"><a href="Step_8h.html">Step.h</a></div><div class="ttdoc">Declaration of the Step class.</div></div>
 <div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:33</div></div>
-<div class="ttc" id="anamespacetask_html_a2918f99439e2f0705b36dc82d686c93b"><div class="ttname"><a href="namespacetask.html#a2918f99439e2f0705b36dc82d686c93b">task::load_step_setup_script</a></div><div class="ttdeci">void load_step_setup_script(const std::filesystem::path &amp;folder, Sequence &amp;sequence)</div><div class="ttdoc">Load a step setup script into the Sequence.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:344</div></div>
+<div class="ttc" id="anamespacetask_html_a5eeedb324f13bee35b988881a6806d82"><div class="ttname"><a href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters</a></div><div class="ttdeci">void load_sequence_parameters(const std::filesystem::path &amp;folder, Sequence &amp;sequence)</div><div class="ttdoc">Load sequence parameters like the step setup script and the sequence timeout.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:344</div></div>
 <div class="ttc" id="anamespacetask_html_a6267718d543a5b3e74455d4e78de04f3"><div class="ttname"><a href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">task::operator&gt;&gt;</a></div><div class="ttdeci">std::istream &amp; operator&gt;&gt;(std::istream &amp;stream, Step &amp;step)</div><div class="ttdoc">Deserialize parameters of Step from the input stream.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:229</div></div>
 <div class="ttc" id="anamespacetask_html_a82114c3fc93381449488afc662ff88ed"><div class="ttname"><a href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">task::load_step</a></div><div class="ttdeci">Step load_step(const std::filesystem::path &amp;lua_file)</div><div class="ttdoc">Read a Step from a file and return it.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:331</div></div>
-<div class="ttc" id="anamespacetask_html_ac32d1dd524a788593956a85f44d68a0c"><div class="ttname"><a href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">task::load_sequence</a></div><div class="ttdeci">Sequence load_sequence(const std::filesystem::path &amp;folder)</div><div class="ttdoc">Loads a Sequence with all of the stored Step's from the folder.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:362</div></div>
+<div class="ttc" id="anamespacetask_html_ac32d1dd524a788593956a85f44d68a0c"><div class="ttname"><a href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">task::load_sequence</a></div><div class="ttdeci">Sequence load_sequence(const std::filesystem::path &amp;folder)</div><div class="ttdoc">Loads a Sequence with all of the stored Step's from the folder.</div><div class="ttdef"><b>Definition:</b> deserialize_sequence.cc:371</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 7 2023 14:13:01 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 10 2023 07:19:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
