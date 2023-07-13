@@ -111,6 +111,9 @@ public:
     /// Max number of bytes of a Sequence label.
     static constexpr std::size_t max_label_length = 128;
 
+    /// Max number of bytes of a Sequence nice name.
+    static constexpr std::size_t max_nice_name_length = 128;
+
     /**
      * Construct a Sequence with a descriptive name.
      * The label should describe the function of the sequence clearly and concisely.
@@ -121,7 +124,8 @@ public:
      *                  is used.
      *
      * \exception       Error is thrown if the label is empty or if its length exceeds
-     *                  max_label_length bytes. The nice
+     *                  max_label_length bytes or the nice name exceeds the limit of
+     *                  max_nice_name_length bytes.
      */
     explicit Sequence(gul14::string_view label, gul14::string_view nice_name = "");
 
@@ -558,7 +562,7 @@ public:
      *
      * \param nice_name to be interpreted by humans.
      *
-     * \exception Error is thrown if the nice name exceeds max_label_length bytes.
+     * \exception Error is thrown if the nice name exceeds max_nice_name_length bytes.
      */
     void set_nice_name(gul14::string_view nice_name);
 

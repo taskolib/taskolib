@@ -693,9 +693,9 @@ void Sequence::set_label(gul14::string_view label)
 
 void Sequence::set_nice_name(gul14::string_view nice_name)
 {
-    if (nice_name.size() > max_label_length)
+    if (nice_name.size() > max_nice_name_length)
     {
-        throw Error(cat("Nice name is too long (>", max_label_length, " bytes)"));
+        throw Error(cat("Nice name is too long (>", max_nice_name_length, " bytes)"));
     }
 
     nice_name_.assign(nice_name.begin(), nice_name.end());
