@@ -660,17 +660,19 @@ TEST_CASE("serialize_sequence: sequence with step setup script", "[serialize_seq
     REQUIRE(seq_deserialized.empty()); // no Step's loaded
 }
 
-TEST_CASE("serialize_sequence: sequence maintainers & timeout", "[serialize_sequence]")
+TEST_CASE("serialize_sequence: sequence maintainers, timeout & nice name",
+    "[serialize_sequence]")
 {
 
     std::string seq_label{"test sequence with maintainers"};
+    std::string seq_nice_name{"The quick brown fox jumps over the lazy dog"};
 
     std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously stored
                                                              // sequence
 
     Sequence seq{seq_label};
 
-    SECTION("maintainer & 1min timeout")
+    SECTION("maintainer, 1min timeout & no nice name")
     {
         seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
         seq.set_timeout(task::Timeout{1min});
@@ -687,9 +689,10 @@ TEST_CASE("serialize_sequence: sequence maintainers & timeout", "[serialize_sequ
         REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
     }
 
-    SECTION("maintainer with whitespaces & infinite timeout")
+    SECTION("maintainer with whitespaces, infinite timeout & nice name")
     {
         seq.set_maintainers("\t  John   Doe;   Bob Smith boby@milkyway.edu \b");
+        seq.set_nice_name(seq_nice_name);
 
         store_sequence(temp_dir, seq);
 
@@ -700,5 +703,6 @@ TEST_CASE("serialize_sequence: sequence maintainers & timeout", "[serialize_sequ
 
         REQUIRE("John   Doe;   Bob Smith boby@milkyway.edu" == seq_deserialized.get_maintainers());
         REQUIRE(task::Timeout::infinity() == seq_deserialized.get_timeout());
+        REQUIRE(seq_nice_name == seq_deserialized.get_nice_name());
     }
 }

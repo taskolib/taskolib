@@ -3981,9 +3981,18 @@ TEST_CASE("Sequence: add nice name", "[Sequence]")
         REQUIRE("" == seq.get_nice_name());
     }
 
+    SECTION("exclude control characters from nice name")
+    {
+        Sequence seq{"test_sequence"};
+        REQUIRE_THROWS_AS(seq.set_nice_name("\n"), Error);
+        REQUIRE_THROWS_AS(seq.set_nice_name("\r"), Error);
+        REQUIRE_THROWS_AS(seq.set_nice_name("\f"), Error);
+    }
+
     SECTION("exceed limit on constructor")
     {
         auto to_big_nice_name = std::string(Sequence::max_nice_name_length + 1, 'x');
+
         REQUIRE_THROWS_AS(Sequence("test_sequence", to_big_nice_name), Error);
 
         Sequence seq{"test_sequence"};

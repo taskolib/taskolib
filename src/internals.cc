@@ -29,6 +29,8 @@
 
 #include "internals.h"
 
+#include "taskolib/exceptions.h"
+
 namespace task {
 
 const gul14::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
@@ -69,6 +71,15 @@ std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error
     }
 
     return std::make_pair(msg, ErrorCause::aborted);
+}
+
+void check_for_control_characters(gul14::string_view str)
+{
+    auto count = std::count_if(str.cbegin(), str.cend(),
+                            [](unsigned char c) -> bool
+                            { return std::iscntrl(c); });
+    if (count > 0)
+        throw Error("String should not contain any control character.");
 }
 
 } // namespace task

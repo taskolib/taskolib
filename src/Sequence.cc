@@ -698,6 +698,8 @@ void Sequence::set_nice_name(gul14::string_view nice_name)
         throw Error(cat("Nice name is too long (>", max_nice_name_length, " bytes)"));
     }
 
+    check_for_control_characters(nice_name);
+
     nice_name_.assign(nice_name.begin(), nice_name.end());
 }
 
@@ -705,11 +707,7 @@ void Sequence::set_maintainers(gul14::string_view maintainers)
 {
     maintainers = gul14::trim_sv(maintainers);
 
-    auto count = std::count_if(maintainers.cbegin(), maintainers.cend(),
-                            [](unsigned char c) -> bool
-                            { return std::iscntrl(c); });
-    if (count > 0)
-        throw Error("Maintainer should not contain any control character.");
+    check_for_control_characters(maintainers);
 
     maintainers_.assign(maintainers.begin(), maintainers.end());
 }

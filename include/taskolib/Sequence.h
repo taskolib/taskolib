@@ -121,11 +121,9 @@ public:
      *
      * \param label     descriptive and expressive label.
      * \param nice_name of the sequence. Argument is optional. Per default an empty string
-     *                  is used.
+     *                  is used. Should not contain any control characters.
      *
-     * \exception       Error is thrown if the label is empty or if its length exceeds
-     *                  max_label_length bytes or the nice name exceeds the limit of
-     *                  max_nice_name_length bytes.
+     * \exception       is thrown if the label or nice name does not fit.
      */
     explicit Sequence(gul14::string_view label, gul14::string_view nice_name = "");
 
@@ -558,11 +556,13 @@ public:
     void set_label(gul14::string_view label);
 
     /**
-     * Set the nice name that describes the sequence for humans.
+     * Set the nice name that describes the sequence for humans. The nice name should not
+     * contain any control characters.
      *
      * \param nice_name to be interpreted by humans.
      *
-     * \exception Error is thrown if the nice name exceeds max_nice_name_length bytes.
+     * \exception Error is thrown if the nice name exceeds max_nice_name_length bytes or
+     *            has some control characters.
      */
     void set_nice_name(gul14::string_view nice_name);
 
