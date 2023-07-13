@@ -3956,3 +3956,28 @@ TEST_CASE("Sequence: add maintainer", "[Sequence]")
     REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\rJane Doe"), Error);
     REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\vJane Doe"), Error);
 }
+
+TEST_CASE("Sequence: add nice name", "[Sequence]")
+{
+    SECTION("empty nice name")
+    {
+        Sequence seq{"test_sequence"};
+        REQUIRE("" == seq.get_nice_name());
+    }
+
+    SECTION("nice name with content")
+    {
+        Sequence seq{"test_sequence", "The super duper sequence!"};
+        REQUIRE("The super duper sequence!" == seq.get_nice_name());
+    }
+
+    SECTION("set/get nice name")
+    {
+        Sequence seq{"test_sequence", "The super duper sequence!"};
+        REQUIRE("The super duper sequence!" == seq.get_nice_name());
+        seq.set_nice_name("Another Sequence name.");
+        REQUIRE("Another Sequence name." == seq.get_nice_name());
+        seq.set_nice_name("");
+        REQUIRE("" == seq.get_nice_name());
+    }
+}
