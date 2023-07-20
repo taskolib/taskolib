@@ -54,9 +54,8 @@ namespace task {
  * fault is detected an Error is thrown including a precise error message about what
  * fails.
  *
- * By creating a sequence you must specify a label and a nice name. The label is used to
- * identify the sequence where the nice name should be interpreted by humans and can
- * have blanks.
+ * By creating a sequence you must specify a label. The label is used to identify the
+ * sequence.
  *
  * To modify the sequence the following member functions are implemented:
  *
@@ -120,12 +119,9 @@ public:
      * The label must not be empty. Leading and trailing whitespaces will be removed.
      *
      * \param label     descriptive and expressive label.
-     * \param nice_name of the sequence. Argument is optional. Per default an empty string
-     *                  is used. Should not contain any control characters.
-     *
      * \exception       is thrown if the label or nice name does not fit.
      */
-    explicit Sequence(gul14::string_view label, gul14::string_view nice_name = "");
+    explicit Sequence(gul14::string_view label);
 
     /**
      * Assign a Step to the sequence entry at the given position.
@@ -323,13 +319,6 @@ public:
      * @returns a descriptive name for the sequence.
      */
     const std::string& get_label() const noexcept { return label_; }
-
-    /**
-     * Return the nice name of the sequence.
-     *
-     * @return a nice name of the sequence.
-     */
-    const std::string& get_nice_name() const noexcept { return nice_name_; }
 
     /**
      * Return the maintainers of the sequence.
@@ -556,17 +545,6 @@ public:
     void set_label(gul14::string_view label);
 
     /**
-     * Set the nice name that describes the sequence for humans. The nice name should not
-     * contain any control characters.
-     *
-     * \param nice_name to be interpreted by humans.
-     *
-     * \exception Error is thrown if the nice name exceeds max_nice_name_length bytes or
-     *            has some control characters.
-     */
-    void set_nice_name(gul14::string_view nice_name);
-
-    /**
      * Add one or more maintainers to the sequence. You are free to choose what ever you
      * can use to identify the maintainer. You can also type more than one maintainer
      * where they can be separated with comma or semicolon. For example:
@@ -616,8 +594,6 @@ private:
     std::string indentation_error_;
 
     std::string label_; ///< Sequence label.
-
-    std::string nice_name_; ///< Nice name of the sequence.
 
     std::string maintainers_; ///< One or more maintainers.
 

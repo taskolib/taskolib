@@ -65,10 +65,9 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 } // anonymous namespace
 
 
-Sequence::Sequence(gul14::string_view label, gul14::string_view nice_name)
+Sequence::Sequence(gul14::string_view label)
 {
     set_label(label);
-    set_nice_name(nice_name);
 }
 
 void Sequence::assign(Sequence::ConstIterator iter, const Step& step)
@@ -689,18 +688,6 @@ void Sequence::set_label(gul14::string_view label)
     }
 
     label_.assign(label.begin(), label.end());
-}
-
-void Sequence::set_nice_name(gul14::string_view nice_name)
-{
-    if (nice_name.size() > max_nice_name_length)
-    {
-        throw Error(cat("Nice name is too long (>", max_nice_name_length, " bytes)"));
-    }
-
-    check_for_control_characters(nice_name);
-
-    nice_name_.assign(nice_name.begin(), nice_name.end());
 }
 
 void Sequence::set_maintainers(gul14::string_view maintainers)

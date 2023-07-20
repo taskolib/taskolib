@@ -158,7 +158,7 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
     if (not seq.get_maintainers().empty())
         stream << "-- maintainers: " << seq.get_maintainers() << '\n';
 
-    stream << "-- nice name: " << seq.get_nice_name() << '\n';
+    stream << "-- label: " << seq.get_label() << '\n';
 
     stream << "-- timeout: ";
     if (!isfinite(seq.get_timeout()))

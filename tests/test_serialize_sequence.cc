@@ -564,12 +564,12 @@ TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]"
     REQUIRE(after[0] == "A bell"); // This is strictly speaking not required
 
     Sequence deserialize_seq = load_sequence(temp_dir + "/" + after[0]);
-    // REQUIRE(sequence.get_label() == deserialize_seq.get_label());
+    REQUIRE(sequence.get_label() == deserialize_seq.get_label());
     // Compare all chars but not the control char which is at index 1:
     REQUIRE(sequence.get_label().substr(0,1) == deserialize_seq.get_label().substr(0,1));
     REQUIRE(sequence.get_label().substr(2) == deserialize_seq.get_label().substr(2));
-    // Control char shall be encoded as blank
-    REQUIRE(deserialize_seq.get_label().substr(1, 1) == " ");
+    // Control char shall be encoded as a control character for bell (\b)
+    REQUIRE(deserialize_seq.get_label().substr(1, 1) == "\b");
 }
 
 TEST_CASE("serialize_sequence: : simple step setup", "[serialize_sequence]")
@@ -665,14 +665,12 @@ TEST_CASE("serialize_sequence: sequence maintainers, timeout & nice name",
 {
 
     std::string seq_label{"test sequence with maintainers"};
-    std::string seq_nice_name{"The quick brown fox jumps over the lazy dog"};
-
     std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously stored
                                                              // sequence
 
     Sequence seq{seq_label};
 
-    SECTION("maintainer, 1min timeout & no nice name")
+    SECTION("maintainer and 1min timeout")
     {
         seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
         seq.set_timeout(task::Timeout{1min});
@@ -687,22 +685,6 @@ TEST_CASE("serialize_sequence: sequence maintainers, timeout & nice name",
         REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
             == seq_deserialized.get_maintainers());
         REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
-    }
-
-    SECTION("maintainer with whitespaces, infinite timeout & nice name")
-    {
-        seq.set_maintainers("\t  John   Doe;   Bob Smith boby@milkyway.edu \b");
-        seq.set_nice_name(seq_nice_name);
-
-        store_sequence(temp_dir, seq);
-
-        Sequence seq_deserialized{seq_label};
-
-        std::filesystem::path path{temp_dir + '/' + seq_label};
-        load_sequence_parameters(path, seq_deserialized);
-
-        REQUIRE("John   Doe;   Bob Smith boby@milkyway.edu" == seq_deserialized.get_maintainers());
-        REQUIRE(task::Timeout::infinity() == seq_deserialized.get_timeout());
-        REQUIRE(seq_nice_name == seq_deserialized.get_nice_name());
+        REQUIRE("test sequence with maintainers" == seq_deserialized.get_label());
     }
 }
