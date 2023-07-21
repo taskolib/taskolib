@@ -681,6 +681,8 @@ void Sequence::set_label(gul14::string_view label)
     if (label.empty())
         throw Error("Sequence label may not be empty");
 
+    check_for_control_characters(label);
+
     if (label.size() > max_label_length)
     {
         throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
@@ -694,11 +696,7 @@ void Sequence::set_maintainers(gul14::string_view maintainers)
 {
     maintainers = gul14::trim_sv(maintainers);
 
-    auto count = std::count_if(maintainers.cbegin(), maintainers.cend(),
-                            [](unsigned char c) -> bool
-                            { return std::iscntrl(c); });
-    if (count > 0)
-        throw Error("Maintainer should not contain any control character.");
+    check_for_control_characters(maintainers);
 
     maintainers_.assign(maintainers.begin(), maintainers.end());
 }

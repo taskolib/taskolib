@@ -71,6 +71,13 @@ enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
  */
 std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message);
 
+/**
+ * Checks if the string includes any control characters.
+ *
+ * \exception of Error is thrown If one control character is found.
+ */
+void check_for_control_characters(gul14::string_view str);
+
 } // namespace task
 
 #endif

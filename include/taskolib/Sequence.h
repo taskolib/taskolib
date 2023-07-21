@@ -54,6 +54,9 @@ namespace task {
  * fault is detected an Error is thrown including a precise error message about what
  * fails.
  *
+ * By creating a sequence you must specify a label. The label is used to identify the
+ * sequence.
+ *
  * To modify the sequence the following member functions are implemented:
  *
  * -# push_back(): add a new Step at the end
@@ -111,11 +114,11 @@ public:
      * Construct a Sequence with a descriptive name.
      * The label should describe the function of the sequence clearly and concisely.
      * The label must not be empty. Leading and trailing whitespaces will be removed.
+     * If the label has any control character it will reject with an exception.
      *
-     * \param label descriptive and expressive label.
-     *
-     * \exception Error is thrown if the label is empty or if its length exceeds
-     *            max_label_length bytes.
+     * \param label     descriptive and expressive label.
+     * \exception       is thrown if the label is empty, exceeds max_label_length or has
+     *                  at least one control character.
      */
     explicit Sequence(gul14::string_view label);
 
@@ -531,12 +534,12 @@ public:
      * Set the sequence label.
      *
      * Leading and trailing whitespace is trimmed, and the resulting label must not be
-     * empty.
+     * empty. Moreover it should not contain any control characters.
      *
      * \param label  descriptive and expressive label.
      *
-     * \exception Error is thrown if the label is empty or if its length exceeds
-     *            max_label_length bytes.
+     * \exception Error is thrown if the label is empty, its length exceeds
+     *            max_label_length bytes or has some control characters.
      */
     void set_label(gul14::string_view label);
 
