@@ -681,6 +681,8 @@ void Sequence::set_label(gul14::string_view label)
     if (label.empty())
         throw Error("Sequence label may not be empty");
 
+    check_for_control_characters(label);
+
     if (label.size() > max_label_length)
     {
         throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,

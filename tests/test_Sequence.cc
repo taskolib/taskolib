@@ -3956,3 +3956,11 @@ TEST_CASE("Sequence: add maintainer", "[Sequence]")
     REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\rJane Doe"), Error);
     REQUIRE_THROWS_AS(seq.set_maintainers("John Doe\vJane Doe"), Error);
 }
+
+TEST_CASE("Sequence: label with control character", "[serialize_sequence]")
+{
+    REQUIRE_THROWS_AS(Sequence("A\bbell"), Error);
+
+    Sequence sequence{ "Test sequence" };
+    REQUIRE_THROWS_AS(sequence.set_label("A\bbell"), Error);
+}

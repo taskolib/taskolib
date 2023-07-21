@@ -541,11 +541,12 @@ TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
 
 TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]")
 {
+    // Note: for handling control character see test case in test_Sequence.cc:
+    // "Sequence: label with control character".
+
     auto before = collect_filenames(temp_dir);
 
-    // Unfortunately this is legal:
-    // (Maybe labels of Step and Sequence should not allow control characters?)
-    Sequence sequence{ "A\bbell" };
+    Sequence sequence{ "A bell" };
 
     sequence.push_back(Step{ });
     REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
@@ -565,11 +566,6 @@ TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]"
 
     Sequence deserialize_seq = load_sequence(temp_dir + "/" + after[0]);
     REQUIRE(sequence.get_label() == deserialize_seq.get_label());
-    // Compare all chars but not the control char which is at index 1:
-    REQUIRE(sequence.get_label().substr(0,1) == deserialize_seq.get_label().substr(0,1));
-    REQUIRE(sequence.get_label().substr(2) == deserialize_seq.get_label().substr(2));
-    // Control char shall be encoded as a control character for bell (\b)
-    REQUIRE(deserialize_seq.get_label().substr(1, 1) == "\b");
 }
 
 TEST_CASE("serialize_sequence: : simple step setup", "[serialize_sequence]")
