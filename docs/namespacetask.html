@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.5.2</span>
+   &#160;<span id="projectnumber">0.6.0</span>
    </div>
   </td>
  </tr>
@@ -207,6 +207,9 @@ Functions</h2></td></tr>
 <tr class="memitem:adfba3503e0ced28341fcfe37f25eb244"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers</a> (gul14::string_view error_message)</td></tr>
 <tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message, beautify it, and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
 <tr class="separator:adfba3503e0ced28341fcfe37f25eb244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abffd9175baff53f84f476579b65b4075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#abffd9175baff53f84f476579b65b4075">check_for_control_characters</a> (gul14::string_view str)</td></tr>
+<tr class="memdesc:abffd9175baff53f84f476579b65b4075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the string includes any control characters.  <a href="namespacetask.html#abffd9175baff53f84f476579b65b4075">More...</a><br /></td></tr>
+<tr class="separator:abffd9175baff53f84f476579b65b4075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error</a> (lua_State *lua_state, const std::string &amp;msg)</td></tr>
 <tr class="separator:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0420458f3b22f97c90b2a4a14d68b03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request</a> (lua_State *lua_state)</td></tr>
@@ -606,6 +609,34 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers()</a>.</p>
+
+</div>
+</div>
+<a id="abffd9175baff53f84f476579b65b4075"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abffd9175baff53f84f476579b65b4075">&#9670;&nbsp;</a></span>check_for_control_characters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::check_for_control_characters </td>
+          <td>(</td>
+          <td class="paramtype">gul14::string_view&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if the string includes any control characters. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">of</td><td><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> is thrown If one control character is found. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a4549f7958067eaf3e2d3e5f049cb262b">task::Sequence::set_label()</a>, and <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808">task::Sequence::set_maintainers()</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1139,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> for step setup script. </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808">task::Sequence::set_maintainers()</a>, <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">task::Sequence::set_timeout()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#a4549f7958067eaf3e2d3e5f049cb262b">task::Sequence::set_label()</a>, <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808">task::Sequence::set_maintainers()</a>, <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">task::Sequence::set_timeout()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">load_sequence()</a>.</p>
 
@@ -1623,7 +1654,7 @@ the collection of context variable names can also be an empty list, ie. <code></
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be">task::Sequence::get_maintainers()</a>, and <a class="el" href="classtask_1_1Sequence.html#a13e7536da87d1b09756f8eed40fb47e3">task::Sequence::get_timeout()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ad2c6281b29b351dc92a491ae0e0858a9">task::Sequence::get_label()</a>, <a class="el" href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be">task::Sequence::get_maintainers()</a>, and <a class="el" href="classtask_1_1Sequence.html#a13e7536da87d1b09756f8eed40fb47e3">task::Sequence::get_timeout()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">store_sequence()</a>.</p>
 
@@ -1808,7 +1839,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 10 2023 07:19:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Jul 21 2023 14:29:19 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

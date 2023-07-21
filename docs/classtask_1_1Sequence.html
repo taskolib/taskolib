@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.5.2</span>
+   &#160;<span id="projectnumber">0.6.0</span>
    </div>
   </td>
  </tr>
@@ -59,6 +59,7 @@ $(function() {
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A sequence of <a class="el" href="classtask_1_1Step.html">Step</a>s to be executed under a given <a class="el" href="structtask_1_1Context.html" title="A context stores information that influences the execution of steps and sequences,...">Context</a>. </p>
 <p>On executing a validation is performed to check if the steps are consistent. When a fault is detected an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> is thrown including a precise error message about what fails.</p>
+<p>By creating a sequence you must specify a label. The label is used to identify the sequence.</p>
 <p>To modify the sequence the following member functions are implemented:</p>
 <ol type="1">
 <li><a class="el" href="classtask_1_1Sequence.html#a5b281658b4349ca8c63a8a287ebd0420" title="Add a step to the end of the sequence.">push_back()</a>: add a new <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> at the end</li>
@@ -416,16 +417,16 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Construct a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> with a descriptive name. </p>
-<p>The label should describe the function of the sequence clearly and concisely. The label must not be empty. Leading and trailing whitespaces will be removed.</p>
+<p>The label should describe the function of the sequence clearly and concisely. The label must not be empty. Leading and trailing whitespaces will be removed. If the label has any control character it will reject with an exception.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">label</td><td>descriptive and expressive label.</td></tr>
+    <tr><td class="paramname">label</td><td>descriptive and expressive label. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the label is empty or if its length exceeds max_label_length bytes. </td></tr>
+    <tr><td class="paramname">is</td><td>thrown if the label is empty, exceeds max_label_length or has at least one control character. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1688,7 +1689,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#acabb4f67da8fa2ba6a9382b7dc457405">label_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">task::store_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">task::store_sequence()</a>, and <a class="el" href="namespacetask.html#aa883a2a495601e09399da5b2bdd887d5">task::store_sequence_parameters()</a>.</p>
 
 </div>
 </div>
@@ -2391,7 +2392,7 @@ template&lt;typename Closure &gt; </div>
 </div><div class="memdoc">
 
 <p>Set the sequence label. </p>
-<p>Leading and trailing whitespace is trimmed, and the resulting label must not be empty.</p>
+<p>Leading and trailing whitespace is trimmed, and the resulting label must not be empty. Moreover it should not contain any control characters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">label</td><td>descriptive and expressive label.</td></tr>
@@ -2400,14 +2401,14 @@ template&lt;typename Closure &gt; </div>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the label is empty or if its length exceeds max_label_length bytes. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the label is empty, its length exceeds max_label_length bytes or has some control characters. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#acabb4f67da8fa2ba6a9382b7dc457405">label_</a>, and <a class="el" href="classtask_1_1Sequence.html#aa8f2b437f77a0eaa81e96b0c79aab308">max_label_length</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#abffd9175baff53f84f476579b65b4075">task::check_for_control_characters()</a>, <a class="el" href="classtask_1_1Sequence.html#acabb4f67da8fa2ba6a9382b7dc457405">label_</a>, and <a class="el" href="classtask_1_1Sequence.html#aa8f2b437f77a0eaa81e96b0c79aab308">max_label_length</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#ab9ac451ffade407a0029e2f189e7f7ef">Sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters()</a>, and <a class="el" href="classtask_1_1Sequence.html#ab9ac451ffade407a0029e2f189e7f7ef">Sequence()</a>.</p>
 
 </div>
 </div>
@@ -2442,7 +2443,7 @@ template&lt;typename Closure &gt; </div>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a16847049da1e3844a4356b506895ed8a">maintainers_</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#abffd9175baff53f84f476579b65b4075">task::check_for_control_characters()</a>, and <a class="el" href="classtask_1_1Sequence.html#a16847049da1e3844a4356b506895ed8a">maintainers_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters()</a>.</p>
 
@@ -2920,7 +2921,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 10 2023 07:19:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Jul 21 2023 14:29:19 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
