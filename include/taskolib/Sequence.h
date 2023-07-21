@@ -118,7 +118,7 @@ public:
      *
      * \param label     descriptive and expressive label.
      * \exception       is thrown if the label is empty, exceeds max_label_length or has
-     *                  at least one control characters.
+     *                  at least one control character.
      */
     explicit Sequence(gul14::string_view label);
 

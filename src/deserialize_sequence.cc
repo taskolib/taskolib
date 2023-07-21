@@ -359,7 +359,7 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
             if (gul14::starts_with(keyword, "-- maintainers:"))
                 sequence.set_maintainers(keyword.substr(15));
             else if (gul14::starts_with(keyword, "-- label:"))
-                sequence.set_label(gul14::trim(keyword.substr(9)));
+                sequence.set_label(gul14::trim_sv(keyword.substr(9)));
             else if (gul14::starts_with(keyword, "-- timeout:"))
                 sequence.set_timeout(parse_timeout(keyword.substr(11)));
             else
