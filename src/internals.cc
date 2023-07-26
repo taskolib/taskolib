@@ -44,6 +44,15 @@ std::string beautify_message(gul14::string_view msg)
         u8"\n\u25cf Stack traceback:\n");
 }
 
+void check_for_control_characters(gul14::string_view str)
+{
+    auto count = std::count_if(str.cbegin(), str.cend(),
+        [](unsigned char c) -> bool { return std::iscntrl(c); });
+
+    if (count > 0)
+        throw Error("String should not contain any control character.");
+}
+
 std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message)
 {
     const auto tokens = gul14::split<gul14::SmallVector<gul14::string_view, 3>>(
@@ -71,15 +80,6 @@ std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error
     }
 
     return std::make_pair(msg, ErrorCause::aborted);
-}
-
-void check_for_control_characters(gul14::string_view str)
-{
-    auto count = std::count_if(str.cbegin(), str.cend(),
-                            [](unsigned char c) -> bool
-                            { return std::iscntrl(c); });
-    if (count > 0)
-        throw Error("String should not contain any control character.");
 }
 
 } // namespace task
