@@ -32,6 +32,9 @@
 
 namespace task {
 
+/// An enum detailing the possible causes of the termination of a sequence.
+enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
+
 /// Define the Lua sequence filename for storing and loading Lua script.
 const char sequence_lua_filename[] = "sequence.lua";
 
@@ -41,7 +44,12 @@ const char sequence_lua_filename[] = "sequence.lua";
  */
 extern const gul14::string_view abort_marker;
 
-enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
+/**
+ * Throw an exception if the string contains control characters.
+ *
+ * \exception Error is thrown if the string contains any control characters.
+ */
+void check_for_control_characters(gul14::string_view str);
 
 /**
  * Remove abort markers from the given error message, beautify it, and determine the cause
@@ -70,13 +78,6 @@ enum class ErrorCause { terminated_by_script, aborted, uncaught_error };
  *          ErrorCause.
  */
 std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message);
-
-/**
- * Checks if the string includes any control characters.
- *
- * \exception of Error is thrown If one control character is found.
- */
-void check_for_control_characters(gul14::string_view str);
 
 } // namespace task
 
