@@ -41,30 +41,31 @@
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
 #include "taskolib/exceptions.h"
+#include "taskolib/SequenceName.h"
 #include "taskolib/Step.h"
 #include "taskolib/StepIndex.h"
 #include "taskolib/TimeoutTrigger.h"
+#include "taskolib/UniqueId.h"
 
 namespace task {
 
 /**
- * A sequence of \ref task::Step "Step"s to be executed under a given Context.
+ * A sequence of steps that can be modified and executed.
  *
- * On executing a validation is performed to check if the steps are consistent. When a
- * fault is detected an Error is thrown including a precise error message about what
- * fails.
+ * A sequence is basically a list of \ref task::Step "Step" objects with some additional
+ * functionality and information. For instance, a sequence has a human-readable label,
+ * a list of maintainers, a unique ID, a timeout, and a "step setup script" that is
+ * executed before each individual step.
  *
- * By creating a sequence you must specify a label. The label is used to identify the
- * sequence.
+ * A sequence can be executed in the current thread with execute(). The most important
+ * member functions for modifying the sequence are the following ones:
  *
- * To modify the sequence the following member functions are implemented:
- *
- * -# push_back(): add a new Step at the end
- * -# pop_back(): remove a Step from the end
- * -# insert(): insert a Step at an arbitrary position
- * -# assign(): assign a new Step to an existing element
- * -# erase(): remove a Step or a range of steps
- * -# modify(): modify a Step inside the sequence via a function or function object
+ * -# push_back(): add a new step at the end
+ * -# pop_back(): remove a step from the end
+ * -# insert(): insert a step at an arbitrary position
+ * -# assign(): assign a new step to an existing element
+ * -# erase(): remove a step or a range of steps
+ * -# modify(): modify a step inside the sequence via a function or function object
  *
  * \code {.cpp}
  * Sequence seq;
@@ -75,25 +76,73 @@ namespace task {
  * seq.push_back(Step{Step::type_end});
  * // insert an action step at index 1
  * seq.insert(seq.begin() + 1, Step{Step::type_action});
+ *
+ * Context context;
+ * auto maybe_error = seq.execute(context);
  * \endcode
  *
- * ## Step setup script #
+ * ## Additional information
  *
- * The sequence can contains a common setup script that is shared by all of its steps. It
- * is called automatically before the execution of each step's script, just after
+ * Beside the list of steps, a sequence carries additional information. The following
+ * paragraphs give a coarse overview.
+ *
+ * ### Label
+ *
+ * A human-readable label that describes the function of the sequence. It may not contain
+ * control characters like linebreaks, but can otherwise be chosen freely. The library and
+ * user code are free to use the label as a basis for generating file, directory, and
+ * similar names, but must take of the necessary character escaping. The label is not
+ * unique and it might be empty.
+ *
+ * \see get_label(), set_label()
+ *
+ * ### Name
+ *
+ * While the label is meant for humans to read, the sequence name is a more
+ * machine-friendly identifier for constrained uses such as filenames. The name may only
+ * contain alphanumeric characters, the minus and underscore characters, and periods. It
+ * can be up to 64 characters long, but may be empty.
+ *
+ * \see get_name(), set_name()
+ *
+ * ### Unique ID
+ *
+ * The unique ID (UID) is a 64-bit integer that is used to identify the sequence, as far
+ * as possible, in a unique way. Upon construction of the sequence, a random UID is
+ * generated. Although clashes are very unlikely, an external class like the
+ * SequenceManager may take additional steps to ensure the uniqueness of the ID.
+ *
+ * \see get_unique_id(), set_unique_id()
+ *
+ * ### Maintainers
+ *
+ * The sequence carries a list of maintainers or sequence authors as a string. By default,
+ * it is empty, and it can hold whatever information seems useful.
+ *
+ * \see get_maintainers(), set_maintainers()
+ *
+ * ### Step setup script
+ *
+ * The sequence contains a common setup script that is shared by all of its steps. It is
+ * called automatically before the execution of the script from each step, just after
  * executing the lua_step_setup. It is typically used like a small library for defining
- * common functions or constants.
+ * common functions or constants. The setup script is only executed for steps that
+ * actually execute a script themselves (ACTION, IF, ELSEIF, WHILE).
  *
- * The setup script is only executed for step types for which Step::executes_script()
- * returns true (ACTION, IF, ELSEIF, WHILE).
+ * \see get_step_setup_script(), set_step_setup_script()
  *
- * ## Sequence timeout
+ * ### Sequence timeout
  *
- * The sequence timeout is per default set to infinity.
+ * The sequence has a global timeout that starts counting down when execute() is called.
+ * By default, it is set to infinity (i.e., no timeout).
  *
- * ## Maintainer
+ * \see get_timeout(), set_timeout()
  *
- * The sequence can have one or more maintainers. Per default the maintainer is empty.
+ * ### Time of last execution
+ *
+ * The sequence stores the timestamp of when it was last executed.
+ *
+ * \see get_time_of_last_execution()
  */
 class Sequence
 {
@@ -107,20 +156,24 @@ public:
     /// Alias for a constant reverse vector iterator.
     using ConstReverseIterator = std::vector<Step>::const_reverse_iterator;
 
-    /// Max number of bytes of a Sequence label.
+    /// Maximum number of bytes of a Sequence label.
     static constexpr std::size_t max_label_length = 128;
 
     /**
-     * Construct a Sequence with a descriptive name.
-     * The label should describe the function of the sequence clearly and concisely.
-     * The label must not be empty. Leading and trailing whitespaces will be removed.
-     * If the label has any control character it will reject with an exception.
+     * Construct an empty sequence.
      *
-     * \param label     descriptive and expressive label.
-     * \exception       is thrown if the label is empty, exceeds max_label_length or has
-     *                  at least one control character.
+     * \param label  Human-readable label for the sequence. It should describe the
+     *               function of the sequence clearly and concisely. The label may not
+     *               contain any control characters like linebreaks and it may not exceed
+     *               max_label_length bytes. Leading and trailing whitespace is trimmed.
+     * \param name   Machine-friendly name for the sequence.
+     * \param uid    Unique ID for the sequence.
+     *
+     * \exception Error is thrown if the label is too long or if it contains at least one
+     *            control character.
      */
-    explicit Sequence(gul14::string_view label);
+    Sequence(gul14::string_view label = "", SequenceName name = SequenceName{},
+        UniqueId uid = UniqueId{});
 
     /**
      * Assign a Step to the sequence entry at the given position.
@@ -313,7 +366,7 @@ public:
     const std::string& get_indentation_error() const noexcept { return indentation_error_; }
 
     /**
-     * Return the sequence label.
+     * Return the human-readable sequence label.
      *
      * @returns a descriptive name for the sequence.
      */
@@ -325,6 +378,13 @@ public:
      * \returns the maintainers of the sequence.
      */
     const std::string& get_maintainers() const noexcept { return maintainers_; }
+
+    /**
+     * Return the machine-friendly name of the sequence.
+     *
+     * \returns the unique ID.
+     */
+    const SequenceName& get_name() const noexcept { return name_; }
 
     /**
      * Get the step setup script.
@@ -345,6 +405,13 @@ public:
 
     /// Return the timeout duration for executing the sequence.
     Timeout get_timeout() const { return timeout_trigger_.get_timeout(); }
+
+    /**
+     * Return the unique ID of the sequence.
+     *
+     * \returns the unique ID.
+     */
+    UniqueId get_unique_id() const noexcept { return unique_id_; }
 
     /// Return true if the timeout is elapsed otherwise false.
     bool is_timeout_elapsed() const { return timeout_trigger_.is_elapsed(); }
@@ -531,10 +598,11 @@ public:
     void set_error(gul14::optional<Error> opt_error);
 
     /**
-     * Set the sequence label.
+     * Set the human-readable sequence label.
      *
-     * Leading and trailing whitespace is trimmed, and the resulting label must not be
-     * empty. Moreover it should not contain any control characters.
+     * Leading and trailing whitespace is trimmed, and the resulting label must not exceed
+     * a length of max_label_length bytes. Moreover, it should not contain any control
+     * characters.
      *
      * \param label  descriptive and expressive label.
      *
@@ -555,6 +623,13 @@ public:
      * \exception Error is thrown if control characters are detected.
      */
     void set_maintainers(gul14::string_view maintainers);
+
+    /**
+     * Set the machine-friendly sequence name.
+     *
+     * \param name  new sequence name
+     */
+    void set_name(SequenceName name) { name_ = std::move(name); }
 
     /**
      * Set the sequence into the state "is running" (true) or "is not running" (false).
@@ -579,6 +654,14 @@ public:
     /// Set the timeout duration for executing the sequence.
     void set_timeout(Timeout timeout) { timeout_trigger_.set_timeout(timeout); }
 
+    /**
+     * Set the unique ID of the sequence.
+     *
+     * The unique ID is assigned upon construction and should ideally not be changed
+     * afterwards.
+     */
+    void set_unique_id(UniqueId uid) { unique_id_ = uid; }
+
     /// Return the number of steps contained in this sequence.
     SizeType size() const noexcept { return static_cast<SizeType>(steps_.size()); }
 
@@ -592,10 +675,10 @@ private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
-    std::string label_; ///< Sequence label.
-
+    UniqueId unique_id_; ///< Unique ID.
+    SequenceName name_; ///< Machine-readable name.
+    std::string label_; ///< Human-readable sequence label.
     std::string maintainers_; ///< One or more maintainers.
-
     std::string step_setup_script_; ///< Step setup script.
 
     std::vector<Step> steps_; ///< Collection of steps.
