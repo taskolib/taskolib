@@ -4,7 +4,7 @@
  * \date   Created on May 6, 2022
  * \brief  Test suite for the free function serialize_sequence().
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,24 +25,24 @@
 #include <algorithm>
 #include <chrono>
 #include <filesystem>
-#include <gul14/catch.h>
-#include <gul14/gul.h>
 #include <sstream>
 #include <system_error>
 #include <vector>
 
+#include <gul14/catch.h>
+
 #include "../src/internals.h" // SEQUENCE_LUA_FILENAME
 #include "taskolib/deserialize_sequence.h"
+#include "taskolib/SequenceManager.h"
 #include "taskolib/serialize_sequence.h"
 
-using namespace task;
 using namespace std::literals;
+using namespace task;
+using namespace task::literals;
 
-static const auto temp_dir = "unit_test"s;
+namespace {
 
-// Remove the previous created temp folder
-// This is executed before main() is called
-static auto prepare_filesystem = []() { return std::filesystem::remove_all(temp_dir); }();
+static const std::filesystem::path temp_dir{ "unit_test_files" };
 
 // Helper that returns all Lua step entries of a directory (i.e. files or subdirs)
 std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path)
@@ -51,6 +51,8 @@ std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path
     for (const auto& entry: std::filesystem::directory_iterator{ path })
         if (entry.path().extension() == ".lua")
             result.push_back(entry.path().filename().string());
+
+    std::sort(result.begin(), result.end());
     return result;
 }
 
@@ -60,7 +62,32 @@ std::vector<std::string> collect_filenames(const std::filesystem::path& path)
     std::vector<std::string> result;
     for (const auto& entry: std::filesystem::directory_iterator{ path })
         result.push_back(entry.path().filename().string());
+
+    std::sort(result.begin(), result.end());
     return result;
+}
+
+} // anonymous namespace
+
+TEST_CASE("make_sequence_filename(Sequence)", "[serialize_sequence]")
+{
+    REQUIRE(make_sequence_filename(
+        Sequence{ "A sequence", SequenceName{ "A_sequence" }, 0xdeadbeef_uid })
+        == "A_sequence[00000000deadbeef]");
+    REQUIRE(make_sequence_filename(
+        Sequence{ "A/\"sequence\"$<again>", SequenceName{ "my_seq_name" }, 1_uid })
+        == "my_seq_name[0000000000000001]");
+    REQUIRE(make_sequence_filename(
+        Sequence{ "", SequenceName{}, 0x1234_uid }) == "[0000000000001234]");
+}
+
+TEST_CASE("make_sequence_filename(SequenceName, UniqueId)", "[serialize_sequence]")
+{
+    REQUIRE(make_sequence_filename(SequenceName{ "A_sequence" }, 0xdeadbeef_uid)
+        == "A_sequence[00000000deadbeef]");
+    REQUIRE(make_sequence_filename(SequenceName{ "my_seq_name" }, 1_uid)
+        == "my_seq_name[0000000000000001]");
+    REQUIRE(make_sequence_filename(SequenceName{}, 0x1234_uid) == "[0000000000001234]");
 }
 
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
@@ -404,7 +431,16 @@ R"(
 
 TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
 {
-    REQUIRE_THROWS_AS(load_sequence(temp_dir + "/sequence"), Error);
+    SequenceManager manager{ temp_dir };
+
+    const SequenceName seq_name{ "Test_sequence" };
+    const UniqueId seq_uid{ 0xdeadbeef };
+    const auto seq_folder = make_sequence_filename(seq_name, seq_uid);
+
+    if (std::filesystem::exists(temp_dir / seq_folder))
+        std::filesystem::remove_all(temp_dir / seq_folder);
+
+    REQUIRE_THROWS_AS(load_sequence(temp_dir / seq_folder), Error);
 
     Step step01{Step::type_action};
     step01.set_label("action");
@@ -427,7 +463,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     Step step10{Step::type_action};
     step10.set_label("action");
 
-    Sequence sequence{"sequence"};
+    Sequence sequence{ "", seq_name, seq_uid };
     sequence.push_back(step01);
     sequence.push_back(step02);
     sequence.push_back(step03);
@@ -439,7 +475,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
     sequence.push_back(step09);
     sequence.push_back(step10);
 
-    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
 
     std::vector<std::string> expect{
         sequence_lua_filename,
@@ -455,7 +491,7 @@ TEST_CASE("serialize_sequence: test filename format", "[serialize_sequence]")
         "step_10_action.lua"
     };
 
-    std::vector<std::string> actual = collect_lua_filenames(temp_dir + "/sequence");
+    std::vector<std::string> actual = collect_lua_filenames(temp_dir / seq_folder);
     std::sort(actual.begin(), actual.end());
 
     REQUIRE(expect.size() == actual.size());
@@ -470,11 +506,13 @@ TEST_CASE("serialize_sequence: loading nonexisting file", "[serialize_sequence]"
     std::filesystem::create_directory(temp_dir);
 
     // folder 'sequence' does not exist
-    REQUIRE_THROWS_AS(load_sequence(temp_dir + "/sequence2"), Error);
+    REQUIRE_THROWS_AS(load_sequence(temp_dir / "sequence2"), Error);
 }
 
 TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]")
 {
+    SequenceManager manager{ temp_dir };
+
     Step step01{Step::type_while};
     step01.set_label("while condition");
     Step step02{Step::type_action};
@@ -482,14 +520,14 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
     Step step03{Step::type_end};
     step03.set_label("while end");
 
-    Sequence sequence{"This is a sequence"};
+    Sequence sequence{ "this_is_a_sequence" };
     sequence.push_back(step01);
     sequence.push_back(step02);
     sequence.push_back(step03);
 
-    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
 
-    Sequence deserialize_seq = load_sequence(temp_dir + "/This is a sequence");
+    Sequence deserialize_seq = load_sequence(temp_dir / make_sequence_filename(sequence));
 
     REQUIRE(not deserialize_seq.empty());
     REQUIRE(deserialize_seq.size() == 3);
@@ -503,89 +541,71 @@ TEST_CASE("serialize_sequence: indentation level & type", "[serialize_sequence]"
 
 TEST_CASE("serialize_sequence: default constructed Step", "[serialize_sequence]")
 {
-    Step step{ };
+    SequenceManager manager{ temp_dir };
 
     Sequence sequence{ "BlueAsBlood" };
-    sequence.push_back(step);
+    sequence.push_back(Step{});
 
-    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
-    REQUIRE_NOTHROW(load_sequence(temp_dir + "/BlueAsBlood"));
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
+    REQUIRE_NOTHROW(load_sequence(temp_dir / make_sequence_filename(sequence)));
 }
 
-TEST_CASE("serialize_sequence: sequence name escaping", "[serialize_sequence]")
+TEST_CASE("serialize_sequence: Sequence label and UID escaping", "[serialize_sequence]")
 {
-    auto before = collect_filenames(temp_dir);
+    SequenceManager manager{ temp_dir };
 
-    Sequence sequence{ "A/\"sequence\"$<again>" };
-    sequence.push_back(Step{ });
-    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
+    const auto label = "A/\"sequence\"$[<again>]"s;
+    const SequenceName name{ "gabba-gabba_he.Y" };
 
-    auto after = collect_filenames(temp_dir);
-    // Man do I hate C++, I just want to subtract one array from another
-    // after = after - before;
-    after.erase(std::remove_if(after.begin(), after.end(),
-        [&before](std::string const& e) -> bool {
-            for (auto const& b : before)
-                if (e == b)
-                    return true;
-            return false;
-        }),
-        after.end());
+    Sequence sequence{ label, name };
+    sequence.push_back(Step{});
 
-    REQUIRE(after.size() == 1);
-    REQUIRE(after[0] == "A$2f$22sequence$22$24$3cagain$3e"); // This is strictly speaking not required
+    const auto seq_folder = make_sequence_filename(sequence);
 
-    Sequence deserialize_seq = load_sequence(temp_dir + "/" + after[0]);
-    REQUIRE(sequence.get_label() == deserialize_seq.get_label());
-}
-
-TEST_CASE("serialize_sequence: sequence name escaping 2", "[serialize_sequence]")
-{
-    // Note: for handling control character see test case in test_Sequence.cc:
-    // "Sequence: label with control character".
+    if (std::filesystem::exists(temp_dir / seq_folder))
+        std::filesystem::remove_all(temp_dir / seq_folder);
 
     auto before = collect_filenames(temp_dir);
 
-    Sequence sequence{ "A bell" };
-
-    sequence.push_back(Step{ });
-    REQUIRE_NOTHROW(store_sequence(temp_dir, sequence));
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
 
     auto after = collect_filenames(temp_dir);
-    after.erase(std::remove_if(after.begin(), after.end(),
-        [&before](std::string const& e) -> bool {
-            for (auto const& b : before)
-                if (e == b)
-                    return true;
-            return false;
-        }),
-        after.end());
 
-    REQUIRE(after.size() == 1);
-    REQUIRE(after[0] == "A bell"); // This is strictly speaking not required
+    std::vector<std::string> new_filenames;
+    std::set_difference(after.begin(), after.end(),
+                        before.begin(), before.end(),
+                        std::back_inserter(new_filenames));
 
-    Sequence deserialize_seq = load_sequence(temp_dir + "/" + after[0]);
+    REQUIRE(new_filenames.size() == 1);
+    REQUIRE(new_filenames[0] == seq_folder);
+
+    Sequence deserialize_seq = load_sequence(temp_dir / new_filenames[0]);
     REQUIRE(sequence.get_label() == deserialize_seq.get_label());
+    REQUIRE(sequence.get_name() == deserialize_seq.get_name());
 }
 
-TEST_CASE("serialize_sequence: : simple step setup", "[serialize_sequence]")
+TEST_CASE("serialize_sequence: simple step setup", "[serialize_sequence]")
 {
+    SequenceManager manager{ temp_dir };
+
     Step step_action{Step::type_action};
     step_action.set_script("a = preface .. 'Bob'");
 
-    Sequence seq{ "test_sequence_with_simple_step_setup" };
+    Sequence seq{ "seq_with_simple_step_setup" };
     seq.push_back(step_action);
     seq.set_step_setup_script("preface = 'Alice calls '");
 
-    store_sequence(temp_dir, seq);
+    manager.store_sequence(seq);
 
-    Sequence seq_deserialized = load_sequence(temp_dir + "/test_sequence_with_simple_step_setup");
+    Sequence seq_deserialized = load_sequence(temp_dir / make_sequence_filename(seq));
 
     REQUIRE(seq_deserialized.get_step_setup_script() == "preface = 'Alice calls '");
 }
 
-TEST_CASE("serialize_sequence: : complex step setup", "[serialize_sequence]")
+TEST_CASE("serialize_sequence: complex step setup", "[serialize_sequence]")
 {
+    SequenceManager manager{ temp_dir };
+
     auto step_setup_script =
 R"(
 a = 'Bob'
@@ -595,92 +615,93 @@ b = test('Alice') \b\b  c = 4)";
     Step step_action{Step::type_action};
     step_action.set_script("a = preface .. 'Bob'");
 
-    Sequence seq{ "test_sequence_with_complex_step_setup" };
+    Sequence seq{ "seq_with_complex_step_setup" };
     seq.push_back(step_action);
     seq.set_step_setup_script(step_setup_script);
 
-    store_sequence(temp_dir, seq);
+    manager.store_sequence(seq);
 
-    Sequence seq_deserialized = load_sequence(temp_dir + "/test_sequence_with_complex_step_setup");
+    Sequence seq_deserialized = load_sequence(temp_dir / make_sequence_filename(seq));
 
     REQUIRE(seq_deserialized.get_step_setup_script() == step_setup_script);
 }
 
 TEST_CASE("serialize_sequence: empty sequence", "[serialize_sequence]")
 {
-    std::string seq_label{"test empty sequence with step setup script"};
-    Sequence seq{seq_label};
+    SequenceManager manager{ temp_dir };
+
+    std::string uid{ "empty_seq_with_step_setup" };
+    Sequence seq{ uid };
 
     SECTION("Deserialize empty sequence (part 1)")
     {
-        store_sequence(temp_dir, seq);
-
-        REQUIRE_NOTHROW(load_sequence(temp_dir + '/' + seq_label));
+        manager.store_sequence(seq);
+        REQUIRE_NOTHROW(load_sequence(temp_dir / make_sequence_filename(seq)));
     }
 
     SECTION("Deserialize empty sequence (part 2)")
     {
+        // Remove previously stored sequence
+        if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
+            std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
 
-        std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously
-                                                                 // stored sequence
+        manager.store_sequence(seq);
 
-        store_sequence(temp_dir, seq);
-
-        Sequence seq_deserialized = load_sequence(temp_dir + '/' + seq_label);
+        Sequence seq_deserialized = load_sequence(temp_dir / make_sequence_filename(seq));
         REQUIRE(seq_deserialized.empty());
     }
 }
 
 TEST_CASE("serialize_sequence: sequence with step setup script", "[serialize_sequence]")
 {
+    SequenceManager manager{ temp_dir };
 
-    std::string seq_label{"test sequence with step setup script"};
-
-    std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously stored
-                                                             // sequence
+    std::string uid{ "seq_with_step_setup" };
 
     Step step_action{Step::type_action};
     step_action.set_script("a = preface .. 'Bob'");
 
-    Sequence seq{seq_label};
+    Sequence seq{ uid };
     seq.set_step_setup_script("a = 'Bob is alive'");
     seq.push_back(step_action);
-    store_sequence(temp_dir, seq);
 
-    Sequence seq_deserialized{seq_label};
+    // remove previously stored sequence
+    if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
+        std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
+
+    manager.store_sequence(seq);
+
+    Sequence seq_deserialized;
     seq_deserialized.set_step_setup_script("b = 'Should break the test!'");
 
-    std::filesystem::path path{temp_dir + '/' + seq_label};
-    load_sequence_parameters(path, seq_deserialized);
+    load_sequence_parameters(temp_dir / make_sequence_filename(seq), seq_deserialized);
     REQUIRE(seq_deserialized.get_step_setup_script() == "a = 'Bob is alive'");
-    REQUIRE(seq_deserialized.empty()); // no Step's loaded
+    REQUIRE(seq_deserialized.empty()); // no steps loaded
 }
 
 TEST_CASE("serialize_sequence: sequence maintainers, timeout & nice name",
     "[serialize_sequence]")
 {
+    SequenceManager manager{ temp_dir };
 
-    std::string seq_label{"test sequence with maintainers"};
-    std::filesystem::remove_all(temp_dir + '/' + seq_label); // remove previously stored
-                                                             // sequence
+    Sequence seq{ "Test sequence with maintainers" };
 
-    Sequence seq{seq_label};
+    // remove previously stored sequence
+    if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
+        std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
 
-    SECTION("maintainer and 1min timeout")
-    {
-        seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
-        seq.set_timeout(task::Timeout{1min});
+    seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
+    seq.set_timeout(task::Timeout{1min});
 
-        store_sequence(temp_dir, seq);
+    manager.store_sequence(seq);
 
-        Sequence seq_deserialized{seq_label};
+    Sequence seq_deserialized;
 
-        std::filesystem::path path{temp_dir + '/' + seq_label};
-        load_sequence_parameters(path, seq_deserialized);
+    std::filesystem::path path{ temp_dir/make_sequence_filename(seq) };
+    load_sequence_parameters(path, seq_deserialized);
 
-        REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
-            == seq_deserialized.get_maintainers());
-        REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
-        REQUIRE("test sequence with maintainers" == seq_deserialized.get_label());
-    }
+    REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
+        == seq_deserialized.get_maintainers());
+    REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
+    REQUIRE("Test sequence with maintainers" == seq_deserialized.get_label());
 }

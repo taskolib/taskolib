@@ -35,8 +35,10 @@
 #include <gul14/gul.h>
 
 #include "internals.h"
-#include "taskolib/hash_string.h"
 #include "taskolib/deserialize_sequence.h"
+#include "taskolib/hash_string.h"
+
+using gul14::cat;
 
 namespace task {
 
@@ -224,7 +226,34 @@ void extract_disabled(gul14::string_view extract, Step& step)
     step.set_disabled(val);
 }
 
-} // namespace anonymous
+} // anonymous namespace
+
+SequenceInfo get_sequence_info_from_filename(gul14::string_view filename)
+{
+    SequenceInfo result;
+
+    const std::string str = unescape_filename_characters(filename);
+
+    auto opening_bracket = str.rfind('[');
+    auto closing_bracket = str.find(']', opening_bracket);
+    if (opening_bracket != filename.npos && closing_bracket == str.size() - 1)
+    {
+        result.name = SequenceName::from_string(
+            gul14::trim(str.substr(0, opening_bracket)));
+        result.unique_id = UniqueId::from_string(
+            str.substr(opening_bracket + 1, closing_bracket - opening_bracket - 1));
+
+        if (result.name && result.unique_id)
+            return result;
+    }
+
+    // The filename is not in the new format "name[uid]". We assume it is just the label.
+    result.label = gul14::trim(str);
+    result.name = gul14::nullopt;
+    result.unique_id = gul14::nullopt;
+
+    return result;
+}
 
 std::istream& operator>>(std::istream& stream, Step& step)
 {
@@ -375,16 +404,31 @@ Sequence load_sequence(const std::filesystem::path& folder)
     if (folder.empty())
         throw Error("Must specify a valid folder. Currently it is empty.");
 
-    auto label = unescape_filename_characters(folder.filename().string());
-    Sequence seq{label};
+    SequenceInfo seq_info = get_sequence_info_from_filename(folder.filename().string());
+    if (not seq_info.unique_id)
+    {
+        throw Error(cat("Cannot load sequence from '", folder.string(),
+            "': missing unique ID"));
+    }
+    if (not seq_info.name)
+    {
+        throw Error(cat("Cannot load sequence from '", folder.string(),
+            "': missing sequence name"));
+    }
+
+    Sequence seq{ seq_info.label, *seq_info.name, *seq_info.unique_id };
 
     load_sequence_parameters(folder, seq);
 
     std::vector<std::filesystem::path> steps;
     for (auto const& entry : std::filesystem::directory_iterator{folder})
+    {
         if (entry.is_regular_file()
             and gul14::starts_with(entry.path().filename().string(), "step_"))
+        {
             steps.push_back(entry.path());
+        }
+    }
 
     if (not steps.empty())
     {
