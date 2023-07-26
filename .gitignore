@@ -2,9 +2,6 @@
 docs/html/
 build*/
 subprojects/*/
-sequences/
 another/
-unit_test/
-unit_test_2/
-test.seq/
+unit_test_files/
 index

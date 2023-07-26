@@ -2,9 +2,9 @@
  * \file   test_main.cc
  * \author Lars Froehlich
  * \date   Created on November 26, 2019
- * \brief  Test suite for Taskolib
+ * \brief  Implementation of main() for the Taskolib unit test suite.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,8 +22,15 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-// This tells Catch to provide a main() - only do this in one cc file
-#define CATCH_CONFIG_MAIN
+#include <filesystem>
+
+#define CATCH_CONFIG_RUNNER
 #include <gul14/catch.h>
 
-// No tests here
+int main(int argc, char* argv[])
+{
+    if (std::filesystem::exists("unit_test_files"))
+        std::filesystem::remove_all("unit_test_files");
+
+    return Catch::Session().run(argc, argv);
+}

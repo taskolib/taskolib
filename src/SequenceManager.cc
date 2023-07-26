@@ -1,6 +1,6 @@
 /**
  * \file   SequenceManager.cc
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Froehlich
  * \date   Created on July 22, 2022
  * \brief  Manage and control sequences.
  *
@@ -23,36 +23,258 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <algorithm>
+#include <fstream>
 
-#include "taskolib/SequenceManager.h"
+#include <gul14/substring_checks.h>
+
+#include "../src/internals.h"
 #include "taskolib/deserialize_sequence.h"
+#include "taskolib/SequenceManager.h"
+#include "taskolib/serialize_sequence.h"
+
+using gul14::cat;
 
 namespace task {
 
-SequenceManager::PathList SequenceManager::get_sequence_names() const
+namespace {
+
+bool contains_id(const std::vector<SequenceManager::SequenceOnDisk>& sequences,
+    const UniqueId& uid)
 {
-    PathList sequences;
-    for (auto const& entry : std::filesystem::directory_iterator{path_})
+    return std::any_of(sequences.begin(), sequences.end(),
+        [&uid](const auto& seq) { return seq.unique_id == uid; });
+}
+
+/// Create the filename. Push the extra leading zero to the step numberings (ie. leading
+/// zeros) to order them alphabetically.
+std::string extract_filename_step(const int number, int max_digits, const Step& step)
+{
+    std::ostringstream ss;
+    ss << "step_" << std::setw(max_digits) << std::setfill('0') << number << '_'
+       << to_string(step.get_type()) << ".lua";
+    return ss.str();
+}
+
+/// Remove Step from the file system.
+void remove_path(const std::filesystem::path& folder)
+{
+    try
     {
-        if (entry.is_directory() and entry.path().filename() != ".git")
-            sequences.push_back(entry.path());
+        if (std::filesystem::exists(folder))
+            std::filesystem::remove(folder); // remove previous stored step
+    }
+    catch (const std::exception& e)
+    {
+        throw Error(cat("I/O error: ", e.what()));
+    }
+}
+
+void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequence& seq)
+{
+    remove_path(lua_file);
+
+    std::ofstream stream(lua_file);
+
+    if (not stream.is_open())
+        throw Error(gul14::cat("I/O error: unable to open file (", lua_file.string(), ")"));
+
+    if (not seq.get_maintainers().empty())
+        stream << "-- maintainers: " << seq.get_maintainers() << '\n';
+
+    stream << "-- label: " << seq.get_label() << '\n';
+
+    stream << "-- timeout: ";
+    if (!isfinite(seq.get_timeout()))
+        stream << "infinite\n";
+    else
+        stream << static_cast<std::chrono::milliseconds>(seq.get_timeout()).count() << '\n';
+
+    stream << seq; // RAII closes the stream (let the destructor do the job)
+}
+
+} // anonymous namespace
+
+SequenceManager::SequenceManager(std::filesystem::path path)
+    : path_{ std::move(path) }
+{
+    if (path_.empty())
+        throw Error("Root sequences path name must not be empty");
+}
+
+Sequence SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
+    const
+{
+    const auto sequences = list_sequences();
+    const UniqueId unique_id = create_unique_id(sequences);
+
+    const auto new_folder_name = make_sequence_filename(name, unique_id);
+    const auto new_path = path_ / new_folder_name;
+
+    std::error_code error;
+    std::filesystem::create_directory(new_path, error);
+    if (error)
+    {
+        throw Error(gul14::cat("Unable to create sequence folder ", new_path.string(),
+            ": ", error.message()));
     }
 
-    std::sort(sequences.begin(), sequences.end());
+    return Sequence{ label, name, unique_id };
+}
+
+UniqueId SequenceManager::create_unique_id(const std::vector<SequenceOnDisk>& sequences)
+{
+    for (int i = 0; i != 10'000; ++i)
+    {
+        UniqueId uid;
+
+        if (!contains_id(sequences, uid))
+            return uid;
+    }
+
+    throw Error("Unable to find a unique ID");
+}
+
+std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() const
+{
+    std::vector<SequenceOnDisk> sequences;
+    std::vector<std::filesystem::path> suspicious_folders;
+
+    for (const auto& entry : std::filesystem::directory_iterator{ path_ })
+    {
+        if (not entry.is_directory())
+            continue;
+        if (entry.path().filename() == ".git")
+            continue;
+
+        SequenceInfo seq_info = get_sequence_info_from_filename(
+            entry.path().filename().string());
+
+        if (seq_info.name.has_value() && seq_info.unique_id.has_value())
+        {
+            sequences.push_back(SequenceOnDisk{
+                entry.path(),
+                std::move(*seq_info.name),
+                std::move(*seq_info.unique_id) });
+        }
+        else
+        {
+            suspicious_folders.push_back(entry.path());
+        }
+    }
+
+    // Loop over all folders that did not have name and unique ID in their name.
+    for (const auto& path : suspicious_folders)
+    {
+        // It could be a non-sequence folder or a sequence folder from an older version.
+        // We only believe it is the latter if it contains a sequence.lua file.
+        if (not std::filesystem::exists(path / "sequence.lua"))
+            continue;
+
+        // So it is a sequence folder after all. We automatically generate a unique ID
+        // and rename the folder.
+        UniqueId unique_id = create_unique_id(sequences);
+
+        const auto [label, dummy1, dummy2] =
+            get_sequence_info_from_filename(path.filename().string());
+
+        SequenceName name = make_sequence_name_from_label(label);
+
+        const auto new_folder_name = make_sequence_filename(name, unique_id);
+        const auto new_path = path.parent_path() / new_folder_name;
+
+        std::error_code error;
+        std::filesystem::rename(path, new_path, error);
+        if (error)
+        {
+            throw Error(gul14::cat("Sequence folder ", path.string(),
+                " does not contain a unique ID and cannot be renamed to ",
+                new_path.string(), ": ", error.message()));
+        }
+
+        sequences.push_back(SequenceOnDisk{ new_path, name, unique_id });
+    }
 
     return sequences;
 }
 
 Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path) const
 {
-    auto sequence = path_/sequence_path;
+    const auto sequence = path_ / sequence_path;
     if (not std::filesystem::exists(sequence))
-        throw Error(gul14::cat("Sequence file path does not exist: ",
-            sequence.string()));
+    {
+        throw Error(gul14::cat("Sequence file path does not exist: ", sequence.string()));
+    }
     else if (not std::filesystem::is_directory(sequence))
+    {
         throw Error(gul14::cat("File path to sequence is not a directory: ",
             sequence.string()));
+    }
     return task::load_sequence(sequence);
+}
+
+SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view label)
+{
+    std::string name;
+
+    if (label.size() > SequenceName::max_length)
+        label = label.substr(0, SequenceName::max_length);
+
+    for (const auto c : label)
+    {
+        if (gul14::contains(SequenceName::valid_characters, c))
+            name.push_back(c);
+        else
+            name.push_back('_');
+    }
+
+    return SequenceName{ name };
+}
+
+void SequenceManager::rename_sequence(const SequenceName& old_name, UniqueId unique_id,
+    const SequenceName& new_name) const
+{
+    const auto old_folder_name = make_sequence_filename(old_name, unique_id);
+    const auto old_path = path_ / old_folder_name;
+
+    const auto new_folder_name = make_sequence_filename(new_name, unique_id);
+    const auto new_path = path_ / new_folder_name;
+
+    std::error_code error;
+    std::filesystem::rename(old_path, new_path, error);
+    if (error)
+    {
+        throw Error(gul14::cat("Cannot rename folder ", old_path.string(),
+            " to ", new_path.string(), ": ", error.message()));
+    }
+}
+
+void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
+    const
+{
+    rename_sequence(sequence.get_name(), sequence.get_unique_id(), new_name);
+    sequence.set_name(new_name);
+}
+
+void SequenceManager::store_sequence(const Sequence& seq)
+{
+    const int max_digits = int( seq.size() / 10 ) + 1;
+    const auto seq_path = path_ / make_sequence_filename(seq);
+    try
+    {
+        if (std::filesystem::exists(seq_path))
+            std::filesystem::remove_all(seq_path); // remove previous storage
+        std::filesystem::create_directories(seq_path);
+    }
+    catch (const std::exception& e)
+    {
+        throw Error(cat("I/O error: ", e.what()));
+    }
+
+    store_sequence_parameters(seq_path / sequence_lua_filename, seq);
+
+    unsigned int idx = 0;
+    for (const auto& step: seq)
+        store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 }
 
 } // namespace task

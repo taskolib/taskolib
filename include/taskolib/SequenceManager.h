@@ -1,10 +1,10 @@
 /**
  * \file   SequenceManager.h
- * \author Marcus Walla
+ * \author Marcus Walla, Lars Fröhlich
  * \date   Created on July 22, 2022
  * \brief  Manage and control sequences.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,11 +25,14 @@
 #ifndef TASKOLIB_SEQUENCEMANAGER_H_
 #define TASKOLIB_SEQUENCEMANAGER_H_
 
-#include <vector>
 #include <filesystem>
 #include <string>
+#include <vector>
+
 #include <gul14/string_view.h>
+
 #include "taskolib/Sequence.h"
+#include "taskolib/UniqueId.h"
 
 namespace task {
 
@@ -57,51 +60,135 @@ namespace task {
 class SequenceManager
 {
 public:
-    using PathList = std::vector<std::filesystem::path>;
-
-    /**
-     * Creates a new instance to manage and control of sequences that are serialized in
-     * the underlying file system.
-     *
-     * \param path set root path to the sequence folders.
-     *
-     * \exception throws Error exception if path is empty.
-     */
-    explicit SequenceManager(std::filesystem::path path)
+    /// A struct to represent a sequence on the disk.
+    struct SequenceOnDisk
     {
-        if (path.empty())
-            throw Error("Root sequences path must not be empty.");
-        path_ = path;
-    }
+        std::filesystem::path path; ///< The path to the sequence
+        SequenceName name; ///< The machine-friendly name of the sequence
+        UniqueId unique_id; ///< The unique ID of the sequence
+    };
 
     /**
-     * Returns the root path of the serialized sequences.
+     * Create a SequenceManager to manage sequences that are stored in a given directory.
      *
-     * \return root path of the serialized sequences.
+     * \param path  the root folder that contains individual folders for each sequence.
+     *
+     * \exception Error is thrown if the path name is empty.
+     */
+    explicit SequenceManager(std::filesystem::path path);
+
+    /**
+     * Create an empty sequence on disk.
+     *
+     * The new sequence contains no steps and has a randomly assigned unique ID.
+     *
+     * \param label  An optional human-readable label for the sequence
+     * \param name   A optional machine-friendly name for the sequence
+     *
+     * \returns a new sequence.
+     *
+     * \exception Error is thrown if the sequence folder cannot be created.
+     */
+    Sequence create_sequence(gul14::string_view label = "",
+        SequenceName name = SequenceName{}) const;
+
+    /**
+     * Return the root path of the serialized sequences.
+     *
+     * \returns the root path of the serialized sequences.
      */
     std::filesystem::path get_path() const { return path_; }
 
     /**
-     * Get sequence names without the previous path.
+     * Return an unsorted list of all valid sequences that are found inside the root path
+     * and rename sequence folders that do not contain a valid unique ID.
      *
-     * \return sequences as a list of strings.
+     * This function examines all folders inside the root path. If any of these folder
+     * names does not contain a valid unique ID, one is randomly generated and the folder
+     * is renamed accordingly.
+     *
+     * \returns a vector containing one SequenceOnDisk object for each sequence that was
+     *          found.
+     *
+     * \exception Error is thrown if one of the folders needs to be renamed but the
+     *            renaming fails.
      */
-    PathList get_sequence_names() const;
+    std::vector<SequenceOnDisk> list_sequences() const;
 
     /**
-     * Loads sequence on the sequence file path.
+     * Load a sequence from the specified folder.
      *
-     * \param sequence_path path to sequence.
+     * \param sequence_folder  path to the sequence folder that should be loaded (should
+     *                         be relative to the root path, as returned by
+     *                         list_sequences())
      *
-     * \return deserialized sequence.
+     * \returns the deserialized sequence.
      *
-     * \exception throws Error if the sequence path is invalid.
+     * \exception Error is thrown if the specified folder name is not valid or if it does
+     *            not contain a valid sequence.
      */
-    Sequence load_sequence(std::filesystem::path sequence_path) const;
+    Sequence load_sequence(std::filesystem::path sequence_folder) const;
+
+    /**
+     * Change the machine-friendly name of a sequence on disk.
+     *
+     * The sequence to be renamed is identified by its unique ID and the old name.
+     *
+     * \param old_name   the original machine-friendly name of the sequence
+     * \param unique_id  the unique ID of the sequence
+     * \param new_name   the new machine-friendly name of the sequence
+     *
+     * \exception Error is thrown if the sequence cannot be found or if the renaming of
+     *            the folder fails.
+     */
+    void rename_sequence(const SequenceName& old_name, UniqueId unique_id,
+        const SequenceName& new_name) const;
+
+    /**
+     * Change the machine-friendly name of a sequence, both in a Sequence object and on
+     * disk.
+     *
+     * The sequence to be renamed is identified by the unique ID and machine-friendly name
+     * of the given Sequence object. The Sequence object is updated to reflect the new
+     * name.
+     *
+     * \param sequence  the sequence to be relabeled
+     * \param new_name  the new machine-friendly name of the sequence
+     *
+     * \exception Error is thrown if the sequence cannot be found or if the renaming of
+     *            the folder fails.
+     */
+    void rename_sequence(Sequence& sequence, const SequenceName& new_name) const;
+
+    /**
+     * Store the given sequence in a subfolder under the root directory of this object.
+     *
+     * This function generates a subfolder name from the sequence name and unique ID. If
+     * such a subfolder exists already, it is removed. Afterwards, a subfolder is newly
+     * created and the sequence is stored inside it. Inside the folder, each step is
+     * stored in a separate file. The filenames start with `step` followed by a
+     * consecutive number followed by the type of the step and the extension `'.lua'`.
+     * The step number is zero-filled to allow alphanumerical sorting
+     * (e.g. `step_01_action.lua`).
+     *
+     * \param sequence  the sequence to be stored
+     */
+    void store_sequence(const Sequence& sequence);
 
 private:
     /// Root path to the sequences
     std::filesystem::path path_;
+
+    /**
+     * Create a random unique ID that does not collide with the ID of any sequence in the
+     * given sequence list.
+     *
+     * \exception Error is thrown if no unique ID can be found.
+     */
+    static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
+
+    /// Generate a machine-friendly sequence name from a human-readable label.
+    static SequenceName make_sequence_name_from_label(gul14::string_view label);
 };
 
 } // namespace task

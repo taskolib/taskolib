@@ -27,10 +27,32 @@
 
 #include <filesystem>
 #include <iostream>
-#include "taskolib/Step.h"
+
+#include <gul14/string_view.h>
+
 #include "taskolib/Sequence.h"
+#include "taskolib/Step.h"
+#include "taskolib/UniqueId.h"
 
 namespace task {
+
+/**
+ * Return a unique filename for the given sequence.
+ *
+ * The filename is constructed from the machine-friendly sequence name and the unique ID.
+ * It is guaranteed that the filename does not contain filesystem-unsafe characters like
+ * / or \.
+ */
+std::string make_sequence_filename(const Sequence& sequence);
+
+/**
+ * Return a filename for the given combination of machine-friendly sequence name and
+ * unique ID.
+ *
+ * It is guaranteed that the filename does not contain filesystem-unsafe characters like
+ * / or \.
+ */
+std::string make_sequence_filename(SequenceName sequence_name, UniqueId unique_id);
 
 /**
  * Serialize parameters of Step to the output stream.
@@ -92,31 +114,6 @@ void store_step(const std::filesystem::path& lua_file, const Step& step);
  * \return passed output stream
  */
 std::ostream& operator<<(std::ostream& stream, const Sequence& sequence);
-
-/**
- * Stores the Sequence in a folder containing all steps as individual files.
- *
- * After storing you will find the following structure:
- *
- * - the sequence label is extracted to a folder name, where underneath all steps are
- *   serialized. If the label has one of the following characters they are escaped to
- *   hexadecimal format: /\\:?*"'<>|$&. Moreover all control characters (<= 32) are
- *   converted to space character (' ').
- *
- * - underneath the sequence folder you will find the steps serialized in files. Each
- *   filename starts with `step` followed by a consecutive step enumeration number
- *   followed by the type of the step and the extension `'.lua'`. The step number is
- *   filled with zeros to allow alphanumerical sorting.
- *
- *  Here is one example for the first step that has type `action`: `step_001_action.lua`
- *
- *  \note Remember that the libary only uses three digit for numbering. There is no
- *  guarantee for serializing more then 1000 Step 's in alphabetical order.
- *
- * \param folder  in which to store the Sequence
- * \param sequence  the Sequence that should be serialized
- */
-void store_sequence(const std::filesystem::path& folder, const Sequence& sequence);
 
 } // namespace task
 

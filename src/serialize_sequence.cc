@@ -24,71 +24,37 @@
 
 #include <fstream>
 #include <sstream>
+
 #include <gul14/gul.h>
+
 #include "internals.h"
 #include "taskolib/serialize_sequence.h"
+
+using gul14::cat;
 
 namespace task {
 
 namespace {
 
-/// Remove Step from the file system.
-void remove_path(const std::filesystem::path& folder)
-{
-    try
-    {
-        if (std::filesystem::exists(folder))
-            std::filesystem::remove(folder); // remove previous stored step
-    }
-    catch(const std::exception& e)
-    {
-        auto err = errno;
-        throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
-    }
-}
-
-/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
-std::string escape_filename_characters(gul14::string_view str)
-{
-    static const std::string bad_characters("/\\:?*\"\'<>|$&");
-
-    std::ostringstream out;
-    out.fill('0');
-
-    for (const char c : str)
-    {
-        const unsigned char u = static_cast<unsigned char>(c);
-
-        if (u <= 32)
-            out << ' ';
-        else if (u > 127 or bad_characters.find(c) != bad_characters.npos)
-            out << '$' << std::setw(2) << std::hex << static_cast<unsigned int>(u);
-        else
-            out << c;
-    }
-
-    return out.str();
-}
-
-/// Create the filename. Push the extra leading zero to the step numberings (ie. leading
-/// zeros) to order them alphabetically.
-std::string extract_filename_step(const int number, int max_digits, const Step& step)
-{
-    std::ostringstream ss;
-    ss << "step_" << std::setw(max_digits) << std::setfill('0') << number << '_'
-       << to_string(step.get_type()) << ".lua";
-    return ss.str();
-}
-
 void check_stream(std::ostream& stream)
 {
     if (stream.bad())
-        throw Error(gul14::cat("I/O error: serious error on file system (bad flag is set)"));
+        throw Error(cat("I/O error: serious error on file system (bad flag is set)"));
     else if (stream.fail())
-        throw Error(gul14::cat("I/O error: failure on storing step"));
+        throw Error(cat("I/O error: failure on storing step"));
 }
 
-} // namespace anonymous
+} // anonymous namespace
+
+std::string make_sequence_filename(const Sequence& sequence)
+{
+    return make_sequence_filename(sequence.get_name(), sequence.get_unique_id());
+}
+
+std::string make_sequence_filename(SequenceName sequence_name, UniqueId unique_id)
+{
+    return cat(sequence_name.string(), '[', to_string(unique_id), ']');
+}
 
 std::ostream& operator<<(std::ostream& stream, const Step& step)
 {
@@ -127,7 +93,16 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
 
 void store_step(const std::filesystem::path& lua_file, const Step& step)
 {
-    remove_path(lua_file);
+    if (std::filesystem::exists(lua_file))
+    {
+        std::error_code err{};
+        std::filesystem::remove(lua_file, err);
+        if (err)
+        {
+            throw Error(cat("I/O error: Unable to remove file '", lua_file.string(),
+                "': ", err.message()));
+        }
+    }
 
     std::ofstream stream(lua_file);
 
@@ -146,54 +121,5 @@ std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
     return stream;
 }
 
-void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequence& seq)
-{
-    remove_path(lua_file);
-
-    std::ofstream stream(lua_file);
-
-    if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", lua_file.string(), ")"));
-
-    if (not seq.get_maintainers().empty())
-        stream << "-- maintainers: " << seq.get_maintainers() << '\n';
-
-    stream << "-- label: " << seq.get_label() << '\n';
-
-    stream << "-- timeout: ";
-    if (!isfinite(seq.get_timeout()))
-        stream << "infinite\n";
-    else
-        stream << static_cast<std::chrono::milliseconds>(seq.get_timeout()).count() << '\n';
-
-    stream << seq; // RAII closes the stream (let the destructor do the job)
-}
-
-void store_sequence(const std::filesystem::path& folder, const Sequence& seq)
-{
-    unsigned int idx = 0;
-    const int max_digits = int( seq.size() / 10 ) + 1;
-    auto seq_path = folder / escape_filename_characters(seq.get_label());
-    try
-    {
-        if (std::filesystem::exists(seq_path))
-            std::filesystem::remove_all(seq_path); // remove previous storage
-        std::filesystem::create_directories(seq_path);
-    }
-    catch(const std::filesystem::filesystem_error& io_err)
-    {
-        throw Error(gul14::cat("I/O error: ", io_err.what()));
-    }
-    catch(const std::exception& e)
-    {
-        auto err = errno;
-        throw Error(gul14::cat("I/O error: ", e.what(), ", error=", std::strerror(err)));
-    }
-
-    store_sequence_parameters(seq_path / sequence_lua_filename, seq);
-
-    for(const auto& step: seq)
-        store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
-}
 
 } // namespace task

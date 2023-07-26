@@ -4,7 +4,7 @@
  * \date   Created on May 24, 2022
  * \brief  Deserialize Sequence and Steps from storage hardware.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -27,10 +27,42 @@
 
 #include <filesystem>
 #include <iostream>
+
+#include <gul14/optional.h>
+
 #include "taskolib/Step.h"
 #include "taskolib/Sequence.h"
+#include "taskolib/UniqueId.h"
 
 namespace task {
+
+struct SequenceInfo
+{
+    std::string label;
+    gul14::optional<SequenceName> name;
+    gul14::optional<UniqueId> unique_id;
+
+    friend bool operator==(const SequenceInfo& a, const SequenceInfo& b) noexcept
+    {
+        return a.unique_id == b.unique_id && a.label == b.label;
+    }
+
+    friend bool operator!=(const SequenceInfo& a, const SequenceInfo& b) noexcept
+    {
+        return !(a == b);
+    }
+};
+
+/**
+ * Determine the label, name, and unique ID of a sequence from a filename, if possible.
+ *
+ * New versions of Taskolib store sequences in a folder following the scheme "name[uid]",
+ * whereas old versions just used an escaped form of the label as the folder name. This
+ * function looks for the angle brackets to figure out which of the two formats is used.
+ *
+ * This is the reverse function to make_sequence_filename().
+ */
+SequenceInfo get_sequence_info_from_filename(gul14::string_view filename);
 
 /**
  * Deserialize parameters of Step from the input stream.
@@ -105,7 +137,7 @@ Step load_step(const std::filesystem::path& lua_file);
 void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence);
 
 /**
- * Loads a Sequence with all of the stored Step's from the folder.
+ * Loads a Sequence with all of the stored steps from the folder.
  *
  * \param folder from which the Sequence should be loaded.
  * \returns the loaded Sequence object.
