@@ -29,79 +29,45 @@
 
 using namespace std::literals;
 using namespace task;
+using namespace task::literals;
 using Catch::Matchers::Contains;
 
-TEST_CASE("Sequence: Constructor without descriptive label", "[Sequence]")
+TEST_CASE("Sequence: Constructor", "[Sequence]")
 {
-    REQUIRE_THROWS_AS(Sequence{ "" }, Error);
-    REQUIRE_THROWS_AS(Sequence{ " \t\v\n\r\f" }, Error);
-}
-
-TEST_CASE("Sequence: Constructor with descriptive label", "[Sequence]")
-{
-    // label is to many characters -> throws Error
-    REQUIRE_THROWS_AS(Sequence{ std::string(Sequence::max_label_length + 1, 'c') },
-        Error);
-    // minimum label length with one character
-    REQUIRE_NOTHROW(Sequence{ "S" });
-    // label length with all characters filled
-    REQUIRE_NOTHROW(Sequence{ std::string(Sequence::max_label_length, 'c') });
-}
-
-TEST_CASE("Sequence: Constructor with get label", "[Sequence]")
-{
-    SECTION("label with leading blanks")
+    SECTION("No arguments")
     {
-        Sequence seq{ " test_sequence" };
-        REQUIRE(seq.get_label() == "test_sequence" );
+        Sequence sequence;
+        REQUIRE(sequence.empty());
+        REQUIRE(sequence.get_label() == "");
+        REQUIRE(sequence.get_name() == SequenceName{ "" });
     }
 
-    SECTION("label with trailing blanks")
+    SECTION("Label specified")
     {
-        Sequence seq{ "test_sequence " };
-        REQUIRE(seq.get_label() == "test_sequence" );
+        REQUIRE_THROWS_AS(Sequence{ " a\nb " }, Error);
+        REQUIRE_THROWS_AS(Sequence{ std::string(Sequence::max_label_length + 1, '+') }, Error);
+
+        REQUIRE(Sequence{ "" }.get_label() == "");
+        REQUIRE(Sequence{ " \t\v\n\r\f" }.get_label() == "");
+        REQUIRE(Sequence{ "abc" }.get_label() == "abc");
+
+        Sequence sequence{ "This is a label" };
+        REQUIRE(sequence.empty());
+        REQUIRE(sequence.get_label() == "This is a label");
     }
 
-    SECTION("label with leading tab")
+    SECTION("Label and name specified")
     {
-        Sequence seq{ "\ttest_sequence" };
-        REQUIRE(seq.get_label() == "test_sequence" );
+        REQUIRE(Sequence{ "abc", SequenceName{ "Jim" } }.get_label() == "abc");
+        REQUIRE(Sequence{ "abc", SequenceName{ "Jim" } }.get_name() == SequenceName{ "Jim" });
     }
 
-    SECTION("label with trailing tab")
+    SECTION("Label, name, and unique ID specified")
     {
-        Sequence seq{ "test_sequence\t" };
-        REQUIRE(seq.get_label() == "test_sequence" );
+        REQUIRE(Sequence{ "abc", SequenceName{ "Jim" }, 0xdeadbeef_uid }.get_label() == "abc");
+        REQUIRE(Sequence{ "abc", SequenceName{ "Jim" }, 0xdeadbeef_uid }.get_name() == SequenceName{ "Jim" });
+        REQUIRE(Sequence{ "abc", SequenceName{ "Jim" }, 0xdeadbeef_uid }.get_unique_id() == 0xdeadbeef_uid);
     }
-
-    SECTION("label surrounded with multiple whitespaces")
-    {
-        Sequence seq{ " \t\r\n\v\ftest_sequence \r\t\v\f\n" };
-        REQUIRE(seq.get_label() == "test_sequence" );
-    }
-}
-
-TEST_CASE("Sequence: Construct an empty Sequence", "[Sequence]")
-{
-    Sequence s{ "test_sequence" };
-    REQUIRE(s.size() == 0);
-    REQUIRE(s.empty());
-    REQUIRE(s.begin() == s.end());
-    REQUIRE(s.cbegin() == s.cend());
-}
-
-TEST_CASE("Sequence: get and set sequence label", "[Sequence]")
-{
-    Sequence s{ "test_sequence" };
-    REQUIRE(s.get_label() == "test_sequence");
-
-    s.set_label("modified_test_sequence");
-    REQUIRE(s.get_label() == "modified_test_sequence");
-
-    REQUIRE_THROWS_AS(s.set_label(std::string(Sequence::max_label_length + 1, 'a')),
-        Error);
-    REQUIRE_THROWS_AS(s.set_label(""), Error);
-    REQUIRE_NOTHROW(s.set_label(std::string(Sequence::max_label_length, 'c')));
 }
 
 TEST_CASE("Sequence: assign()", "[Sequence]")
@@ -229,6 +195,34 @@ TEST_CASE("Sequence: get_error()", "[Sequence]")
     REQUIRE(seq.get_error()->what() == "Test2"s);
     REQUIRE(seq.get_error()->get_index().has_value() == true);
     REQUIRE(seq.get_error()->get_index().value() == 42);
+}
+
+TEST_CASE("Sequence: get_label()", "[Sequence]")
+{
+    Sequence s;
+    REQUIRE(s.get_label() == "");
+
+    s.set_label("Another label");
+    REQUIRE(s.get_label() == "Another label");
+}
+
+TEST_CASE("Sequence: get_name()", "[Sequence]")
+{
+    Sequence s;
+    REQUIRE(s.get_name() == SequenceName{""});
+
+    s.set_name(SequenceName{ "a_rose_by_any_other_name" });
+    REQUIRE(s.get_name() == SequenceName{ "a_rose_by_any_other_name" });
+}
+
+TEST_CASE("Sequence: get_unique_id()", "[Sequence]")
+{
+    Sequence seq1;
+    Sequence seq2;
+    REQUIRE(seq1.get_unique_id() != seq2.get_unique_id());
+
+    seq1.set_unique_id(0xdeadbeef_uid);
+    REQUIRE(seq1.get_unique_id() == 0xdeadbeef_uid);
 }
 
 TEST_CASE("Sequence: insert()", "[Sequence]")
@@ -437,6 +431,19 @@ TEST_CASE("Sequence: set_error()", "[Sequence]")
     REQUIRE(seq.get_error().has_value() == false);
 }
 
+TEST_CASE("Sequence: set_label()", "[Sequence]")
+{
+    Sequence s;
+
+    s.set_label("  Another label\t");
+    REQUIRE(s.get_label() == "Another label");
+
+    REQUIRE_THROWS_AS(s.set_label("a\nb"), Error);
+    REQUIRE_THROWS_AS(s.set_label(std::string(Sequence::max_label_length + 1, 'a')),
+        Error);
+    REQUIRE_NOTHROW(s.set_label(std::string(Sequence::max_label_length, 'c')));
+}
+
 TEST_CASE("Sequence: set_running()", "[Sequence]")
 {
     Step step1{ Step::type_action };
@@ -499,6 +506,16 @@ TEST_CASE("Sequence: set_running()", "[Sequence]")
     }
 }
 
+TEST_CASE("Sequence: set_unique_id()", "[Sequence]")
+{
+    Sequence seq{ "test_sequence" };
+
+    seq.set_unique_id(1234_uid);
+    REQUIRE(seq.get_unique_id() == 1234_uid);
+    seq.set_unique_id(0xdeadbeef_uid);
+    REQUIRE(seq.get_unique_id() == 0xdeadbeef_uid);
+}
+
 TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
 {
     /*
@@ -508,7 +525,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 1", "[Sequence]")
         END
     */
 
-    Sequence sequence("validating try-catch-end 1 correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_action});
@@ -535,7 +552,7 @@ TEST_CASE("Sequence: check correctness of try-catch-end 2", "[Sequence]")
         END
     */
 
-    Sequence sequence("validating try-catch-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_action});
@@ -567,7 +584,7 @@ TEST_CASE("Sequence: check correctness of try-try-catch-end-catch-end", "[Sequen
             ACTION
         END
     */
-    Sequence sequence("validating try-try-catch-end-catch-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_try});
@@ -589,7 +606,7 @@ TEST_CASE("Sequence: check fault for try", "[Sequence]")
     /*
         TRY
     */
-    Sequence sequence("validating try-catch correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
 
@@ -606,7 +623,7 @@ TEST_CASE("Sequence: check fault for try-try", "[Sequence]")
         TRY
         TRY
     */
-    Sequence sequence("validating try-catch correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_try});
@@ -626,7 +643,7 @@ TEST_CASE("Sequence: check fault for try-catch", "[Sequence]")
             ACTION
         CATCH
     */
-    Sequence sequence("validating try-catch correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_action});
@@ -647,7 +664,7 @@ TEST_CASE("Sequence: check fault for try-end", "[Sequence]")
         TRY
         END
     */
-    Sequence sequence("validating try-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_end});
@@ -669,7 +686,7 @@ TEST_CASE("Sequence: check fault for try-catch-catch-end", "[Sequence]")
         CATCH
         END
     */
-    Sequence sequence("validating try-catch-catch-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_try});
     sequence.push_back(Step{Step::type_action});
@@ -695,7 +712,7 @@ TEST_CASE("Sequence: check correctness of if-end", "[Sequence]")
             ACTION
         END
     */
-    Sequence sequence("validating if-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
@@ -719,7 +736,7 @@ TEST_CASE("Sequence: check correctness of if-else-end", "[Sequence]")
             ACTION
         END
     */
-    Sequence sequence("validating if-else-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
@@ -749,7 +766,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-else-end", "[Sequence]")
             ACTION
         END
     */
-    Sequence sequence("validating if-else-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
@@ -785,7 +802,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-elseif-else-end", "[Sequence
             ACTION
         END
     */
-    Sequence sequence("validating if-else-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
@@ -827,7 +844,7 @@ TEST_CASE("Sequence: check if-elseif-try-catch-end-elseif-end w/ empty catch blo
             ACTION
         END
     */
-    Sequence sequence("validating if-elseif-try-catch-end-else-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
@@ -872,7 +889,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-try-catch-end-elseif-end",
             ACTION
         END
     */
-    Sequence sequence("validating if-elseif-try-catch-end-else-end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
@@ -915,7 +932,7 @@ TEST_CASE("Sequence: if-elseif-while-end-else-end with empty while loop", "[Sequ
         06:     ACTION
         07: END
     */
-    Sequence sequence("validating if-elseif-while-end-else-end correctness");
+    Sequence sequence;
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
     sequence.push_back(Step{Step::type_elseif});
@@ -953,7 +970,7 @@ TEST_CASE("Sequence: check correctness of if-elseif-while-end-else-end", "[Seque
         07:     ACTION
         08: END
     */
-    Sequence sequence("validating if-elseif-while-end-else-end correctness");
+    Sequence sequence;
     sequence.push_back(Step{Step::type_if});
     sequence.push_back(Step{Step::type_action});
     sequence.push_back(Step{Step::type_elseif});
@@ -983,7 +1000,7 @@ TEST_CASE("Sequence: check fault for end", "[Sequence]")
     /*
         END
     */
-    Sequence sequence("validating end correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
 
@@ -1000,7 +1017,7 @@ TEST_CASE("Sequence: check fault for end-action", "[Sequence]")
         END
         ACTION
     */
-    Sequence sequence("validating end-action correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_action});
@@ -1019,7 +1036,7 @@ TEST_CASE("Sequence: check fault for end-try", "[Sequence]")
         END
         TRY
     */
-    Sequence sequence("validating end-try correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_try});
@@ -1038,7 +1055,7 @@ TEST_CASE("Sequence: check fault for end-catch", "[Sequence]")
         END
         CATCH
     */
-    Sequence sequence("validating end-catch correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_catch});
@@ -1057,7 +1074,7 @@ TEST_CASE("Sequence: check fault for end-if", "[Sequence]")
         END
         IF
     */
-    Sequence sequence("validating end-if correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_if});
@@ -1076,7 +1093,7 @@ TEST_CASE("Sequence: check fault for end-elseif", "[Sequence]")
         END
         ELSE IF
     */
-    Sequence sequence("validating end-elseif correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_elseif});
@@ -1095,7 +1112,7 @@ TEST_CASE("Sequence: check fault for end-else", "[Sequence]")
         END
         ELSE
     */
-    Sequence sequence("validating end-else correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_else});
@@ -1114,7 +1131,7 @@ TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
         END
         WHILE
     */
-    Sequence sequence("validating end-while correctness");
+    Sequence sequence;
 
     sequence.push_back(Step{Step::type_end});
     sequence.push_back(Step{Step::type_while});
@@ -1130,7 +1147,7 @@ TEST_CASE("Sequence: check fault for end-while", "[Sequence]")
 TEST_CASE("execute(): empty sequence", "[Sequence]")
 {
     Context context;
-    Sequence sequence("Empty sequence");
+    Sequence sequence;
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
     REQUIRE(sequence.get_error().has_value() == false);
@@ -1141,7 +1158,7 @@ TEST_CASE("execute(): simple sequence", "[Sequence]")
     Context context;
     Step step;
 
-    Sequence sequence("Simple sequence");
+    Sequence sequence;
     sequence.push_back(step);
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
@@ -1156,7 +1173,7 @@ TEST_CASE("execute(): Simple sequence with unchanged context", "[Sequence]")
     Step step;
     step.set_used_context_variable_names(VariableNames{"a"});
 
-    Sequence sequence("Simple sequence");
+    Sequence sequence;
     sequence.push_back(step);
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
@@ -1297,7 +1314,7 @@ TEST_CASE("execute(): complex sequence with prohibited Lua function", "[Sequence
     step.set_type(Step::type_action);
     step.set_script("require 'io'"); // provokes Error exception
 
-    Sequence sequence("Complex sequence");
+    Sequence sequence;
     sequence.push_back(step);
 
     auto maybe_error = sequence.execute(context, nullptr);
@@ -1325,7 +1342,7 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
     step_action2.set_type(Step::type_action);
     step_action2.set_script("a=a+1");
 
-    Sequence sequence("Complex sequence");
+    Sequence sequence;
     sequence.push_back(step_action1);
     sequence.push_back(step_action2);
 
@@ -1351,7 +1368,7 @@ TEST_CASE("execute(): complex sequence with context change", "[Sequence]")
     step_action1.set_script("a=a+1");
     step_action1.set_used_context_variable_names(VariableNames{"a"});
 
-    Sequence sequence("Complex sequence");
+    Sequence sequence;
     sequence.push_back(step_action1);
 
     REQUIRE_NOTHROW(sequence.execute(context, nullptr));
@@ -3184,7 +3201,11 @@ TEST_CASE("execute(): sequence with multiple disabled", "[Sequence]")
     }
 }
 
+namespace {
+
 auto copy_and_disable(Step x) -> Step { return x.set_disabled(true), x; }
+
+} // anonymous namespace
 
 TEST_CASE("execute(): disable 'invariant' (direct)", "[Sequence]")
 {

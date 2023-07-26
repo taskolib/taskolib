@@ -65,7 +65,9 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 } // anonymous namespace
 
 
-Sequence::Sequence(gul14::string_view label)
+Sequence::Sequence(gul14::string_view label, SequenceName name, UniqueId uid)
+    : unique_id_{ uid }
+    , name_{ std::move(name) }
 {
     set_label(label);
 }
@@ -678,15 +680,12 @@ void Sequence::set_label(gul14::string_view label)
 {
     label = gul14::trim_sv(label);
 
-    if (label.empty())
-        throw Error("Sequence label may not be empty");
-
     check_for_control_characters(label);
 
     if (label.size() > max_label_length)
     {
-        throw Error(cat("Label \"", label, "\" is too long (>", max_label_length,
-                        " bytes)"));
+        throw Error(cat("Label \"", label, "\" is too long (", label.size(), " bytes > ",
+            max_label_length, " bytes)"));
     }
 
     label_.assign(label.begin(), label.end());
