@@ -20,7 +20,8 @@ public_headers = [
    'taskolib/time_types.h',
    'taskolib/Timeout.h',
    'taskolib/TimeoutTrigger.h',
-   'taskolib/VariableName.h'
+   'taskolib/UniqueId.h',
+   'taskolib/VariableName.h',
 ]
 install_headers(files(public_headers),
     subdir: 'taskolib',
