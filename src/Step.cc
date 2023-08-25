@@ -103,7 +103,9 @@ void Step::copy_used_variables_from_lua_to_context(const sol::state& lua, Contex
                 context.variables.erase(varname);
                 break;
             default:
-                break;
+                throw Error(cat("Variable ", varname.string(),
+                    " cannot be exported because it is of the unsupported type '",
+                    sol::type_name(lua.lua_state(), var.get_type()), "'."));
         }
     }
 }
