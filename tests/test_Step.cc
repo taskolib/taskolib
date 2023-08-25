@@ -671,7 +671,7 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
                           std::bad_variant_access);
     }
 
-    SECTION("Exporting a floating point")
+    SECTION("Exporting a floating-point value")
     {
         step.set_used_context_variable_names(VariableNames{ "b" });
         step.execute(context);
@@ -692,14 +692,6 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
         REQUIRE_THROWS_AS(std::get<VarFloat>(context.variables["c"]), std::bad_variant_access);
         REQUIRE(std::get<VarString>(context.variables["c"]) == "string");
         REQUIRE_THROWS_AS(std::get<VarBool>(context.variables["c"]), std::bad_variant_access);
-    }
-
-    SECTION("Exporting a function (!?)")
-    {
-        step.set_used_context_variable_names(VariableNames{ "d" });
-        step.execute(context);
-        // silently nothing is exported
-        REQUIRE(context.variables.size() == 0);
     }
 
     SECTION("Exporting a boolean")
@@ -727,8 +719,9 @@ TEST_CASE("execute(): Exporting variables into a context", "[Step]")
     SECTION("Exporting unknown types")
     {
         step.set_used_context_variable_names(VariableNames{ "d" });
-        step.execute(context);
-        REQUIRE(context.variables.size() == 0); // d is of type function and does not get exported
+
+        // d is a Lua function and cannot be exported
+        REQUIRE_THROWS_AS(step.execute(context), Error);
     }
 
     SECTION("Exporting undefined variables")
