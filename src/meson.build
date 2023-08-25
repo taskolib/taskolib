@@ -8,6 +8,7 @@ sources = files(
     'send_message.cc',
     'Sequence.cc',
     'SequenceManager.cc',
+    'SequenceName.cc',
     'serialize_sequence.cc',
     'Step.cc',
     'time_types.cc',

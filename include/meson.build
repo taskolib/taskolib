@@ -13,6 +13,7 @@ public_headers = [
    'taskolib/Message.h',
    'taskolib/Sequence.h',
    'taskolib/SequenceManager.h',
+   'taskolib/SequenceName.h',
    'taskolib/serialize_sequence.h',
    'taskolib/Step.h',
    'taskolib/StepIndex.h',
