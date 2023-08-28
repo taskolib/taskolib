@@ -136,14 +136,6 @@ Step load_step(const std::filesystem::path& lua_file);
  */
 void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence);
 
-/**
- * Loads a Sequence with all of the stored steps from the folder.
- *
- * \param folder from which the Sequence should be loaded.
- * \returns the loaded Sequence object.
- */
-Sequence load_sequence(const std::filesystem::path& folder);
-
 } // namespace task
 
 #endif
