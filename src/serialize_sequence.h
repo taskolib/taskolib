@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOLIB_SERIALIZE_H_
-#define TASKOLIB_SERIALIZE_H_
+#ifndef TASKOLIB_SERIALIZE_SEQUENCE_H_
+#define TASKOLIB_SERIALIZE_SEQUENCE_H_
 
 #include <filesystem>
 #include <iostream>

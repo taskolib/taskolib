@@ -22,16 +22,17 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#ifndef TASKOLIB_DESERIALIZE_H_
-#define TASKOLIB_DESERIALIZE_H_
+#ifndef TASKOLIB_DESERIALIZE_SEQUENCE_H_
+#define TASKOLIB_DESERIALIZE_SEQUENCE_H_
 
 #include <filesystem>
 #include <iostream>
 
 #include <gul14/optional.h>
 
-#include "taskolib/Step.h"
 #include "taskolib/Sequence.h"
+#include "taskolib/SequenceName.h"
+#include "taskolib/Step.h"
 #include "taskolib/UniqueId.h"
 
 namespace task {
