@@ -199,17 +199,58 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
 
 Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path) const
 {
-    const auto sequence = path_ / sequence_path;
-    if (not std::filesystem::exists(sequence))
+    if (sequence_path.empty())
+        throw Error("Cannot load sequence: Empty folder name");
+
+    const auto folder = path_ / sequence_path;
+    if (not std::filesystem::exists(folder))
     {
-        throw Error(gul14::cat("Sequence file path does not exist: ", sequence.string()));
+        throw Error(gul14::cat("Sequence file path does not exist: ", folder.string()));
     }
-    else if (not std::filesystem::is_directory(sequence))
+    else if (not std::filesystem::is_directory(folder))
     {
         throw Error(gul14::cat("File path to sequence is not a directory: ",
-            sequence.string()));
+            folder.string()));
     }
-    return task::load_sequence(sequence);
+
+    SequenceInfo seq_info = get_sequence_info_from_filename(folder.filename().string());
+    if (not seq_info.unique_id)
+    {
+        throw Error(cat("Cannot load sequence from '", folder.string(),
+            "': missing unique ID"));
+    }
+    if (not seq_info.name)
+    {
+        throw Error(cat("Cannot load sequence from '", folder.string(),
+            "': missing sequence name"));
+    }
+
+    Sequence seq{ seq_info.label, *seq_info.name, *seq_info.unique_id };
+
+    load_sequence_parameters(folder, seq);
+
+    std::vector<std::filesystem::path> steps;
+    for (auto const& entry : std::filesystem::directory_iterator{folder})
+    {
+        if (entry.is_regular_file()
+            and gul14::starts_with(entry.path().filename().string(), "step_"))
+        {
+            steps.push_back(entry.path());
+        }
+    }
+
+    if (not steps.empty())
+    {
+        // load steps ...
+        std::sort(std::begin(steps), std::end(steps),
+            [](const auto& lhs, const auto& rhs) -> bool
+            { return lhs.filename() < rhs.filename(); });
+
+        for (const auto& entry : steps)
+            seq.push_back(load_step(entry));
+    }
+
+    return seq;
 }
 
 SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view label)

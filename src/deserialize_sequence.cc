@@ -399,49 +399,4 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
     sequence.set_step_setup_script(step_setup_script);
 }
 
-Sequence load_sequence(const std::filesystem::path& folder)
-{
-    if (folder.empty())
-        throw Error("Must specify a valid folder. Currently it is empty.");
-
-    SequenceInfo seq_info = get_sequence_info_from_filename(folder.filename().string());
-    if (not seq_info.unique_id)
-    {
-        throw Error(cat("Cannot load sequence from '", folder.string(),
-            "': missing unique ID"));
-    }
-    if (not seq_info.name)
-    {
-        throw Error(cat("Cannot load sequence from '", folder.string(),
-            "': missing sequence name"));
-    }
-
-    Sequence seq{ seq_info.label, *seq_info.name, *seq_info.unique_id };
-
-    load_sequence_parameters(folder, seq);
-
-    std::vector<std::filesystem::path> steps;
-    for (auto const& entry : std::filesystem::directory_iterator{folder})
-    {
-        if (entry.is_regular_file()
-            and gul14::starts_with(entry.path().filename().string(), "step_"))
-        {
-            steps.push_back(entry.path());
-        }
-    }
-
-    if (not steps.empty())
-    {
-        // load steps ...
-        std::sort(std::begin(steps), std::end(steps),
-            [](const auto& lhs, const auto& rhs) -> bool
-            { return lhs.filename() < rhs.filename(); });
-
-        for (const auto& entry : steps)
-            seq.push_back(load_step(entry));
-    }
-
-    return seq;
-}
-
 } // namespace task
