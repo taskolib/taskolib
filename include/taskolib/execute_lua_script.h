@@ -1,6 +1,6 @@
 /**
  * \file   execute_lua_script.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 15, 2022
  * \brief  Declaration of execute_lua_script().
  *

@@ -1,6 +1,6 @@
 /**
  * \file   test_SequenceName.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on July 27, 2023
  * \brief  Test suite for the SequenceName class.
  *

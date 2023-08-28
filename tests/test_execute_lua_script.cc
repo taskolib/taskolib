@@ -1,6 +1,6 @@
 /**
  * \file   test_execute_lua_script.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on October 28, 2022
  * \brief  Test suite for Lua-related internal functions.
  *

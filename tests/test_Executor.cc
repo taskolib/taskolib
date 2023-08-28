@@ -1,6 +1,6 @@
 /**
  * \file   test_Executor.cc
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on May 30, 2022
  * \brief  Test suite for the Executor class.
  *

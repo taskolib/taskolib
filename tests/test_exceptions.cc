@@ -1,6 +1,6 @@
 /**
  * \file   test_exceptions.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on December 10, 2021
  * \brief  Test suite for the Error exception class.
  *

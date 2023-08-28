@@ -1,6 +1,6 @@
 /**
  * \file   default_message_callback.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on June 22, 2022
  * \brief  Declaration of the default_message_callback() function.
  *

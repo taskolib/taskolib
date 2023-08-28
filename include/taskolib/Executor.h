@@ -1,6 +1,6 @@
 /**
  * \file   Executor.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on May 30, 2022
  * \brief  Declaration of the Executor class.
  *

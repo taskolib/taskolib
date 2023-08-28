@@ -1,6 +1,6 @@
 /**
  * \file   SequenceManager.cc
- * \author Marcus Walla, Lars Froehlich
+ * \author Marcus Walla, Lars Fröhlich
  * \date   Created on July 22, 2022
  * \brief  Manage and control sequences.
  *

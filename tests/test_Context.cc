@@ -1,6 +1,6 @@
 /**
  * \file   test_Context.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on December 20, 2021
  * \brief  Test suite for the Context class.
  *

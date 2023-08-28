@@ -1,6 +1,6 @@
 /**
  * \file   Message.h
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on April 1, 2022
  * \brief  Declaration of the Message class.
  *

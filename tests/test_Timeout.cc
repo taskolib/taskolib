@@ -1,6 +1,6 @@
 /**
  * \file   test_Timeout.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 28, 2022
  * \brief  Test suite for the Timeout class.
  *

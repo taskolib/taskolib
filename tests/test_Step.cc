@@ -1,6 +1,6 @@
 /**
  * \file   test_Step.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 26, 2021
  * \brief  Test suite for the Step class.
  *

@@ -2,7 +2,7 @@
 
 #
 #  \file   make-doc.py
-#  \author Lars Froehlich
+#  \author Lars Fröhlich
 #  \date   Created on 26 July 2021
 #
 #  \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
