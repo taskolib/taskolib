@@ -1,6 +1,6 @@
 /**
  * \file   test_Sequence.cc
- * \author Marcus Walla, Lars Froehlich, Ulf Fini Jastrow
+ * \author Marcus Walla, Lars Fröhlich, Ulf Fini Jastrow
  * \date   Created on February 8, 2022
  * \brief  Test suite for the the Sequence class.
  *

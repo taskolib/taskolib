@@ -1,6 +1,6 @@
 /**
  * \file   execute_lua_script.cc
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on November 15, 2022
  * \brief  Implementation of execute_lua_script().
  *

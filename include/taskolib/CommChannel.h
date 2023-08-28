@@ -1,6 +1,6 @@
 /**
  * \file   CommChannel.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on June 8, 2022
  * \brief  Declaration of the CommChannel struct.
  *

@@ -1,6 +1,6 @@
 /**
  * \file   lua_details.cc
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on June 15, 2022
  * \brief  Implementation of free functions dealing with Lua specifics.
  *

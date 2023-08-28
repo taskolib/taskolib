@@ -1,6 +1,6 @@
 /**
  * \file   Timeout.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 28, 2022
  * \brief  Declaration of the Timeout class.
  *

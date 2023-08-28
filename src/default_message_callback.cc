@@ -1,6 +1,6 @@
 /**
  * \file   console.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on June 22, 2022
  * \brief  Implementation of the default_message_callback() function.
  *

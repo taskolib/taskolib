@@ -1,6 +1,6 @@
 /**
  * \file   test_send_message.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on January 30, 2023, based on older code
  * \brief  Test suite for the send_message() function.
  *

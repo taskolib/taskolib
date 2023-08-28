@@ -1,6 +1,6 @@
 /**
  * \file   time_types.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on April 8, 2022
  * \brief  Declaration of time-related types.
  *

@@ -1,6 +1,6 @@
 /**
  * \file   exceptions.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on July 4, 2017
  * \brief  Definition of the Error exception class.
  *

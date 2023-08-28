@@ -1,6 +1,6 @@
 /**
  * \file   Sequence.h
- * \author Marcus Walla, Lars Froehlich
+ * \author Marcus Walla, Lars Fröhlich
  * \date   Created on February 8, 2022
  * \brief  A sequence of Steps.
  *

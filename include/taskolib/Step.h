@@ -1,6 +1,6 @@
 /**
  * \file   Step.h
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on November 26, 2021
  * \brief  Declaration of the Step class.
  *

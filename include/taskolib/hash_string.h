@@ -8,7 +8,7 @@
  *
  * Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
  *
- * Adaptations for taskolib: L. Froehlich, U. Jastrow, M. Walla, 2022.
+ * Adaptations for taskolib: L. Fröhlich, U. Jastrow, M. Walla, 2022.
  *
  * MIT license
  *

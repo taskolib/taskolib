@@ -1,6 +1,6 @@
 /**
  * \file   test_LockedQueue.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on April 1, 2022
  * \brief  Test suite for the LockedQueue class template.
  *

@@ -1,6 +1,6 @@
 /**
  * \file   taskolib.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 26, 2021
  * \brief  Main include file for Taskolib.
  *

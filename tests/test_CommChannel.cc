@@ -1,6 +1,6 @@
 /**
  * \file   test_CommChannel.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on June 8, 2022
  * \brief  Test suite for the CommChannel struct.
  *

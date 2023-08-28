@@ -1,6 +1,6 @@
 /**
  * \file   StepIndex.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on October 18, 2022
  * \brief  Declaration of the StepIndex type.
  *

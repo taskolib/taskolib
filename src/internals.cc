@@ -1,6 +1,6 @@
 /**
  * \file   internals.cc
- * \author Lars Froehlich, Marcus Walla
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on August 30, 2022
  * \brief  Definition of internal constants and functions.
  *

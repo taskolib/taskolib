@@ -1,6 +1,6 @@
 /**
  * \file   test_internals.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 4, 2022
  * \brief  Test suite for internal functions.
  *

@@ -1,6 +1,6 @@
 /**
  * \file   SequenceName.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on July 26, 2023
  * \brief  Implementation of the SequenceName class.
  *

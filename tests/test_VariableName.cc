@@ -1,6 +1,6 @@
 /**
  * \file   test_VariableName.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on January 6, 2022
  * \brief  Test suite for the VariableName class.
  *

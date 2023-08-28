@@ -1,6 +1,6 @@
 /**
  * \file   UniqueId.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on July 26, 2023
  * \brief  Declaration of the UniqueId class.
  *

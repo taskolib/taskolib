@@ -1,6 +1,6 @@
 /**
  * \file   Context.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on December 20, 2021
  * \brief  Declaration of the Context and VariableValue types.
  *

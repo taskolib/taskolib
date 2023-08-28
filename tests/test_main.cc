@@ -1,6 +1,6 @@
 /**
  * \file   test_main.cc
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on November 26, 2019
  * \brief  Implementation of main() for the Taskolib unit test suite.
  *

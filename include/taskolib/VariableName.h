@@ -1,6 +1,6 @@
 /**
  * \file   VariableName.h
- * \author Lars Froehlich
+ * \author Lars Fröhlich
  * \date   Created on January 6, 2022
  * \brief  Declaration of the VariableName class and of an associated specialization of
  *         std::hash.
