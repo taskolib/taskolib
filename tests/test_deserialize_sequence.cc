@@ -24,7 +24,7 @@
 
 #include <gul14/catch.h>
 
-#include "taskolib/deserialize_sequence.h"
+#include "deserialize_sequence.h"
 
 using namespace task;
 using namespace task::literals;

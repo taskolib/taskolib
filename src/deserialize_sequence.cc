@@ -34,8 +34,8 @@
 
 #include <gul14/gul.h>
 
+#include "deserialize_sequence.h"
 #include "internals.h"
-#include "taskolib/deserialize_sequence.h"
 #include "taskolib/hash_string.h"
 
 using gul14::cat;

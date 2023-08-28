@@ -28,8 +28,8 @@
 
 #include <gul14/catch.h>
 
-#include "taskolib/deserialize_sequence.h"
-#include "taskolib/serialize_sequence.h"
+#include "deserialize_sequence.h"
+#include "serialize_sequence.h"
 
 using namespace std::literals;
 using namespace task;

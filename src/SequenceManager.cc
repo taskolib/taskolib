@@ -27,10 +27,10 @@
 
 #include <gul14/substring_checks.h>
 
-#include "../src/internals.h"
-#include "taskolib/deserialize_sequence.h"
+#include "deserialize_sequence.h"
+#include "internals.h"
+#include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
-#include "taskolib/serialize_sequence.h"
 
 using gul14::cat;
 

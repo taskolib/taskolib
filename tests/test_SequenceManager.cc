@@ -31,9 +31,9 @@
 
 #include <gul14/catch.h>
 
-#include "../src/internals.h"
+#include "internals.h"
+#include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
-#include "taskolib/serialize_sequence.h"
 
 using namespace Catch::Matchers;
 using namespace std::literals;

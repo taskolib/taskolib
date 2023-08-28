@@ -28,7 +28,7 @@
 #include <gul14/gul.h>
 
 #include "internals.h"
-#include "taskolib/serialize_sequence.h"
+#include "serialize_sequence.h"
 
 using gul14::cat;
 
