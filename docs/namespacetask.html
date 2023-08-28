@@ -149,6 +149,7 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">aborted</a>
 , <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">uncaught_error</a>
  }</td></tr>
+<tr class="memdesc:ab7ac2691887079331ac27d8acbe0f8d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">An enum detailing the possible causes of the termination of a sequence.  <a href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">More...</a><br /></td></tr>
 <tr class="separator:ab7ac2691887079331ac27d8acbe0f8d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -204,12 +205,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa8a13e460561c228be4437ac6e92a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e6bf3c71399243d4bcea6e6788d83bc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a1e6bf3c71399243d4bcea6e6788d83bc">beautify_message</a> (gul14::string_view msg)</td></tr>
 <tr class="separator:a1e6bf3c71399243d4bcea6e6788d83bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abffd9175baff53f84f476579b65b4075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#abffd9175baff53f84f476579b65b4075">check_for_control_characters</a> (gul14::string_view str)</td></tr>
+<tr class="memdesc:abffd9175baff53f84f476579b65b4075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw an exception if the string contains control characters.  <a href="namespacetask.html#abffd9175baff53f84f476579b65b4075">More...</a><br /></td></tr>
+<tr class="separator:abffd9175baff53f84f476579b65b4075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfba3503e0ced28341fcfe37f25eb244"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2">ErrorCause</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">remove_abort_markers</a> (gul14::string_view error_message)</td></tr>
 <tr class="memdesc:adfba3503e0ced28341fcfe37f25eb244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove abort markers from the given error message, beautify it, and determine the cause of the error.  <a href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">More...</a><br /></td></tr>
 <tr class="separator:adfba3503e0ced28341fcfe37f25eb244"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abffd9175baff53f84f476579b65b4075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#abffd9175baff53f84f476579b65b4075">check_for_control_characters</a> (gul14::string_view str)</td></tr>
-<tr class="memdesc:abffd9175baff53f84f476579b65b4075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the string includes any control characters.  <a href="namespacetask.html#abffd9175baff53f84f476579b65b4075">More...</a><br /></td></tr>
-<tr class="separator:abffd9175baff53f84f476579b65b4075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">abort_script_with_error</a> (lua_State *lua_state, const std::string &amp;msg)</td></tr>
 <tr class="separator:a4e70dafdac8eb79e24f90e03aec5b590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0420458f3b22f97c90b2a4a14d68b03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">check_immediate_termination_request</a> (lua_State *lua_state)</td></tr>
@@ -551,6 +552,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>An enum detailing the possible causes of the termination of a sequence. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2"></a>terminated_by_script&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4"></a>aborted&#160;</td><td class="fielddoc"></td></tr>
@@ -628,10 +631,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if the string includes any control characters. </p>
+<p>Throw an exception if the string contains control characters. </p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">of</td><td><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> is thrown If one control character is found. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the string contains any control characters. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1839,7 +1842,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 21 2023 14:29:19 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 28 2023 16:18:57 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
