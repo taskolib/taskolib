@@ -23,17 +23,52 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include <gul14/catch.h>
 
+#include "../src/internals.h"
 #include "taskolib/SequenceManager.h"
 #include "taskolib/serialize_sequence.h"
 
 using namespace Catch::Matchers;
+using namespace std::literals;
 using namespace task;
 using namespace task::literals;
+
+namespace {
+
+static const std::filesystem::path temp_dir{ "unit_test_files" };
+
+// Helper that returns all entries of a directory (i.e. files or subdirs)
+std::vector<std::string> collect_filenames(const std::filesystem::path& path)
+{
+    std::vector<std::string> result;
+    for (const auto& entry: std::filesystem::directory_iterator{ path })
+        result.push_back(entry.path().filename().string());
+
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+// Helper that returns all ".lua" entries of a directory (i.e. files or subdirs)
+std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path)
+{
+    std::vector<std::string> result;
+    for (const auto& entry: std::filesystem::directory_iterator{ path })
+        if (entry.path().extension() == ".lua")
+            result.push_back(entry.path().filename().string());
+
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+} // anonymous namespace
+
 
 TEST_CASE("SequenceManager: Constructor with path", "[SequenceManager]")
 {
@@ -167,7 +202,101 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
     REQUIRE_THROWS_AS(sm.load_sequence(root + "/some_weirdo_file[1234567890abcdef]"), Error);
 }
 
-TEST_CASE("SequenceManager: load_sequence()", "[SequenceManager]")
+TEST_CASE("SequenceManager: load_sequence() - Nonexistent folder", "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir };
+
+    // empty path
+    REQUIRE_THROWS_AS(manager.load_sequence(""), Error);
+
+    // folder 'sequence2' does not exist
+    REQUIRE_THROWS_AS(manager.load_sequence(temp_dir / "sequence2"), Error);
+}
+
+TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
+{
+    const char* dir = "unit_test_files/relabel_sequence_test";
+
+    std::filesystem::create_directories(dir);
+    SequenceManager manager{ dir };
+
+    Sequence seq1 = manager.create_sequence("First sequence", SequenceName{ "first" });
+    Sequence seq2 = manager.create_sequence("Second sequence", SequenceName{ "second" });
+
+    manager.rename_sequence(seq1, SequenceName{ "first_after_rename" });
+    REQUIRE(seq1.empty());
+    REQUIRE(seq1.get_name() == SequenceName{ "first_after_rename" });
+
+    manager.rename_sequence(SequenceName{ "second" }, seq2.get_unique_id(),
+        SequenceName{ "second_after_rename" });
+
+    REQUIRE_THROWS_AS(manager.rename_sequence(SequenceName{ "inexistent" }, 0_uid,
+        SequenceName{ "Bla" }), Error);
+
+    auto sequences = manager.list_sequences();
+    std::sort(sequences.begin(), sequences.end(),
+        [](const SequenceManager::SequenceOnDisk& a, const SequenceManager::SequenceOnDisk& b)
+        {
+            return a.path < b.path;
+        });
+
+    REQUIRE(sequences.size() == 2);
+    REQUIRE(sequences[0].name.string() == "first_after_rename");
+    REQUIRE(sequences[0].unique_id == seq1.get_unique_id());
+    REQUIRE(sequences[1].name.string() == "second_after_rename");
+    REQUIRE(sequences[1].unique_id == seq2.get_unique_id());
+}
+
+TEST_CASE("SequenceManager: store_sequence() - Filename format", "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir };
+
+    const SequenceName seq_name{ "Test_sequence" };
+    const UniqueId seq_uid{ 0xfeeddeafdeadbeef };
+    const auto seq_folder = make_sequence_filename(seq_name, seq_uid);
+
+    if (std::filesystem::exists(temp_dir / seq_folder))
+        std::filesystem::remove_all(temp_dir / seq_folder);
+
+    REQUIRE_THROWS_AS(manager.load_sequence(seq_folder), Error);
+
+    Sequence sequence{ "", seq_name, seq_uid };
+    sequence.push_back(Step{ Step::type_action });
+    sequence.push_back(Step{ Step::type_if });
+    sequence.push_back(Step{ Step::type_action });
+    sequence.push_back(Step{ Step::type_elseif });
+    sequence.push_back(Step{ Step::type_action });
+    sequence.push_back(Step{ Step::type_end });
+    sequence.push_back(Step{ Step::type_while });
+    sequence.push_back(Step{ Step::type_action });
+    sequence.push_back(Step{ Step::type_end });
+    sequence.push_back(Step{ Step::type_action });
+
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
+
+    std::vector<std::string> expect{
+        sequence_lua_filename,
+        "step_01_action.lua",
+        "step_02_if.lua",
+        "step_03_action.lua",
+        "step_04_elseif.lua",
+        "step_05_action.lua",
+        "step_06_end.lua",
+        "step_07_while.lua",
+        "step_08_action.lua",
+        "step_09_end.lua",
+        "step_10_action.lua"
+    };
+
+    std::vector<std::string> actual = collect_lua_filenames(temp_dir / seq_folder);
+    std::sort(actual.begin(), actual.end());
+
+    REQUIRE(expect.size() == actual.size());
+    REQUIRE(expect == actual);
+}
+
+TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Steps",
+    "[SequenceManager]")
 {
     // prepare some sequence for the test
     Step step_01{Step::type_while};
@@ -204,36 +333,137 @@ TEST_CASE("SequenceManager: load_sequence()", "[SequenceManager]")
     REQUIRE(result);
 }
 
-TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
+TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UID",
+    "[SequenceManager]")
 {
-    const char* dir = "unit_test_files/relabel_sequence_test";
+    SequenceManager manager{ temp_dir };
 
-    std::filesystem::create_directories(dir);
-    SequenceManager manager{ dir };
+    const auto label = "A/\"sequence\"$[<again>]"s;
+    const SequenceName name{ "gabba-gabba_he.Y" };
 
-    Sequence seq1 = manager.create_sequence("First sequence", SequenceName{ "first" });
-    Sequence seq2 = manager.create_sequence("Second sequence", SequenceName{ "second" });
+    Sequence sequence{ label, name };
+    sequence.push_back(Step{});
 
-    manager.rename_sequence(seq1, SequenceName{ "first_after_rename" });
-    REQUIRE(seq1.empty());
-    REQUIRE(seq1.get_name() == SequenceName{ "first_after_rename" });
+    const auto seq_folder = make_sequence_filename(sequence);
 
-    manager.rename_sequence(SequenceName{ "second" }, seq2.get_unique_id(),
-        SequenceName{ "second_after_rename" });
+    if (std::filesystem::exists(temp_dir / seq_folder))
+        std::filesystem::remove_all(temp_dir / seq_folder);
 
-    REQUIRE_THROWS_AS(manager.rename_sequence(SequenceName{ "inexistent" }, 0_uid,
-        SequenceName{ "Bla" }), Error);
+    auto before = collect_filenames(temp_dir);
 
-    auto sequences = manager.list_sequences();
-    std::sort(sequences.begin(), sequences.end(),
-        [](const SequenceManager::SequenceOnDisk& a, const SequenceManager::SequenceOnDisk& b)
-        {
-            return a.path < b.path;
-        });
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
 
-    REQUIRE(sequences.size() == 2);
-    REQUIRE(sequences[0].name.string() == "first_after_rename");
-    REQUIRE(sequences[0].unique_id == seq1.get_unique_id());
-    REQUIRE(sequences[1].name.string() == "second_after_rename");
-    REQUIRE(sequences[1].unique_id == seq2.get_unique_id());
+    auto after = collect_filenames(temp_dir);
+
+    std::vector<std::string> new_filenames;
+    std::set_difference(after.begin(), after.end(),
+                        before.begin(), before.end(),
+                        std::back_inserter(new_filenames));
+
+    REQUIRE(new_filenames.size() == 1);
+    REQUIRE(new_filenames[0] == seq_folder);
+
+    Sequence deserialize_seq = manager.load_sequence(new_filenames[0]);
+    REQUIRE(sequence.get_label() == deserialize_seq.get_label());
+    REQUIRE(sequence.get_name() == deserialize_seq.get_name());
+    REQUIRE(sequence.get_unique_id() == deserialize_seq.get_unique_id());
+}
+
+TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Step setup",
+    "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir };
+
+    const auto step_setup_script =
+        R"(
+        a = 'Bob'
+        function test(name)
+            return name .. ' with some funky stuff!'
+        end
+        b = test('Alice') \t\b\b  c = 4)";
+
+    Sequence seq{ "seq_with_complex_step_setup" };
+    seq.push_back(Step{ Step::type_action });
+    seq.set_step_setup_script(step_setup_script);
+
+    manager.store_sequence(seq);
+
+    Sequence seq_deserialized = manager.load_sequence(make_sequence_filename(seq));
+
+    REQUIRE(seq_deserialized.get_step_setup_script() == step_setup_script);
+}
+
+TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Indentation level & type",
+    "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir };
+
+    Sequence sequence{ "this_is_a_sequence" };
+    sequence.push_back(Step{ Step::type_while });
+    sequence.push_back(Step{ Step::type_action });
+    sequence.push_back(Step{ Step::type_end });
+
+    REQUIRE_NOTHROW(manager.store_sequence(sequence));
+
+    Sequence deserialize_seq = manager.load_sequence(make_sequence_filename(sequence));
+
+    REQUIRE(not deserialize_seq.empty());
+    REQUIRE(deserialize_seq.size() == 3);
+    REQUIRE(deserialize_seq[0].get_indentation_level() == 0);
+    REQUIRE(deserialize_seq[0].get_type() == Step::type_while);
+    REQUIRE(deserialize_seq[1].get_indentation_level() == 1);
+    REQUIRE(deserialize_seq[1].get_type() == Step::type_action);
+    REQUIRE(deserialize_seq[2].get_indentation_level() == 0);
+    REQUIRE(deserialize_seq[2].get_type() == Step::type_end);
+}
+
+TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, timeout",
+    "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir };
+
+    Sequence seq{ "Test sequence with maintainers" };
+
+    // remove previously stored sequence
+    if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
+        std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
+
+    seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
+    seq.set_timeout(task::Timeout{1min});
+
+    manager.store_sequence(seq);
+
+    Sequence seq_deserialized = manager.load_sequence(make_sequence_filename(seq));
+
+    REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
+        == seq_deserialized.get_maintainers());
+    REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
+    REQUIRE("Test sequence with maintainers" == seq_deserialized.get_label());
+}
+
+TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence",
+    "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir };
+
+    std::string uid{ "empty_seq_with_step_setup" };
+    Sequence seq{ uid };
+
+    SECTION("Deserialize empty sequence (part 1)")
+    {
+        manager.store_sequence(seq);
+        REQUIRE_NOTHROW(manager.load_sequence(make_sequence_filename(seq)));
+    }
+
+    SECTION("Deserialize empty sequence (part 2)")
+    {
+        // Remove previously stored sequence
+        if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
+            std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
+
+        manager.store_sequence(seq);
+
+        Sequence seq_deserialized = manager.load_sequence(make_sequence_filename(seq));
+        REQUIRE(seq_deserialized.empty());
+    }
 }
