@@ -1,13 +1,13 @@
 <map id="Sequence.h" name="Sequence.h">
-<area shape="rect" id="node1" title="A sequence of Steps." alt="" coords="444,5,541,32"/>
-<area shape="rect" id="node2" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="61,80,236,107"/>
-<area shape="rect" id="node5" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="489,80,579,107"/>
-<area shape="rect" id="node6" href="$taskolib_8h.html" title="Main include file for Taskolib." alt="" coords="393,155,478,181"/>
-<area shape="rect" id="node8" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="260,80,413,107"/>
-<area shape="rect" id="node9" href="$serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="603,80,761,107"/>
-<area shape="rect" id="node11" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="785,80,888,107"/>
-<area shape="rect" id="node3" href="$deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="5,155,185,181"/>
-<area shape="rect" id="node4" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="209,155,368,181"/>
-<area shape="rect" id="node7" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="503,155,597,181"/>
-<area shape="rect" id="node10" href="$serialize__sequence_8cc.html" title="Implementation of the store_sequence() free function." alt="" coords="621,155,785,181"/>
+<area shape="rect" id="node1" title="A sequence of Steps." alt="" coords="327,5,424,32"/>
+<area shape="rect" id="node2" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="40,80,129,107"/>
+<area shape="rect" id="node3" href="$taskolib_8h.html" title="Main include file for Taskolib." alt="" coords="125,155,210,181"/>
+<area shape="rect" id="node5" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="205,80,359,107"/>
+<area shape="rect" id="node7" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="383,80,557,107"/>
+<area shape="rect" id="node9" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="764,80,867,107"/>
+<area shape="rect" id="node10" href="$serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="581,80,740,107"/>
+<area shape="rect" id="node4" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="5,155,100,181"/>
+<area shape="rect" id="node6" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="439,155,597,181"/>
+<area shape="rect" id="node8" href="$deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="235,155,415,181"/>
+<area shape="rect" id="node11" href="$serialize__sequence_8cc.html" title="Implementation of the store_sequence() free function." alt="" coords="621,155,785,181"/>
 </map>

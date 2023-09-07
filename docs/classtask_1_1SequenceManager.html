@@ -45,8 +45,9 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classtask_1_1SequenceManager-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -70,25 +71,47 @@ $(function() {
 </div>
 <p><code>#include &lt;<a class="el" href="SequenceManager_8h_source.html">SequenceManager.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a2b7ef7a25b0f1f3b77885e9a35ba9505"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a2b7ef7a25b0f1f3b77885e9a35ba9505">PathList</a> = std::vector&lt; std::filesystem::path &gt;</td></tr>
-<tr class="separator:a2b7ef7a25b0f1f3b77885e9a35ba9505"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceOnDisk</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A struct to represent a sequence on the disk.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1de48cda21bd0aef903d007b6cdf5323"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">SequenceManager</a> (std::filesystem::path path)</td></tr>
-<tr class="memdesc:a1de48cda21bd0aef903d007b6cdf5323"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new instance to manage and control of sequences that are serialized in the underlying file system.  <a href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">More...</a><br /></td></tr>
+<tr class="memdesc:a1de48cda21bd0aef903d007b6cdf5323"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="classtask_1_1SequenceManager.html" title="A class to have a birds eye view on the underlying serialized sequences in the file system.">SequenceManager</a> to manage sequences that are stored in a given directory.  <a href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">More...</a><br /></td></tr>
 <tr class="separator:a1de48cda21bd0aef903d007b6cdf5323"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61382a6aaa6748cd453c8b177abc3ca1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence</a> (gul14::string_view label=&quot;&quot;, <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> name=<a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>{}) const</td></tr>
+<tr class="memdesc:a61382a6aaa6748cd453c8b177abc3ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an empty sequence on disk.  <a href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">More...</a><br /></td></tr>
+<tr class="separator:a61382a6aaa6748cd453c8b177abc3ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a28bef2aa4989b8fc4886d39476a25"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path</a> () const</td></tr>
-<tr class="memdesc:a49a28bef2aa4989b8fc4886d39476a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the root path of the serialized sequences.  <a href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">More...</a><br /></td></tr>
+<tr class="memdesc:a49a28bef2aa4989b8fc4886d39476a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the root path of the serialized sequences.  <a href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">More...</a><br /></td></tr>
 <tr class="separator:a49a28bef2aa4989b8fc4886d39476a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acce2cf9d1b2b1c4d5d87e9f4093bcfa3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1SequenceManager.html#a2b7ef7a25b0f1f3b77885e9a35ba9505">PathList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#acce2cf9d1b2b1c4d5d87e9f4093bcfa3">get_sequence_names</a> () const</td></tr>
-<tr class="memdesc:acce2cf9d1b2b1c4d5d87e9f4093bcfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get sequence names without the previous path.  <a href="classtask_1_1SequenceManager.html#acce2cf9d1b2b1c4d5d87e9f4093bcfa3">More...</a><br /></td></tr>
-<tr class="separator:acce2cf9d1b2b1c4d5d87e9f4093bcfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48adcbdcc8cf7e351e63c449a1931049"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a48adcbdcc8cf7e351e63c449a1931049">load_sequence</a> (std::filesystem::path sequence_path) const</td></tr>
-<tr class="memdesc:a48adcbdcc8cf7e351e63c449a1931049"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads sequence on the sequence file path.  <a href="classtask_1_1SequenceManager.html#a48adcbdcc8cf7e351e63c449a1931049">More...</a><br /></td></tr>
-<tr class="separator:a48adcbdcc8cf7e351e63c449a1931049"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb018b6d4d91e735352c01d023264bef"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceOnDisk</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences</a> () const</td></tr>
+<tr class="memdesc:abb018b6d4d91e735352c01d023264bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an unsorted list of all valid sequences that are found inside the root path and rename sequence folders that do not contain a valid unique ID.  <a href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">More...</a><br /></td></tr>
+<tr class="separator:abb018b6d4d91e735352c01d023264bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81564ce920f1d174e3c9aa6a51542312"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a81564ce920f1d174e3c9aa6a51542312">load_sequence</a> (std::filesystem::path sequence_folder) const</td></tr>
+<tr class="memdesc:a81564ce920f1d174e3c9aa6a51542312"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a sequence from the specified folder.  <a href="classtask_1_1SequenceManager.html#a81564ce920f1d174e3c9aa6a51542312">More...</a><br /></td></tr>
+<tr class="separator:a81564ce920f1d174e3c9aa6a51542312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a136bc43ca6fa64fb3e7f329123f074db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a136bc43ca6fa64fb3e7f329123f074db">rename_sequence</a> (const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;old_name, <a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> unique_id, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name) const</td></tr>
+<tr class="memdesc:a136bc43ca6fa64fb3e7f329123f074db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the machine-friendly name of a sequence on disk.  <a href="classtask_1_1SequenceManager.html#a136bc43ca6fa64fb3e7f329123f074db">More...</a><br /></td></tr>
+<tr class="separator:a136bc43ca6fa64fb3e7f329123f074db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69d344fb994bb53b77a09b1b559913a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a69d344fb994bb53b77a09b1b559913a4">rename_sequence</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name) const</td></tr>
+<tr class="memdesc:a69d344fb994bb53b77a09b1b559913a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the machine-friendly name of a sequence, both in a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object and on disk.  <a href="classtask_1_1SequenceManager.html#a69d344fb994bb53b77a09b1b559913a4">More...</a><br /></td></tr>
+<tr class="separator:a69d344fb994bb53b77a09b1b559913a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17baf5133f4572d49462bf0ad629fa40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">store_sequence</a> (const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
+<tr class="memdesc:a17baf5133f4572d49462bf0ad629fa40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the given sequence in a subfolder under the root directory of this object.  <a href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">More...</a><br /></td></tr>
+<tr class="separator:a17baf5133f4572d49462bf0ad629fa40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:a5b4cdb83e4dc60db5297d12634622fe6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtask_1_1UniqueId.html">UniqueId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id</a> (const std::vector&lt; <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceOnDisk</a> &gt; &amp;sequences)</td></tr>
+<tr class="memdesc:a5b4cdb83e4dc60db5297d12634622fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a random unique ID that does not collide with the ID of any sequence in the given sequence list.  <a href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">More...</a><br /></td></tr>
+<tr class="separator:a5b4cdb83e4dc60db5297d12634622fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62fde05531e93a82d47f464afaaad2a3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">make_sequence_name_from_label</a> (gul14::string_view label)</td></tr>
+<tr class="memdesc:a62fde05531e93a82d47f464afaaad2a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a machine-friendly sequence name from a human-readable label.  <a href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">More...</a><br /></td></tr>
+<tr class="separator:a62fde05531e93a82d47f464afaaad2a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -96,21 +119,6 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a9756b5e8e4b87748b849147f79b478b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Root path to the sequences.  <a href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">More...</a><br /></td></tr>
 <tr class="separator:a9756b5e8e4b87748b849147f79b478b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a2b7ef7a25b0f1f3b77885e9a35ba9505"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b7ef7a25b0f1f3b77885e9a35ba9505">&#9670;&nbsp;</a></span>PathList</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classtask_1_1SequenceManager.html#a2b7ef7a25b0f1f3b77885e9a35ba9505">task::SequenceManager::PathList</a> =  std::vector&lt;std::filesystem::path&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1de48cda21bd0aef903d007b6cdf5323"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1de48cda21bd0aef903d007b6cdf5323">&#9670;&nbsp;</a></span>SequenceManager()</h2>
@@ -131,21 +139,21 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a new instance to manage and control of sequences that are serialized in the underlying file system. </p>
+<p>Create a <a class="el" href="classtask_1_1SequenceManager.html" title="A class to have a birds eye view on the underlying serialized sequences in the file system.">SequenceManager</a> to manage sequences that are stored in a given directory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>set root path to the sequence folders.</td></tr>
+    <tr><td class="paramname">path</td><td>the root folder that contains individual folders for each sequence.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">throws</td><td><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception if path is empty. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the path name is empty. </td></tr>
   </table>
   </dd>
 </dl>
@@ -155,6 +163,89 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a61382a6aaa6748cd453c8b177abc3ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61382a6aaa6748cd453c8b177abc3ca1">&#9670;&nbsp;</a></span>create_sequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> task::SequenceManager::create_sequence </td>
+          <td>(</td>
+          <td class="paramtype">gul14::string_view&#160;</td>
+          <td class="paramname"><em>label</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>&#160;</td>
+          <td class="paramname"><em>name</em> = <code><a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create an empty sequence on disk. </p>
+<p>The new sequence contains no steps and has a randomly assigned unique ID.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>An optional human-readable label for the sequence </td></tr>
+    <tr><td class="paramname">name</td><td>A optional machine-friendly name for the sequence</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a new sequence.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the sequence folder cannot be created. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
+
+</div>
+</div>
+<a id="a5b4cdb83e4dc60db5297d12634622fe6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b4cdb83e4dc60db5297d12634622fe6">&#9670;&nbsp;</a></span>create_unique_id()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> task::SequenceManager::create_unique_id </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceOnDisk</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sequences</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a random unique ID that does not collide with the ID of any sequence in the given sequence list. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if no unique ID can be found. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+
+</div>
+</div>
 <a id="a49a28bef2aa4989b8fc4886d39476a25"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49a28bef2aa4989b8fc4886d39476a25">&#9670;&nbsp;</a></span>get_path()</h2>
 
@@ -178,21 +269,21 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the root path of the serialized sequences. </p>
-<dl class="section return"><dt>Returns</dt><dd>root path of the serialized sequences. </dd></dl>
+<p>Return the root path of the serialized sequences. </p>
+<dl class="section return"><dt>Returns</dt><dd>the root path of the serialized sequences. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
 
 </div>
 </div>
-<a id="acce2cf9d1b2b1c4d5d87e9f4093bcfa3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acce2cf9d1b2b1c4d5d87e9f4093bcfa3">&#9670;&nbsp;</a></span>get_sequence_names()</h2>
+<a id="abb018b6d4d91e735352c01d023264bef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb018b6d4d91e735352c01d023264bef">&#9670;&nbsp;</a></span>list_sequences()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtask_1_1SequenceManager.html#a2b7ef7a25b0f1f3b77885e9a35ba9505">SequenceManager::PathList</a> task::SequenceManager::get_sequence_names </td>
+          <td class="memname">std::vector&lt; <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceManager::SequenceOnDisk</a> &gt; task::SequenceManager::list_sequences </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -200,15 +291,24 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get sequence names without the previous path. </p>
-<dl class="section return"><dt>Returns</dt><dd>sequences as a list of strings. </dd></dl>
+<p>Return an unsorted list of all valid sequences that are found inside the root path and rename sequence folders that do not contain a valid unique ID. </p>
+<p>This function examines all folders inside the root path. If any of these folder names does not contain a valid unique ID, one is randomly generated and the folder is renamed accordingly.</p>
+<dl class="section return"><dt>Returns</dt><dd>a vector containing one <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html" title="A struct to represent a sequence on the disk.">SequenceOnDisk</a> object for each sequence that was found.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if one of the folders needs to be renamed but the renaming fails. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">make_sequence_name_from_label()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a8d6f12eac764079bd94cfbaf57144796">task::SequenceManager::SequenceOnDisk::path</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, and <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence()</a>.</p>
 
 </div>
 </div>
-<a id="a48adcbdcc8cf7e351e63c449a1931049"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48adcbdcc8cf7e351e63c449a1931049">&#9670;&nbsp;</a></span>load_sequence()</h2>
+<a id="a81564ce920f1d174e3c9aa6a51542312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81564ce920f1d174e3c9aa6a51542312">&#9670;&nbsp;</a></span>load_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -217,28 +317,190 @@ Private Attributes</h2></td></tr>
           <td class="memname"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> task::SequenceManager::load_sequence </td>
           <td>(</td>
           <td class="paramtype">std::filesystem::path&#160;</td>
-          <td class="paramname"><em>sequence_path</em></td><td>)</td>
+          <td class="paramname"><em>sequence_folder</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Loads sequence on the sequence file path. </p>
+<p>Load a sequence from the specified folder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sequence_path</td><td>path to sequence.</td></tr>
+    <tr><td class="paramname">sequence_folder</td><td>path to the sequence folder that should be loaded (should be relative to the root path, as returned by <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef" title="Return an unsorted list of all valid sequences that are found inside the root path and rename sequenc...">list_sequences()</a>)</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>deserialized sequence.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the deserialized sequence.</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">throws</td><td><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> if the sequence path is invalid. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the specified folder name is not valid or if it does not contain a valid sequence. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">task::load_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a3a114f94df4e448e5713ebf0daff6e44">task::SequenceInfo::label</a>, <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters()</a>, <a class="el" href="namespacetask.html#a82114c3fc93381449488afc662ff88ed">task::load_step()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, and <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>.</p>
+
+</div>
+</div>
+<a id="a62fde05531e93a82d47f464afaaad2a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62fde05531e93a82d47f464afaaad2a3">&#9670;&nbsp;</a></span>make_sequence_name_from_label()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> task::SequenceManager::make_sequence_name_from_label </td>
+          <td>(</td>
+          <td class="paramtype">gul14::string_view&#160;</td>
+          <td class="paramname"><em>label</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generate a machine-friendly sequence name from a human-readable label. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1SequenceName.html#a6d4891f62777c07fcedf397042125ac3">task::SequenceName::max_length</a>, and <a class="el" href="classtask_1_1SequenceName.html#acc59a4978c873c954f1969afd5c3d07d">task::SequenceName::valid_characters</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+
+</div>
+</div>
+<a id="a136bc43ca6fa64fb3e7f329123f074db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a136bc43ca6fa64fb3e7f329123f074db">&#9670;&nbsp;</a></span>rename_sequence() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::SequenceManager::rename_sequence </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;&#160;</td>
+          <td class="paramname"><em>old_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtask_1_1UniqueId.html">UniqueId</a>&#160;</td>
+          <td class="paramname"><em>unique_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;&#160;</td>
+          <td class="paramname"><em>new_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Change the machine-friendly name of a sequence on disk. </p>
+<p>The sequence to be renamed is identified by its unique ID and the old name.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">old_name</td><td>the original machine-friendly name of the sequence </td></tr>
+    <tr><td class="paramname">unique_id</td><td>the unique ID of the sequence </td></tr>
+    <tr><td class="paramname">new_name</td><td>the new machine-friendly name of the sequence</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the sequence cannot be found or if the renaming of the folder fails. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a69d344fb994bb53b77a09b1b559913a4">rename_sequence()</a>.</p>
+
+</div>
+</div>
+<a id="a69d344fb994bb53b77a09b1b559913a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69d344fb994bb53b77a09b1b559913a4">&#9670;&nbsp;</a></span>rename_sequence() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::SequenceManager::rename_sequence </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;&#160;</td>
+          <td class="paramname"><em>new_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Change the machine-friendly name of a sequence, both in a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object and on disk. </p>
+<p>The sequence to be renamed is identified by the unique ID and machine-friendly name of the given <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object. The <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object is updated to reflect the new name.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence</td><td>the sequence to be relabeled </td></tr>
+    <tr><td class="paramname">new_name</td><td>the new machine-friendly name of the sequence</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if the sequence cannot be found or if the renaming of the folder fails. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a024b0c34822b2577c63036287bf09c18">task::Sequence::get_name()</a>, <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">task::Sequence::get_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a136bc43ca6fa64fb3e7f329123f074db">rename_sequence()</a>, and <a class="el" href="classtask_1_1Sequence.html#ad246a5d71f854c4924573f112e41123f">task::Sequence::set_name()</a>.</p>
+
+</div>
+</div>
+<a id="a17baf5133f4572d49462bf0ad629fa40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17baf5133f4572d49462bf0ad629fa40">&#9670;&nbsp;</a></span>store_sequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::SequenceManager::store_sequence </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Store the given sequence in a subfolder under the root directory of this object. </p>
+<p>This function generates a subfolder name from the sequence name and unique ID. If such a subfolder exists already, it is removed. Afterwards, a subfolder is newly created and the sequence is stored inside it. Inside the folder, each step is stored in a separate file. The filenames start with <code>step</code> followed by a consecutive number followed by the type of the step and the extension &lsquo;&rsquo;.lua'`. The step number is zero-filled to allow alphanumerical sorting (e.g. <code>step_01_action.lua</code>).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence</td><td>the sequence to be stored </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">task::sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>, and <a class="el" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">task::store_step()</a>.</p>
 
 </div>
 </div>
@@ -265,7 +527,7 @@ Private Attributes</h2></td></tr>
 
 <p>Root path to the sequences. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path()</a>, <a class="el" href="classtask_1_1SequenceManager.html#acce2cf9d1b2b1c4d5d87e9f4093bcfa3">get_sequence_names()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a48adcbdcc8cf7e351e63c449a1931049">load_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">SequenceManager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a81564ce920f1d174e3c9aa6a51542312">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a136bc43ca6fa64fb3e7f329123f074db">rename_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">SequenceManager()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">store_sequence()</a>.</p>
 
 </div>
 </div>
@@ -276,7 +538,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 28 2023 16:18:57 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Sep 7 2023 15:53:49 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

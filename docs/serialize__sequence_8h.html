@@ -40,7 +40,7 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_68c8ab359e8f503a15f3a52889fd1962.html">taskolib</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -61,55 +61,60 @@ $(function() {
 <p>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>. </p>
 </div><div class="textblock"><code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &quot;<a class="el" href="Step_8h_source.html">taskolib/Step.h</a>&quot;</code><br />
+<code>#include &lt;gul14/string_view.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="Sequence_8h_source.html">taskolib/Sequence.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Step_8h_source.html">taskolib/Step.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="UniqueId_8h_source.html">taskolib/UniqueId.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for serialize_sequence.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="serialize__sequence_8h__incl.png" border="0" usemap="#aserialize__sequence_8h" alt=""/></div>
 <map name="aserialize__sequence_8h" id="aserialize__sequence_8h">
-<area shape="rect" title="Serialize Sequence and Steps on storage hardware." alt="" coords="1378,5,1537,32"/>
+<area shape="rect" title="Serialize Sequence and Steps on storage hardware." alt="" coords="1853,5,2011,32"/>
 <area shape="rect" title=" " alt="" coords="5,155,96,181"/>
-<area shape="rect" title=" " alt="" coords="1855,80,1935,107"/>
-<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="507,155,626,181"/>
-<area shape="rect" href="Sequence_8h.html" title="A sequence of Steps." alt="" coords="1679,80,1831,107"/>
-<area shape="rect" title=" " alt="" coords="201,543,268,569"/>
-<area shape="rect" title=" " alt="" coords="323,229,365,256"/>
-<area shape="rect" title=" " alt="" coords="1007,543,1065,569"/>
-<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="603,311,789,338"/>
+<area shape="rect" title=" " alt="" coords="2559,80,2639,107"/>
+<area shape="rect" title=" " alt="" coords="2051,393,2199,420"/>
+<area shape="rect" href="Sequence_8h.html" title="A sequence of Steps." alt="" coords="1497,80,1649,107"/>
+<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="457,155,575,181"/>
+<area shape="rect" href="UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="2368,311,2515,338"/>
+<area shape="rect" title=" " alt="" coords="1687,155,1772,181"/>
+<area shape="rect" title=" " alt="" coords="176,543,243,569"/>
+<area shape="rect" title=" " alt="" coords="1787,393,1874,420"/>
+<area shape="rect" title=" " alt="" coords="528,393,587,420"/>
+<area shape="rect" title=" " alt="" coords="935,543,993,569"/>
+<area shape="rect" title=" " alt="" coords="1797,155,1859,181"/>
+<area shape="rect" title=" " alt="" coords="1883,155,1978,181"/>
+<area shape="rect" title=" " alt="" coords="2003,155,2128,181"/>
+<area shape="rect" title=" " alt="" coords="2275,543,2402,569"/>
+<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="923,311,1109,338"/>
+<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="2031,468,2185,495"/>
+<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1430,229,1570,256"/>
+<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1603,393,1763,420"/>
+<area shape="rect" href="SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="2153,311,2343,338"/>
+<area shape="rect" href="TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="440,229,627,256"/>
+<area shape="rect" title=" " alt="" coords="712,393,779,420"/>
+<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="1319,393,1495,420"/>
+<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="947,393,1093,420"/>
+<area shape="rect" title=" " alt="" coords="1509,468,1651,495"/>
+<area shape="rect" title=" " alt="" coords="1240,468,1304,495"/>
+<area shape="rect" title=" " alt="" coords="1329,468,1485,495"/>
+<area shape="rect" title=" " alt="" coords="1109,468,1165,495"/>
+<area shape="rect" title=" " alt="" coords="763,468,840,495"/>
+<area shape="rect" title=" " alt="" coords="865,468,941,495"/>
+<area shape="rect" title=" " alt="" coords="965,468,1085,495"/>
 <area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="323,468,485,495"/>
-<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1181,229,1321,256"/>
-<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1536,311,1717,338"/>
-<area shape="rect" href="Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="385,311,527,338"/>
-<area shape="rect" href="TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="389,229,576,256"/>
-<area shape="rect" title=" " alt="" coords="859,393,925,420"/>
-<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="659,393,835,420"/>
-<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="1143,393,1289,420"/>
-<area shape="rect" title=" " alt="" coords="561,468,703,495"/>
-<area shape="rect" title=" " alt="" coords="728,468,792,495"/>
-<area shape="rect" title=" " alt="" coords="2173,543,2299,569"/>
-<area shape="rect" title=" " alt="" coords="817,468,973,495"/>
-<area shape="rect" title=" " alt="" coords="1344,468,1400,495"/>
-<area shape="rect" title=" " alt="" coords="1424,468,1501,495"/>
-<area shape="rect" title=" " alt="" coords="1526,468,1602,495"/>
-<area shape="rect" title=" " alt="" coords="1200,468,1320,495"/>
-<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="2099,468,2253,495"/>
-<area shape="rect" title=" " alt="" coords="2081,543,2148,569"/>
-<area shape="rect" title=" " alt="" coords="1526,393,1613,420"/>
-<area shape="rect" title=" " alt="" coords="1129,311,1253,338"/>
-<area shape="rect" title=" " alt="" coords="1277,311,1345,338"/>
-<area shape="rect" title=" " alt="" coords="1369,311,1461,338"/>
-<area shape="rect" href="default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="864,304,1053,345"/>
-<area shape="rect" title=" " alt="" coords="1637,393,1785,420"/>
-<area shape="rect" title=" " alt="" coords="425,393,487,420"/>
-<area shape="rect" title=" " alt="" coords="512,393,571,420"/>
-<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1860,393,2020,420"/>
-<area shape="rect" title=" " alt="" coords="2008,468,2075,495"/>
-<area shape="rect" title=" " alt="" coords="1897,468,1983,495"/>
-<area shape="rect" title=" " alt="" coords="1944,155,2029,181"/>
-<area shape="rect" title=" " alt="" coords="2054,155,2117,181"/>
-<area shape="rect" title=" " alt="" coords="2141,155,2235,181"/>
-<area shape="rect" title=" " alt="" coords="2260,155,2385,181"/>
+<area shape="rect" title=" " alt="" coords="2075,543,2141,569"/>
+<area shape="rect" title=" " alt="" coords="1441,311,1565,338"/>
+<area shape="rect" title=" " alt="" coords="1589,311,1657,338"/>
+<area shape="rect" title=" " alt="" coords="1681,311,1773,338"/>
+<area shape="rect" href="default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="709,304,899,345"/>
+<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1184,311,1365,338"/>
+<area shape="rect" title=" " alt="" coords="1889,468,1956,495"/>
+<area shape="rect" title=" " alt="" coords="1778,468,1865,495"/>
+<area shape="rect" title=" " alt="" coords="221,229,264,256"/>
+<area shape="rect" href="Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="441,311,583,338"/>
+<area shape="rect" title=" " alt="" coords="441,393,503,420"/>
+<area shape="rect" title=" " alt="" coords="2376,393,2448,420"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -117,8 +122,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="serialize__sequence_8h__dep__incl.png" border="0" usemap="#aserialize__sequence_8hdep" alt=""/></div>
 <map name="aserialize__sequence_8hdep" id="aserialize__sequence_8hdep">
-<area shape="rect" title="Serialize Sequence and Steps on storage hardware." alt="" coords="8,5,167,32"/>
-<area shape="rect" href="serialize__sequence_8cc.html" title="Implementation of the store_sequence() free function." alt="" coords="5,80,169,107"/>
+<area shape="rect" title="Serialize Sequence and Steps on storage hardware." alt="" coords="97,5,256,32"/>
+<area shape="rect" href="SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="5,80,164,107"/>
+<area shape="rect" href="serialize__sequence_8cc.html" title="Implementation of the store_sequence() free function." alt="" coords="188,80,352,107"/>
 </map>
 </div>
 </div>
@@ -132,6 +138,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a67a00ba5f07d8f2d59b7e8d156986437"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename</a> (const Sequence &amp;sequence)</td></tr>
+<tr class="memdesc:a67a00ba5f07d8f2d59b7e8d156986437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a unique filename for the given sequence.  <a href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">More...</a><br /></td></tr>
+<tr class="separator:a67a00ba5f07d8f2d59b7e8d156986437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a68055bbd6dce627cb95a2a3429e9dd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">task::make_sequence_filename</a> (SequenceName sequence_name, UniqueId unique_id)</td></tr>
+<tr class="memdesc:a0a68055bbd6dce627cb95a2a3429e9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a filename for the given combination of machine-friendly sequence name and unique ID.  <a href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">More...</a><br /></td></tr>
+<tr class="separator:a0a68055bbd6dce627cb95a2a3429e9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2246f61abd992f460cb3afe7ce45bac2"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">task::operator&lt;&lt;</a> (std::ostream &amp;stream, const Step &amp;step)</td></tr>
 <tr class="memdesc:a2246f61abd992f460cb3afe7ce45bac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize parameters of <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> to the output stream.  <a href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">More...</a><br /></td></tr>
 <tr class="separator:a2246f61abd992f460cb3afe7ce45bac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,16 +151,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:adf47d649e6e2db7cf0e50298701558d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store a <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> in a file.  <a href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">More...</a><br /></td></tr>
 <tr class="separator:adf47d649e6e2db7cf0e50298701558d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bb441c55c946559ff32889db4e735ca"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a2bb441c55c946559ff32889db4e735ca">task::operator&lt;&lt;</a> (std::ostream &amp;stream, const Sequence &amp;sequence)</td></tr>
-<tr class="memdesc:a2bb441c55c946559ff32889db4e735ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize parameters of <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> to the output stream.  <a href="namespacetask.html#a2bb441c55c946559ff32889db4e735ca">More...</a><br /></td></tr>
+<tr class="memdesc:a2bb441c55c946559ff32889db4e735ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize parameters of <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> to the output stream.  <a href="namespacetask.html#a2bb441c55c946559ff32889db4e735ca">More...</a><br /></td></tr>
 <tr class="separator:a2bb441c55c946559ff32889db4e735ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3a3d9384c0c3f7b6f3426d0ea96376a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">task::store_sequence</a> (const std::filesystem::path &amp;folder, const Sequence &amp;sequence)</td></tr>
-<tr class="memdesc:aa3a3d9384c0c3f7b6f3426d0ea96376a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> in a folder containing all steps as individual files.  <a href="namespacetask.html#aa3a3d9384c0c3f7b6f3426d0ea96376a">More...</a><br /></td></tr>
-<tr class="separator:aa3a3d9384c0c3f7b6f3426d0ea96376a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 28 2023 16:18:57 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Sep 7 2023 15:53:49 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -40,11 +40,12 @@ $(function() {
 <div id="main-nav"></div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_68c8ab359e8f503a15f3a52889fd1962.html">taskolib</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -55,61 +56,67 @@ $(function() {
 <div class="textblock"><p>Deserialize Sequence and Steps from storage hardware. </p>
 <dl class="section author"><dt>Author</dt><dd>Marcus Walla </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>Created on May 24, 2022</dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg</dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg</dd></dl>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 2.1 of the license, or (at your option) any later version.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
 <p>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>. </p>
 </div><div class="textblock"><code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &quot;<a class="el" href="Step_8h_source.html">taskolib/Step.h</a>&quot;</code><br />
+<code>#include &lt;gul14/optional.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="Sequence_8h_source.html">taskolib/Sequence.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SequenceName_8h_source.html">taskolib/SequenceName.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Step_8h_source.html">taskolib/Step.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="UniqueId_8h_source.html">taskolib/UniqueId.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for deserialize_sequence.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="deserialize__sequence_8h__incl.png" border="0" usemap="#adeserialize__sequence_8h" alt=""/></div>
 <map name="adeserialize__sequence_8h" id="adeserialize__sequence_8h">
-<area shape="rect" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="1370,5,1545,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,96,181"/>
-<area shape="rect" title=" " alt="" coords="1855,80,1935,107"/>
-<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="507,155,626,181"/>
-<area shape="rect" href="Sequence_8h.html" title="A sequence of Steps." alt="" coords="1679,80,1831,107"/>
-<area shape="rect" title=" " alt="" coords="201,543,268,569"/>
-<area shape="rect" title=" " alt="" coords="323,229,365,256"/>
-<area shape="rect" title=" " alt="" coords="1007,543,1065,569"/>
-<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="603,311,789,338"/>
-<area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="323,468,485,495"/>
-<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1181,229,1321,256"/>
-<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1536,311,1717,338"/>
-<area shape="rect" href="Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="385,311,527,338"/>
-<area shape="rect" href="TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="389,229,576,256"/>
-<area shape="rect" title=" " alt="" coords="859,393,925,420"/>
-<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="659,393,835,420"/>
-<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="1143,393,1289,420"/>
-<area shape="rect" title=" " alt="" coords="561,468,703,495"/>
-<area shape="rect" title=" " alt="" coords="728,468,792,495"/>
-<area shape="rect" title=" " alt="" coords="2173,543,2299,569"/>
-<area shape="rect" title=" " alt="" coords="817,468,973,495"/>
-<area shape="rect" title=" " alt="" coords="1344,468,1400,495"/>
-<area shape="rect" title=" " alt="" coords="1424,468,1501,495"/>
-<area shape="rect" title=" " alt="" coords="1526,468,1602,495"/>
-<area shape="rect" title=" " alt="" coords="1200,468,1320,495"/>
-<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="2099,468,2253,495"/>
-<area shape="rect" title=" " alt="" coords="2081,543,2148,569"/>
-<area shape="rect" title=" " alt="" coords="1526,393,1613,420"/>
-<area shape="rect" title=" " alt="" coords="1129,311,1253,338"/>
-<area shape="rect" title=" " alt="" coords="1277,311,1345,338"/>
-<area shape="rect" title=" " alt="" coords="1369,311,1461,338"/>
-<area shape="rect" href="default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="864,304,1053,345"/>
-<area shape="rect" title=" " alt="" coords="1637,393,1785,420"/>
-<area shape="rect" title=" " alt="" coords="425,393,487,420"/>
-<area shape="rect" title=" " alt="" coords="512,393,571,420"/>
-<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1860,393,2020,420"/>
-<area shape="rect" title=" " alt="" coords="2008,468,2075,495"/>
-<area shape="rect" title=" " alt="" coords="1897,468,1983,495"/>
-<area shape="rect" title=" " alt="" coords="1944,155,2029,181"/>
-<area shape="rect" title=" " alt="" coords="2054,155,2117,181"/>
-<area shape="rect" title=" " alt="" coords="2141,155,2235,181"/>
-<area shape="rect" title=" " alt="" coords="2260,155,2385,181"/>
+<area shape="rect" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="134,5,309,32"/>
+<area shape="rect" title=" " alt="" coords="93,155,184,181"/>
+<area shape="rect" title=" " alt="" coords="981,80,1061,107"/>
+<area shape="rect" title=" " alt="" coords="233,543,359,569"/>
+<area shape="rect" href="Sequence_8h.html" title="A sequence of Steps." alt="" coords="755,80,907,107"/>
+<area shape="rect" href="SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="346,311,537,338"/>
+<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="2318,155,2437,181"/>
+<area shape="rect" href="UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="124,311,271,338"/>
+<area shape="rect" title=" " alt="" coords="2208,155,2293,181"/>
+<area shape="rect" title=" " alt="" coords="2516,543,2583,569"/>
+<area shape="rect" title=" " alt="" coords="1706,393,1793,420"/>
+<area shape="rect" title=" " alt="" coords="1903,393,1961,420"/>
+<area shape="rect" title=" " alt="" coords="1732,543,1791,569"/>
+<area shape="rect" title=" " alt="" coords="361,155,423,181"/>
+<area shape="rect" title=" " alt="" coords="447,155,542,181"/>
+<area shape="rect" title=" " alt="" coords="567,155,692,181"/>
+<area shape="rect" title=" " alt="" coords="470,393,618,420"/>
+<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="809,311,994,338"/>
+<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="948,468,1103,495"/>
+<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1442,229,1582,256"/>
+<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1985,393,2145,420"/>
+<area shape="rect" href="TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="2208,229,2395,256"/>
+<area shape="rect" title=" " alt="" coords="893,393,960,420"/>
+<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="643,393,819,420"/>
+<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="1200,393,1347,420"/>
+<area shape="rect" title=" " alt="" coords="511,468,654,495"/>
+<area shape="rect" title=" " alt="" coords="679,468,743,495"/>
+<area shape="rect" title=" " alt="" coords="767,468,923,495"/>
+<area shape="rect" title=" " alt="" coords="1372,468,1428,495"/>
+<area shape="rect" title=" " alt="" coords="1452,468,1529,495"/>
+<area shape="rect" title=" " alt="" coords="1127,468,1203,495"/>
+<area shape="rect" title=" " alt="" coords="1228,468,1348,495"/>
+<area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="2300,468,2463,495"/>
+<area shape="rect" title=" " alt="" coords="992,543,1059,569"/>
+<area shape="rect" title=" " alt="" coords="1694,311,1818,338"/>
+<area shape="rect" title=" " alt="" coords="1486,311,1554,338"/>
+<area shape="rect" title=" " alt="" coords="1578,311,1670,338"/>
+<area shape="rect" href="default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="1171,304,1360,345"/>
+<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1893,311,2075,338"/>
+<area shape="rect" title=" " alt="" coords="1905,468,1972,495"/>
+<area shape="rect" title=" " alt="" coords="1997,468,2083,495"/>
+<area shape="rect" title=" " alt="" coords="2469,229,2512,256"/>
+<area shape="rect" href="Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="2201,311,2343,338"/>
+<area shape="rect" title=" " alt="" coords="2230,393,2293,420"/>
+<area shape="rect" title=" " alt="" coords="161,393,233,420"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -125,6 +132,11 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="deserialize__sequence_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1SequenceInfo.html">task::SequenceInfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacetask"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html">task</a></td></tr>
@@ -133,6 +145,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a93f382e8c5663f8f71d7b2229f8c60db"><td class="memItemLeft" align="right" valign="top">SequenceInfo&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename</a> (gul14::string_view filename)</td></tr>
+<tr class="memdesc:a93f382e8c5663f8f71d7b2229f8c60db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the label, name, and unique ID of a sequence from a filename, if possible.  <a href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">More...</a><br /></td></tr>
+<tr class="separator:a93f382e8c5663f8f71d7b2229f8c60db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6267718d543a5b3e74455d4e78de04f3"><td class="memItemLeft" align="right" valign="top">std::istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">task::operator&gt;&gt;</a> (std::istream &amp;stream, Step &amp;step)</td></tr>
 <tr class="memdesc:a6267718d543a5b3e74455d4e78de04f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize parameters of <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the input stream.  <a href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">More...</a><br /></td></tr>
 <tr class="separator:a6267718d543a5b3e74455d4e78de04f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,14 +157,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a5eeedb324f13bee35b988881a6806d82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters</a> (const std::filesystem::path &amp;folder, Sequence &amp;sequence)</td></tr>
 <tr class="memdesc:a5eeedb324f13bee35b988881a6806d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load sequence parameters like the step setup script and the sequence timeout.  <a href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">More...</a><br /></td></tr>
 <tr class="separator:a5eeedb324f13bee35b988881a6806d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac32d1dd524a788593956a85f44d68a0c"><td class="memItemLeft" align="right" valign="top">Sequence&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">task::load_sequence</a> (const std::filesystem::path &amp;folder)</td></tr>
-<tr class="memdesc:ac32d1dd524a788593956a85f44d68a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of Steps to be executed under a given Context.">Sequence</a> with all of the stored <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a>'s from the folder.  <a href="namespacetask.html#ac32d1dd524a788593956a85f44d68a0c">More...</a><br /></td></tr>
-<tr class="separator:ac32d1dd524a788593956a85f44d68a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 28 2023 16:18:57 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Sep 7 2023 15:53:49 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

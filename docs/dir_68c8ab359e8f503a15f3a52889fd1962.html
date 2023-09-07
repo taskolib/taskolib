@@ -60,9 +60,6 @@ Files</h2></td></tr>
 <tr class="memitem:default__message__callback_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="default__message__callback_8h.html">default_message_callback.h</a> <a href="default__message__callback_8h_source.html">[code]</a></td></tr>
 <tr class="memdesc:default__message__callback_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the <a class="el" href="namespacetask.html#a6421ad950ed1b80aaa83d75862c30fb7" title="Default callback function for messages.">default_message_callback()</a> function. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:deserialize__sequence_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="deserialize__sequence_8h.html">deserialize_sequence.h</a> <a href="deserialize__sequence_8h_source.html">[code]</a></td></tr>
-<tr class="memdesc:deserialize__sequence_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize Sequence and Steps from storage hardware. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:exceptions_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exceptions_8h.html">exceptions.h</a> <a href="exceptions_8h_source.html">[code]</a></td></tr>
 <tr class="memdesc:exceptions_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the Error exception class. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -90,8 +87,8 @@ Files</h2></td></tr>
 <tr class="memitem:SequenceManager_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SequenceManager_8h.html">SequenceManager.h</a> <a href="SequenceManager_8h_source.html">[code]</a></td></tr>
 <tr class="memdesc:SequenceManager_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manage and control sequences. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:serialize__sequence_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="serialize__sequence_8h.html">serialize_sequence.h</a> <a href="serialize__sequence_8h_source.html">[code]</a></td></tr>
-<tr class="memdesc:serialize__sequence_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize Sequence and Steps on storage hardware. <br /></td></tr>
+<tr class="memitem:SequenceName_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SequenceName_8h.html">SequenceName.h</a> <a href="SequenceName_8h_source.html">[code]</a></td></tr>
+<tr class="memdesc:SequenceName_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the SequenceName class. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:Step_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Step_8h.html">Step.h</a> <a href="Step_8h_source.html">[code]</a></td></tr>
 <tr class="memdesc:Step_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the Step class. <br /></td></tr>
@@ -111,6 +108,9 @@ Files</h2></td></tr>
 <tr class="memitem:TimeoutTrigger_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="TimeoutTrigger_8h.html">TimeoutTrigger.h</a> <a href="TimeoutTrigger_8h_source.html">[code]</a></td></tr>
 <tr class="memdesc:TimeoutTrigger_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logic to check if a timeout elapsed. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:UniqueId_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="UniqueId_8h.html">UniqueId.h</a> <a href="UniqueId_8h_source.html">[code]</a></td></tr>
+<tr class="memdesc:UniqueId_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the UniqueId class. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:VariableName_8h"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="VariableName_8h.html">VariableName.h</a> <a href="VariableName_8h_source.html">[code]</a></td></tr>
 <tr class="memdesc:VariableName_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the VariableName class and of an associated specialization of std::hash. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,7 +118,7 @@ Files</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 28 2023 16:18:57 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Sep 7 2023 15:53:49 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
