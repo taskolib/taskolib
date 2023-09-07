@@ -22,7 +22,7 @@ pkg_config_name = 'taskolib'
 
 # Keep this version number up to date...
 sol_version = '3.3.0'
-lua_version = '5.4.3'
+lua_version = '5.4.6'
 
 
 
