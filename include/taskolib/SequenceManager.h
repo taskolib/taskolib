@@ -41,10 +41,10 @@ namespace task {
  * directory.
  *
  * \code
- * // Create a SequenceManager that manages sequences stored in the root folder "sequences"
+ * // Create a SequenceManager that manages sequences stored in the base folder "sequences"
  * SequenceManager manager{ "sequences" };
  *
- * // List all sequences below the root folder
+ * // List all sequences below the base folder
  * auto sequences = manager.list_sequences();
  *
  * for (const auto& s : sequences) {
@@ -61,7 +61,7 @@ public:
     /// A struct to represent a sequence on disk.
     struct SequenceOnDisk
     {
-        std::filesystem::path path; ///< Path to the sequence, relative to SequenceManager root path
+        std::filesystem::path path; ///< Path to the sequence, relative to SequenceManager base path
         SequenceName name; ///< Machine-friendly name of the sequence
         UniqueId unique_id; ///< Unique ID of the sequence
     };
@@ -69,7 +69,7 @@ public:
     /**
      * Create a SequenceManager to manage sequences that are stored in a given directory.
      *
-     * \param path  the root folder that contains individual folders for each sequence.
+     * \param path  the base folder that contains individual folders for each sequence.
      *
      * \exception Error is thrown if the path name is empty.
      */
@@ -91,22 +91,22 @@ public:
         SequenceName name = SequenceName{});
 
     /**
-     * Return the root path of the serialized sequences.
+     * Return the base path of the serialized sequences.
      *
-     * \returns the root path of the serialized sequences.
+     * \returns the base path of the serialized sequences.
      */
     std::filesystem::path get_path() const { return path_; }
 
     /**
-     * Return an unsorted list of all valid sequences that are found inside the root path
+     * Return an unsorted list of all valid sequences that are found inside the base path
      * and rename sequence folders that do not contain a valid unique ID.
      *
-     * This function examines all folders inside the root path. If any of these folder
+     * This function examines all folders inside the base path. If any of these folder
      * names does not contain a valid unique ID, one is randomly generated and the folder
      * is renamed accordingly.
      *
      * \returns a vector containing one SequenceOnDisk object for each sequence that was
-     *          found. The paths in the returned objects are relative to the root path.
+     *          found. The paths in the returned objects are relative to the base path.
      *
      * \exception Error is thrown if one of the folders needs to be renamed but the
      *            renaming fails.
@@ -117,7 +117,7 @@ public:
      * Load a sequence from the specified folder.
      *
      * \param sequence_folder  path to the sequence folder to be loaded, relative to the
-     *                         root path
+     *                         base path
      *
      * \returns the deserialized sequence.
      *
@@ -158,7 +158,7 @@ public:
     void rename_sequence(Sequence& sequence, const SequenceName& new_name) const;
 
     /**
-     * Store the given sequence in a subfolder under the root directory of this object.
+     * Store the given sequence in a subfolder under the base directory of this object.
      *
      * This function generates a subfolder name from the sequence name and unique ID. If
      * such a subfolder exists already, it is removed. Afterwards, a subfolder is newly
@@ -173,7 +173,7 @@ public:
     void store_sequence(const Sequence& sequence);
 
 private:
-    /// Root path to the sequences
+    /// Base path to the sequences.
     std::filesystem::path path_;
 
     /**

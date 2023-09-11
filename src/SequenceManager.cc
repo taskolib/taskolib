@@ -98,7 +98,7 @@ SequenceManager::SequenceManager(std::filesystem::path path)
     : path_{ std::move(path) }
 {
     if (path_.empty())
-        throw Error("Root sequences path name must not be empty");
+        throw Error("Base path name for sequences must not be empty");
 }
 
 Sequence SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
