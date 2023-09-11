@@ -37,35 +37,33 @@
 namespace task {
 
 /**
- * A class to have a birds eye view on the underlying serialized sequences in the file
- * system. It allows to manage and control sequences.
- *
- * Since we have a predefined flat struture for serialize sequences we come to the
- * assumption for the following specification:
+ * A class for listing, loading, storing, and renaming sequences in a given file system
+ * directory.
  *
  * \code
- * ./sequence_1 <- folder name that represents the first sequence
- *    step_while_01.lua <- first step of sequence 1
- *    ...
- *    step_action_<n>.lua <- n-th step of sequence 1
- * ...
- * ./sequence_<m> <- folder name that represents the m-th sequence
- *    step_if_01.lua <- first step of sequence 1
- *    ...
- *    step_action_<n>.lua <- n-th step of sequence 1
- * \endcode
+ * // Create a SequenceManager that manages sequences stored in the root folder "sequences"
+ * SequenceManager manager{ "sequences" };
  *
- * Above we have as root path the folder '.'.
+ * // List all sequences below the root folder
+ * auto sequences = manager.list_sequences();
+ *
+ * for (const auto& s : sequences) {
+ *     // Load the sequence from disk
+ *     auto seq = manager.load_sequence(s.path);
+ *     std::cout << "Sequence " << seq.get_name() << " has " << seq.get_steps().size()
+ *               << " steps\n";
+ * }
+ * \endcode
  */
 class SequenceManager
 {
 public:
-    /// A struct to represent a sequence on the disk.
+    /// A struct to represent a sequence on disk.
     struct SequenceOnDisk
     {
-        std::filesystem::path path; ///< The path to the sequence
-        SequenceName name; ///< The machine-friendly name of the sequence
-        UniqueId unique_id; ///< The unique ID of the sequence
+        std::filesystem::path path; ///< Path to the sequence, relative to SequenceManager root path
+        SequenceName name; ///< Machine-friendly name of the sequence
+        UniqueId unique_id; ///< Unique ID of the sequence
     };
 
     /**
@@ -108,7 +106,7 @@ public:
      * is renamed accordingly.
      *
      * \returns a vector containing one SequenceOnDisk object for each sequence that was
-     *          found.
+     *          found. The paths in the returned objects are relative to the root path.
      *
      * \exception Error is thrown if one of the folders needs to be renamed but the
      *            renaming fails.
@@ -118,9 +116,8 @@ public:
     /**
      * Load a sequence from the specified folder.
      *
-     * \param sequence_folder  path to the sequence folder that should be loaded (should
-     *                         be relative to the root path, as returned by
-     *                         list_sequences())
+     * \param sequence_folder  path to the sequence folder to be loaded, relative to the
+     *                         root path
      *
      * \returns the deserialized sequence.
      *

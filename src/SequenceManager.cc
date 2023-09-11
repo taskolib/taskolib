@@ -149,25 +149,27 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         SequenceInfo seq_info = get_sequence_info_from_filename(
             entry.path().filename().string());
 
+        auto rel_path = std::filesystem::relative(entry.path(), path_);
+
         if (seq_info.name.has_value() && seq_info.unique_id.has_value())
         {
             sequences.push_back(SequenceOnDisk{
-                entry.path(),
+                std::move(rel_path),
                 std::move(*seq_info.name),
                 std::move(*seq_info.unique_id) });
         }
         else
         {
-            suspicious_folders.push_back(entry.path());
+            suspicious_folders.push_back(std::move(rel_path));
         }
     }
 
     // Loop over all folders that did not have name and unique ID in their name.
-    for (const auto& path : suspicious_folders)
+    for (const auto& folder : suspicious_folders)
     {
         // It could be a non-sequence folder or a sequence folder from an older version.
         // We only believe it is the latter if it contains a sequence.lua file.
-        if (not std::filesystem::exists(path / "sequence.lua"))
+        if (not std::filesystem::exists(path_ / folder / "sequence.lua"))
             continue;
 
         // So it is a sequence folder after all. We automatically generate a unique ID
@@ -175,23 +177,22 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         UniqueId unique_id = create_unique_id(sequences);
 
         const auto [label, dummy1, dummy2] =
-            get_sequence_info_from_filename(path.filename().string());
+            get_sequence_info_from_filename(folder.string());
 
         SequenceName name = make_sequence_name_from_label(label);
 
         const auto new_folder_name = make_sequence_filename(name, unique_id);
-        const auto new_path = path.parent_path() / new_folder_name;
 
         std::error_code error;
-        std::filesystem::rename(path, new_path, error);
+        std::filesystem::rename(path_ / folder, path_ / new_folder_name, error);
         if (error)
         {
-            throw Error(gul14::cat("Sequence folder ", path.string(),
+            throw Error(gul14::cat("Sequence folder ", folder.string(),
                 " does not contain a unique ID and cannot be renamed to ",
-                new_path.string(), ": ", error.message()));
+                new_folder_name, ": ", error.message()));
         }
 
-        sequences.push_back(SequenceOnDisk{ new_path, name, unique_id });
+        sequences.push_back(SequenceOnDisk{ new_folder_name, name, unique_id });
     }
 
     return sequences;

@@ -183,23 +183,23 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 
     REQUIRE(sequences.size() == 3);
 
-    REQUIRE_THAT(sequences[0].path, StartsWith(root + "/A_legacy_sequence["));
+    REQUIRE_THAT(sequences[0].path, StartsWith("A_legacy_sequence["));
     REQUIRE_THAT(sequences[0].path, EndsWith("]"));
     REQUIRE(sequences[0].name == SequenceName{ "A_legacy_sequence" });
     REQUIRE(sequences[0].unique_id != 0_uid);
 
-    REQUIRE_THAT(sequences[1].path, StartsWith(root + "/test.seq.1["));
+    REQUIRE_THAT(sequences[1].path, StartsWith("test.seq.1["));
     REQUIRE_THAT(sequences[1].path, EndsWith("]"));
     REQUIRE(sequences[1].name == SequenceName{ "test.seq.1" });
     REQUIRE(sequences[1].unique_id != 0_uid);
 
-    REQUIRE_THAT(sequences[2].path, StartsWith(root + "/test.seq.2["));
+    REQUIRE_THAT(sequences[2].path, StartsWith("test.seq.2["));
     REQUIRE_THAT(sequences[2].path, EndsWith("]"));
     REQUIRE(sequences[2].name == SequenceName{ "test.seq.2" });
     REQUIRE(sequences[2].unique_id != 0_uid);
 
     // check for loading sequence directories only (and not any arbritrary regular file)
-    REQUIRE_THROWS_AS(sm.load_sequence(root + "/some_weirdo_file[1234567890abcdef]"), Error);
+    REQUIRE_THROWS_AS(sm.load_sequence("some_weirdo_file[1234567890abcdef]"), Error);
 }
 
 TEST_CASE("SequenceManager: load_sequence() - Nonexistent folder", "[SequenceManager]")
@@ -210,7 +210,7 @@ TEST_CASE("SequenceManager: load_sequence() - Nonexistent folder", "[SequenceMan
     REQUIRE_THROWS_AS(manager.load_sequence(""), Error);
 
     // folder 'sequence2' does not exist
-    REQUIRE_THROWS_AS(manager.load_sequence(temp_dir / "sequence2"), Error);
+    REQUIRE_THROWS_AS(manager.load_sequence("sequence2"), Error);
 }
 
 TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
