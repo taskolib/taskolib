@@ -102,7 +102,6 @@ SequenceManager::SequenceManager(std::filesystem::path path)
 }
 
 Sequence SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
-    const
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -134,7 +133,7 @@ UniqueId SequenceManager::create_unique_id(const std::vector<SequenceOnDisk>& se
     throw Error("Unable to find a unique ID");
 }
 
-std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() const
+std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences()
 {
     std::vector<SequenceOnDisk> sequences;
     std::vector<std::filesystem::path> suspicious_folders;
@@ -190,6 +189,13 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
             throw Error(gul14::cat("Sequence folder ", folder.string(),
                 " does not contain a unique ID and cannot be renamed to ",
                 new_folder_name, ": ", error.message()));
+        }
+
+        auto seq = load_sequence(new_folder_name);
+        if (seq.get_label().empty()) // legacy sequences do not store the label in the lua file
+        {
+            seq.set_label(label);
+            store_sequence(seq);
         }
 
         sequences.push_back(SequenceOnDisk{ new_folder_name, name, unique_id });
