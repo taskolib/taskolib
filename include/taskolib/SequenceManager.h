@@ -88,7 +88,7 @@ public:
      * \exception Error is thrown if the sequence folder cannot be created.
      */
     Sequence create_sequence(gul14::string_view label = "",
-        SequenceName name = SequenceName{});
+        SequenceName name = SequenceName{}) const;
 
     /**
      * Return the base path of the serialized sequences.
@@ -111,7 +111,7 @@ public:
      * \exception Error is thrown if one of the folders needs to be renamed but the
      *            renaming fails.
      */
-    std::vector<SequenceOnDisk> list_sequences();
+    std::vector<SequenceOnDisk> list_sequences() const;
 
     /**
      * Load a sequence from the specified folder.
@@ -170,7 +170,7 @@ public:
      *
      * \param sequence  the sequence to be stored
      */
-    void store_sequence(const Sequence& sequence);
+    void store_sequence(const Sequence& sequence) const;
 
 private:
     /// Base path to the sequences.

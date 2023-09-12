@@ -101,7 +101,8 @@ SequenceManager::SequenceManager(std::filesystem::path path)
         throw Error("Base path name for sequences must not be empty");
 }
 
-Sequence SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
+Sequence
+SequenceManager::create_sequence(gul14::string_view label, SequenceName name) const
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -133,7 +134,7 @@ UniqueId SequenceManager::create_unique_id(const std::vector<SequenceOnDisk>& se
     throw Error("Unable to find a unique ID");
 }
 
-std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences()
+std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() const
 {
     std::vector<SequenceOnDisk> sequences;
     std::vector<std::filesystem::path> suspicious_folders;
@@ -303,7 +304,7 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
     sequence.set_name(new_name);
 }
 
-void SequenceManager::store_sequence(const Sequence& seq)
+void SequenceManager::store_sequence(const Sequence& seq) const
 {
     const int max_digits = int( seq.size() / 10 ) + 1;
     const auto seq_path = path_ / make_sequence_filename(seq);
