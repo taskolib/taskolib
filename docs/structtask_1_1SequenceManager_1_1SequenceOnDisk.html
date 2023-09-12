@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">0.7.0</span>
+   &#160;<span id="projectnumber">0.7.2</span>
    </div>
   </td>
  </tr>
@@ -52,20 +52,20 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A struct to represent a sequence on the disk. </p>
+<div class="textblock"><p>A struct to represent a sequence on disk. </p>
 </div>
 <p><code>#include &lt;<a class="el" href="SequenceManager_8h_source.html">SequenceManager.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a8d6f12eac764079bd94cfbaf57144796"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a8d6f12eac764079bd94cfbaf57144796">path</a></td></tr>
-<tr class="memdesc:a8d6f12eac764079bd94cfbaf57144796"><td class="mdescLeft">&#160;</td><td class="mdescRight">The path to the sequence.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a8d6f12eac764079bd94cfbaf57144796">More...</a><br /></td></tr>
+<tr class="memdesc:a8d6f12eac764079bd94cfbaf57144796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path to the sequence, relative to <a class="el" href="classtask_1_1SequenceManager.html" title="A class for listing, loading, storing, and renaming sequences in a given file system directory.">SequenceManager</a> base path.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a8d6f12eac764079bd94cfbaf57144796">More...</a><br /></td></tr>
 <tr class="separator:a8d6f12eac764079bd94cfbaf57144796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0d9714ce1c6b374548642b69aa9987c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#aa0d9714ce1c6b374548642b69aa9987c">name</a></td></tr>
-<tr class="memdesc:aa0d9714ce1c6b374548642b69aa9987c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The machine-friendly name of the sequence.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#aa0d9714ce1c6b374548642b69aa9987c">More...</a><br /></td></tr>
+<tr class="memdesc:aa0d9714ce1c6b374548642b69aa9987c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Machine-friendly name of the sequence.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#aa0d9714ce1c6b374548642b69aa9987c">More...</a><br /></td></tr>
 <tr class="separator:aa0d9714ce1c6b374548642b69aa9987c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e88d7069936b9d4282c7c7aa913ecb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1UniqueId.html">UniqueId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a7e88d7069936b9d4282c7c7aa913ecb7">unique_id</a></td></tr>
-<tr class="memdesc:a7e88d7069936b9d4282c7c7aa913ecb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique ID of the sequence.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a7e88d7069936b9d4282c7c7aa913ecb7">More...</a><br /></td></tr>
+<tr class="memdesc:a7e88d7069936b9d4282c7c7aa913ecb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique ID of the sequence.  <a href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a7e88d7069936b9d4282c7c7aa913ecb7">More...</a><br /></td></tr>
 <tr class="separator:a7e88d7069936b9d4282c7c7aa913ecb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -81,7 +81,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The machine-friendly name of the sequence. </p>
+<p>Machine-friendly name of the sequence. </p>
 
 </div>
 </div>
@@ -97,9 +97,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The path to the sequence. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">task::SequenceManager::list_sequences()</a>.</p>
+<p>Path to the sequence, relative to <a class="el" href="classtask_1_1SequenceManager.html" title="A class for listing, loading, storing, and renaming sequences in a given file system directory.">SequenceManager</a> base path. </p>
 
 </div>
 </div>
@@ -115,7 +113,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The unique ID of the sequence. </p>
+<p>Unique ID of the sequence. </p>
 
 </div>
 </div>
@@ -125,7 +123,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 7 2023 16:09:27 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Sep 12 2023 07:37:44 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
