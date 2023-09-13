@@ -102,6 +102,22 @@ SequenceManager::SequenceManager(std::filesystem::path path)
 }
 
 Sequence
+SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name) const
+{
+    const auto sequences = list_sequences();
+    const UniqueId new_unique_id = create_unique_id(sequences);
+
+    Sequence sequence = load_sequence(original_uid, sequences);
+
+    sequence.set_unique_id(new_unique_id);
+    sequence.set_name(new_name);
+
+    store_sequence(sequence);
+
+    return sequence;
+}
+
+Sequence
 SequenceManager::create_sequence(gul14::string_view label, SequenceName name) const
 {
     const auto sequences = list_sequences();

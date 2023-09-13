@@ -82,6 +82,49 @@ TEST_CASE("SequenceManager: Move constructor", "[SequenceManager]")
     REQUIRE(s.get_path() == "unit_test_files");
 }
 
+TEST_CASE("SequenceManager: copy_sequence()", "[SequenceManager]")
+{
+    const char* dir = "unit_test_files/copy_sequence_test";
+
+    if (std::filesystem::exists(dir))
+        std::filesystem::remove_all(dir);
+
+    std::filesystem::create_directories(dir);
+    SequenceManager manager{ dir };
+
+    // Create a sequence and store it
+    Sequence seq{ "First sequence", SequenceName{ "first" } };
+    Step step{ Step::type_action };
+    step.set_script("answer = 42");
+    seq.push_back(step);
+    manager.store_sequence(seq);
+
+    // Make a copy
+    Sequence copy = manager.copy_sequence(seq.get_unique_id(), SequenceName("copy"));
+
+    // Compare original and copy
+    REQUIRE(copy.get_label() == "First sequence");
+    REQUIRE(copy.get_name() == SequenceName{ "copy" });
+    REQUIRE(copy.get_unique_id() != seq.get_unique_id());
+    REQUIRE(copy.size() == seq.size());
+    REQUIRE(copy[0].get_type() == seq[0].get_type());
+    REQUIRE(copy[0].get_script() == seq[0].get_script());
+
+    // Examine base folder
+    auto list = manager.list_sequences();
+    REQUIRE(list.size() == 2);
+    REQUIRE(std::find_if(list.begin(), list.end(),
+        [](const SequenceManager::SequenceOnDisk& s)
+        {
+            return s.name == SequenceName{ "first" };
+        }) != list.end());
+    REQUIRE(std::find_if(list.begin(), list.end(),
+        [](const SequenceManager::SequenceOnDisk& s)
+        {
+            return s.name == SequenceName{ "copy" };
+        }) != list.end());
+}
+
 TEST_CASE("SequenceManager: create_sequence()", "[SequenceManager]")
 {
     const char* dir = "unit_test_files/create_sequence_test";
