@@ -150,6 +150,19 @@ UniqueId SequenceManager::create_unique_id(const std::vector<SequenceOnDisk>& se
     throw Error("Unable to find a unique ID");
 }
 
+SequenceManager::SequenceOnDisk
+SequenceManager::find_sequence_on_disk(UniqueId uid,
+    const std::vector<SequenceManager::SequenceOnDisk>& sequences)
+{
+    const auto it = std::find_if(sequences.begin(), sequences.end(),
+        [uid](const auto& seq) { return seq.unique_id == uid; });
+
+    if (it == sequences.end())
+        throw Error(cat("Sequence not found: Unknown unique ID ", to_string(uid)));
+
+    return *it;
+}
+
 std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() const
 {
     std::vector<SequenceOnDisk> sequences;
@@ -229,13 +242,9 @@ Sequence SequenceManager::load_sequence(UniqueId uid) const
 Sequence SequenceManager::load_sequence(UniqueId uid,
     const std::vector<SequenceOnDisk>& sequences) const
 {
-    const auto it = std::find_if(sequences.begin(), sequences.end(),
-        [uid](const auto& seq) { return seq.unique_id == uid; });
+    const auto seq_on_disk = find_sequence_on_disk(uid, sequences);
 
-    if (it == sequences.end())
-        throw Error(cat("Cannot load sequence: Unknown unique ID ", to_string(uid)));
-
-    const auto folder = path_ / it->path;
+    const auto folder = path_ / seq_on_disk.path;
     if (not std::filesystem::exists(folder))
         throw Error(cat("Sequence file path does not exist: ", folder.string()));
     else if (not std::filesystem::is_directory(folder))
@@ -297,6 +306,21 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
     }
 
     return SequenceName{ name };
+}
+
+void SequenceManager::remove_sequence(UniqueId unique_id) const
+{
+    const auto sequences = list_sequences();
+    const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
+    const auto path = path_ / seq_on_disk.path;
+
+    std::error_code error;
+    std::filesystem::remove(path, error);
+    if (error)
+    {
+        throw Error(cat("Cannot remove sequence folder ", path.string(), ": ",
+            error.message()));
+    }
 }
 
 void SequenceManager::rename_sequence(const SequenceName& old_name, UniqueId unique_id,

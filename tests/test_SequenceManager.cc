@@ -256,6 +256,26 @@ TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[Sequence
     REQUIRE_THROWS_AS(manager.load_sequence(UniqueId{}), Error);
 }
 
+TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
+{
+    const char* dir = "unit_test_files/remove_sequence_test";
+
+    if (std::filesystem::exists(dir))
+        std::filesystem::remove_all(dir);
+
+    std::filesystem::create_directories(dir);
+    SequenceManager manager{ dir };
+
+    Sequence seq1 = manager.create_sequence("First sequence", SequenceName{ "first" });
+    Sequence seq2 = manager.create_sequence("Second sequence", SequenceName{ "second" });
+
+    manager.remove_sequence(seq1.get_unique_id());
+
+    auto sequences = manager.list_sequences();
+    REQUIRE(sequences.size() == 1);
+    REQUIRE(sequences[0].name == SequenceName{ "second" });
+}
+
 TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
 {
     const char* dir = "unit_test_files/relabel_sequence_test";

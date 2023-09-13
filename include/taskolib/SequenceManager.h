@@ -155,6 +155,18 @@ public:
         const;
 
     /**
+     * Remove a sequence from the base folder.
+     *
+     * The sequence to be removed is identified by its unique ID.
+     *
+     * \param unique_id  the unique ID of the sequence
+     *
+     * \exception Error is thrown if the sequence cannot be found or if the removal of
+     *            the folder fails.
+     */
+    void remove_sequence(UniqueId unique_id) const;
+
+    /**
      * Change the machine-friendly name of a sequence on disk.
      *
      * The sequence to be renamed is identified by its unique ID and the old name.
@@ -211,6 +223,13 @@ private:
      * \exception Error is thrown if no unique ID can be found.
      */
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
+
+    /**
+     * Find the sequence with the given unique ID in the given list of sequences.
+     * \exception Error is thrown if the sequence cannot be found.
+     */
+    static SequenceOnDisk find_sequence_on_disk(UniqueId uid,
+        const std::vector<SequenceOnDisk>& sequences);
 
     /// Generate a machine-friendly sequence name from a human-readable label.
     static SequenceName make_sequence_name_from_label(gul14::string_view label);
