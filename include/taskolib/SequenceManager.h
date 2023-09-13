@@ -76,6 +76,23 @@ public:
     explicit SequenceManager(std::filesystem::path path);
 
     /**
+     * Create a copy of an existing sequence (from disk).
+     *
+     * This function loads an existing sequence (identified by its unique ID) from disk,
+     * assigns a new name (new_name) and a new random unique ID to it, and stores the new
+     * sequence in the base folder.
+     *
+     * \param original_uid  Unique ID of the original sequence
+     * \param new_name      Machine-friendly name of the copy
+     *
+     * \returns the copied sequence as if it had been loaded from disk.
+     *
+     * \exception Error is thrown if the original sequence cannot be found or if the new
+     *            sequence folder cannot be created.
+     */
+    Sequence copy_sequence(UniqueId original_uid, const SequenceName& new_name) const;
+
+    /**
      * Create an empty sequence on disk.
      *
      * The new sequence contains no steps and has a randomly assigned unique ID.
