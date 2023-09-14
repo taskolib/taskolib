@@ -131,15 +131,13 @@ public:
     std::vector<SequenceOnDisk> list_sequences() const;
 
     /**
-     * Load a sequence from the specified folder.
+     * Load a sequence from the base folder.
      *
-     * \param sequence_folder  path to the sequence folder to be loaded, relative to the
-     *                         base path
+     * \param unique_id  unique ID of the sequence to be loaded
      *
-     * \returns the deserialized sequence.
+     * \returns the loaded sequence.
      *
-     * \exception Error is thrown if the specified folder name is not valid or if it does
-     *            not contain a valid sequence.
+     * \exception Error is thrown if the sequence cannot be loaded.
      */
     Sequence load_sequence(UniqueId uid) const;
 
@@ -151,8 +149,8 @@ public:
      *
      * \param sequences  a list of sequences as obtained from list_sequences()
      */
-    Sequence load_sequence(UniqueId uid, const std::vector<SequenceOnDisk>& sequences)
-        const;
+    Sequence
+    load_sequence(UniqueId uid, const std::vector<SequenceOnDisk>& sequences) const;
 
     /**
      * Remove a sequence from the base folder.
