@@ -197,20 +197,20 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
     REQUIRE_THAT(sequences[2].path, EndsWith("]"));
     REQUIRE(sequences[2].name == SequenceName{ "test.seq.2" });
     REQUIRE(sequences[2].unique_id != 0_uid);
-
-    // check for loading sequence directories only (and not any arbritrary regular file)
-    REQUIRE_THROWS_AS(sm.load_sequence("some_weirdo_file[1234567890abcdef]"), Error);
 }
 
-TEST_CASE("SequenceManager: load_sequence() - Nonexistent folder", "[SequenceManager]")
+TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const char* dir = "unit_test_files/empty_sequence_folder";
 
-    // empty path
-    REQUIRE_THROWS_AS(manager.load_sequence(""), Error);
+    if (std::filesystem::exists(dir))
+        std::filesystem::remove_all(dir);
 
-    // folder 'sequence2' does not exist
-    REQUIRE_THROWS_AS(manager.load_sequence("sequence2"), Error);
+    std::filesystem::create_directories(dir);
+
+    SequenceManager manager{ dir };
+
+    REQUIRE_THROWS_AS(manager.load_sequence(UniqueId{}), Error);
 }
 
 TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
@@ -257,8 +257,6 @@ TEST_CASE("SequenceManager: store_sequence() - Filename format", "[SequenceManag
 
     if (std::filesystem::exists(temp_dir / seq_folder))
         std::filesystem::remove_all(temp_dir / seq_folder);
-
-    REQUIRE_THROWS_AS(manager.load_sequence(seq_folder), Error);
 
     Sequence sequence{ "", seq_name, seq_uid };
     sequence.push_back(Step{ Step::type_action });
@@ -325,7 +323,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Steps",
     SequenceManager sm{ "unit_test_files" };
     sm.store_sequence(seq);
 
-    Sequence load = sm.load_sequence(make_sequence_filename(seq));
+    Sequence load = sm.load_sequence(seq.get_unique_id());
 
     REQUIRE(load.get_label() == seq.get_label());
     REQUIRE(load.size() == seq.size());
@@ -363,7 +361,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UI
     REQUIRE(new_filenames.size() == 1);
     REQUIRE(new_filenames[0] == seq_folder);
 
-    Sequence deserialize_seq = manager.load_sequence(new_filenames[0]);
+    Sequence deserialize_seq = manager.load_sequence(sequence.get_unique_id());
     REQUIRE(sequence.get_label() == deserialize_seq.get_label());
     REQUIRE(sequence.get_name() == deserialize_seq.get_name());
     REQUIRE(sequence.get_unique_id() == deserialize_seq.get_unique_id());
@@ -388,7 +386,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Step setup",
 
     manager.store_sequence(seq);
 
-    Sequence seq_deserialized = manager.load_sequence(make_sequence_filename(seq));
+    Sequence seq_deserialized = manager.load_sequence(seq.get_unique_id());
 
     REQUIRE(seq_deserialized.get_step_setup_script() == step_setup_script);
 }
@@ -405,7 +403,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Indentation lev
 
     REQUIRE_NOTHROW(manager.store_sequence(sequence));
 
-    Sequence deserialize_seq = manager.load_sequence(make_sequence_filename(sequence));
+    Sequence deserialize_seq = manager.load_sequence(sequence.get_unique_id());
 
     REQUIRE(not deserialize_seq.empty());
     REQUIRE(deserialize_seq.size() == 3);
@@ -433,7 +431,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, ti
 
     manager.store_sequence(seq);
 
-    Sequence seq_deserialized = manager.load_sequence(make_sequence_filename(seq));
+    Sequence seq_deserialized = manager.load_sequence(seq.get_unique_id());
 
     REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
         == seq_deserialized.get_maintainers());
@@ -452,7 +450,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
     SECTION("Deserialize empty sequence (part 1)")
     {
         manager.store_sequence(seq);
-        REQUIRE_NOTHROW(manager.load_sequence(make_sequence_filename(seq)));
+        REQUIRE_NOTHROW(manager.load_sequence(seq.get_unique_id()));
     }
 
     SECTION("Deserialize empty sequence (part 2)")
@@ -463,7 +461,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
 
         manager.store_sequence(seq);
 
-        Sequence seq_deserialized = manager.load_sequence(make_sequence_filename(seq));
+        Sequence seq_deserialized = manager.load_sequence(seq.get_unique_id());
         REQUIRE(seq_deserialized.empty());
     }
 }

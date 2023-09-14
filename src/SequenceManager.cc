@@ -192,7 +192,7 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
                 new_folder_name, ": ", error.message()));
         }
 
-        auto seq = load_sequence(new_folder_name);
+        auto seq = load_sequence(unique_id);
         if (seq.get_label().empty()) // legacy sequences do not store the label in the lua file
         {
             seq.set_label(label);
@@ -205,21 +205,25 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
     return sequences;
 }
 
-Sequence SequenceManager::load_sequence(std::filesystem::path sequence_path) const
+Sequence SequenceManager::load_sequence(UniqueId uid) const
 {
-    if (sequence_path.empty())
-        throw Error("Cannot load sequence: Empty folder name");
+    return load_sequence(uid, list_sequences());
+}
 
-    const auto folder = path_ / sequence_path;
+Sequence SequenceManager::load_sequence(UniqueId uid,
+    const std::vector<SequenceOnDisk>& sequences) const
+{
+    const auto it = std::find_if(sequences.begin(), sequences.end(),
+        [uid](const auto& seq) { return seq.unique_id == uid; });
+
+    if (it == sequences.end())
+        throw Error(cat("Cannot load sequence: Unknown unique ID ", to_string(uid)));
+
+    const auto folder = path_ / it->path;
     if (not std::filesystem::exists(folder))
-    {
-        throw Error(gul14::cat("Sequence file path does not exist: ", folder.string()));
-    }
+        throw Error(cat("Sequence file path does not exist: ", folder.string()));
     else if (not std::filesystem::is_directory(folder))
-    {
-        throw Error(gul14::cat("File path to sequence is not a directory: ",
-            folder.string()));
-    }
+        throw Error(cat("Sequence file path is not a directory: ", folder.string()));
 
     SequenceInfo seq_info = get_sequence_info_from_filename(folder.filename().string());
     if (not seq_info.unique_id)

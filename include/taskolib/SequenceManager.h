@@ -124,7 +124,18 @@ public:
      * \exception Error is thrown if the specified folder name is not valid or if it does
      *            not contain a valid sequence.
      */
-    Sequence load_sequence(std::filesystem::path sequence_folder) const;
+    Sequence load_sequence(UniqueId uid) const;
+
+    /**
+     * \copydoc load_sequence(UniqueId)
+     *
+     * This overload allows to pass in a list of sequences to avoid having to examine the
+     * base path again:
+     *
+     * \param sequences  a list of sequences as obtained from list_sequences()
+     */
+    Sequence load_sequence(UniqueId uid, const std::vector<SequenceOnDisk>& sequences)
+        const;
 
     /**
      * Change the machine-friendly name of a sequence on disk.
