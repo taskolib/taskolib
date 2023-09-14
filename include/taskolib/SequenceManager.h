@@ -169,27 +169,24 @@ public:
     /**
      * Change the machine-friendly name of a sequence on disk.
      *
-     * The sequence to be renamed is identified by its unique ID and the old name.
+     * The sequence to be renamed is identified by its unique ID.
      *
-     * \param old_name   the original machine-friendly name of the sequence
      * \param unique_id  the unique ID of the sequence
      * \param new_name   the new machine-friendly name of the sequence
      *
      * \exception Error is thrown if the sequence cannot be found or if the renaming of
      *            the folder fails.
      */
-    void rename_sequence(const SequenceName& old_name, UniqueId unique_id,
-        const SequenceName& new_name) const;
+    void rename_sequence(UniqueId unique_id, const SequenceName& new_name) const;
 
     /**
      * Change the machine-friendly name of a sequence, both in a Sequence object and on
      * disk.
      *
-     * The sequence to be renamed is identified by the unique ID and machine-friendly name
-     * of the given Sequence object. The Sequence object is updated to reflect the new
-     * name.
+     * The sequence to be renamed is identified by the unique ID of the given Sequence
+     * object. The Sequence object is updated to reflect the new name.
      *
-     * \param sequence  the sequence to be relabeled
+     * \param sequence  the sequence to be renamed
      * \param new_name  the new machine-friendly name of the sequence
      *
      * \exception Error is thrown if the sequence cannot be found or if the renaming of

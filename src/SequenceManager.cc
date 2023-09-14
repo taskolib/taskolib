@@ -323,14 +323,14 @@ void SequenceManager::remove_sequence(UniqueId unique_id) const
     }
 }
 
-void SequenceManager::rename_sequence(const SequenceName& old_name, UniqueId unique_id,
-    const SequenceName& new_name) const
+void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& new_name)
+    const
 {
-    const auto old_folder_name = make_sequence_filename(old_name, unique_id);
-    const auto old_path = path_ / old_folder_name;
+    const auto sequences = list_sequences();
+    const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
 
-    const auto new_folder_name = make_sequence_filename(new_name, unique_id);
-    const auto new_path = path_ / new_folder_name;
+    const auto old_path = path_ / old_seq_on_disk.path;
+    const auto new_path = path_ / make_sequence_filename(new_name, unique_id);
 
     std::error_code error;
     std::filesystem::rename(old_path, new_path, error);
@@ -344,7 +344,7 @@ void SequenceManager::rename_sequence(const SequenceName& old_name, UniqueId uni
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
     const
 {
-    rename_sequence(sequence.get_name(), sequence.get_unique_id(), new_name);
+    rename_sequence(sequence.get_unique_id(), new_name);
     sequence.set_name(new_name);
 }
 
