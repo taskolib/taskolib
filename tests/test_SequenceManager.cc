@@ -290,11 +290,9 @@ TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
     REQUIRE(seq1.empty());
     REQUIRE(seq1.get_name() == SequenceName{ "first_after_rename" });
 
-    manager.rename_sequence(SequenceName{ "second" }, seq2.get_unique_id(),
-        SequenceName{ "second_after_rename" });
+    manager.rename_sequence(seq2.get_unique_id(), SequenceName{ "second_after_rename" });
 
-    REQUIRE_THROWS_AS(manager.rename_sequence(SequenceName{ "inexistent" }, 0_uid,
-        SequenceName{ "Bla" }), Error);
+    REQUIRE_THROWS_AS(manager.rename_sequence(0_uid, SequenceName{ "Bla" }), Error);
 
     auto sequences = manager.list_sequences();
     std::sort(sequences.begin(), sequences.end(),
