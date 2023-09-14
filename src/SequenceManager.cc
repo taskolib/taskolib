@@ -55,7 +55,6 @@ std::string extract_filename_step(const int number, int max_digits, const Step& 
     return ss.str();
 }
 
-/// Remove Step from the file system.
 void remove_path(const std::filesystem::path& folder)
 {
     try
@@ -245,24 +244,13 @@ Sequence SequenceManager::load_sequence(UniqueId uid,
     const auto seq_on_disk = find_sequence_on_disk(uid, sequences);
 
     const auto folder = path_ / seq_on_disk.path;
+
     if (not std::filesystem::exists(folder))
         throw Error(cat("Sequence file path does not exist: ", folder.string()));
     else if (not std::filesystem::is_directory(folder))
         throw Error(cat("Sequence file path is not a directory: ", folder.string()));
 
-    SequenceInfo seq_info = get_sequence_info_from_filename(folder.filename().string());
-    if (not seq_info.unique_id)
-    {
-        throw Error(cat("Cannot load sequence from '", folder.string(),
-            "': missing unique ID"));
-    }
-    if (not seq_info.name)
-    {
-        throw Error(cat("Cannot load sequence from '", folder.string(),
-            "': missing sequence name"));
-    }
-
-    Sequence seq{ seq_info.label, *seq_info.name, *seq_info.unique_id };
+    Sequence seq{ "", seq_on_disk.name, seq_on_disk.unique_id };
 
     load_sequence_parameters(folder, seq);
 
