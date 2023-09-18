@@ -303,7 +303,7 @@ void SequenceManager::remove_sequence(UniqueId unique_id) const
     const auto path = path_ / seq_on_disk.path;
 
     std::error_code error;
-    std::filesystem::remove(path, error);
+    std::filesystem::remove_all(path, error);
     if (error)
     {
         throw Error(cat("Cannot remove sequence folder ", path.string(), ": ",
