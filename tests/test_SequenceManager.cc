@@ -267,6 +267,9 @@ TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
     SequenceManager manager{ dir };
 
     Sequence seq1 = manager.create_sequence("First sequence", SequenceName{ "first" });
+    seq1.push_back(Step{ Step::type_action });
+    manager.store_sequence(seq1);
+
     Sequence seq2 = manager.create_sequence("Second sequence", SequenceName{ "second" });
 
     manager.remove_sequence(seq1.get_unique_id());
