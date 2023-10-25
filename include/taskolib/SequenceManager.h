@@ -30,9 +30,11 @@
 #include <vector>
 
 #include <gul14/string_view.h>
+#include <libgit4cpp/GitRepository.h>
 
 #include "taskolib/Sequence.h"
 #include "taskolib/UniqueId.h"
+
 
 namespace task {
 
@@ -90,7 +92,7 @@ public:
      * \exception Error is thrown if the original sequence cannot be found or if the new
      *            sequence folder cannot be created.
      */
-    Sequence copy_sequence(UniqueId original_uid, const SequenceName& new_name) const;
+    Sequence copy_sequence(UniqueId original_uid, const SequenceName& new_name);
 
     /**
      * Create an empty sequence on disk.
@@ -105,7 +107,7 @@ public:
      * \exception Error is thrown if the sequence folder cannot be created.
      */
     Sequence create_sequence(gul14::string_view label = "",
-        SequenceName name = SequenceName{}) const;
+        SequenceName name = SequenceName{});
 
     /**
      * Return the base path of the serialized sequences.
@@ -162,7 +164,7 @@ public:
      * \exception Error is thrown if the sequence cannot be found or if the removal of
      *            the folder fails.
      */
-    void remove_sequence(UniqueId unique_id) const;
+    void remove_sequence(UniqueId unique_id);
 
     /**
      * Change the machine-friendly name of a sequence on disk.
@@ -175,7 +177,7 @@ public:
      * \exception Error is thrown if the sequence cannot be found or if the renaming of
      *            the folder fails.
      */
-    void rename_sequence(UniqueId unique_id, const SequenceName& new_name) const;
+    void rename_sequence(UniqueId unique_id, const SequenceName& new_name);
 
     /**
      * Change the machine-friendly name of a sequence, both in a Sequence object and on
@@ -190,7 +192,7 @@ public:
      * \exception Error is thrown if the sequence cannot be found or if the renaming of
      *            the folder fails.
      */
-    void rename_sequence(Sequence& sequence, const SequenceName& new_name) const;
+    void rename_sequence(Sequence& sequence, const SequenceName& new_name);
 
     /**
      * Store the given sequence in a subfolder under the base directory of this object.
@@ -202,14 +204,18 @@ public:
      * consecutive number followed by the type of the step and the extension `'.lua'`.
      * The step number is zero-filled to allow alphanumerical sorting
      * (e.g. `step_01_action.lua`).
+     * This function use git.
      *
      * \param sequence  the sequence to be stored
      */
-    void store_sequence(const Sequence& sequence) const;
+    void store_sequence(const Sequence& sequence);
 
 private:
     /// Base path to the sequences.
     std::filesystem::path path_;
+
+    /// Git Repsoitory object
+    git::GitRepository git_repo_;
 
     /**
      * Create a random unique ID that does not collide with the ID of any sequence in the
@@ -220,6 +226,18 @@ private:
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
     /**
+     * Stage all files git can find in a repository.
+     * parameter dir and fileytpe are used as filter.
+     * To stage all, use dir_name = "" and filetype = ""
+     * filetype values: {"", "new file", "modified", "deleted",
+     * "renamed", "typechange", "untracked"}
+     * \param dir relative path to sequence from path_ as base
+     * \param filetype 
+     * \return commit message starting with a linebreak
+    */
+    std::string stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype);
+
+    /**
      * Find the sequence with the given unique ID in the given list of sequences.
      * \exception Error is thrown if the sequence cannot be found.
      */
@@ -228,6 +246,12 @@ private:
 
     /// Generate a machine-friendly sequence name from a human-readable label.
     static SequenceName make_sequence_name_from_label(gul14::string_view label);
+
+    /**
+     * private function to store a sequence without commit in git.
+     * \param sequence sequence object
+    */
+    void store_sequence_impl(const Sequence& sequence) const;
 };
 
 } // namespace task
