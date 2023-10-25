@@ -69,6 +69,8 @@ deps = [
     dependency('threads'),
     gul_dep.partial_dependency(compile_args : true, includes : true),
     lua_dep,
+    dependency('libgit4cpp'),
+
 ]
 
 lib = both_libraries(meson.project_name(),
@@ -100,6 +102,7 @@ taskolib_dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
     dependencies : [ deps, gul_dep, ],
+    
 )
 
 subdir('tests')

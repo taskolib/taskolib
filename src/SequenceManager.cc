@@ -32,6 +32,9 @@
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
 
+#include <libgit4cpp/GitRepository.h>
+#include <libgit4cpp/Error.h>
+
 using gul14::cat;
 
 namespace task {
@@ -94,14 +97,14 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
 } // anonymous namespace
 
 SequenceManager::SequenceManager(std::filesystem::path path)
-    : path_{ std::move(path) }
+    : path_{ std::move(path) }, git_repo_{path_}
 {
     if (path_.empty())
         throw Error("Base path name for sequences must not be empty");
 }
 
 Sequence
-SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name) const
+SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name)
 {
     const auto sequences = list_sequences();
     const UniqueId new_unique_id = create_unique_id(sequences);
@@ -111,13 +114,19 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
     sequence.set_unique_id(new_unique_id);
     sequence.set_name(new_name);
 
-    store_sequence(sequence);
+    store_sequence_impl(sequence);
+
+    // commit to local repository
+    const auto new_folder_name = make_sequence_filename(new_name, new_unique_id);
+    const auto commit_msg = stage_files_in_directory(new_folder_name, "");
+    if (commit_msg != "")
+        git_repo_.commit(gul14::cat("copy sequence:", commit_msg));
 
     return sequence;
 }
 
 Sequence
-SequenceManager::create_sequence(gul14::string_view label, SequenceName name) const
+SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -129,8 +138,8 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name) co
     std::filesystem::create_directory(new_path, error);
     if (error)
     {
-        throw Error(gul14::cat("Unable to create sequence folder ", new_path.string(),
-            ": ", error.message()));
+        throw Error(gul14::cat("Unable to create sequence folder '", new_path.string(),
+            "': ", error.message()));
     }
 
     return Sequence{ label, name, unique_id };
@@ -224,7 +233,7 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         if (seq.get_label().empty()) // legacy sequences do not store the label in the lua file
         {
             seq.set_label(label);
-            store_sequence(seq);
+            store_sequence_impl(seq);
         }
 
         sequences.push_back(SequenceOnDisk{ new_folder_name, name, unique_id });
@@ -296,8 +305,9 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
     return SequenceName{ name };
 }
 
-void SequenceManager::remove_sequence(UniqueId unique_id) const
+void SequenceManager::remove_sequence(UniqueId unique_id)
 {
+
     const auto sequences = list_sequences();
     const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
     const auto path = path_ / seq_on_disk.path;
@@ -309,13 +319,19 @@ void SequenceManager::remove_sequence(UniqueId unique_id) const
         throw Error(cat("Cannot remove sequence folder ", path.string(), ": ",
             error.message()));
     }
+
+    // commit to local repository
+    const auto commit_msg = stage_files_in_directory(seq_on_disk.path, "");
+    if (commit_msg != "")
+        git_repo_.commit(gul14::cat("remove sequence:", commit_msg));
+
 }
 
 void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& new_name)
-    const
 {
     const auto sequences = list_sequences();
     const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
+
 
     const auto old_path = path_ / old_seq_on_disk.path;
     const auto new_path = path_ / make_sequence_filename(new_name, unique_id);
@@ -327,16 +343,34 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
         throw Error(gul14::cat("Cannot rename folder ", old_path.string(),
             " to ", new_path.string(), ": ", error.message()));
     }
+
+    // commit to local repository
+    auto commit_msg = stage_files_in_directory(old_seq_on_disk.path, "");
+    commit_msg += stage_files_in_directory(make_sequence_filename(new_name, unique_id), "");
+    if (commit_msg != "")
+        git_repo_.commit(gul14::cat("Rename ", old_seq_on_disk.name.string(), " to ", new_name.string(), ":", commit_msg));
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
-    const
 {
     rename_sequence(sequence.get_unique_id(), new_name);
     sequence.set_name(new_name);
 }
 
-void SequenceManager::store_sequence(const Sequence& seq) const
+void SequenceManager::store_sequence(const Sequence& seq)
+{
+    store_sequence_impl(seq);
+
+    // detect what has changed in the sequence
+    const auto dir_name = make_sequence_filename(seq.get_name(), seq.get_unique_id());
+    const auto commit_msg = stage_files_in_directory(dir_name, "");
+
+    // commit to local repository
+    if (commit_msg != "")
+        git_repo_.commit(gul14::cat("change sequence:", commit_msg));
+}
+
+void SequenceManager::store_sequence_impl(const Sequence& seq) const
 {
     const int max_digits = int( seq.size() / 10 ) + 1;
     const auto seq_path = path_ / make_sequence_filename(seq);
@@ -356,6 +390,57 @@ void SequenceManager::store_sequence(const Sequence& seq) const
     unsigned int idx = 0;
     for (const auto& step: seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
+}
+
+std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype)
+{
+
+    // detect what has changed in the sequence
+    std::string git_msg{""};
+    auto stats = git_repo_.status();
+    for(const auto& elm: stats)
+    {
+        
+        // filter for changes in sequence
+        if (gul14::starts_with(elm.path_name, dir_name.string()))
+        {
+            if (elm.changes == "new file" and (filetype == elm.changes or filetype == ""))
+            {
+                git_msg += gul14::cat("\n", "- create '",elm.path_name, "'");
+            }
+            else if (elm.changes == "modified" and (filetype == elm.changes or filetype == ""))
+            {
+                git_msg += gul14::cat("\n", "- modify '",elm.path_name, "'");
+            }
+            //TODO: file number is changing. Figure out which file is deleted
+            //INFO: Maybe git figures it out on its own and tag it with "renamed"
+            else if (elm.changes == "deleted" and (filetype == elm.changes or filetype == ""))
+            {
+                git_msg += gul14::cat("\n", "- delete '",elm.path_name, "'");
+                git_repo_.remove_files({elm.path_name});
+                continue;
+            }
+            else if (elm.changes == "renamed" and (filetype == elm.changes or filetype == ""))
+            {
+                git_msg += gul14::cat("\n", "- rename '",elm.path_name, "'");
+            }
+            else if (elm.changes == "typechange" and (filetype == elm.changes or filetype == ""))
+            {
+                git_msg += gul14::cat("\n", "- '",elm.path_name, "' has its type change");
+            }
+            else if (elm.changes == "untracked" and (filetype == elm.changes or filetype == ""))
+            {
+                const auto elmpath = (std::filesystem::path) elm.path_name;
+                git_msg += gul14::cat("\n", "- Add ",elmpath.filename().string(), " from new sequence '", dir_name.string(), "'");
+            }
+            else continue;
+
+            auto err_index = git_repo_.add_files({elm.path_name});
+            if (err_index.size() > 0)
+                throw git::Error(gul14::cat("ERROR:", elm.path_name, " was not staged."));
+        }
+    }
+    return git_msg;
 }
 
 } // namespace task
