@@ -32,6 +32,8 @@
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
 
+#include <libgit4cpp/GitRepository.h>
+
 using gul14::cat;
 
 namespace task {
@@ -94,30 +96,36 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
 } // anonymous namespace
 
 SequenceManager::SequenceManager(std::filesystem::path path)
-    : path_{ std::move(path) }
+    : path_{ std::move(path) }, gl_{path_}
 {
     if (path_.empty())
         throw Error("Base path name for sequences must not be empty");
 }
 
 Sequence
-SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name) const
+SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name)
 {
     const auto sequences = list_sequences();
     const UniqueId new_unique_id = create_unique_id(sequences);
 
     Sequence sequence = load_sequence(original_uid, sequences);
+    const std::string& old_name = sequence.get_name().string();
 
     sequence.set_unique_id(new_unique_id);
     sequence.set_name(new_name);
 
-    store_sequence(sequence);
+    _store_sequence(sequence);
+
+    // commit to local repository
+    const auto new_folder_name = make_sequence_filename(new_name, new_unique_id);
+    gl_.add_files({gul14::cat(new_folder_name, "/*")});
+    gl_.commit(gul14::cat("Copy ", old_name, " to ", new_name.string()));
 
     return sequence;
 }
 
 Sequence
-SequenceManager::create_sequence(gul14::string_view label, SequenceName name) const
+SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -132,6 +140,10 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name) co
         throw Error(gul14::cat("Unable to create sequence folder ", new_path.string(),
             ": ", error.message()));
     }
+
+    // commit to local repository
+    gl_.add_files({gul14::cat(new_folder_name, "/*")});
+    gl_.commit(gul14::cat("Create new sequence ", name.string()));
 
     return Sequence{ label, name, unique_id };
 }
@@ -224,7 +236,7 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         if (seq.get_label().empty()) // legacy sequences do not store the label in the lua file
         {
             seq.set_label(label);
-            store_sequence(seq);
+            _store_sequence(seq);
         }
 
         sequences.push_back(SequenceOnDisk{ new_folder_name, name, unique_id });
@@ -296,7 +308,7 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
     return SequenceName{ name };
 }
 
-void SequenceManager::remove_sequence(UniqueId unique_id) const
+void SequenceManager::remove_sequence(UniqueId unique_id)
 {
     const auto sequences = list_sequences();
     const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
@@ -312,10 +324,10 @@ void SequenceManager::remove_sequence(UniqueId unique_id) const
 }
 
 void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& new_name)
-    const
 {
     const auto sequences = list_sequences();
     const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
+
 
     const auto old_path = path_ / old_seq_on_disk.path;
     const auto new_path = path_ / make_sequence_filename(new_name, unique_id);
@@ -327,16 +339,68 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
         throw Error(gul14::cat("Cannot rename folder ", old_path.string(),
             " to ", new_path.string(), ": ", error.message()));
     }
+
+    // commit to local repository
+    gl_.add_files({gul14::cat((const std::string&) new_path, "/*")});
+    gl_.commit(gul14::cat("Rename ", old_seq_on_disk.name.string(), " to ", new_name.string()));
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
-    const
 {
     rename_sequence(sequence.get_unique_id(), new_name);
     sequence.set_name(new_name);
 }
 
-void SequenceManager::store_sequence(const Sequence& seq) const
+void SequenceManager::store_sequence(const Sequence& seq)
+{
+    _store_sequence(seq);
+
+    // detect what has changed in the sequence
+    const auto dir_name = make_sequence_filename(seq.get_name(), seq.get_unique_id());
+    std::string git_msg{"Store changes:"};
+    auto stats = gl_.status();
+    for(const auto& elm: stats)
+    {
+        // filter for changes in sequence
+        if (gul14::starts_with(elm.path_name, (std::string) (path_ / dir_name)))
+        {
+            if (elm.changes == "new file")
+            {
+                gl_.add_files({elm.path_name});
+                git_msg += gul14::cat("\n", "- create ",elm.path_name);
+            }
+            else if (elm.changes == "modified")
+            {
+                gl_.add_files({elm.path_name});
+                git_msg += gul14::cat("\n", "- modify ",elm.path_name);
+            }
+            //TODO: file number is changing. Figure out which file is deleted
+            //INFO: Maybe git figures it out on its own and tag it with "renamed"
+            else if (elm.changes == "deleted")
+            {
+                gl_.add_files({elm.path_name});
+                git_msg += gul14::cat("\n", "- delete ",elm.path_name);
+            }
+            //TODO: previous filename
+            else if (elm.changes == "renamed")
+            {
+                gl_.add_files({elm.path_name});
+                git_msg += gul14::cat("\n", "- rename ",elm.path_name);
+            }
+            else if (elm.changes == "typechange")
+            {
+                gl_.add_files({elm.path_name});
+                git_msg += gul14::cat("\n", "- ",elm.path_name, " has its type change");
+            }
+            //TODO: What to do with untracked files  
+        }
+    }
+
+    // commit to local repository
+    gl_.commit(git_msg);
+}
+
+void SequenceManager::_store_sequence(const Sequence& seq) const
 {
     const int max_digits = int( seq.size() / 10 ) + 1;
     const auto seq_path = path_ / make_sequence_filename(seq);

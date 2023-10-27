@@ -34,6 +34,9 @@
 #include "taskolib/Sequence.h"
 #include "taskolib/UniqueId.h"
 
+#include <libgit4cpp/GitRepository.h>
+
+
 namespace task {
 
 /**
@@ -90,7 +93,7 @@ public:
      * \exception Error is thrown if the original sequence cannot be found or if the new
      *            sequence folder cannot be created.
      */
-    Sequence copy_sequence(UniqueId original_uid, const SequenceName& new_name) const;
+    Sequence copy_sequence(UniqueId original_uid, const SequenceName& new_name);
 
     /**
      * Create an empty sequence on disk.
@@ -105,7 +108,7 @@ public:
      * \exception Error is thrown if the sequence folder cannot be created.
      */
     Sequence create_sequence(gul14::string_view label = "",
-        SequenceName name = SequenceName{}) const;
+        SequenceName name = SequenceName{});
 
     /**
      * Return the base path of the serialized sequences.
@@ -162,7 +165,7 @@ public:
      * \exception Error is thrown if the sequence cannot be found or if the removal of
      *            the folder fails.
      */
-    void remove_sequence(UniqueId unique_id) const;
+    void remove_sequence(UniqueId unique_id);
 
     /**
      * Change the machine-friendly name of a sequence on disk.
@@ -175,7 +178,7 @@ public:
      * \exception Error is thrown if the sequence cannot be found or if the renaming of
      *            the folder fails.
      */
-    void rename_sequence(UniqueId unique_id, const SequenceName& new_name) const;
+    void rename_sequence(UniqueId unique_id, const SequenceName& new_name);
 
     /**
      * Change the machine-friendly name of a sequence, both in a Sequence object and on
@@ -190,7 +193,7 @@ public:
      * \exception Error is thrown if the sequence cannot be found or if the renaming of
      *            the folder fails.
      */
-    void rename_sequence(Sequence& sequence, const SequenceName& new_name) const;
+    void rename_sequence(Sequence& sequence, const SequenceName& new_name);
 
     /**
      * Store the given sequence in a subfolder under the base directory of this object.
@@ -205,11 +208,14 @@ public:
      *
      * \param sequence  the sequence to be stored
      */
-    void store_sequence(const Sequence& sequence) const;
+    void store_sequence(const Sequence& sequence);
 
 private:
     /// Base path to the sequences.
     std::filesystem::path path_;
+
+    /// Git Repsoitory object
+    git::GitRepository gl_;
 
     /**
      * Create a random unique ID that does not collide with the ID of any sequence in the
@@ -228,6 +234,8 @@ private:
 
     /// Generate a machine-friendly sequence name from a human-readable label.
     static SequenceName make_sequence_name_from_label(gul14::string_view label);
+
+    void _store_sequence(const Sequence& sequence) const;
 };
 
 } // namespace task
