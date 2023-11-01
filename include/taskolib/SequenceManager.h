@@ -226,6 +226,14 @@ private:
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
     /**
+     * Commit chosen changes of sequences to the local git repository.
+     * \param commit_msg: commit message
+     * \param files: list of files to be staged. path is relative to sequence directory. No regex allowed.
+     * \exception an exception is thrown if not all files could be staged.
+    */
+   void stage_and_commit_files(std::string commit_msg, std::vector<std::filesystem::path> files);
+
+    /**
      * Find the sequence with the given unique ID in the given list of sequences.
      * \exception Error is thrown if the sequence cannot be found.
      */
