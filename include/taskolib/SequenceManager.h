@@ -225,6 +225,14 @@ private:
      */
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
+
+    /**
+     * Stage all files git can find in a repository
+     * \param dir relative path to sequence from path_ as base
+     * \return commit message
+    */
+    std::string stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype);
+
     /**
      * Commit chosen changes of sequences to the local git repository.
      * \param commit_msg: commit message
