@@ -110,7 +110,6 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
     const UniqueId new_unique_id = create_unique_id(sequences);
 
     Sequence sequence = load_sequence(original_uid, sequences);
-    const std::string& old_name = sequence.get_name().string();
 
     sequence.set_unique_id(new_unique_id);
     sequence.set_name(new_name);
@@ -120,7 +119,8 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
     // commit to local repository
     const auto new_folder_name = make_sequence_filename(new_name, new_unique_id);
     const auto commit_msg = stage_files_in_directory(new_folder_name, "");
-    gl_.commit(commit_msg);
+    if (commit_msg != "")
+        gl_.commit(gul14::cat("copy sequence:", commit_msg));
 
     return sequence;
 }
@@ -143,8 +143,9 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
     }
 
     // commit to local repository
-    const auto commit_msg = stage_files_in_directory(new_folder_name, "");
-    gl_.commit(commit_msg);
+    // TODO: braucht man nicht, da keine Datei erstellt wird
+    //const auto commit_msg = stage_files_in_directory(new_folder_name, "");
+    //gl_.commit(commit_msg);
 
     return Sequence{ label, name, unique_id };
 }
@@ -328,7 +329,8 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
 
     // commit to local repository
     const auto commit_msg = stage_files_in_directory(seq_on_disk.path, "");
-    gl_.commit(commit_msg);
+    if (commit_msg != "")
+        gl_.commit(gul14::cat("remove sequence:", commit_msg));
 
 }
 
@@ -352,7 +354,8 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
     // commit to local repository
     auto commit_msg = stage_files_in_directory(old_seq_on_disk.path, "");
     commit_msg += stage_files_in_directory(make_sequence_filename(new_name, unique_id), "");
-    gl_.commit(gul14::cat("Rename ", old_seq_on_disk.name.string(), " to ", new_name.string(), "\n", commit_msg));
+    if (commit_msg != "")
+        gl_.commit(gul14::cat("Rename ", old_seq_on_disk.name.string(), " to ", new_name.string(), ":", commit_msg));
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
@@ -367,10 +370,11 @@ void SequenceManager::store_sequence(const Sequence& seq)
 
     // detect what has changed in the sequence
     const auto dir_name = make_sequence_filename(seq.get_name(), seq.get_unique_id());
-    const auto git_msg = stage_files_in_directory(dir_name, "");
+    const auto commit_msg = stage_files_in_directory(dir_name, "");
 
     // commit to local repository
-    gl_.commit(git_msg);
+    if (commit_msg != "")
+        gl_.commit(gul14::cat("change sequence:", commit_msg));
 }
 
 void SequenceManager::_store_sequence(const Sequence& seq) const
@@ -395,23 +399,11 @@ void SequenceManager::_store_sequence(const Sequence& seq) const
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 }
 
-void SequenceManager::stage_and_commit_files(std::string commit_msg, std::vector<std::filesystem::path> files)
-{
-    std::vector<int> err_index = gl_.add_files(files);
-    if (err_index.size() > 0)
-    {
-        std::string err_msg = "Following files were not added (index): ";
-        for (auto elm: err_index) err_msg += std::to_string(elm);
-        throw git::Error(err_msg);
-    }
-    gl_.commit(commit_msg);
-}
-
 std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype)
 {
 
     // detect what has changed in the sequence
-    std::string git_msg{"Store changes:"};
+    std::string git_msg{""};
     auto stats = gl_.status();
     for(const auto& elm: stats)
     {
@@ -451,13 +443,10 @@ std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_
 
             auto err_index = gl_.add_files({elm.path_name});
             if (err_index.size() > 0)
-            {
-                std::string err_msg = "Following files were not added (index): ";
-                for (auto elm: err_index) err_msg += gul14::cat(std::to_string(elm), ", ");
-                throw git::Error(err_msg);
-            } 
+                throw git::Error(gul14::cat("ERROR:", elm.path_name, " was not staged."));
         }
     }
+    return git_msg;
 }
 
 } // namespace task
