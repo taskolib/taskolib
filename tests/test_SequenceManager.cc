@@ -30,10 +30,13 @@
 #include <vector>
 
 #include <gul14/catch.h>
+#include<gul14/substring_checks.h>
+#include <libgit4cpp/GitRepository.h>
 
 #include "internals.h"
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
+
 
 using namespace Catch::Matchers;
 using namespace std::literals;
@@ -528,4 +531,189 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
         Sequence seq_deserialized = manager.load_sequence(seq.get_unique_id());
         REQUIRE(seq_deserialized.empty());
     }
+}
+
+
+TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
+{
+    SequenceManager manager{ temp_dir};
+
+
+    SECTION("Create and store sequence")
+    {
+        Sequence seq{ "git Sequence 1",  SequenceName{ "git_sequence_1" }, UniqueId{ 0xabcdef123456 } };
+
+        Step step_01{Step::type_while};
+        step_01.set_label("while");
+        step_01.set_script("return i < 10");
+
+        seq.push_back(step_01);
+
+
+        manager.store_sequence(seq);
+
+        // create object here so that manager.store_sequence throws error
+        // if init repository did not work
+        git::GitRepository gl{temp_dir};
+
+        const std::string& expected_msg = "";
+        const auto& last_msg = gl.get_last_commit_message();
+        REQUIRE(expected_msg == last_msg);
+
+
+        // use raw repository to access status
+        const auto stats = gl.status();
+        REQUIRE(stats.size() != 0);
+        bool seq_exists = false;
+        for(const auto& elm: stats)
+        {
+            if (gul14::starts_with(elm.path_name, "git_sequence_1"))
+            {
+                seq_exists = true;
+
+                // if staging did not work: 
+                //      elm.handling == "untracked"
+                //      elm.changes == "untracked"
+                // if commit did not work
+                //      elm.handling == "staged"
+                //      elm.changes == "new file"
+                REQUIRE(elm.handling == "unchanged");
+                REQUIRE(elm.changes == "unchanged");
+
+            }
+        }
+        // check if created sequence is at least indexed by git
+        REQUIRE(seq_exists);
+    }
+
+    SECTION("copy sequence")
+    {
+        // find sequence
+        UniqueId uID{0};
+        for (auto elm: manager.list_sequences())
+        {
+            if (elm.name == SequenceName{"git_sequence_1"}) uID = elm.unique_id;
+        }
+        REQUIRE(uID == UniqueId{0xabcdef123456});
+
+        manager.copy_sequence(UniqueId{0xabcdef123456}, SequenceName{"git_sequence_2"});
+
+        // create object here so that manager.store_sequence throws error
+        // if init repository did not work
+        git::GitRepository gl{temp_dir};
+
+        const std::string& expected_msg = "";
+        const auto& last_msg = gl.get_last_commit_message();
+        REQUIRE(expected_msg == last_msg);
+
+        // use raw repository to access status
+        const auto stats = gl.status();
+        REQUIRE(stats.size() != 0);
+        bool seq_exists = false;
+        for(const auto& elm: stats)
+        {
+            if (gul14::starts_with(elm.path_name, "git_sequence_2"))
+            {
+                seq_exists = true;
+
+                // if staging did not work: 
+                //      elm.handling == "untracked"
+                //      elm.changes == "untracked"
+                // if commit did not work
+                //      elm.handling == "staged"
+                //      elm.changes == "new file"
+                REQUIRE(elm.handling == "unchanged");
+                REQUIRE(elm.changes == "unchanged");
+
+            }
+        }
+        // check if created sequence is at least indexed by git
+        REQUIRE(seq_exists);
+
+
+    }
+
+    SECTION("rename sequence")
+    {
+        // find sequence
+        UniqueId uID{0};
+        for (auto elm: manager.list_sequences())
+        {
+            if (elm.name == SequenceName{"git_sequence_2"}) uID = elm.unique_id;
+        }
+        REQUIRE(uID != UniqueId{0});
+
+
+        manager.rename_sequence(uID, SequenceName{"git_sequence_3"});
+
+        // create object here so that manager.store_sequence throws error
+        // if init repository did not work
+        git::GitRepository gl{temp_dir};
+
+        const std::string& expected_msg = "";
+        const auto& last_msg = gl.get_last_commit_message();
+        REQUIRE(expected_msg == last_msg);
+
+        // use raw repository to access status
+        const auto stats = gl.status();
+        REQUIRE(stats.size() != 0);
+        bool seq_exists = false;
+        for(const auto& elm: stats)
+        {
+            if (gul14::starts_with(elm.path_name, "git_sequence_3"))
+            {
+                seq_exists = true;
+
+                // if staging did not work: 
+                //      elm.handling == "untracked"
+                //      elm.changes == "untracked"
+                // if commit did not work
+                //      elm.handling == "staged"
+                //      elm.changes == "new file"
+                REQUIRE(elm.handling == "unchanged");
+                REQUIRE(elm.changes == "unchanged");
+
+            }
+        }
+        // check if created sequence is at least indexed by git
+        REQUIRE(seq_exists);
+
+    }
+
+    SECTION("remove sequence")
+    {
+        manager.remove_sequence(UniqueId{ 0xabcdef123456 });
+
+        // create object here so that manager.store_sequence throws error
+        // if init repository did not work
+        git::GitRepository gl{temp_dir};
+
+        const std::string& expected_msg = "";
+        const auto& last_msg = gl.get_last_commit_message();
+        REQUIRE(expected_msg == last_msg);
+
+        // use raw repository to access status
+        const auto stats = gl.status();
+        bool seq_exists = false;
+        for(const auto& elm: stats)
+        {
+            if (gul14::starts_with(elm.path_name, "git_sequence_1"))
+            {
+                seq_exists = true;
+
+                // if staging did not work: 
+                //      elm.handling == "untracked"
+                //      elm.changes == "untracked"
+                // if commit did not work
+                //      elm.handling == "staged"
+                //      elm.changes == "new file"
+                REQUIRE(elm.handling == "unchanged");
+                REQUIRE(elm.changes == "unchanged");
+
+            }
+        }
+        // check if sequence got removed from index
+        REQUIRE(! seq_exists);
+    }
+
 }
