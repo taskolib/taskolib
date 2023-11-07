@@ -75,12 +75,14 @@ std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path
 
 TEST_CASE("SequenceManager: Constructor with path", "[SequenceManager]")
 {
+    std::filesystem::remove_all("./another/path/to/sequences");
     SequenceManager sm{"./another/path/to/sequences"};
     REQUIRE(sm.get_path() == "./another/path/to/sequences");
 }
 
 TEST_CASE("SequenceManager: Move constructor", "[SequenceManager]")
 {
+    std::filesystem::remove_all("unit_test_files");
     SequenceManager s{SequenceManager("unit_test_files")};
     REQUIRE(s.get_path() == "unit_test_files");
 }
@@ -167,6 +169,10 @@ TEST_CASE("SequenceManager: create_sequence()", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 {
+    const std::string root = "unit_test_files/sequences";
+    if (std::filesystem::exists(root))
+    std::filesystem::remove_all(root);
+
     // prepare first sequence for test
     Step step_1_01{Step::type_while};
     step_1_01.set_label("while");
@@ -193,12 +199,7 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
     seq_2.push_back(step_1_01);
     seq_2.push_back(step_1_02);
 
-
-    const std::string root = "unit_test_files/sequences";
     SequenceManager manager{ root };
-
-    if (std::filesystem::exists(root))
-        std::filesystem::remove_all(root);
 
     manager.store_sequence(seq_1);
     manager.store_sequence(seq_2);
@@ -536,11 +537,13 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
 
 TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir};
-
 
     SECTION("Create and store sequence")
     {
+            // clean surrounding
+        std::filesystem::remove_all(temp_dir);
+        SequenceManager manager{ temp_dir};
+
         Sequence seq{ "git Sequence 1",  SequenceName{ "git_sequence_1" }, UniqueId{ 0xabcdef123456 } };
 
         Step step_01{Step::type_while};
@@ -556,7 +559,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // if init repository did not work
         git::GitRepository gl{temp_dir};
 
-        const std::string& expected_msg = "";
+        const std::string& expected_msg = "change sequence:\n- Add sequence.lua from new sequence 'git_sequence_1[0000abcdef123456]'\n- Add step_1_while.lua from new sequence 'git_sequence_1[0000abcdef123456]'";
         const auto& last_msg = gl.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -586,8 +589,59 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         REQUIRE(seq_exists);
     }
 
+    SECTION("change and store sequence (step_setup)")
+    {
+        SequenceManager manager{ temp_dir};
+
+        auto seq = manager.load_sequence(UniqueId{ 0xabcdef123456 });
+
+        const auto step_setup_script =
+        R"(
+        a = 'Bob'
+        function test(name)
+            return name .. ' with some funky stuff!'
+        end
+        b = test('Alice') \t\b\b  c = 4)";
+
+    seq.set_step_setup_script(step_setup_script);
+
+    manager.store_sequence(seq);
+
+    git::GitRepository gl{temp_dir};
+
+        const std::string& expected_msg = "change sequence:\n- modify 'git_sequence_1[0000abcdef123456]/sequence.lua'";
+        const auto& last_msg = gl.get_last_commit_message();
+        REQUIRE(expected_msg == last_msg);
+
+        // use raw repository to access status
+        const auto stats = gl.status();
+        REQUIRE(stats.size() != 0);
+        bool seq_exists = false;
+        for(const auto& elm: stats)
+        {
+            if (gul14::starts_with(elm.path_name, "git_sequence_1[0000abcdef123456]/sequence.lua"))
+            {
+                seq_exists = true;
+
+                // if staging did not work: 
+                //      elm.handling == "untracked"
+                //      elm.changes == "untracked"
+                // if commit did not work
+                //      elm.handling == "staged"
+                //      elm.changes == "new file"
+                REQUIRE(elm.handling == "unchanged");
+                REQUIRE(elm.changes == "unchanged");
+
+            }
+        }
+        // check if created sequence is at least indexed by git
+        REQUIRE(seq_exists);
+    }
+
     SECTION("copy sequence")
     {
+        SequenceManager manager{ temp_dir};
+
         // find sequence
         UniqueId uID{0};
         for (auto elm: manager.list_sequences())
@@ -602,7 +656,17 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // if init repository did not work
         git::GitRepository gl{temp_dir};
 
-        const std::string& expected_msg = "";
+                // find sequence
+        std::filesystem::path seq_name{""};
+        for (auto elm: manager.list_sequences())
+        {
+            if (elm.name == SequenceName{"git_sequence_2"}) seq_name = elm.path;
+        }
+        REQUIRE(seq_name != "");
+
+        const std::string& expected_msg = gul14::cat("copy sequence:\n- Add sequence.lua from new sequence '",
+                                                     seq_name.string(), "'\n- Add step_1_while.lua from new sequence '",
+                                                     seq_name.string(), "'");
         const auto& last_msg = gl.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -635,22 +699,41 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("rename sequence")
     {
+        SequenceManager manager{ temp_dir};
+
         // find sequence
         UniqueId uID{0};
+        std::filesystem::path seq2{""};
         for (auto elm: manager.list_sequences())
         {
-            if (elm.name == SequenceName{"git_sequence_2"}) uID = elm.unique_id;
+            if (elm.name == SequenceName{"git_sequence_2"})
+            {
+                uID = elm.unique_id;
+                seq2 = elm.path;
+            }
         }
         REQUIRE(uID != UniqueId{0});
+        REQUIRE(seq2 != "");
 
 
         manager.rename_sequence(uID, SequenceName{"git_sequence_3"});
 
-        // create object here so that manager.store_sequence throws error
-        // if init repository did not work
+        // find sequence paths
+        std::filesystem::path seq3{""};
+        for (auto elm: manager.list_sequences())
+        {
+            
+            if (elm.name == SequenceName{"git_sequence_3"}) seq3 = elm.path;
+        }
+        REQUIRE(seq3 != "");
+
         git::GitRepository gl{temp_dir};
 
-        const std::string& expected_msg = "";
+        const std::string& expected_msg = gul14::cat("Rename git_sequence_2 to git_sequence_3:\n",
+                                                     "- delete '", seq2.string(), "/sequence.lua'\n",
+                                                     "- delete '", seq2.string(), "/step_1_while.lua'\n"
+                                                     "- Add sequence.lua from new sequence '", seq3.string(), "'\n"
+                                                     "- Add step_1_while.lua from new sequence '", seq3.string(), "'");
         const auto& last_msg = gl.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -682,13 +765,17 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("remove sequence")
     {
+        SequenceManager manager{ temp_dir};
+
         manager.remove_sequence(UniqueId{ 0xabcdef123456 });
 
         // create object here so that manager.store_sequence throws error
         // if init repository did not work
         git::GitRepository gl{temp_dir};
 
-        const std::string& expected_msg = "";
+        const std::string& expected_msg = gul14::cat("remove sequence:\n",
+                                                     "- delete 'git_sequence_1[0000abcdef123456]/sequence.lua'\n",
+                                                     "- delete 'git_sequence_1[0000abcdef123456]/step_1_while.lua'");
         const auto& last_msg = gl.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -697,20 +784,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (gul14::starts_with(elm.path_name, "git_sequence_1"))
-            {
-                seq_exists = true;
-
-                // if staging did not work: 
-                //      elm.handling == "untracked"
-                //      elm.changes == "untracked"
-                // if commit did not work
-                //      elm.handling == "staged"
-                //      elm.changes == "new file"
-                REQUIRE(elm.handling == "unchanged");
-                REQUIRE(elm.changes == "unchanged");
-
-            }
+            REQUIRE(! gul14::starts_with(elm.path_name, "git_sequence_1"));
         }
         // check if sequence got removed from index
         REQUIRE(! seq_exists);

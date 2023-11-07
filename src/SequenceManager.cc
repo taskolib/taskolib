@@ -317,8 +317,6 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
     const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
     const auto path = path_ / seq_on_disk.path;
 
-    gl_.remove_directory(seq_on_disk.path);
-
     std::error_code error;
     std::filesystem::remove_all(path, error);
     if (error)
@@ -413,26 +411,28 @@ std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_
         {
             if (elm.changes == "new file" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- create ",elm.path_name);
+                git_msg += gul14::cat("\n", "- create '",elm.path_name, "'");
             }
             else if (elm.changes == "modified" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- modify ",elm.path_name);
+                git_msg += gul14::cat("\n", "- modify '",elm.path_name, "'");
             }
             //TODO: file number is changing. Figure out which file is deleted
             //INFO: Maybe git figures it out on its own and tag it with "renamed"
             else if (elm.changes == "deleted" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- delete ",elm.path_name);
+                git_msg += gul14::cat("\n", "- delete '",elm.path_name, "'");
+                gl_.remove_files({elm.path_name});
+                continue;
             }
             //TODO: previous filename
             else if (elm.changes == "renamed" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- rename ",elm.path_name);
+                git_msg += gul14::cat("\n", "- rename '",elm.path_name, "'");
             }
             else if (elm.changes == "typechange" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- ",elm.path_name, " has its type change");
+                git_msg += gul14::cat("\n", "- '",elm.path_name, "' has its type change");
             }
             else if (elm.changes == "untracked" and (filetype == elm.changes or filetype == ""))
             {
