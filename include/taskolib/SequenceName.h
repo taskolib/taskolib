@@ -37,7 +37,8 @@ namespace task {
  *
  * A sequence name has constraints on its length and the contained characters. It may be
  * at most max_length bytes long and it may only contain upper- and lowercase letters,
- * digits, the minus and underscore characters, and periods.
+ * digits, the minus and underscore characters, and periods. It may not start with a
+ * period.
  */
 class SequenceName
 {
