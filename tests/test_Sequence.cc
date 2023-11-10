@@ -110,11 +110,25 @@ TEST_CASE("Sequence: empty()", "[Sequence]")
 TEST_CASE("Sequence: erase()", "[Sequence]")
 {
     Sequence seq{ "test_sequence" };
-    seq.push_back(Step{Step::type_action});
-    seq.push_back(Step{Step::type_while});
-    seq.push_back(Step{Step::type_action});
-    seq.push_back(Step{Step::type_end});
-    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action}); // idx 0
+
+    Step step{ Step::type_while };
+    step.set_script("return true");
+    seq.push_back(step); // idx 1
+
+    step.set_type(Step::type_action);
+    step.set_script("not a valid Lua script");
+    seq.push_back(step); // idx 2
+
+    seq.push_back(Step{Step::type_end}); // idx 3
+    seq.push_back(Step{Step::type_action}); // idx 4
+
+    // Execute the script so that it fails at index 2 and the sequence stores error info
+    Context context;
+    auto err = seq.execute(context, nullptr);
+    REQUIRE(err.has_value() == true);
+    REQUIRE(err->get_index().has_value() == true);
+    REQUIRE(err->get_index().value() == 2);
 
     SECTION("erase first (iterator)")
     {
@@ -122,6 +136,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
         REQUIRE(Step::type_while == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 1);
     }
 
     SECTION("erase middle (iterator)")
@@ -130,6 +146,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
         REQUIRE(Step::type_end == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value() == true);
+        REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
     SECTION("erase last (iterator)")
@@ -138,6 +156,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
         REQUIRE(Step::type_action == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
     }
 
     SECTION("erase end (iterator)")
@@ -145,6 +165,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         seq.erase(seq.end());
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
     }
 
     SECTION("erase range from beginning (iterator)")
@@ -153,6 +175,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_action == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 0);
     }
 
     SECTION("erase range from middle (iterator)")
@@ -161,6 +185,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_end == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
     SECTION("erase range from end (iterator)")
@@ -169,6 +195,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_action == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
     SECTION("erase range from end (iterator)")
@@ -177,6 +205,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_end == (*erase).get_type());
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
     }
 }
 
