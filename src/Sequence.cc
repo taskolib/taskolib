@@ -274,8 +274,25 @@ void Sequence::enforce_invariants()
 
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 {
+    const auto erased_idx = std::distance(cbegin(), iter);
+
     throw_if_running();
     auto return_iter = steps_.erase(iter);
+
+    if (error_.has_value())
+    {
+        auto maybe_idx = error_->get_index();
+        if (maybe_idx.has_value())
+        {
+            const auto error_idx = *maybe_idx;
+
+            if (erased_idx == error_idx)
+                error_->set_index(gul14::nullopt);
+            else if (erased_idx < error_idx)
+                error_->set_index(error_idx - 1);
+        }
+    }
+
     enforce_invariants();
     return return_iter;
 }
@@ -283,8 +300,26 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
                                         Sequence::ConstIterator end)
 {
+    const auto erased_begin_idx = std::distance(cbegin(), begin);
+    const auto erased_end_idx = std::distance(cbegin(), end);
+
     throw_if_running();
     auto return_iter = steps_.erase(begin, end);
+
+    if (error_.has_value())
+    {
+        auto maybe_idx = error_->get_index();
+        if (maybe_idx.has_value())
+        {
+            const auto error_idx = *maybe_idx;
+
+            if (error_idx >= erased_begin_idx && error_idx < erased_end_idx)
+                error_->set_index(gul14::nullopt);
+            else if (error_idx >= erased_end_idx)
+                error_->set_index(error_idx - (erased_end_idx - erased_begin_idx));
+        }
+    }
+
     enforce_invariants();
     return return_iter;
 }
