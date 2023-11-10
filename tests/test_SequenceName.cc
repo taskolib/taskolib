@@ -46,6 +46,7 @@ TEST_CASE("SequenceName: Constructor from string", "[SequenceName]")
     REQUIRE_THROWS_AS(SequenceName{ "abcd#e" }, Error);
     REQUIRE_THROWS_AS(SequenceName{ "abcd(e)" }, Error);
     REQUIRE_THROWS_AS(SequenceName{ "abcd[e]" }, Error);
+    REQUIRE_THROWS_AS(SequenceName{ ".abcd" }, Error);
 }
 
 TEST_CASE("SequenceName: from_string()", "[SequenceName]")
@@ -60,6 +61,7 @@ TEST_CASE("SequenceName: from_string()", "[SequenceName]")
     REQUIRE(SequenceName::from_string("abcd#e") == gul14::nullopt);
     REQUIRE(SequenceName::from_string("abcd(e)") == gul14::nullopt);
     REQUIRE(SequenceName::from_string("abcd[e]") == gul14::nullopt);
+    REQUIRE(SequenceName::from_string(".abcd") == gul14::nullopt);
 }
 
 TEST_CASE("SequenceName: operator==()", "[SequenceName]")

@@ -24,9 +24,12 @@
 
 #include <gul14/cat.h>
 #include <gul14/escape.h>
+#include <gul14/substring_checks.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/SequenceName.h"
+
+using gul14::cat;
 
 namespace task {
 
@@ -38,16 +41,18 @@ gul14::string_view SequenceName::check_validity(gul14::string_view str)
 {
     if (str.size() > max_length)
     {
-        throw Error(gul14::cat("Sequence name '", str, "' is too long: ", str.size(),
+        throw Error(cat("Sequence name '", str, "' is too long: ", str.size(),
             " bytes > ", max_length, " bytes"));
     }
 
-    if (str.find_first_not_of(valid_characters)
-        != gul14::string_view::npos)
+    if (str.find_first_not_of(valid_characters) != gul14::string_view::npos)
     {
-        throw Error(gul14::cat("Sequence name '", gul14::escape(str),
+        throw Error(cat("Sequence name '", gul14::escape(str),
             "' contains invalid characters"));
     }
+
+    if (gul14::starts_with(str, '.'))
+        throw Error(cat("A sequence name may not start with a period ('", str, "'"));
 
     return str;
 }
