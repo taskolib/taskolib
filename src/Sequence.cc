@@ -219,6 +219,40 @@ Sequence::ConstIterator Sequence::check_syntax_for_while(Sequence::ConstIterator
     return block_end + 1;
 }
 
+void Sequence::correct_error_index_after_step_erased(Sequence::ConstIterator iter)
+{
+    if (not error_.has_value())
+        return;
+
+    auto maybe_idx = error_->get_index();
+    if (not maybe_idx.has_value())
+        return;
+
+    const auto erased_idx = std::distance(cbegin(), iter);
+    const auto error_idx = *maybe_idx;
+
+    if (erased_idx == error_idx)
+        error_->set_index(gul14::nullopt);
+    else if (erased_idx < error_idx)
+        error_->set_index(error_idx - 1);
+}
+
+void Sequence::correct_error_index_after_step_inserted(Sequence::ConstIterator iter)
+{
+    if (not error_.has_value())
+        return;
+
+    auto maybe_idx = error_->get_index();
+    if (not maybe_idx.has_value())
+        return;
+
+    const auto insert_idx = std::distance(cbegin(), iter);
+    const auto error_idx = *maybe_idx;
+
+    if (insert_idx <= error_idx)
+        error_->set_index(error_idx + 1);
+}
+
 void Sequence::enforce_consistency_of_disabled_flags() noexcept
 {
     auto step = steps_.begin();
@@ -274,25 +308,10 @@ void Sequence::enforce_invariants()
 
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 {
-    const auto erased_idx = std::distance(cbegin(), iter);
-
     throw_if_running();
     auto return_iter = steps_.erase(iter);
 
-    if (error_.has_value())
-    {
-        auto maybe_idx = error_->get_index();
-        if (maybe_idx.has_value())
-        {
-            const auto error_idx = *maybe_idx;
-
-            if (erased_idx == error_idx)
-                error_->set_index(gul14::nullopt);
-            else if (erased_idx < error_idx)
-                error_->set_index(error_idx - 1);
-        }
-    }
-
+    correct_error_index_after_step_erased(return_iter);
     enforce_invariants();
     return return_iter;
 }
@@ -660,26 +679,6 @@ void Sequence::indent()
                 "for each IF, TRY, WHILE)";
         }
     }
-}
-
-Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, const Step& step)
-{
-    throw_if_running();
-    throw_if_full();
-
-    auto return_iter = steps_.insert(iter, step);
-    enforce_invariants();
-    return return_iter;
-}
-
-Sequence::ConstIterator Sequence::insert(Sequence::ConstIterator iter, Step&& step)
-{
-    throw_if_running();
-    throw_if_full();
-
-    auto return_iter = steps_.insert(iter, std::move(step));
-    enforce_invariants();
-    return return_iter;
 }
 
 void Sequence::pop_back()
