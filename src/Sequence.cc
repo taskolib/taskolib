@@ -685,7 +685,10 @@ void Sequence::pop_back()
 {
     throw_if_running();
     if (not steps_.empty())
+    {
+        correct_error_index_after_step_erased(steps_.end() - 1);
         steps_.pop_back();
+    }
     enforce_invariants();
 }
 

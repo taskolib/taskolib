@@ -403,13 +403,25 @@ TEST_CASE("Sequence: modify()", "[Sequence]")
 TEST_CASE("Sequence: pop_back()", "[Sequence]")
 {
     Sequence seq{ "test_sequence" };
-    seq.push_back(Step{});
-    seq.push_back(Step{});
+    seq.push_back(Step{}); // idx 0
+
+    Step step{ Step::type_action };
+    step.set_script("not a valid Lua script");
+    seq.push_back(step); // idx 1
     REQUIRE(seq.empty() == false);
     REQUIRE(seq.size() == 2);
 
+    // Execute the script so that it fails at index 1 and the sequence stores error info
+    Context context;
+    auto err = seq.execute(context, nullptr);
+    REQUIRE(err.has_value() == true);
+    REQUIRE(err->get_index().has_value() == true);
+    REQUIRE(err->get_index().value() == 1);
+
     seq.pop_back();
     REQUIRE(seq.size() == 1);
+    REQUIRE(seq.get_error().has_value());
+    REQUIRE(seq.get_error()->get_index().has_value() == false);
 
     seq.pop_back();
     REQUIRE(seq.size() == 0);
