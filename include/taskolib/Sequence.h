@@ -31,12 +31,14 @@
 #include <functional>
 #include <limits>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <gul14/cat.h>
 #include <gul14/finalizer.h>
 #include <gul14/optional.h>
 #include <gul14/string_view.h>
+#include <gul14/traits.h>
 
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
@@ -413,9 +415,6 @@ public:
      */
     UniqueId get_unique_id() const noexcept { return unique_id_; }
 
-    /// Return true if the timeout is elapsed otherwise false.
-    bool is_timeout_elapsed() const { return timeout_trigger_.is_elapsed(); }
-
     /**
      * Insert the given Step into the sequence just before the specified iterator.
      *
@@ -429,22 +428,19 @@ public:
      * \exception Error is thrown if the sequence has no capacity for additional entries
      *            or if it is currently running.
      */
-    ConstIterator insert(ConstIterator iter, const Step& step);
+    template <typename StepType, std::enable_if_t<
+        std::is_same<gul14::remove_cvref_t<StepType>, Step>::value, bool> = true>
+    ConstIterator insert(ConstIterator iter, StepType step)
+    {
+        throw_if_running();
+        throw_if_full();
 
-    /**
-     * Insert the given Step into the sequence just before the specified iterator.
-     *
-     * This can trigger a reallocation that invalidates all iterators.
-     *
-     * \param iter  an iterator indicating the position before which the new step should
-     *              be inserted
-     * \param step  the Step to be inserted by moving
-     * \returns an iterator to the newly inserted Step
-     *
-     * \exception Error is thrown if the sequence has no capacity for additional entries
-     *            or if it is currently running.
-     */
-    ConstIterator insert(ConstIterator iter, Step&& step);
+        auto return_iter = steps_.insert(iter, std::forward<StepType>(step));
+
+        correct_error_index_after_step_inserted(return_iter);
+        enforce_invariants();
+        return return_iter;
+    }
 
     /**
      * Retrieve if the sequence is executed.
@@ -452,6 +448,9 @@ public:
      * \return true on executing otherwise false.
      */
     bool is_running() const noexcept { return is_running_; }
+
+    /// Return true if the timeout is elapsed otherwise false.
+    bool is_timeout_elapsed() const { return timeout_trigger_.is_elapsed(); }
 
     /// Return the maximum number of steps that a sequence can hold.
     static SizeType max_size() noexcept { return std::numeric_limits<StepIndex>::max(); }
@@ -736,6 +735,18 @@ private:
      * @exception Error is thrown if a syntax error is found.
      */
     ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
+
+    /**
+     * Correct the step index of the stored error (if any) after a single step has been
+     * erased at the indicated position.
+     */
+    void correct_error_index_after_step_erased(Sequence::ConstIterator iter);
+
+    /**
+     * Correct the step index of the stored error (if any) after a single step has been
+     * inserted at the indicated position.
+     */
+    void correct_error_index_after_step_inserted(Sequence::ConstIterator iter);
 
     /**
      * Update the disabled flag of all steps to ensure that control structures are not

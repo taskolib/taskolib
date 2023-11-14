@@ -258,25 +258,20 @@ TEST_CASE("Sequence: get_unique_id()", "[Sequence]")
 TEST_CASE("Sequence: insert()", "[Sequence]")
 {
     Sequence seq{ "test_sequence" };
-    seq.push_back(Step{Step::type_action});
-    seq.push_back(Step{Step::type_action});
+    seq.push_back(Step{Step::type_action}); // idx 0
 
-    SECTION("insert lvalue reference (iterator)")
-    {
-        Step insertStep{Step::type_if};
-        auto iter = seq.insert(seq.begin()+1, insertStep);
+    Step step{ Step::type_action };
+    step.set_script("not a valid Lua script");
+    seq.push_back(step); // idx 1
 
-        REQUIRE(not seq.empty());
-        REQUIRE(3 == seq.size());
-        REQUIRE(Step::type_if == (*iter).get_type());
+    // Execute the script so that it fails at index 1 and the sequence stores error info
+    Context context;
+    auto err = seq.execute(context, nullptr);
+    REQUIRE(err.has_value() == true);
+    REQUIRE(err->get_index().has_value() == true);
+    REQUIRE(err->get_index().value() == 1);
 
-        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
-        int idx = 0;
-        for(auto step : seq)
-            REQUIRE(step.get_type() == expected[idx++]);
-    }
-
-    SECTION("insert const lvalue reference (iterator)")
+    SECTION("insert const reference")
     {
         const Step insertStep{Step::type_if};
         auto iter = seq.insert(seq.begin()+1, insertStep);
@@ -289,20 +284,26 @@ TEST_CASE("Sequence: insert()", "[Sequence]")
         int idx = 0;
         for(auto step : seq)
             REQUIRE(step.get_type() == expected[idx++]);
+
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
     }
 
-    SECTION("insert rvalue reference (iterator)")
+    SECTION("insert rvalue reference")
     {
-        auto iter = seq.insert(seq.begin()+1, Step{Step::type_if});
+        auto iter = seq.insert(seq.begin()+2, Step{Step::type_if});
 
         REQUIRE(not seq.empty());
         REQUIRE(3 == seq.size());
         REQUIRE(Step::type_if == (*iter).get_type());
 
-        Step::Type expected[] = {Step::type_action, Step::type_if, Step::type_action};
+        Step::Type expected[] = {Step::type_action, Step::type_action, Step::type_if};
         int idx = 0;
         for(auto step : seq)
             REQUIRE(step.get_type() == expected[idx++]);
+
+        REQUIRE(seq.get_error().has_value());
+        REQUIRE(seq.get_error()->get_index().value_or(-1) == 1);
     }
 }
 
