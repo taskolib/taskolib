@@ -126,8 +126,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
     // Execute the script so that it fails at index 2 and the sequence stores error info
     Context context;
     auto err = seq.execute(context, nullptr);
-    REQUIRE(err.has_value() == true);
-    REQUIRE(err->get_index().has_value() == true);
+    REQUIRE(err.has_value());
+    REQUIRE(err->get_index().has_value());
     REQUIRE(err->get_index().value() == 2);
 
     SECTION("erase first (iterator)")
@@ -146,7 +146,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(not seq.empty());
         REQUIRE(4 == seq.size());
         REQUIRE(Step::type_end == (*erase).get_type());
-        REQUIRE(seq.get_error().has_value() == true);
+        REQUIRE(seq.get_error().has_value());
         REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
@@ -216,14 +216,14 @@ TEST_CASE("Sequence: get_error()", "[Sequence]")
     REQUIRE(seq.get_error().has_value() == false);
 
     seq.set_error(Error{ "Test", gul14::nullopt });
-    REQUIRE(seq.get_error().has_value() == true);
+    REQUIRE(seq.get_error().has_value());
     REQUIRE(seq.get_error()->what() == "Test"s);
     REQUIRE(seq.get_error()->get_index().has_value() == false);
 
     seq.set_error(Error{ "Test2", 42 });
-    REQUIRE(seq.get_error().has_value() == true);
+    REQUIRE(seq.get_error().has_value());
     REQUIRE(seq.get_error()->what() == "Test2"s);
-    REQUIRE(seq.get_error()->get_index().has_value() == true);
+    REQUIRE(seq.get_error()->get_index().has_value());
     REQUIRE(seq.get_error()->get_index().value() == 42);
 }
 
@@ -267,8 +267,8 @@ TEST_CASE("Sequence: insert()", "[Sequence]")
     // Execute the script so that it fails at index 1 and the sequence stores error info
     Context context;
     auto err = seq.execute(context, nullptr);
-    REQUIRE(err.has_value() == true);
-    REQUIRE(err->get_index().has_value() == true);
+    REQUIRE(err.has_value());
+    REQUIRE(err->get_index().has_value());
     REQUIRE(err->get_index().value() == 1);
 
     SECTION("insert const reference")
@@ -323,7 +323,7 @@ TEST_CASE("Sequence: is_running()", "[Sequence]")
     REQUIRE(not seq.is_running());
 
     seq.set_running(true);
-    REQUIRE(seq.is_running() == true);
+    REQUIRE(seq.is_running());
 
     seq.set_running(false);
     REQUIRE(seq.is_running() == false);
@@ -414,8 +414,8 @@ TEST_CASE("Sequence: pop_back()", "[Sequence]")
     // Execute the script so that it fails at index 1 and the sequence stores error info
     Context context;
     auto err = seq.execute(context, nullptr);
-    REQUIRE(err.has_value() == true);
-    REQUIRE(err->get_index().has_value() == true);
+    REQUIRE(err.has_value());
+    REQUIRE(err->get_index().has_value());
     REQUIRE(err->get_index().value() == 1);
 
     seq.pop_back();
@@ -465,9 +465,9 @@ TEST_CASE("Sequence: set_error()", "[Sequence]")
     Sequence seq{ "test_sequence" };
 
     seq.set_error(Error{ "Test", 42 });
-    REQUIRE(seq.get_error().has_value() == true);
+    REQUIRE(seq.get_error().has_value());
     REQUIRE(seq.get_error()->what() == "Test"s);
-    REQUIRE(seq.get_error()->get_index().has_value() == true);
+    REQUIRE(seq.get_error()->get_index().has_value());
     REQUIRE(seq.get_error()->get_index().value() == 42);
 
     seq.set_error(gul14::nullopt);
@@ -501,7 +501,7 @@ TEST_CASE("Sequence: set_running()", "[Sequence]")
     seq.push_back(step1);
 
     seq.set_running(true);
-    REQUIRE(seq.is_running() == true);
+    REQUIRE(seq.is_running());
 
     SECTION("Sequence can be modified while not is_running()")
     {
@@ -1361,9 +1361,9 @@ TEST_CASE("execute(): complex sequence with prohibited Lua function", "[Sequence
     sequence.push_back(step);
 
     auto maybe_error = sequence.execute(context, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE(maybe_error->what() != ""s);
-    REQUIRE(maybe_error->get_index().has_value() == true);
+    REQUIRE(maybe_error->get_index().has_value());
     REQUIRE(maybe_error->get_index().value() == 0);
 
     REQUIRE(sequence.get_error() == maybe_error);
@@ -1390,9 +1390,9 @@ TEST_CASE("execute(): complex sequence with disallowed 'function' and context "
     sequence.push_back(step_action2);
 
     auto maybe_error = sequence.execute(context, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE(maybe_error->what() != ""s);
-    REQUIRE(maybe_error->get_index().has_value() == true);
+    REQUIRE(maybe_error->get_index().has_value());
     REQUIRE(maybe_error->get_index().value() == 0);
 
     REQUIRE(sequence.get_error() == maybe_error);
@@ -2007,7 +2007,7 @@ TEST_CASE("execute(): faulty if-else-elseif sequence", "[Sequence]")
 
     auto maybe_error = sequence.execute(context, nullptr);
 
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE(maybe_error->what() != ""s);
     REQUIRE(maybe_error->get_index().has_value() == false);
 
@@ -2359,9 +2359,9 @@ TEST_CASE("execute(): simple try sequence with fault", "[Sequence]")
     context.variables["a"] = VarInteger{ 0 };
 
     auto maybe_error = sequence.execute(context, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE(maybe_error->what() != ""s);
-    REQUIRE(maybe_error->get_index().has_value() == true);
+    REQUIRE(maybe_error->get_index().has_value());
     REQUIRE(maybe_error->get_index().value() == 5);
     REQUIRE(sequence.get_error() == maybe_error);
     REQUIRE(std::get<VarInteger>(context.variables["a"]) == 2);
@@ -2460,7 +2460,7 @@ TEST_CASE("execute(): complex try sequence with fault", "[Sequence]")
 
     Context context;
     auto maybe_error = sequence.execute(context, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
 
     REQUIRE(std::get<VarInteger>(context.variables["a"]) == 2);
 }
@@ -2962,7 +2962,7 @@ TEST_CASE("execute(): complex sequence with misplaced if", "[Sequence]")
     Context context;
 
     auto maybe_error = sequence.execute(context, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
 }
 
 TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
@@ -3682,14 +3682,14 @@ TEST_CASE("execute(): Disable + re-enable action inside while loop", "[Sequence]
     SECTION("Disable WHILE, then attempt to re-enable ACTION")
     {
         s.modify(s.begin(), [](Step& st) { st.set_disabled(true); });
-        REQUIRE(s[0].is_disabled() == true);
-        REQUIRE(s[1].is_disabled() == true);
-        REQUIRE(s[2].is_disabled() == true);
+        REQUIRE(s[0].is_disabled());
+        REQUIRE(s[1].is_disabled());
+        REQUIRE(s[2].is_disabled());
 
         s.modify(s.begin() + 1, [](Step& st) { st.set_disabled(false); });
-        REQUIRE(s[0].is_disabled() == true);
-        REQUIRE(s[1].is_disabled() == true);
-        REQUIRE(s[2].is_disabled() == true);
+        REQUIRE(s[0].is_disabled());
+        REQUIRE(s[1].is_disabled());
+        REQUIRE(s[2].is_disabled());
     }
 }
 
@@ -3735,9 +3735,9 @@ TEST_CASE("execute(): Single step", "[Sequence]")
     SECTION("Index 2 (ACTION step): Script is executed")
     {
         auto maybe_error = sequence.execute(context, nullptr, 2);
-        REQUIRE(maybe_error.has_value() == true);
+        REQUIRE(maybe_error.has_value());
         REQUIRE_THAT(maybe_error->what(), Contains("Action Boom"));
-        REQUIRE(maybe_error->get_index().has_value() == true);
+        REQUIRE(maybe_error->get_index().has_value());
         REQUIRE(maybe_error->get_index().value() == 2);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 3 });
     }
@@ -3909,7 +3909,7 @@ TEST_CASE("Sequence: Check line number on failure (setup at line 2)", "[Sequence
         )");
 
     auto maybe_error = seq.execute(ctx, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE_THAT(maybe_error->what(), Catch::Matchers::StartsWith("[setup] 2: syntax error"));
 }
 
@@ -3929,7 +3929,7 @@ TEST_CASE("Sequence: Check line number on failure (script at line 2)", "[Sequenc
     seq.set_step_setup_script("preface = 'Alice'");
 
     auto maybe_error = seq.execute(ctx, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE_THAT(maybe_error->what(), Catch::Matchers::StartsWith("2: syntax error"));
 }
 
@@ -3950,7 +3950,7 @@ TEST_CASE("Sequence: Check line number on failure (script at line 3)", "[Sequenc
     seq.set_step_setup_script("preface = 'Alice'");
 
     auto maybe_error = seq.execute(ctx, nullptr);
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE_THAT(maybe_error->what(), Catch::Matchers::StartsWith("3: syntax error"));
 }
 
@@ -3992,7 +3992,7 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
     auto maybe_error = seq.execute(ctx, nullptr);
     REQUIRE(seq.get_time_of_last_execution() != task::TimePoint{});
 
-    REQUIRE(maybe_error.has_value() == true);
+    REQUIRE(maybe_error.has_value());
     REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));
 }
 
