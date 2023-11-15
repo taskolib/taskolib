@@ -77,7 +77,7 @@ TEST_CASE("Sequence: assign()", "[Sequence]")
     seq.push_back(Step{Step::type_action});
     seq.push_back(Step{Step::type_action});
 
-    SECTION("assign step as lvalue (iterator)")
+    SECTION("assign step as lvalue")
     {
         Step step{Step::type_if};
         seq.assign(seq.begin()+1, step);
@@ -88,7 +88,7 @@ TEST_CASE("Sequence: assign()", "[Sequence]")
             REQUIRE(step.get_type() == expected[idx++]);
     }
 
-    SECTION("assign step as rvalue (iterator)")
+    SECTION("assign step as rvalue")
     {
         seq.assign(seq.begin()+1, Step{Step::type_if});
 
@@ -130,7 +130,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
     REQUIRE(err->get_index().has_value());
     REQUIRE(err->get_index().value() == 2);
 
-    SECTION("erase first (iterator)")
+    SECTION("erase first")
     {
         auto erase = seq.erase(seq.begin());
         REQUIRE(not seq.empty());
@@ -140,7 +140,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().value_or(-1) == 1);
     }
 
-    SECTION("erase middle (iterator)")
+    SECTION("erase middle")
     {
         auto erase = seq.erase(seq.begin()+2);
         REQUIRE(not seq.empty());
@@ -150,7 +150,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
-    SECTION("erase last (iterator)")
+    SECTION("erase last")
     {
         auto erase = seq.erase(seq.end()-1);
         REQUIRE(not seq.empty());
@@ -160,7 +160,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
     }
 
-    SECTION("erase end (iterator)")
+    SECTION("erase end")
     {
         seq.erase(seq.end());
         REQUIRE(not seq.empty());
@@ -169,7 +169,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
     }
 
-    SECTION("erase range from beginning (iterator)")
+    SECTION("erase range from beginning")
     {
         auto erase = seq.erase(seq.begin(), seq.begin()+2);
         REQUIRE(not seq.empty());
@@ -179,7 +179,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().value_or(-1) == 0);
     }
 
-    SECTION("erase range from middle (iterator)")
+    SECTION("erase range from middle")
     {
         auto erase = seq.erase(seq.begin()+1, seq.begin()+3);
         REQUIRE(not seq.empty());
@@ -189,7 +189,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
-    SECTION("erase range from end (iterator)")
+    SECTION("erase range from end")
     {
         auto erase = seq.erase(seq.end()-3, seq.end()-1);
         REQUIRE(not seq.empty());
@@ -199,7 +199,7 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
         REQUIRE(seq.get_error()->get_index().has_value() == false);
     }
 
-    SECTION("erase range from end (iterator)")
+    SECTION("erase range from end")
     {
         auto erase = seq.erase(seq.end()-2, seq.end());
         REQUIRE(not seq.empty());
