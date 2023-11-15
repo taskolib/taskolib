@@ -309,7 +309,7 @@ public:
      *
      * \returns an iterator to the first step after the deleted range.
      *
-     * \exception Error is thrown if the sequence is currently running.
+     * \exception Error is thrown if the sequence is currently running or if begin > end.
      */
     ConstIterator erase(ConstIterator begin, ConstIterator end);
 
@@ -437,7 +437,15 @@ public:
 
         auto return_iter = steps_.insert(iter, std::forward<StepType>(step));
 
-        correct_error_index_after_step_inserted(return_iter);
+        correct_error_index(
+            [insert_idx = return_iter - cbegin()](StepIndex error_idx) -> OptionalStepIndex
+            {
+                if (insert_idx <= error_idx)
+                    return error_idx + 1;
+                else
+                    return error_idx;
+            });
+
         enforce_invariants();
         return return_iter;
     }
@@ -737,16 +745,16 @@ private:
     ConstIterator check_syntax_for_while(ConstIterator begin, ConstIterator end) const;
 
     /**
-     * Correct the step index of the stored error (if any) after a single step has been
-     * erased at the indicated position.
+     * If the sequence has a stored error with step index information, call the given
+     * function and replace the error step index with the return value.
+     *
+     * The function is only called if the sequence has a stored error
+     * (get_error() != nullopt) and the stored error has a step index
+     * (get_error()->get_step_index() != nullopt). Otherwise, correct_error_index() does
+     * nothing.
      */
-    void correct_error_index_after_step_erased(Sequence::ConstIterator iter);
-
-    /**
-     * Correct the step index of the stored error (if any) after a single step has been
-     * inserted at the indicated position.
-     */
-    void correct_error_index_after_step_inserted(Sequence::ConstIterator iter);
+    void correct_error_index(
+        std::function<OptionalStepIndex(StepIndex err_idx)> get_new_index);
 
     /**
      * Update the disabled flag of all steps to ensure that control structures are not

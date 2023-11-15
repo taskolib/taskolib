@@ -22,8 +22,6 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <iterator>
-
 #include <gul14/join_split.h>
 #include <gul14/SmallVector.h>
 #include <gul14/string_view.h>
@@ -219,38 +217,17 @@ Sequence::ConstIterator Sequence::check_syntax_for_while(Sequence::ConstIterator
     return block_end + 1;
 }
 
-void Sequence::correct_error_index_after_step_erased(Sequence::ConstIterator iter)
+void Sequence::correct_error_index(
+    std::function<OptionalStepIndex(StepIndex err_idx)> get_new_index)
 {
     if (not error_.has_value())
         return;
 
-    auto maybe_idx = error_->get_index();
-    if (not maybe_idx.has_value())
+    auto maybe_error_idx = error_->get_index();
+    if (not maybe_error_idx.has_value())
         return;
 
-    const auto erased_idx = std::distance(cbegin(), iter);
-    const auto error_idx = *maybe_idx;
-
-    if (erased_idx == error_idx)
-        error_->set_index(gul14::nullopt);
-    else if (erased_idx < error_idx)
-        error_->set_index(error_idx - 1);
-}
-
-void Sequence::correct_error_index_after_step_inserted(Sequence::ConstIterator iter)
-{
-    if (not error_.has_value())
-        return;
-
-    auto maybe_idx = error_->get_index();
-    if (not maybe_idx.has_value())
-        return;
-
-    const auto insert_idx = std::distance(cbegin(), iter);
-    const auto error_idx = *maybe_idx;
-
-    if (insert_idx <= error_idx)
-        error_->set_index(error_idx + 1);
+    error_ = Error(error_.value().what(), get_new_index(*maybe_error_idx));
 }
 
 void Sequence::enforce_consistency_of_disabled_flags() noexcept
@@ -311,7 +288,17 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
     throw_if_running();
     auto return_iter = steps_.erase(iter);
 
-    correct_error_index_after_step_erased(return_iter);
+    correct_error_index(
+        [erased_idx = return_iter - cbegin()](StepIndex error_idx) -> OptionalStepIndex
+        {
+            if (erased_idx == error_idx)
+                return gul14::nullopt;
+            else if (erased_idx < error_idx)
+                return error_idx - 1;
+            else
+                return error_idx;
+        });
+
     enforce_invariants();
     return return_iter;
 }
@@ -319,8 +306,8 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
                                         Sequence::ConstIterator end)
 {
-    const auto erased_begin_idx = std::distance(cbegin(), begin);
-    const auto erased_end_idx = std::distance(cbegin(), end);
+    const auto erased_begin_idx = begin - cbegin();
+    const auto erased_end_idx = end - cbegin();
 
     throw_if_running();
 
@@ -329,19 +316,16 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
 
     auto return_iter = steps_.erase(begin, end);
 
-    if (error_.has_value())
-    {
-        auto maybe_idx = error_->get_index();
-        if (maybe_idx.has_value())
+    correct_error_index(
+        [erased_begin_idx, erased_end_idx](StepIndex error_idx) -> OptionalStepIndex
         {
-            const auto error_idx = *maybe_idx;
-
             if (error_idx >= erased_begin_idx && error_idx < erased_end_idx)
-                error_->set_index(gul14::nullopt);
+                return gul14::nullopt;
             else if (error_idx >= erased_end_idx)
-                error_->set_index(error_idx - (erased_end_idx - erased_begin_idx));
-        }
-    }
+                return error_idx - (erased_end_idx - erased_begin_idx);
+            else
+                return error_idx;
+        });
 
     enforce_invariants();
     return return_iter;
@@ -690,7 +674,14 @@ void Sequence::pop_back()
     throw_if_running();
     if (not steps_.empty())
     {
-        correct_error_index_after_step_erased(steps_.end() - 1);
+        correct_error_index(
+            [erased_idx = size() - 1](StepIndex error_idx) -> OptionalStepIndex
+            {
+                if (erased_idx == error_idx)
+                    return gul14::nullopt;
+                else
+                    return error_idx;
+            });
         steps_.pop_back();
     }
     enforce_invariants();
