@@ -323,6 +323,10 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
     const auto erased_end_idx = std::distance(cbegin(), end);
 
     throw_if_running();
+
+    if (begin > end)
+        throw Error("Invalid range: begin > end");
+
     auto return_iter = steps_.erase(begin, end);
 
     if (error_.has_value())
