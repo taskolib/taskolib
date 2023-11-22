@@ -107,7 +107,7 @@ public:
      * \exception Error is thrown if the sequence folder cannot be created.
      */
     Sequence create_sequence(gul14::string_view label = "",
-        SequenceName name = SequenceName{});
+        SequenceName name = SequenceName{}) const;
 
     /**
      * Return the base path of the serialized sequences.
@@ -214,7 +214,7 @@ private:
     /// Base path to the sequences.
     std::filesystem::path path_;
 
-    /// Git Repsoitory object
+    /// Git Repository object
     git::GitRepository git_repo_;
 
     /**
@@ -228,11 +228,19 @@ private:
     /**
      * Stage all files git can find in a repository.
      * parameter dir and fileytpe are used as filter.
-     * To stage all, use dir_name = "" and filetype = ""
-     * filetype values: {"", "new file", "modified", "deleted",
-     * "renamed", "typechange", "untracked"}
+     * To stage all, use
+     *     - dir_name = ""
+     *     - filetype = ""
+     * filetype values:
+     *     - "" = all types allowed
+     *     - "new file"
+     *     - "modified"
+     *     - "deleted"
+     *     - "renamed"
+     *     - "typechange"
+     *     - "untracked"
      * \param dir relative path to sequence from path_ as base
-     * \param filetype 
+     * \param filetype define which file status group shall be staged
      * \return commit message starting with a linebreak
     */
     std::string stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype);

@@ -537,14 +537,15 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
 
 TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 {
+    std::filesystem::path git_dir {"sequences_git"};
 
     SECTION("Create and store sequence")
     {
         // clean surrounding
-        std::filesystem::remove_all(temp_dir);
+        std::filesystem::remove_all(git_dir);
 
         // init manager
-        SequenceManager manager{ temp_dir};
+        SequenceManager manager{ git_dir};
 
         // create sequence
         Sequence seq{ "git Sequence 1",  SequenceName{ "git_sequence_1" }, UniqueId{ 0xabcdef123456 } };
@@ -556,18 +557,18 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // store sequence and make git commit
         manager.store_sequence(seq);
 
-        // unable to reach gl debug functions without a new function in sequenceManager
+        // unable to reach repo debug functions without a new function in sequenceManager
         // Therefore a standalone git handler has to be initialized
-        git::GitRepository gl{temp_dir};
+        git::GitRepository repo{git_dir};
 
         // check if commit was done
-        const std::string& expected_msg = "change sequence:\n- Add sequence.lua from new sequence 'git_sequence_1[0000abcdef123456]'\n- Add step_1_while.lua from new sequence 'git_sequence_1[0000abcdef123456]'";
-        const auto& last_msg = gl.get_last_commit_message();
+        const std::string expected_msg = "change sequence:\n- Add sequence.lua from new sequence 'git_sequence_1[0000abcdef123456]'\n- Add step_1_while.lua from new sequence 'git_sequence_1[0000abcdef123456]'";
+        const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
 
         // use raw repository to access status
-        const auto stats = gl.status();
+        const auto stats = repo.status();
         REQUIRE(stats.size() != 0);
         bool seq_exists = false;
         for(const auto& elm: stats)
@@ -584,7 +585,6 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
                 //      elm.changes == "new file"
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
-
             }
         }
         // check if created sequence is at least indexed by git
@@ -593,7 +593,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("change and store sequence (step_setup)")
     {
-        SequenceManager manager{ temp_dir};
+        SequenceManager manager{ git_dir};
 
         // load sequence an change step setup
         auto seq = manager.load_sequence(UniqueId{ 0xabcdef123456 });
@@ -609,14 +609,14 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // store sequence
         manager.store_sequence(seq);
 
-        git::GitRepository gl{temp_dir};
+        git::GitRepository repo{git_dir};
 
-        const std::string& expected_msg = "change sequence:\n- modify 'git_sequence_1[0000abcdef123456]/sequence.lua'";
-        const auto& last_msg = gl.get_last_commit_message();
+        const std::string expected_msg = "change sequence:\n- modify 'git_sequence_1[0000abcdef123456]/sequence.lua'";
+        const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
         // use raw repository to access status
-        const auto stats = gl.status();
+        const auto stats = repo.status();
         REQUIRE(stats.size() != 0);
         bool seq_exists = false;
         for(const auto& elm: stats)
@@ -633,7 +633,6 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
                 //      elm.changes == "modified"
                 REQUIRE(elm.handling == "unchanged");
                 REQUIRE(elm.changes == "unchanged");
-
             }
         }
         // check if created sequence is at least indexed by git
@@ -642,7 +641,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("copy sequence")
     {
-        SequenceManager manager{ temp_dir};
+        SequenceManager manager{ git_dir};
 
         // find sequence unique ID
         UniqueId uID{0};
@@ -654,7 +653,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         manager.copy_sequence(UniqueId{0xabcdef123456}, SequenceName{"git_sequence_2"});
 
-        git::GitRepository gl{temp_dir};
+        git::GitRepository repo{git_dir};
 
         // find sequence full name
         std::filesystem::path seq_name{""};
@@ -665,14 +664,14 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         REQUIRE(seq_name != "");
 
         // check commit message
-        const std::string& expected_msg = gul14::cat("copy sequence:\n- Add sequence.lua from new sequence '",
+        const std::string expected_msg = gul14::cat("copy sequence:\n- Add sequence.lua from new sequence '",
                                                      seq_name.string(), "'\n- Add step_1_while.lua from new sequence '",
                                                      seq_name.string(), "'");
-        const auto& last_msg = gl.get_last_commit_message();
+        const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
         // use raw repository to access status
-        const auto stats = gl.status();
+        const auto stats = repo.status();
         REQUIRE(stats.size() != 0);
         bool seq_exists = false;
         for(const auto& elm: stats)
@@ -698,7 +697,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("rename sequence")
     {
-        SequenceManager manager{ temp_dir};
+        SequenceManager manager{ git_dir};
 
         // find sequence unique ID and full name
         UniqueId uID{0};
@@ -726,18 +725,18 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         }
         REQUIRE(seq3 != "");
 
-        git::GitRepository gl{temp_dir};
+        git::GitRepository repo{git_dir};
 
-        const std::string& expected_msg = gul14::cat("Rename git_sequence_2 to git_sequence_3:\n",
+        const std::string expected_msg = gul14::cat("Rename git_sequence_2 to git_sequence_3:\n",
                                                      "- delete '", seq2.string(), "/sequence.lua'\n",
                                                      "- delete '", seq2.string(), "/step_1_while.lua'\n"
                                                      "- Add sequence.lua from new sequence '", seq3.string(), "'\n"
                                                      "- Add step_1_while.lua from new sequence '", seq3.string(), "'");
-        const auto& last_msg = gl.get_last_commit_message();
+        const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
         // use raw repository to access status
-        const auto stats = gl.status();
+        const auto stats = repo.status();
         REQUIRE(stats.size() != 0);
         bool seq_exists = false;
         for(const auto& elm: stats)
@@ -764,22 +763,22 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("remove sequence")
     {
-        SequenceManager manager{ temp_dir};
+        SequenceManager manager{ git_dir};
 
         manager.remove_sequence(UniqueId{ 0xabcdef123456 });
 
         // create object here so that manager.store_sequence throws error
         // if init repository did not work
-        git::GitRepository gl{temp_dir};
+        git::GitRepository repo{git_dir};
 
-        const std::string& expected_msg = gul14::cat("remove sequence:\n",
+        const std::string expected_msg = gul14::cat("remove sequence:\n",
                                                      "- delete 'git_sequence_1[0000abcdef123456]/sequence.lua'\n",
                                                      "- delete 'git_sequence_1[0000abcdef123456]/step_1_while.lua'");
-        const auto& last_msg = gl.get_last_commit_message();
+        const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
         // use raw repository to access status
-        const auto stats = gl.status();
+        const auto stats = repo.status();
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
