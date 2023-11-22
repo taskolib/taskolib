@@ -126,7 +126,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 }
 
 Sequence
-SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
+SequenceManager::create_sequence(gul14::string_view label, SequenceName name) const
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -307,7 +307,6 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
 
 void SequenceManager::remove_sequence(UniqueId unique_id)
 {
-
     const auto sequences = list_sequences();
     const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
     const auto path = path_ / seq_on_disk.path;
@@ -331,8 +330,6 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
 {
     const auto sequences = list_sequences();
     const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
-
-
     const auto old_path = path_ / old_seq_on_disk.path;
     const auto new_path = path_ / make_sequence_filename(new_name, unique_id);
 
@@ -394,7 +391,6 @@ void SequenceManager::store_sequence_impl(const Sequence& seq) const
 
 std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype)
 {
-
     // detect what has changed in the sequence
     std::string git_msg{""};
     auto stats = git_repo_.status();
