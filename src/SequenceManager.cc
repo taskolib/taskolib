@@ -408,8 +408,6 @@ std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_
             {
                 git_msg += gul14::cat("\n", "- modify '",elm.path_name, "'");
             }
-            //TODO: file number is changing. Figure out which file is deleted
-            //INFO: Maybe git figures it out on its own and tag it with "renamed"
             else if (elm.changes == "deleted" and (filetype == elm.changes or filetype == ""))
             {
                 git_msg += gul14::cat("\n", "- delete '",elm.path_name, "'");

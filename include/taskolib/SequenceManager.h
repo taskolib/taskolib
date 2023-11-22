@@ -227,10 +227,13 @@ private:
 
     /**
      * Stage all files git can find in a repository.
-     * parameter dir and fileytpe are used as filter.
+     * parameter dir and filetype are used as filter.
      * To stage all, use
      *     - dir_name = ""
      *     - filetype = ""
+     * \param dir relative path to sequence from path_ as base
+     * To restrict staging to one sequence, set dir to the sequence directory
+     * \param filetype define which file status group shall be staged
      * filetype values:
      *     - "" = all types allowed
      *     - "new file"
@@ -239,8 +242,6 @@ private:
      *     - "renamed"
      *     - "typechange"
      *     - "untracked"
-     * \param dir relative path to sequence from path_ as base
-     * \param filetype define which file status group shall be staged
      * \return commit message starting with a linebreak
     */
     std::string stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype);

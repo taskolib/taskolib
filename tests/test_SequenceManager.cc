@@ -30,7 +30,7 @@
 #include <vector>
 
 #include <gul14/catch.h>
-#include<gul14/substring_checks.h>
+#include <gul14/substring_checks.h>
 #include <libgit4cpp/GitRepository.h>
 
 #include "internals.h"
@@ -82,7 +82,6 @@ TEST_CASE("SequenceManager: Constructor with path", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: Move constructor", "[SequenceManager]")
 {
-    std::filesystem::remove_all("unit_test_files");
     SequenceManager s{SequenceManager("unit_test_files")};
     REQUIRE(s.get_path() == "unit_test_files");
 }
@@ -171,7 +170,7 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 {
     const std::string root = "unit_test_files/sequences";
     if (std::filesystem::exists(root))
-    std::filesystem::remove_all(root);
+        std::filesystem::remove_all(root);
 
     // prepare first sequence for test
     Step step_1_01{Step::type_while};
