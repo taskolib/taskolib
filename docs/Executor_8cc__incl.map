@@ -1,9 +1,9 @@
 <map id="Executor.cc" name="Executor.cc">
-<area shape="rect" id="node1" title="Implementation of the Executor class." alt="" coords="1019,5,1114,32"/>
+<area shape="rect" id="node1" title="Implementation of the Executor class." alt="" coords="1030,5,1125,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="94,229,189,256"/>
 <area shape="rect" id="node3" href="$lua__details_8h.html" title="Declaration of free functions dealing with Lua specifics." alt="" coords="2142,229,2247,256"/>
 <area shape="rect" id="node8" title=" " alt="" coords="2511,386,2603,413"/>
-<area shape="rect" id="node36" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="408,80,552,107"/>
+<area shape="rect" id="node36" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="391,80,535,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="2625,617,2692,644"/>
 <area shape="rect" id="node5" title=" " alt="" coords="1811,468,1898,495"/>
 <area shape="rect" id="node6" title=" " alt="" coords="1519,617,1577,644"/>
@@ -35,15 +35,17 @@
 <area shape="rect" id="node33" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="2461,468,2621,495"/>
 <area shape="rect" id="node34" title=" " alt="" coords="2425,543,2492,569"/>
 <area shape="rect" id="node35" title=" " alt="" coords="2517,543,2603,569"/>
-<area shape="rect" id="node37" title=" " alt="" coords="449,155,511,181"/>
-<area shape="rect" id="node38" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="921,155,1073,181"/>
+<area shape="rect" id="node37" title=" " alt="" coords="432,155,493,181"/>
+<area shape="rect" id="node38" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="1017,155,1169,181"/>
 <area shape="rect" id="node39" title=" " alt="" coords="995,229,1080,256"/>
 <area shape="rect" id="node40" title=" " alt="" coords="1104,229,1195,256"/>
-<area shape="rect" id="node41" title=" " alt="" coords="1219,229,1282,256"/>
-<area shape="rect" id="node42" title=" " alt="" coords="1307,229,1432,256"/>
-<area shape="rect" id="node43" href="$SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="587,386,778,413"/>
-<area shape="rect" id="node44" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="1923,229,2042,256"/>
-<area shape="rect" id="node46" href="$UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="416,386,563,413"/>
-<area shape="rect" id="node45" title=" " alt="" coords="1912,304,1955,331"/>
-<area shape="rect" id="node47" title=" " alt="" coords="424,468,496,495"/>
+<area shape="rect" id="node41" title=" " alt="" coords="1219,229,1279,256"/>
+<area shape="rect" id="node42" title=" " alt="" coords="1303,229,1366,256"/>
+<area shape="rect" id="node43" title=" " alt="" coords="1391,229,1516,256"/>
+<area shape="rect" id="node44" title=" " alt="" coords="1541,229,1649,256"/>
+<area shape="rect" id="node45" href="$SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="587,386,778,413"/>
+<area shape="rect" id="node46" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="1923,229,2042,256"/>
+<area shape="rect" id="node48" href="$UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="416,386,563,413"/>
+<area shape="rect" id="node47" title=" " alt="" coords="1912,304,1955,331"/>
+<area shape="rect" id="node49" title=" " alt="" coords="424,468,496,495"/>
 </map>
