@@ -35,14 +35,14 @@ jobs:
         echo "Job triggered by ${{ github.event_name }} event, running on ${{ runner.os }}."
         echo "Branch ${{ github.ref }} on repository ${{ github.repository }}"
     - name: Check out repository code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install Ninja
       run: |
         sudo apt install ninja-build
 
     - name: Fetch meson version for building
-      uses: robinraju/release-downloader@v1.6
+      uses: robinraju/release-downloader@v1.8
       with:
         repository: "mesonbuild/meson"
         tag: "0.53.2"
