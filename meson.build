@@ -69,7 +69,7 @@ deps = [
     dependency('threads'),
     gul_dep.partial_dependency(compile_args : true, includes : true),
     lua_dep,
-    dependency('libgit4cpp'),
+    dependency('libgit4cpp', fallback : ['libgit4cpp', 'libgit4cpp_dep']),
 
 ]
 

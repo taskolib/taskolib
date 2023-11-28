@@ -1,0 +1,7 @@
+[wrap-git]
+directory = libgit4cpp
+url = https://github.com/taskolib/libgit4cpp.git
+revision = main
+
+[provide]
+libgit4cpp = libgit4cpp_dep
