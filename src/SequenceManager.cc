@@ -110,7 +110,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 }
 
 Sequence
-SequenceManager::create_sequence(gul14::string_view label, SequenceName name) const
+SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -376,7 +376,7 @@ std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_
     auto stats = git_repo_.status();
     for(const auto& elm: stats)
     {
-        
+
         // filter for changes in sequence
         if (gul14::starts_with(elm.path_name, dir_name.string()))
         {

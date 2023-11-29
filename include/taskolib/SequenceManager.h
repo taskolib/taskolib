@@ -106,8 +106,7 @@ public:
      *
      * \exception Error is thrown if the sequence folder cannot be created.
      */
-    Sequence create_sequence(gul14::string_view label = "",
-        SequenceName name = SequenceName{}) const;
+    Sequence create_sequence(gul14::string_view label = "", SequenceName name = SequenceName{});
 
     /**
      * Return the base path of the serialized sequences.
