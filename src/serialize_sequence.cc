@@ -76,14 +76,8 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     stream << "-- time of last execution: "
         << std::put_time(std::localtime(&execution), "%Y-%m-%d %H:%M:%S") << '\n';
 
-    stream << "-- timeout: ";
-    if (!isfinite(step.get_timeout()))
-        stream << "infinite\n";
-    else
-        stream << static_cast<std::chrono::milliseconds>(step.get_timeout()).count() << '\n';
-
+    stream << "-- timeout: " << step.get_timeout() << '\n';
     stream << "-- disabled: " << std::boolalpha << step.is_disabled() << '\n';
-
     stream << step.get_script() << '\n'; // (Marcus) good practice to add a cr at the end
 
     check_stream(stream);

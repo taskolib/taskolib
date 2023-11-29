@@ -24,6 +24,7 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <sstream>
 
 #include <gul14/catch.h>
 
@@ -142,4 +143,22 @@ TEST_CASE("Timeout: Comparison operators", "[Timeout]")
         REQUIRE((t1 >= t0) == true);
         REQUIRE((t0 >= t1) == false);
     }
+}
+
+TEST_CASE("Timeout: Dump to stream", "[Timeout]")
+{
+    auto t = Timeout{ 0s };
+    std::stringstream ss{ };
+    ss << t;
+    REQUIRE(ss.str() == "0");
+
+    t = Timeout{ 10s };
+    ss.str("");
+    ss << t;
+    REQUIRE(ss.str() == "10000");
+
+    t = Timeout::infinity();
+    ss.str("");
+    ss << t;
+    REQUIRE(ss.str() == "infinite");
 }
