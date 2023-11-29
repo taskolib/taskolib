@@ -28,6 +28,7 @@
 #include <chrono>
 #include <cmath>
 #include <limits>
+#include <ostream>
 
 #include "taskolib/exceptions.h"
 
@@ -185,6 +186,14 @@ private:
 
     Duration timeout_{ infinite_duration };
 };
+
+inline std::ostream& operator<<(std::ostream& stream, const Timeout& timeout) {
+    if (!isfinite(timeout))
+        stream << "infinite";
+    else
+        stream << static_cast<std::chrono::milliseconds>(timeout).count();
+    return stream;
+}
 
 } // namespace task
 
