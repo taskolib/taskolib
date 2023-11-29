@@ -58,22 +58,12 @@ std::string extract_filename_step(const int number, int max_digits, const Step& 
     return ss.str();
 }
 
-void remove_path(const std::filesystem::path& folder)
-{
-    try
-    {
-        if (std::filesystem::exists(folder))
-            std::filesystem::remove(folder); // remove previous stored step
-    }
-    catch (const std::exception& e)
-    {
-        throw Error(cat("I/O error: ", e.what()));
-    }
-}
-
 void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequence& seq)
 {
-    remove_path(lua_file);
+    std::error_code error;
+    std::filesystem::remove(lua_file, error);
+    if (error)
+        throw Error(cat("I/O error: ", error.message()));
 
     std::ofstream stream(lua_file);
 
@@ -371,16 +361,12 @@ void SequenceManager::store_sequence_impl(const Sequence& seq) const
 {
     const int max_digits = int( seq.size() / 10 ) + 1;
     const auto seq_path = path_ / make_sequence_filename(seq);
-    try
-    {
-        if (std::filesystem::exists(seq_path))
-            std::filesystem::remove_all(seq_path); // remove previous storage
-        std::filesystem::create_directories(seq_path);
-    }
-    catch (const std::exception& e)
-    {
-        throw Error(cat("I/O error: ", e.what()));
-    }
+    std::error_code error;
+    std::filesystem::remove_all(seq_path, error); // remove previous storage
+    if (not error)
+        std::filesystem::create_directories(seq_path, error);
+    if (error)
+        throw Error(cat("I/O error: ", error.message()));
 
     store_sequence_parameters(seq_path / sequence_lua_filename, seq);
 
