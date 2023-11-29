@@ -402,30 +402,30 @@ std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_
         {
             if (elm.changes == "new file" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- create '",elm.path_name, "'");
+                git_msg += gul14::cat("\n- create '", elm.path_name, "'");
             }
             else if (elm.changes == "modified" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- modify '",elm.path_name, "'");
+                git_msg += gul14::cat("\n- modify '", elm.path_name, "'");
             }
             else if (elm.changes == "deleted" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- delete '",elm.path_name, "'");
+                git_msg += gul14::cat("\n- delete '", elm.path_name, "'");
                 git_repo_.remove_files({elm.path_name});
                 continue;
             }
             else if (elm.changes == "renamed" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- rename '",elm.path_name, "'");
+                git_msg += gul14::cat("\n- rename '", elm.path_name, "'");
             }
             else if (elm.changes == "typechange" and (filetype == elm.changes or filetype == ""))
             {
-                git_msg += gul14::cat("\n", "- '",elm.path_name, "' has its type change");
+                git_msg += gul14::cat("\n- '", elm.path_name, "' has its type change");
             }
             else if (elm.changes == "untracked" and (filetype == elm.changes or filetype == ""))
             {
                 const auto elmpath = (std::filesystem::path) elm.path_name;
-                git_msg += gul14::cat("\n", "- Add ",elmpath.filename().string(), " from new sequence '", dir_name.string(), "'");
+                git_msg += gul14::cat("\n- Add ", elmpath.filename().string(), " from new sequence '", dir_name.string(), "'");
             }
             else continue;
 
