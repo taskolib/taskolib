@@ -206,8 +206,9 @@ public:
      * This function use git.
      *
      * \param sequence  the sequence to be stored
+     * \param intent    reason for storing the sequence, "change" is default
      */
-    void store_sequence(const Sequence& sequence);
+    void store_sequence(const Sequence& sequence, gul14::string_view intent = "change");
 
 private:
     /// Base path to the sequences.
