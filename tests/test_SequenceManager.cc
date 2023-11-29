@@ -75,20 +75,20 @@ std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path
 
 TEST_CASE("SequenceManager: Constructor with path", "[SequenceManager]")
 {
-    std::filesystem::remove_all("./another/path/to/sequences");
-    SequenceManager sm{ "./another/path/to/sequences" };
-    REQUIRE(sm.get_path() == "./another/path/to/sequences");
+    std::filesystem::remove_all(temp_dir / "1");
+    SequenceManager sm{ temp_dir / "1" };
+    REQUIRE(sm.get_path() == temp_dir / "1");
 }
 
 TEST_CASE("SequenceManager: Move constructor", "[SequenceManager]")
 {
-    SequenceManager s{ SequenceManager("unit_test_files") };
-    REQUIRE(s.get_path() == "unit_test_files");
+    SequenceManager s{ SequenceManager{ temp_dir / "2" } };
+    REQUIRE(s.get_path() == temp_dir / "2");
 }
 
 TEST_CASE("SequenceManager: copy_sequence()", "[SequenceManager]")
 {
-    const char* dir = "unit_test_files/copy_sequence_test";
+    const auto dir = temp_dir / "copy_sequence_test";
 
     if (std::filesystem::exists(dir))
         std::filesystem::remove_all(dir);
@@ -131,7 +131,7 @@ TEST_CASE("SequenceManager: copy_sequence()", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: create_sequence()", "[SequenceManager]")
 {
-    const char* dir = "unit_test_files/create_sequence_test";
+    const auto dir = temp_dir / "create_sequence_test";
 
     std::filesystem::create_directories(dir);
     SequenceManager manager{ dir };
@@ -168,7 +168,7 @@ TEST_CASE("SequenceManager: create_sequence()", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 {
-    const std::string root = "unit_test_files/sequences";
+    auto root = temp_dir / "sequences";
     if (std::filesystem::exists(root))
         std::filesystem::remove_all(root);
 
@@ -204,18 +204,18 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
     manager.store_sequence(seq_2);
 
     // create a regular file to test sequence directory loading only
-    std::fstream f(root + "/some_weirdo_file[1234567890abcdef]", std::ios::out);
+    std::fstream f(root / "some_weirdo_file[1234567890abcdef]", std::ios::out);
     f.close();
 
     // create a ".git" repository to test that it is not listed as a sequence
-    std::filesystem::create_directory(root + "/.git");
+    std::filesystem::create_directory(root / ".git");
 
     // create an empty directory with a non-sequence name (should be ignored)
-    std::filesystem::create_directory(root + "/some_weirdo_folder[x1234567890abcdef]");
+    std::filesystem::create_directory(root / "some_weirdo_folder[x1234567890abcdef]");
 
     // create a sequence directory without a unique ID, but with a sequence.lua file
-    std::filesystem::create_directory(root + "/A legacy sequence");
-    std::fstream f2(root + "/A legacy sequence/sequence.lua", std::ios::out);
+    std::filesystem::create_directory(root / "A legacy sequence");
+    std::fstream f2(root / "A legacy sequence/sequence.lua", std::ios::out);
     f2.close();
 
 
@@ -247,7 +247,7 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[SequenceManager]")
 {
-    const char* dir = "unit_test_files/empty_sequence_folder";
+    const auto dir = temp_dir / "empty_sequence_folder";
 
     if (std::filesystem::exists(dir))
         std::filesystem::remove_all(dir);
@@ -261,7 +261,7 @@ TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[Sequence
 
 TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
 {
-    const char* dir = "unit_test_files/remove_sequence_test";
+    const auto dir = temp_dir / "remove_sequence_test";
 
     if (std::filesystem::exists(dir))
         std::filesystem::remove_all(dir);
@@ -284,7 +284,7 @@ TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
 {
-    const char* dir = "unit_test_files/relabel_sequence_test";
+    const auto dir = temp_dir / "relabel_sequence_test";
 
     std::filesystem::create_directories(dir);
     SequenceManager manager{ dir };
@@ -316,14 +316,14 @@ TEST_CASE("SequenceManager: rename_sequence()", "[SequenceManager]")
 
 TEST_CASE("SequenceManager: store_sequence() - Filename format", "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const auto dir = temp_dir / "store";
+    SequenceManager manager{ dir };
 
     const SequenceName seq_name{ "Test_sequence" };
     const UniqueId seq_uid{ 0xfeeddeafdeadbeef };
     const auto seq_folder = make_sequence_filename(seq_name, seq_uid);
 
-    if (std::filesystem::exists(temp_dir / seq_folder))
-        std::filesystem::remove_all(temp_dir / seq_folder);
+    std::filesystem::remove_all(dir / seq_folder);
 
     Sequence sequence{ "", seq_name, seq_uid };
     sequence.push_back(Step{ Step::type_action });
@@ -353,7 +353,7 @@ TEST_CASE("SequenceManager: store_sequence() - Filename format", "[SequenceManag
         "step_10_action.lua"
     };
 
-    std::vector<std::string> actual = collect_lua_filenames(temp_dir / seq_folder);
+    std::vector<std::string> actual = collect_lua_filenames(dir / seq_folder);
     std::sort(actual.begin(), actual.end());
 
     REQUIRE(expect.size() == actual.size());
@@ -387,7 +387,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Steps",
         return r;
     };
 
-    SequenceManager sm{ "unit_test_files" };
+    SequenceManager sm{ temp_dir / "store_and_load" };
     sm.store_sequence(seq);
 
     Sequence load = sm.load_sequence(seq.get_unique_id());
@@ -401,7 +401,8 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Steps",
 TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UID",
     "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const auto dir = temp_dir / "store_and_load2";
+    SequenceManager manager{ dir };
 
     const auto label = "A/\"sequence\"$[<again>]"s;
     const SequenceName name{ "gabba-gabba_he.Y" };
@@ -411,14 +412,13 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UI
 
     const auto seq_folder = make_sequence_filename(sequence);
 
-    if (std::filesystem::exists(temp_dir / seq_folder))
-        std::filesystem::remove_all(temp_dir / seq_folder);
+    std::filesystem::remove_all(dir / seq_folder);
 
-    auto before = collect_filenames(temp_dir);
+    auto before = collect_filenames(dir);
 
     REQUIRE_NOTHROW(manager.store_sequence(sequence));
 
-    auto after = collect_filenames(temp_dir);
+    auto after = collect_filenames(dir);
 
     std::vector<std::string> new_filenames;
     std::set_difference(after.begin(), after.end(),
@@ -437,7 +437,8 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UI
 TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Step setup",
     "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const auto dir = temp_dir / "store_and_load3";
+    SequenceManager manager{ dir };
 
     const auto step_setup_script =
         R"(
@@ -461,7 +462,8 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Step setup",
 TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Indentation level & type",
     "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const auto dir = temp_dir / "store_and_load4";
+    SequenceManager manager{ dir };
 
     Sequence sequence{ "this_is_a_sequence" };
     sequence.push_back(Step{ Step::type_while });
@@ -485,13 +487,13 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Indentation lev
 TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, timeout",
     "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const auto dir = temp_dir / "store_and_load2";
+    SequenceManager manager{ dir };
 
     Sequence seq{ "Test sequence with maintainers" };
 
     // remove previously stored sequence
-    if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
-        std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
+    std::filesystem::remove_all(dir / make_sequence_filename(seq));
 
     seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
     seq.set_timeout(task::Timeout{ 1min });
@@ -509,7 +511,8 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, ti
 TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence",
     "[SequenceManager]")
 {
-    SequenceManager manager{ temp_dir };
+    const auto dir = temp_dir / "store_and_load6";
+    SequenceManager manager{ dir };
 
     std::string uid{ "empty_seq_with_step_setup" };
     Sequence seq{ uid };
@@ -523,8 +526,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
     SECTION("Deserialize empty sequence (part 2)")
     {
         // Remove previously stored sequence
-        if (std::filesystem::exists(temp_dir / make_sequence_filename(seq)))
-            std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
+        std::filesystem::remove_all(dir / make_sequence_filename(seq));
 
         manager.store_sequence(seq);
 
@@ -536,7 +538,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
 
 TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 {
-    std::filesystem::path git_dir{ "sequences_git" };
+    auto git_dir = temp_dir / "sequences_git";
 
     SECTION("Create and store sequence")
     {
