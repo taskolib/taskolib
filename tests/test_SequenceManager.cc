@@ -76,13 +76,13 @@ std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path
 TEST_CASE("SequenceManager: Constructor with path", "[SequenceManager]")
 {
     std::filesystem::remove_all("./another/path/to/sequences");
-    SequenceManager sm{"./another/path/to/sequences"};
+    SequenceManager sm{ "./another/path/to/sequences" };
     REQUIRE(sm.get_path() == "./another/path/to/sequences");
 }
 
 TEST_CASE("SequenceManager: Move constructor", "[SequenceManager]")
 {
-    SequenceManager s{SequenceManager("unit_test_files")};
+    SequenceManager s{ SequenceManager("unit_test_files") };
     REQUIRE(s.get_path() == "unit_test_files");
 }
 
@@ -173,11 +173,11 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
         std::filesystem::remove_all(root);
 
     // prepare first sequence for test
-    Step step_1_01{Step::type_while};
+    Step step_1_01{ Step::type_while };
     step_1_01.set_label("while");
     step_1_01.set_script("return i < 10");
 
-    Step step_1_02{Step::type_action};
+    Step step_1_02{ Step::type_action };
     step_1_02.set_label("action");
     step_1_02.set_script("i = i + 1");
 
@@ -256,7 +256,7 @@ TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[Sequence
 
     SequenceManager manager{ dir };
 
-    REQUIRE_THROWS_AS(manager.load_sequence(UniqueId{}), Error);
+    REQUIRE_THROWS_AS(manager.load_sequence(UniqueId{ }), Error);
 }
 
 TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
@@ -364,11 +364,11 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Steps",
     "[SequenceManager]")
 {
     // prepare some sequence for the test
-    Step step_01{Step::type_while};
+    Step step_01{ Step::type_while };
     step_01.set_label("while");
     step_01.set_script("return i < 10");
 
-    Step step_02{Step::type_action};
+    Step step_02{ Step::type_action };
     step_02.set_label("action");
     step_02.set_script("i = i + 1");
 
@@ -407,7 +407,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UI
     const SequenceName name{ "gabba-gabba_he.Y" };
 
     Sequence sequence{ label, name };
-    sequence.push_back(Step{});
+    sequence.push_back(Step{ });
 
     const auto seq_folder = make_sequence_filename(sequence);
 
@@ -494,7 +494,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, ti
         std::filesystem::remove_all(temp_dir / make_sequence_filename(seq));
 
     seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
-    seq.set_timeout(task::Timeout{1min});
+    seq.set_timeout(task::Timeout{ 1min });
 
     manager.store_sequence(seq);
 
@@ -502,7 +502,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, ti
 
     REQUIRE("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu"
         == seq_deserialized.get_maintainers());
-    REQUIRE(task::Timeout{1min} == seq_deserialized.get_timeout());
+    REQUIRE(task::Timeout{ 1min } == seq_deserialized.get_timeout());
     REQUIRE("Test sequence with maintainers" == seq_deserialized.get_label());
 }
 
@@ -536,7 +536,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
 
 TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 {
-    std::filesystem::path git_dir {"sequences_git"};
+    std::filesystem::path git_dir{ "sequences_git" };
 
     SECTION("Create and store sequence")
     {
@@ -544,11 +544,11 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         std::filesystem::remove_all(git_dir);
 
         // init manager
-        SequenceManager manager{ git_dir};
+        SequenceManager manager{ git_dir };
 
         // create sequence
         Sequence seq{ "git Sequence 1",  SequenceName{ "git_sequence_1" }, UniqueId{ 0xabcdef123456 } };
-        Step step_01{Step::type_while};
+        Step step_01{ Step::type_while };
         step_01.set_label("while");
         step_01.set_script("return i < 10");
         seq.push_back(step_01);
@@ -558,7 +558,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         // unable to reach repo debug functions without a new function in sequenceManager
         // Therefore a standalone git handler has to be initialized
-        git::GitRepository repo{git_dir};
+        git::GitRepository repo{ git_dir };
 
         // check if commit was done
         const std::string expected_msg = "change sequence:\n- Add sequence.lua from new sequence 'git_sequence_1[0000abcdef123456]'\n- Add step_1_while.lua from new sequence 'git_sequence_1[0000abcdef123456]'";
@@ -592,7 +592,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("change and store sequence (step_setup)")
     {
-        SequenceManager manager{ git_dir};
+        SequenceManager manager{ git_dir };
 
         // load sequence an change step setup
         auto seq = manager.load_sequence(UniqueId{ 0xabcdef123456 });
@@ -608,7 +608,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // store sequence
         manager.store_sequence(seq);
 
-        git::GitRepository repo{git_dir};
+        git::GitRepository repo{ git_dir };
 
         const std::string expected_msg = "change sequence:\n- modify 'git_sequence_1[0000abcdef123456]/sequence.lua'";
         const auto last_msg = repo.get_last_commit_message();
@@ -640,25 +640,25 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("copy sequence")
     {
-        SequenceManager manager{ git_dir};
+        SequenceManager manager{ git_dir };
 
         // find sequence unique ID
-        UniqueId uID{0};
+        UniqueId uID{ 0 };
         for (auto elm: manager.list_sequences())
         {
-            if (elm.name == SequenceName{"git_sequence_1"}) uID = elm.unique_id;
+            if (elm.name == SequenceName{ "git_sequence_1" }) uID = elm.unique_id;
         }
-        REQUIRE(uID == UniqueId{0xabcdef123456});
+        REQUIRE(uID == UniqueId{ 0xabcdef123456 });
 
-        manager.copy_sequence(UniqueId{0xabcdef123456}, SequenceName{"git_sequence_2"});
+        manager.copy_sequence(UniqueId{ 0xabcdef123456 }, SequenceName{ "git_sequence_2" });
 
-        git::GitRepository repo{git_dir};
+        git::GitRepository repo{ git_dir };
 
         // find sequence full name
-        std::filesystem::path seq_name{""};
+        std::filesystem::path seq_name{ "" };
         for (auto elm: manager.list_sequences())
         {
-            if (elm.name == SequenceName{"git_sequence_2"}) seq_name = elm.path;
+            if (elm.name == SequenceName{ "git_sequence_2" }) seq_name = elm.path;
         }
         REQUIRE(seq_name != "");
 
@@ -679,7 +679,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
             {
                 seq_exists = true;
 
-                // if staging did not work: 
+                // if staging did not work:
                 //      elm.handling == "untracked"
                 //      elm.changes == "untracked"
                 // if commit did not work
@@ -696,35 +696,35 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("rename sequence")
     {
-        SequenceManager manager{ git_dir};
+        SequenceManager manager{ git_dir };
 
         // find sequence unique ID and full name
-        UniqueId uID{0};
-        std::filesystem::path seq2{""};
+        UniqueId uID{ 0 };
+        std::filesystem::path seq2{ "" };
         for (auto elm: manager.list_sequences())
         {
-            if (elm.name == SequenceName{"git_sequence_2"})
+            if (elm.name == SequenceName{ "git_sequence_2" })
             {
                 uID = elm.unique_id;
                 seq2 = elm.path;
             }
         }
-        REQUIRE(uID != UniqueId{0});
+        REQUIRE(uID != UniqueId{ 0 });
         REQUIRE(seq2 != "");
 
 
-        manager.rename_sequence(uID, SequenceName{"git_sequence_3"});
+        manager.rename_sequence(uID, SequenceName{ "git_sequence_3" });
 
         // find sequence paths
-        std::filesystem::path seq3{""};
+        std::filesystem::path seq3{ "" };
         for (auto elm: manager.list_sequences())
         {
-            
-            if (elm.name == SequenceName{"git_sequence_3"}) seq3 = elm.path;
+
+            if (elm.name == SequenceName{ "git_sequence_3" }) seq3 = elm.path;
         }
         REQUIRE(seq3 != "");
 
-        git::GitRepository repo{git_dir};
+        git::GitRepository repo{ git_dir };
 
         const std::string expected_msg = gul14::cat("Rename git_sequence_2 to git_sequence_3:\n",
                                                      "- delete '", seq2.string(), "/sequence.lua'\n",
@@ -762,13 +762,13 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
     SECTION("remove sequence")
     {
-        SequenceManager manager{ git_dir};
+        SequenceManager manager{ git_dir };
 
         manager.remove_sequence(UniqueId{ 0xabcdef123456 });
 
         // create object here so that manager.store_sequence throws error
         // if init repository did not work
-        git::GitRepository repo{git_dir};
+        git::GitRepository repo{ git_dir };
 
         const std::string expected_msg = gul14::cat("remove sequence:\n",
                                                      "- delete 'git_sequence_1[0000abcdef123456]/sequence.lua'\n",
