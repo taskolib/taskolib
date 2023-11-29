@@ -126,7 +126,10 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
             "': ", error.message()));
     }
 
-    return Sequence{ label, name, unique_id };
+    auto seq = Sequence{ label, name, unique_id };
+    store_sequence(seq, "create");
+
+    return seq;
 }
 
 UniqueId SequenceManager::create_unique_id(const std::vector<SequenceOnDisk>& sequences)
@@ -338,7 +341,7 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
     sequence.set_name(new_name);
 }
 
-void SequenceManager::store_sequence(const Sequence& seq)
+void SequenceManager::store_sequence(const Sequence& seq, gul14::string_view intent)
 {
     store_sequence_impl(seq);
 
@@ -348,7 +351,7 @@ void SequenceManager::store_sequence(const Sequence& seq)
 
     // commit to local repository
     if (commit_msg != "")
-        git_repo_.commit(gul14::cat("change sequence:", commit_msg));
+        git_repo_.commit(gul14::cat(intent, " sequence:", commit_msg));
 }
 
 void SequenceManager::store_sequence_impl(const Sequence& seq) const
