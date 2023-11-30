@@ -55,6 +55,12 @@ libno_full = '.'.join(libno_parts)
 ## https://stackoverflow.com/questions/52516165/cannot-use-the-c-stdfilesystem-library-with-meson-build
 add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
+## libgit2 has obviously a change in the globbing
+local_cpp_args = []
+if dependency('libgit2').version().version_compare('<1')
+    message('Ancient libgit2 version detected')
+    local_cpp_args += [ '-DANCIENT_LIBGIT2' ]
+endif
 
 ## Build library
 subdir('include')
@@ -75,6 +81,7 @@ deps = [
 
 lib = both_libraries(meson.project_name(),
     sources,
+    cpp_args : local_cpp_args,
     dependencies : deps,
     soversion : libno_full,
     darwin_versions : libno,
