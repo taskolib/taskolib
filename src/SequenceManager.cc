@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include <gul14/substring_checks.h>
+#include <gul14/gul.h>
 
 #include "deserialize_sequence.h"
 #include "internals.h"
@@ -35,6 +35,7 @@
 #include <libgit4cpp/GitRepository.h>
 #include <libgit4cpp/Error.h>
 
+using namespace std::literals::string_literals;
 using gul14::cat;
 
 namespace task {
@@ -91,6 +92,9 @@ Sequence
 SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name)
 {
     const auto sequences = list_sequences();
+    const auto old_seq_on_disk = find_sequence_on_disk(original_uid, sequences);
+    const auto old_name = old_seq_on_disk.path;
+
     const UniqueId new_unique_id = create_unique_id(sequences);
 
     Sequence sequence = load_sequence(original_uid, sequences);
@@ -102,9 +106,9 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 
     // commit to local repository
     const auto new_folder_name = make_sequence_filename(new_name, new_unique_id);
-    const auto commit_msg = stage_files_in_directory(new_folder_name, "");
+    const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name) + "/");
     if (commit_msg != "")
-        git_repo_.commit(gul14::cat("copy sequence:", commit_msg));
+        git_repo_.commit(gul14::cat("Copy sequence ", old_name.string(), " to ", new_folder_name, "\n", commit_msg));
 
     return sequence;
 }
@@ -127,7 +131,10 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
     }
 
     auto seq = Sequence{ label, name, unique_id };
-    store_sequence(seq, "create");
+    store_sequence_impl(seq);
+    const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name) + "/");
+    if (commit_msg != "")
+        git_repo_.commit(gul14::cat("Create sequence ", new_folder_name, "\n", commit_msg));
 
     return seq;
 }
@@ -307,9 +314,9 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
     }
 
     // commit to local repository
-    const auto commit_msg = stage_files_in_directory(seq_on_disk.path, "");
+    const auto commit_msg = stage_files_in_directory(escape_glob(seq_on_disk.path) + "/");
     if (commit_msg != "")
-        git_repo_.commit(gul14::cat("remove sequence:", commit_msg));
+        git_repo_.commit(gul14::cat("Remove sequence ", seq_on_disk.path.string(), "\n", commit_msg));
 
 }
 
@@ -317,8 +324,9 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
 {
     const auto sequences = list_sequences();
     const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
+    const auto new_disk_name = make_sequence_filename(new_name, unique_id);
     const auto old_path = path_ / old_seq_on_disk.path;
-    const auto new_path = path_ / make_sequence_filename(new_name, unique_id);
+    const auto new_path = path_ / new_disk_name;
 
     std::error_code error;
     std::filesystem::rename(old_path, new_path, error);
@@ -329,10 +337,9 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
     }
 
     // commit to local repository
-    auto commit_msg = stage_files_in_directory(old_seq_on_disk.path, "");
-    commit_msg += stage_files_in_directory(make_sequence_filename(new_name, unique_id), "");
+    auto commit_msg = stage_files_in_directory(escape_glob(old_seq_on_disk.path) + "/", escape_glob(new_disk_name) + "/");
     if (commit_msg != "")
-        git_repo_.commit(gul14::cat("Rename ", old_seq_on_disk.name.string(), " to ", new_name.string(), ":", commit_msg));
+        git_repo_.commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to ", new_disk_name, "\n", commit_msg));
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
@@ -341,17 +348,17 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
     sequence.set_name(new_name);
 }
 
-void SequenceManager::store_sequence(const Sequence& seq, gul14::string_view intent)
+void SequenceManager::store_sequence(const Sequence& seq)
 {
     store_sequence_impl(seq);
 
     // detect what has changed in the sequence
     const auto dir_name = make_sequence_filename(seq.get_name(), seq.get_unique_id());
-    const auto commit_msg = stage_files_in_directory(dir_name, "");
+    const auto commit_msg = stage_files_in_directory(escape_glob(dir_name) + "/");
 
     // commit to local repository
     if (commit_msg != "")
-        git_repo_.commit(gul14::cat(intent, " sequence:", commit_msg));
+        git_repo_.commit(gul14::cat("Modify sequence ", dir_name, "\n", commit_msg));
 }
 
 void SequenceManager::store_sequence_impl(const Sequence& seq) const
@@ -372,52 +379,54 @@ void SequenceManager::store_sequence_impl(const Sequence& seq) const
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 }
 
-std::string SequenceManager::stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype)
+
+std::string SequenceManager::stage_files_in_directory(const std::string& glob1, const std::string& glob2)
 {
-    // detect what has changed in the sequence
-    std::string git_msg{""};
-    auto stats = git_repo_.status();
-    for(const auto& elm: stats)
-    {
+    git_repo_.add(glob1);
+    git_repo_.update(glob1);
+    if (not glob2.empty()) {
+        git_repo_.add(glob2);
+        git_repo_.update(glob2);
+    }
 
-        // filter for changes in sequence
-        if (gul14::starts_with(elm.path_name, dir_name.string()))
-        {
-            if (elm.changes == "new file" and (filetype == elm.changes or filetype == ""))
-            {
-                git_msg += gul14::cat("\n- create '", elm.path_name, "'");
-            }
-            else if (elm.changes == "modified" and (filetype == elm.changes or filetype == ""))
-            {
-                git_msg += gul14::cat("\n- modify '", elm.path_name, "'");
-            }
-            else if (elm.changes == "deleted" and (filetype == elm.changes or filetype == ""))
-            {
-                git_msg += gul14::cat("\n- delete '", elm.path_name, "'");
-                git_repo_.remove_files({elm.path_name});
-                continue;
-            }
-            else if (elm.changes == "renamed" and (filetype == elm.changes or filetype == ""))
-            {
-                git_msg += gul14::cat("\n- rename '", elm.path_name, "'");
-            }
-            else if (elm.changes == "typechange" and (filetype == elm.changes or filetype == ""))
-            {
-                git_msg += gul14::cat("\n- '", elm.path_name, "' has its type change");
-            }
-            else if (elm.changes == "untracked" and (filetype == elm.changes or filetype == ""))
-            {
-                const auto elmpath = (std::filesystem::path) elm.path_name;
-                git_msg += gul14::cat("\n- Add ", elmpath.filename().string(), " from new sequence '", dir_name.string(), "'");
-            }
-            else continue;
-
-            auto err_index = git_repo_.add_files({elm.path_name});
-            if (err_index.size() > 0)
-                throw git::Error(gul14::cat("ERROR:", elm.path_name, " was not staged."));
-        }
+    auto git_msg = ""s;
+    for(const auto& elm: git_repo_.status()) {
+        if (elm.handling != "staged")
+            continue;
+        auto filename = std::filesystem::path{ elm.path_name }.filename();
+        git_msg = gul14::cat(git_msg, "\n- ", elm.changes, ": ", filename.c_str());
     }
     return git_msg;
+}
+
+std::string escape_glob(const std::string& path)
+{
+    auto escaped = ""s;
+    escaped.reserve(path.length());
+
+    for (const signed char c : path) {
+        switch (c) {
+        case '*':
+            escaped += "\\*";
+            break;
+        case '?':
+            escaped += "\\?";
+            break;
+        case '\\':
+            escaped += "\\\\";
+            break;
+        case '[':
+            escaped += "\\[";
+            break;
+        case ']':
+            escaped += "\\]";
+            break;
+        default:
+            escaped += c;
+            break;
+        }
+    }
+    return escaped;
 }
 
 } // namespace task

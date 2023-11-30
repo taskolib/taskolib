@@ -206,9 +206,8 @@ public:
      * This function use git.
      *
      * \param sequence  the sequence to be stored
-     * \param intent    reason for storing the sequence, "change" is default
      */
-    void store_sequence(const Sequence& sequence, gul14::string_view intent = "change");
+    void store_sequence(const Sequence& sequence);
 
 private:
     /// Base path to the sequences.
@@ -227,24 +226,14 @@ private:
 
     /**
      * Stage all files git can find in a repository.
-     * parameter dir and filetype are used as filter.
-     * To stage all, use
-     *     - dir_name = ""
-     *     - filetype = ""
-     * \param dir relative path to sequence from path_ as base
-     * To restrict staging to one sequence, set dir to the sequence directory
-     * \param filetype define which file status group shall be staged
-     * filetype values:
-     *     - "" = all types allowed
-     *     - "new file"
-     *     - "modified"
-     *     - "deleted"
-     *     - "renamed"
-     *     - "typechange"
-     *     - "untracked"
-     * \return commit message starting with a linebreak
+     * Two globs can be specified to find only the files that are wanted.
+     *
+     * \param glob1  Main pathname specification which files to add as glob.
+     *               If it is "" all files in the repo are considered.
+     * \param glob2  Secondary pathname specification. If it is "" it is ignored.
+     * \return       Commit message starting with a linebreak.
     */
-    std::string stage_files_in_directory(std::filesystem::path dir_name, const std::string& filetype);
+    std::string stage_files_in_directory(const std::string& glob1, const std::string& glob2 = "");
 
     /**
      * Find the sequence with the given unique ID in the given list of sequences.
@@ -262,6 +251,17 @@ private:
     */
     void store_sequence_impl(const Sequence& sequence) const;
 };
+
+/**
+ * Escape all glob characters from a literal path
+ *
+ * We escape all globbing characters *, ?, \, [, ].
+ * Afterwards the string is a literal when used in globbing contexts.
+ *
+ * \param path   String that contains a literal path (shall not glob)
+ * \return       String that can be used for the path in globbing contexts
+ */
+std::string escape_glob(const std::string& path);
 
 } // namespace task
 
