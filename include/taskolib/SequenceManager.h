@@ -245,10 +245,12 @@ private:
     static SequenceName make_sequence_name_from_label(gul14::string_view label);
 
     /**
-     * private function to store a sequence without commit in git.
-     * \param sequence sequence object
+     * Actually write a sequence to disk (without commit in git)
+     *
+     * \param sequence  Sequence object to save
+     * \returns         Folder of the sequence on disk (relative to path_)
     */
-    void store_sequence_impl(const Sequence& sequence) const;
+    std::string write_sequence_to_disk(const Sequence& sequence);
 };
 
 /**
@@ -258,7 +260,7 @@ private:
  * Afterwards the string is a literal when used in globbing contexts.
  *
  * \param path   String that contains a literal path (shall not glob)
- * \return       String that can be used for the path in globbing contexts
+ * \returns      String that can be used for the path in globbing contexts
  */
 std::string escape_glob(const std::string& path);
 
