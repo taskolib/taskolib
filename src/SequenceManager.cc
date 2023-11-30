@@ -337,7 +337,8 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
     }
 
     // commit to local repository
-    auto commit_msg = stage_files_in_directory(escape_glob(old_seq_on_disk.path), escape_glob(new_disk_name));
+    stage_files_in_directory(escape_glob(old_seq_on_disk.path)); // result discarded, the next call will pick it up
+    auto commit_msg = stage_files_in_directory(escape_glob(new_disk_name));
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to ", new_disk_name, "\n", commit_msg));
 }
@@ -380,14 +381,9 @@ void SequenceManager::store_sequence_impl(const Sequence& seq) const
 }
 
 
-std::string SequenceManager::stage_files_in_directory(const std::string& glob1, const std::string& glob2)
+std::string SequenceManager::stage_files_in_directory(const std::string& glob)
 {
-    git_repo_.add(glob1);
-    git_repo_.update(glob1);
-    if (not glob2.empty()) {
-        git_repo_.add(glob2);
-        git_repo_.update(glob2);
-    }
+    git_repo_.add(glob);
 
     auto git_msg = ""s;
     for(const auto& elm: git_repo_.status()) {
