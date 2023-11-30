@@ -56,10 +56,10 @@ libno_full = '.'.join(libno_parts)
 add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
 ## libgit2 has obviously a change in the globbing
-local_cpp_args = []
+local_compiler_args = []
 if dependency('libgit2').version().version_compare('<1')
     message('Ancient libgit2 version detected')
-    local_cpp_args += [ '-DANCIENT_LIBGIT2' ]
+    local_compiler_args += [ '-DANCIENT_LIBGIT2' ]
 endif
 
 ## Build library
@@ -76,21 +76,19 @@ deps = [
     gul_dep.partial_dependency(compile_args : true, includes : true),
     lua_dep,
     dependency('libgit4cpp', fallback : ['libgit4cpp', 'libgit4cpp_dep']),
-
 ]
 
 lib = both_libraries(meson.project_name(),
     sources,
-    cpp_args : local_cpp_args,
-    dependencies : deps,
+    dependencies : deps + [ declare_dependency(compile_args : local_compiler_args) ],
     soversion : libno_full,
     darwin_versions : libno,
     include_directories : inc,
     build_rpath : meson.current_build_dir(),
     install_rpath : get_option('prefix') / get_option('libdir'),
     #gnu_symbol_visibility : 'hidden',
-    install : true)
-
+    install : true,
+)
 
 ## pkg-config
 
@@ -109,7 +107,6 @@ taskolib_dep = declare_dependency(
     include_directories : inc,
     link_with : lib,
     dependencies : [ deps, gul_dep, ],
-    
 )
 
 subdir('tests')
