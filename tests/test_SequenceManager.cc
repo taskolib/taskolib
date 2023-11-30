@@ -37,7 +37,6 @@
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
 
-
 using namespace Catch::Matchers;
 using namespace std::literals;
 using namespace task;
@@ -169,8 +168,7 @@ TEST_CASE("SequenceManager: create_sequence()", "[SequenceManager]")
 TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 {
     auto root = temp_dir / "sequences";
-    if (std::filesystem::exists(root))
-        std::filesystem::remove_all(root);
+    std::filesystem::remove_all(root);
 
     // prepare first sequence for test
     Step step_1_01{ Step::type_while };

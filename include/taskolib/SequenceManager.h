@@ -213,7 +213,7 @@ private:
     /// Base path to the sequences.
     std::filesystem::path path_;
 
-    /// Git Repository object
+    /// Git repository in path_ that holds the sequences
     git::GitRepository git_repo_;
 
     /**
@@ -226,6 +226,7 @@ private:
 
     /**
      * Stage all files git can find in a repository.
+     *
      * A file-glob can be specified to find only the files that are wanted.
      *
      * \param glob  Main pathname specification which files to add as glob.

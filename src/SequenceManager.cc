@@ -32,8 +32,8 @@
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
 
-#include <libgit4cpp/GitRepository.h>
 #include <libgit4cpp/Error.h>
+#include <libgit4cpp/GitRepository.h>
 
 using namespace std::literals::string_literals;
 using gul14::cat;
