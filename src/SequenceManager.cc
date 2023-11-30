@@ -76,13 +76,14 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
 
     stream << "-- label: " << seq.get_label() << '\n';
     stream << "-- timeout: " << seq.get_timeout() << '\n';
-    stream << seq; // RAII closes the stream (let the destructor do the job)
+    stream << seq;
 }
 
 } // anonymous namespace
 
 SequenceManager::SequenceManager(std::filesystem::path path)
-    : path_{ std::move(path) }, git_repo_{path_}
+    : path_{ std::move(path) }
+    , git_repo_{ path_ }
 {
     if (path_.empty())
         throw Error("Base path name for sequences must not be empty");
@@ -92,25 +93,19 @@ Sequence
 SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_name)
 {
     const auto sequences = list_sequences();
-    const auto old_seq_on_disk = find_sequence_on_disk(original_uid, sequences);
-    const auto old_name = old_seq_on_disk.path;
-
     const UniqueId new_unique_id = create_unique_id(sequences);
+    auto seq = load_sequence(original_uid, sequences);
+    seq.set_unique_id(new_unique_id);
+    seq.set_name(new_name);
 
-    Sequence sequence = load_sequence(original_uid, sequences);
+    const auto old_name = find_sequence_on_disk(original_uid, sequences).path;
 
-    sequence.set_unique_id(new_unique_id);
-    sequence.set_name(new_name);
-
-    store_sequence_impl(sequence);
-
-    // commit to local repository
-    const auto new_folder_name = make_sequence_filename(new_name, new_unique_id);
+    const auto new_folder_name = write_sequence_to_disk(seq);
     const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name));
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Copy sequence ", old_name.string(), " to ", new_folder_name, "\n", commit_msg));
 
-    return sequence;
+    return seq;
 }
 
 Sequence
@@ -118,20 +113,9 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
-
-    const auto new_folder_name = make_sequence_filename(name, unique_id);
-    const auto new_path = path_ / new_folder_name;
-
-    std::error_code error;
-    std::filesystem::create_directory(new_path, error);
-    if (error)
-    {
-        throw Error(gul14::cat("Unable to create sequence folder '", new_path.string(),
-            "': ", error.message()));
-    }
-
     auto seq = Sequence{ label, name, unique_id };
-    store_sequence_impl(seq);
+
+    const auto new_folder_name = write_sequence_to_disk(seq);
     const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name));
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Create sequence ", new_folder_name, "\n", commit_msg));
@@ -227,7 +211,8 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         if (seq.get_label().empty()) // legacy sequences do not store the label in the lua file
         {
             seq.set_label(label);
-            store_sequence_impl(seq);
+            // Ugly change-on-list_sequences() will go away once we remove legathy stuff:
+            const_cast<SequenceManager*>(this)->write_sequence_to_disk(seq);
         }
 
         sequences.push_back(SequenceOnDisk{ new_folder_name, name, unique_id });
@@ -258,7 +243,7 @@ Sequence SequenceManager::load_sequence(UniqueId uid,
     load_sequence_parameters(folder, seq);
 
     std::vector<std::filesystem::path> steps;
-    for (auto const& entry : std::filesystem::directory_iterator{folder})
+    for (auto const& entry : std::filesystem::directory_iterator{ folder })
     {
         if (entry.is_regular_file()
             and gul14::starts_with(entry.path().filename().string(), "step_"))
@@ -313,7 +298,6 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
             error.message()));
     }
 
-    // commit to local repository
     const auto commit_msg = stage_files_in_directory(escape_glob(seq_on_disk.path));
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Remove sequence ", seq_on_disk.path.string(), "\n", commit_msg));
@@ -336,7 +320,6 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
             " to ", new_path.string(), ": ", error.message()));
     }
 
-    // commit to local repository
     stage_files_in_directory(escape_glob(old_seq_on_disk.path)); // result discarded, the next call will pick it up
     auto commit_msg = stage_files_in_directory(escape_glob(new_disk_name));
     if (not commit_msg.empty())
@@ -351,21 +334,17 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
 
 void SequenceManager::store_sequence(const Sequence& seq)
 {
-    store_sequence_impl(seq);
-
-    // detect what has changed in the sequence
-    const auto dir_name = make_sequence_filename(seq.get_name(), seq.get_unique_id());
+    const auto dir_name = write_sequence_to_disk(seq);
     const auto commit_msg = stage_files_in_directory(escape_glob(dir_name));
-
-    // commit to local repository
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Modify sequence ", dir_name, "\n", commit_msg));
 }
 
-void SequenceManager::store_sequence_impl(const Sequence& seq) const
+std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
 {
     const int max_digits = int( seq.size() / 10 ) + 1;
-    const auto seq_path = path_ / make_sequence_filename(seq);
+    const auto folder = make_sequence_filename(seq);
+    const auto seq_path = path_ / folder;
     std::error_code error;
     std::filesystem::remove_all(seq_path, error); // remove previous storage
     if (not error)
@@ -378,6 +357,8 @@ void SequenceManager::store_sequence_impl(const Sequence& seq) const
     unsigned int idx = 0;
     for (const auto& step: seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
+
+    return folder;
 }
 
 
