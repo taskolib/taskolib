@@ -32,12 +32,6 @@
 
 using namespace task;
 
-TEST_CASE("format: TimePoint", "[format]")
-{
-    auto x = fmt::format("{}", TimePoint{ });
-    REQUIRE(x == "1970-01-01 00:00:00 UTC");
-}
-
 TEST_CASE("format: Message", "[format]")
 {
     Message msg;
@@ -49,4 +43,18 @@ TEST_CASE("format: Message", "[format]")
 
     auto x = fmt::format("{}", msg);
     REQUIRE(gul14::trim(x) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
+}
+
+TEST_CASE("format: Timeout", "[format]")
+{
+    auto x = fmt::format("{}", Timeout{ 0s });
+    REQUIRE(x == "0");
+    x = fmt::format("{}", Timeout::infinity());
+    REQUIRE(x == "infinite");
+}
+
+TEST_CASE("format: TimePoint", "[format]")
+{
+    auto x = fmt::format("{}", TimePoint{ });
+    REQUIRE(x == "1970-01-01 00:00:00 UTC");
 }

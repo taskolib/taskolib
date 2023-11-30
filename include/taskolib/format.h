@@ -28,18 +28,11 @@
 #include <fmt/format.h>
 #include <sstream>
 
-#include "taskolib/time_types.h"
 #include "taskolib/Message.h"
+#include "taskolib/time_types.h"
+#include "taskolib/Timeout.h"
 
-template<> struct fmt::formatter<task::TimePoint> {
-    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
-        return ctx.begin();
-    }
-    template <typename FormatContext>
-    auto format(task::TimePoint const& val, FormatContext& ctx) -> decltype(ctx.out()) {
-        return format_to(ctx.out(), "{}", task::to_string(val));
-    }
-};
+using namespace std::literals;
 
 template<> struct fmt::formatter<task::Message> {
     constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
@@ -50,6 +43,28 @@ template<> struct fmt::formatter<task::Message> {
         std::stringstream ss{ };
         ss << val;
         return format_to(ctx.out(), "{}", ss.str());
+    }
+};
+
+template<> struct fmt::formatter<task::Timeout> {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+        return ctx.begin();
+    }
+    template <typename FormatContext>
+    auto format(task::Timeout const& val, FormatContext& ctx) -> decltype(ctx.out()) {
+        std::stringstream ss{ };
+        ss << val;
+        return format_to(ctx.out(), "{}", ss.str());
+    }
+};
+
+template<> struct fmt::formatter<task::TimePoint> {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+        return ctx.begin();
+    }
+    template <typename FormatContext>
+    auto format(task::TimePoint const& val, FormatContext& ctx) -> decltype(ctx.out()) {
+        return format_to(ctx.out(), "{}", task::to_string(val));
     }
 };
 
