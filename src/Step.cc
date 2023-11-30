@@ -198,8 +198,13 @@ bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index,
 
 Step& Step::set_disabled(bool disable)
 {
-    is_disabled_ = disable;
-    set_time_of_last_modification(Clock::now());
+    // This setter is allways called from Sequence::enforce_consistency_of_disabled_flags()
+    // We must not change the modification time if we are not modified,
+    // or the modification time will always be the last enforce...() time
+    if (is_disabled_ != disable) {
+        is_disabled_ = disable;
+        set_time_of_last_modification(Clock::now());
+    }
     return *this;
 }
 
