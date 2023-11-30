@@ -107,7 +107,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
     // commit to local repository
     const auto new_folder_name = make_sequence_filename(new_name, new_unique_id);
     const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name) + "/");
-    if (commit_msg != "")
+    if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Copy sequence ", old_name.string(), " to ", new_folder_name, "\n", commit_msg));
 
     return sequence;
@@ -133,7 +133,7 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
     auto seq = Sequence{ label, name, unique_id };
     store_sequence_impl(seq);
     const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name) + "/");
-    if (commit_msg != "")
+    if (not commit_msg/empty())
         git_repo_.commit(gul14::cat("Create sequence ", new_folder_name, "\n", commit_msg));
 
     return seq;
@@ -315,7 +315,7 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
 
     // commit to local repository
     const auto commit_msg = stage_files_in_directory(escape_glob(seq_on_disk.path) + "/");
-    if (commit_msg != "")
+    if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Remove sequence ", seq_on_disk.path.string(), "\n", commit_msg));
 
 }
@@ -338,7 +338,7 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
 
     // commit to local repository
     auto commit_msg = stage_files_in_directory(escape_glob(old_seq_on_disk.path) + "/", escape_glob(new_disk_name) + "/");
-    if (commit_msg != "")
+    if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to ", new_disk_name, "\n", commit_msg));
 }
 
@@ -357,7 +357,7 @@ void SequenceManager::store_sequence(const Sequence& seq)
     const auto commit_msg = stage_files_in_directory(escape_glob(dir_name) + "/");
 
     // commit to local repository
-    if (commit_msg != "")
+    if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Modify sequence ", dir_name, "\n", commit_msg));
 }
 
