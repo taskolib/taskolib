@@ -563,7 +563,9 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         git::GitRepository repo{ git_dir };
 
         // check if commit was done
-        const std::string expected_msg = "change sequence:\n- Add sequence.lua from new sequence 'git_sequence_1[0000abcdef123456]'\n- Add step_1_while.lua from new sequence 'git_sequence_1[0000abcdef123456]'";
+        const std::string expected_msg = "Modify sequence git_sequence_1[0000abcdef123456]\n\n"
+            "- new file: sequence.lua\n"
+            "- new file: step_1_while.lua";
         const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -612,7 +614,8 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         git::GitRepository repo{ git_dir };
 
-        const std::string expected_msg = "change sequence:\n- modify 'git_sequence_1[0000abcdef123456]/sequence.lua'";
+        const std::string expected_msg = "Modify sequence git_sequence_1[0000abcdef123456]\n\n"
+            "- modified: sequence.lua";
         const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -665,9 +668,10 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         REQUIRE(seq_name != "");
 
         // check commit message
-        const std::string expected_msg = gul14::cat("copy sequence:\n- Add sequence.lua from new sequence '",
-                                                     seq_name.string(), "'\n- Add step_1_while.lua from new sequence '",
-                                                     seq_name.string(), "'");
+        const std::string expected_msg = gul14::cat("Copy sequence git_sequence_1[0000abcdef123456] "
+            "to ", seq_name.string(), "\n\n"
+            "- new file: sequence.lua\n"
+            "- new file: step_1_while.lua");
         const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -728,11 +732,13 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         git::GitRepository repo{ git_dir };
 
-        const std::string expected_msg = gul14::cat("Rename git_sequence_2 to git_sequence_3:\n",
-                                                     "- delete '", seq2.string(), "/sequence.lua'\n",
-                                                     "- delete '", seq2.string(), "/step_1_while.lua'\n"
-                                                     "- Add sequence.lua from new sequence '", seq3.string(), "'\n"
-                                                     "- Add step_1_while.lua from new sequence '", seq3.string(), "'");
+        const std::string expected_msg = gul14::cat("Rename ",
+            seq2.string(), " to ", seq3.string(), "\n\n",
+            "- deleted: sequence.lua\n"
+            "- deleted: step_1_while.lua\n"
+            "- new file: sequence.lua\n"
+            "- new file: step_1_while.lua");
+
         const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
@@ -772,9 +778,9 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // if init repository did not work
         git::GitRepository repo{ git_dir };
 
-        const std::string expected_msg = gul14::cat("remove sequence:\n",
-                                                     "- delete 'git_sequence_1[0000abcdef123456]/sequence.lua'\n",
-                                                     "- delete 'git_sequence_1[0000abcdef123456]/step_1_while.lua'");
+        const std::string expected_msg = "Remove sequence git_sequence_1[0000abcdef123456]\n\n"
+            "- deleted: sequence.lua\n"
+            "- deleted: step_1_while.lua";
         const auto last_msg = repo.get_last_commit_message();
         REQUIRE(expected_msg == last_msg);
 
