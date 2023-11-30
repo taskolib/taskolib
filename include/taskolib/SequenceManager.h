@@ -226,14 +226,13 @@ private:
 
     /**
      * Stage all files git can find in a repository.
-     * Two globs can be specified to find only the files that are wanted.
+     * A file-glob can be specified to find only the files that are wanted.
      *
-     * \param glob1  Main pathname specification which files to add as glob.
-     *               If it is "" all files in the repo are considered.
-     * \param glob2  Secondary pathname specification. If it is "" it is ignored.
-     * \return       Commit message starting with a linebreak.
+     * \param glob  Main pathname specification which files to add as glob.
+     *              If it is empty ("") all files in the repo are considered.
+     * \return      Commit message starting with a linebreak.
     */
-    std::string stage_files_in_directory(const std::string& glob1, const std::string& glob2 = "");
+    std::string stage_files_in_directory(const std::string& glob);
 
     /**
      * Find the sequence with the given unique ID in the given list of sequences.
