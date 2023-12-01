@@ -225,14 +225,17 @@ private:
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
     /**
-     * Stage all files git can find in a repository.
+     * Stage files matching the specified glob for the next git commit.
      *
-     * A file-glob can be specified to find only the files that are wanted.
+     * This function is similar to "git add", but it can also stage files for removal like
+     * "git rm".
      *
-     * \param glob  Main pathname specification which files to add as glob.
-     *              If it is empty ("") all files in the repo are considered.
-     * \return      Commit message starting with a linebreak.
-    */
+     * \param glob  A git glob specifying which files to stage. If it is empty, all files
+     *              in the repository are considered. Examples: "", "foo/*", "*.txt",
+     *              "*.bak[0-9]"
+     * \returns a partial commit message containing information about the staged changes.
+     *          The returned string starts with a linebreak.
+     */
     std::string stage_files_in_directory(const std::string& glob);
 
     /**
