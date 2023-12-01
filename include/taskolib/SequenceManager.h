@@ -30,6 +30,7 @@
 #include <vector>
 
 #include <gul14/string_view.h>
+#include <gul14/SmallVector.h>
 #include <libgit4cpp/GitRepository.h>
 
 #include "taskolib/Sequence.h"
@@ -224,6 +225,8 @@ private:
      */
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
+    bool commit(gul14::SmallVector<gul14::string_view, 2> dirs, gul14::string_view message);
+
     /**
      * Stage all changes to files in the given directory for the next git commit.
      *
@@ -237,7 +240,7 @@ private:
      * \returns a partial commit message containing information about the staged changes.
      *          The returned string starts with a linebreak.
      */
-    std::string stage_files_in_directory(const std::string& directory);
+    std::string stage_files_in_directory(gul14::string_view directory);
 
     /**
      * Stage files matching the specified glob for the next git commit.
