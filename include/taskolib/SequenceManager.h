@@ -263,7 +263,7 @@ private:
      *
      */
     template <typename T>
-    bool perform_commit(gul14::SmallVector<gul14::string_view, 2> dirs, std::string message, T action)
+    bool perform_commit(gul14::SmallVector<std::string, 2> dirs, std::string message, T action)
     {
         auto commit_body = std::string{ };
         try {
@@ -292,8 +292,6 @@ private:
         return true;
     }
 
-    //bool commit(gul14::SmallVector<gul14::string_view, 2> dirs, gul14::string_view message);
-
     /**
      * Stage all changes to files in the given directory for the next git commit.
      *
@@ -307,7 +305,7 @@ private:
      * \returns a partial commit message containing information about the staged changes.
      *          The returned string starts with a linebreak.
      */
-    std::string stage_files_in_directory(gul14::string_view directory);
+    std::string stage_files_in_directory(const std::string& directory);
 
     /**
      * Stage files matching the specified glob for the next git commit.
