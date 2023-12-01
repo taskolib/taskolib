@@ -100,8 +100,10 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 
     const auto old_name = find_sequence_on_disk(original_uid, sequences).path;
 
-    const auto new_folder_name = write_sequence_to_disk(seq);
-    commit({ new_folder_name }, gul14::cat("Copy sequence ", old_name.string(), " to ", new_folder_name));
+    perform_commit({ }, gul14::cat("Copy sequence ", old_name.string(), " to "), [&]()
+        {
+            return write_sequence_to_disk(seq);
+        });
 
     return seq;
 }
@@ -113,8 +115,10 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
     const UniqueId unique_id = create_unique_id(sequences);
     auto seq = Sequence{ label, name, unique_id };
 
-    const auto new_folder_name = write_sequence_to_disk(seq);
-    commit({ new_folder_name }, gul14::cat("Create sequence ", new_folder_name));
+    perform_commit({ }, "Create sequence ", [&]()
+        {
+            return write_sequence_to_disk(seq);
+        });
 
     return seq;
 }
@@ -286,15 +290,16 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
     const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
     const auto path = path_ / seq_on_disk.path;
 
-    std::error_code error;
-    std::filesystem::remove_all(path, error);
-    if (error)
-    {
-        throw Error(cat("Cannot remove sequence folder ", path.string(), ": ",
-            error.message()));
-    }
-
-    commit({ seq_on_disk.path.string() }, gul14::cat("Remove sequence ", seq_on_disk.path.string()));
+    perform_commit({ seq_on_disk.path.string() }, gul14::cat("Remove sequence ", seq_on_disk.path.string()), [&]()
+        {
+            std::error_code error;
+            std::filesystem::remove_all(path, error);
+            if (error)
+            {
+                throw Error(cat("Cannot remove sequence folder ", path.string(), ": ",
+                    error.message()));
+            }
+        });
 }
 
 void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& new_name)
@@ -305,16 +310,17 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
     const auto old_path = path_ / old_seq_on_disk.path;
     const auto new_path = path_ / new_disk_name;
 
-    std::error_code error;
-    std::filesystem::rename(old_path, new_path, error);
-    if (error)
-    {
-        throw Error(gul14::cat("Cannot rename folder ", old_path.string(),
-            " to ", new_path.string(), ": ", error.message()));
-    }
-
     auto old_disk_name = old_seq_on_disk.path.string();
-    commit({ old_disk_name, new_disk_name }, gul14::cat("Rename ", old_disk_name, " to ", new_disk_name));
+    perform_commit({ old_disk_name, new_disk_name }, gul14::cat("Rename ", old_disk_name, " to ", new_disk_name), [&]()
+        {
+            std::error_code error;
+            std::filesystem::rename(old_path, new_path, error);
+            if (error)
+            {
+                throw Error(gul14::cat("Cannot rename folder ", old_path.string(),
+                    " to ", new_path.string(), ": ", error.message()));
+            }
+        });
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
@@ -325,8 +331,10 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
 
 void SequenceManager::store_sequence(const Sequence& seq)
 {
-    const auto dir_name = write_sequence_to_disk(seq);
-    commit({ dir_name }, gul14::cat("Modify sequence ", dir_name));
+    perform_commit({ }, "Modify sequence ", [&]()
+        {
+            return write_sequence_to_disk(seq);
+        });
 }
 
 std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
@@ -348,17 +356,6 @@ std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
         store_step(seq_path / extract_filename_step(++idx, max_digits, step), step);
 
     return folder;
-}
-
-bool SequenceManager::commit(gul14::SmallVector<gul14::string_view, 2> dirs, gul14::string_view message) {
-    auto commit_body = ""s;
-    for (auto& dir : dirs) {
-        commit_body = stage_files_in_directory(dir);
-    }
-    if (commit_body.empty())
-        return false;
-    git_repo_.commit(gul14::cat(message, "\n", commit_body));
-    return true;
 }
 
 std::string SequenceManager::stage_files(const std::string& glob)

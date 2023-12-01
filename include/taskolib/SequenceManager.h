@@ -225,7 +225,74 @@ private:
      */
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
-    bool commit(gul14::SmallVector<gul14::string_view, 2> dirs, gul14::string_view message);
+    /**
+     * Perform changes and commit them to the git repository.
+     *
+     * This function allows to introduce some changes to the filesystem and create a
+     * git commit from the changes; but if something fails the repository is rolled
+     * back safely.
+     *
+     * Committed are just changes in the directories given in dirs and the message starts
+     * with the specified message. Both dirs and message can be extended by the actual
+     * actions that are performed.
+     *
+     * - Repository is prepared (reset)
+     * - The actions are performed (closure is executed) - they should change the filesystem
+     * - Git searches for changes (just in the directories given by dirs)
+     * - The changes are added and committed using the given message as title
+     * - The commit body contains details about the changed files
+     * - If at any point an error occurs the commit is aborted and the filesystem is reset to
+     *   where we started (changes are undone)
+     *
+     * Sometimes we do not know the actual path we want change and commit before the real
+     * actions are performed. The closure can return a string; and that is a path to be
+     * also considered/added to the commit. The path as string is also added at the end
+     * of the title.
+     *
+     * The signature of the closure can be `void action()` or `std::string action()`.
+     *
+     * It is not possible to add a path to dirs while keeping the commit title unchanged.
+     *
+     * All dirs are relative to the git repository root.
+     *
+     * \param dirs     List of directories to add for this commit (usually just one)
+     * \param message  The commit message title
+     * \param action   Closure that performs the actual modifications on the filesystem
+     * \returns        true if the commit was successful, false if nothing found to commit
+     * \exception      task::Error, git::Error, or any other type can be thrown
+     *
+     */
+    template <typename T>
+    bool perform_commit(gul14::SmallVector<gul14::string_view, 2> dirs, std::string message, T action)
+    {
+        auto commit_body = std::string{ };
+        try {
+            git_repo_.reset(0);
+            if constexpr (std::is_same<decltype(action()), void>::value)
+                action();
+            else {
+                auto add_path = action();
+                message += add_path;
+                dirs.push_back(add_path);
+            }
+            for (auto& dir : dirs) {
+                commit_body = stage_files_in_directory(dir);
+            }
+            if (commit_body.empty())
+                return false;
+            git_repo_.commit(gul14::cat(message, "\n", commit_body));
+        }
+        catch (std::exception const& e) {
+            try {
+                git_repo_.reset(0);
+            }
+            catch (...) {}
+            throw e;
+        }
+        return true;
+    }
+
+    //bool commit(gul14::SmallVector<gul14::string_view, 2> dirs, gul14::string_view message);
 
     /**
      * Stage all changes to files in the given directory for the next git commit.
