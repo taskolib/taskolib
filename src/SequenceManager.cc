@@ -101,7 +101,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
     const auto old_name = find_sequence_on_disk(original_uid, sequences).path;
 
     const auto new_folder_name = write_sequence_to_disk(seq);
-    const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name));
+    const auto commit_msg = stage_files_in_directory(new_folder_name);
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Copy sequence ", old_name.string(), " to ", new_folder_name, "\n", commit_msg));
 
@@ -116,7 +116,7 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
     auto seq = Sequence{ label, name, unique_id };
 
     const auto new_folder_name = write_sequence_to_disk(seq);
-    const auto commit_msg = stage_files_in_directory(escape_glob(new_folder_name));
+    const auto commit_msg = stage_files_in_directory(new_folder_name);
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Create sequence ", new_folder_name, "\n", commit_msg));
 
@@ -298,7 +298,7 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
             error.message()));
     }
 
-    const auto commit_msg = stage_files_in_directory(escape_glob(seq_on_disk.path));
+    const auto commit_msg = stage_files_in_directory(seq_on_disk.path);
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Remove sequence ", seq_on_disk.path.string(), "\n", commit_msg));
 
@@ -320,8 +320,8 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
             " to ", new_path.string(), ": ", error.message()));
     }
 
-    stage_files_in_directory(escape_glob(old_seq_on_disk.path)); // result discarded, the next call will pick it up
-    auto commit_msg = stage_files_in_directory(escape_glob(new_disk_name));
+    stage_files_in_directory(old_seq_on_disk.path); // result discarded, the next call will pick it up
+    auto commit_msg = stage_files_in_directory(new_disk_name);
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to ", new_disk_name, "\n", commit_msg));
 }
@@ -335,7 +335,7 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
 void SequenceManager::store_sequence(const Sequence& seq)
 {
     const auto dir_name = write_sequence_to_disk(seq);
-    const auto commit_msg = stage_files_in_directory(escape_glob(dir_name));
+    const auto commit_msg = stage_files_in_directory(dir_name);
     if (not commit_msg.empty())
         git_repo_.commit(gul14::cat("Modify sequence ", dir_name, "\n", commit_msg));
 }
@@ -361,8 +361,7 @@ std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
     return folder;
 }
 
-
-std::string SequenceManager::stage_files_in_directory(const std::string& glob)
+std::string SequenceManager::stage_files(const std::string& glob)
 {
     git_repo_.add(glob);
 
@@ -376,12 +375,14 @@ std::string SequenceManager::stage_files_in_directory(const std::string& glob)
     return git_msg;
 }
 
+namespace {
+
 std::string escape_glob(const std::string& path)
 {
     auto escaped = ""s;
     escaped.reserve(path.length());
 
-    for (const signed char c : path) {
+    for (const char c : path) {
         switch (c) {
         case '*':
             escaped += "\\*";
@@ -407,6 +408,13 @@ std::string escape_glob(const std::string& path)
         escaped += "/*";
 #   endif
     return escaped;
+}
+
+} // anonymous namespace
+
+std::string SequenceManager::stage_files_in_directory(const std::string& directory)
+{
+    return stage_files(escape_glob(directory));
 }
 
 } // namespace task

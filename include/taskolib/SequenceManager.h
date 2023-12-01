@@ -225,18 +225,33 @@ private:
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
 
     /**
+     * Stage all changes to files in the given directory for the next git commit.
+     *
+     * This function is similar to "git add", but it can also stage files for removal like
+     * "git rm". It recursively stages all changes to files in the given directory and in
+     * its subdirectories.
+     *
+     * \param directory  Directory whose contents should be staged. Glob/wildcard
+     *                   characters like '*' or '?' are considered a literal part of the
+     *                   directory name and escaped automatically.
+     * \returns a partial commit message containing information about the staged changes.
+     *          The returned string starts with a linebreak.
+     */
+    std::string stage_files_in_directory(const std::string& directory);
+
+    /**
      * Stage files matching the specified glob for the next git commit.
      *
      * This function is similar to "git add", but it can also stage files for removal like
      * "git rm".
      *
      * \param glob  A git glob specifying which files to stage. If it is empty, all files
-     *              in the repository are considered. Examples: "", "foo/*", "*.txt",
-     *              "*.bak[0-9]"
+     *              in the repository are considered. Examples: "", "*.txt",
+     *              "foo/backup_[0-9].dat"
      * \returns a partial commit message containing information about the staged changes.
      *          The returned string starts with a linebreak.
      */
-    std::string stage_files_in_directory(const std::string& glob);
+    std::string stage_files(const std::string& glob);
 
     /**
      * Find the sequence with the given unique ID in the given list of sequences.
@@ -256,17 +271,6 @@ private:
     */
     std::string write_sequence_to_disk(const Sequence& sequence);
 };
-
-/**
- * Escape all glob characters from a literal path
- *
- * We escape all globbing characters *, ?, \, [, ].
- * Afterwards the string is a literal when used in globbing contexts.
- *
- * \param path   String that contains a literal path (shall not glob)
- * \returns      String that can be used for the path in globbing contexts
- */
-std::string escape_glob(const std::string& path);
 
 } // namespace task
 
