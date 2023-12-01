@@ -374,7 +374,7 @@ std::string SequenceManager::stage_files(const std::string& glob)
 
 namespace {
 
-std::string escape_glob(gul14::string_view path)
+std::string escape_glob(const std::string& path)
 {
     auto escaped = ""s;
     escaped.reserve(path.length());
@@ -409,7 +409,7 @@ std::string escape_glob(gul14::string_view path)
 
 } // anonymous namespace
 
-std::string SequenceManager::stage_files_in_directory(gul14::string_view directory)
+std::string SequenceManager::stage_files_in_directory(const std::string& directory)
 {
     return stage_files(escape_glob(directory));
 }
