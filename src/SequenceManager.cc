@@ -418,3 +418,5 @@ std::string SequenceManager::stage_files_in_directory(gul14::string_view directo
 }
 
 } // namespace task
+
+// vi:ts=4:sw=4:sts=4:et
