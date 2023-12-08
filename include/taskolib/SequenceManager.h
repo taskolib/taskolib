@@ -263,7 +263,7 @@ private:
      *
      */
     template <typename T>
-    bool perform_commit(gul14::SmallVector<std::string, 2> dirs, std::string message, T action)
+    bool perform_commit(std::string message, T action, std::string extra_dir = "")
     {
         auto commit_body = std::string{ };
         try {
@@ -271,13 +271,12 @@ private:
             if constexpr (std::is_same<decltype(action()), void>::value)
                 action();
             else {
-                auto add_path = action();
-                message += add_path;
-                dirs.push_back(add_path);
+                auto path = action();
+                commit_body = stage_files_in_directory(path);
+                message += path;
             }
-            for (auto& dir : dirs) {
-                commit_body = stage_files_in_directory(dir);
-            }
+            if (not extra_dir.empty())
+                commit_body = stage_files_in_directory(extra_dir);
             if (commit_body.empty())
                 return false;
             git_repo_.commit(gul14::cat(message, "\n", commit_body));
