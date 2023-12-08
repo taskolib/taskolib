@@ -64,12 +64,12 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
     std::error_code error;
     std::filesystem::remove(lua_file, error);
     if (error)
-        throw Error(cat("I/O error: ", error.message()));
+        throw Error{ cat("I/O error: ", error.message()) };
 
     std::ofstream stream(lua_file);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", lua_file.string(), ")"));
+        throw Error{ cat("I/O error: unable to open file (", lua_file.string(), ")") };
 
     if (not seq.get_maintainers().empty())
         stream << "-- maintainers: " << seq.get_maintainers() << '\n';
@@ -86,7 +86,7 @@ SequenceManager::SequenceManager(std::filesystem::path path)
     , git_repo_{ path_ }
 {
     if (path_.empty())
-        throw Error("Base path name for sequences must not be empty");
+        throw Error{ "Base path name for sequences must not be empty" };
 }
 
 Sequence
@@ -105,7 +105,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
             return this->write_sequence_to_disk(seq);
         });
     if (not ok)
-        throw Error(cat("Cannot commit sequence copy ", to_string(original_uid)));
+        throw Error{ cat("Cannot commit sequence copy ", to_string(original_uid)) };
 
     return seq;
 }
@@ -122,7 +122,7 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
             return this->write_sequence_to_disk(seq);
         });
     if (not ok)
-        throw Error(cat("Cannot commit sequence creation ", to_string(unique_id)));
+        throw Error{ cat("Cannot commit sequence creation ", to_string(unique_id)) };
 
     return seq;
 }
@@ -137,7 +137,7 @@ UniqueId SequenceManager::create_unique_id(const std::vector<SequenceOnDisk>& se
             return uid;
     }
 
-    throw Error("Unable to find a unique ID");
+    throw Error{ "Unable to find a unique ID" };
 }
 
 SequenceManager::SequenceOnDisk
@@ -148,7 +148,7 @@ SequenceManager::find_sequence_on_disk(UniqueId uid,
         [uid](const auto& seq) { return seq.unique_id == uid; });
 
     if (it == sequences.end())
-        throw Error(cat("Sequence not found: Unknown unique ID ", to_string(uid)));
+        throw Error{ cat("Sequence not found: Unknown unique ID ", to_string(uid)) };
 
     return *it;
 }
@@ -206,9 +206,9 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         std::filesystem::rename(path_ / folder, path_ / new_folder_name, error);
         if (error)
         {
-            throw Error(gul14::cat("Sequence folder ", folder.string(),
+            throw Error{ gul14::cat("Sequence folder ", folder.string(),
                 " does not contain a unique ID and cannot be renamed to ",
-                new_folder_name, ": ", error.message()));
+                new_folder_name, ": ", error.message()) };
         }
 
         auto seq = load_sequence(unique_id);
@@ -238,9 +238,9 @@ Sequence SequenceManager::load_sequence(UniqueId uid,
     const auto folder = path_ / seq_on_disk.path;
 
     if (not std::filesystem::exists(folder))
-        throw Error(cat("Sequence file path does not exist: ", folder.string()));
+        throw Error{ cat("Sequence file path does not exist: ", folder.string()) };
     else if (not std::filesystem::is_directory(folder))
-        throw Error(cat("Sequence file path is not a directory: ", folder.string()));
+        throw Error{ cat("Sequence file path is not a directory: ", folder.string()) };
 
     Sequence seq{ "", seq_on_disk.name, seq_on_disk.unique_id };
 
@@ -299,13 +299,13 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
             std::filesystem::remove_all(this->path_ / seq_on_disk.path, error);
             if (error)
             {
-                throw Error(cat("Cannot remove sequence folder ",
-                    seq_on_disk.path.string(), ": ", error.message()));
+                throw Error{ cat("Cannot remove sequence folder ",
+                    seq_on_disk.path.string(), ": ", error.message()) };
             }
             return seq_on_disk.path;
         });
     if (not ok)
-        throw Error(cat("Cannot commit sequence removal ", to_string(unique_id)));
+        throw Error{ cat("Cannot commit sequence removal ", to_string(unique_id)) };
 }
 
 void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& new_name)
@@ -322,14 +322,14 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
             std::filesystem::rename(old_path, new_path, error);
             if (error)
             {
-                throw Error(gul14::cat("Cannot rename folder ", old_path.string(),
-                    " to ", new_path.string(), ": ", error.message()));
+                throw Error{ gul14::cat("Cannot rename folder ", old_path.string(),
+                    " to ", new_path.string(), ": ", error.message()) };
             }
             return new_disk_name;
         },
         old_seq_on_disk.path);
     if (not ok)
-        throw Error(cat("Cannot commit sequence rename ", to_string(unique_id)));
+        throw Error{ cat("Cannot commit sequence rename ", to_string(unique_id)) };
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
@@ -345,7 +345,7 @@ void SequenceManager::store_sequence(const Sequence& seq)
             return this->write_sequence_to_disk(seq);
         });
     if (not ok)
-        throw Error(cat("Cannot commit sequence store ", to_string(seq.get_unique_id())));
+        throw Error{ cat("Cannot commit sequence store ", to_string(seq.get_unique_id())) };
 }
 
 std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
@@ -358,7 +358,7 @@ std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
     if (not error)
         std::filesystem::create_directories(seq_path, error);
     if (error)
-        throw Error(cat("I/O error: ", error.message()));
+        throw Error{ cat("I/O error: ", error.message()) };
 
     store_sequence_parameters(seq_path / sequence_lua_filename, seq);
 
