@@ -100,10 +100,12 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 
     const auto old_name = find_sequence_on_disk(original_uid, sequences).path;
 
-    perform_commit(gul14::cat("Copy sequence ", old_name.string(), " to "),
+    auto ok = perform_commit(gul14::cat("Copy sequence ", old_name.string(), " to "),
         [this, &seq]() {
             return this->write_sequence_to_disk(seq);
         });
+    if (not ok)
+        throw Error(cat("Cannot commit sequence copy ", to_string(original_uid)));
 
     return seq;
 }
@@ -115,10 +117,12 @@ SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
     const UniqueId unique_id = create_unique_id(sequences);
     auto seq = Sequence{ label, name, unique_id };
 
-    perform_commit("Create sequence ",
+    auto ok = perform_commit("Create sequence ",
         [this, &seq]() {
             return this->write_sequence_to_disk(seq);
         });
+    if (not ok)
+        throw Error(cat("Cannot commit sequence creation ", to_string(unique_id)));
 
     return seq;
 }
@@ -289,7 +293,7 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
     const auto sequences = list_sequences();
     const auto seq_on_disk = find_sequence_on_disk(unique_id, sequences);
 
-    perform_commit("Remove sequence ",
+    auto ok = perform_commit("Remove sequence ",
         [this, &seq_on_disk]() {
             std::error_code error;
             std::filesystem::remove_all(this->path_ / seq_on_disk.path, error);
@@ -300,6 +304,8 @@ void SequenceManager::remove_sequence(UniqueId unique_id)
             }
             return seq_on_disk.path;
         });
+    if (not ok)
+        throw Error(cat("Cannot commit sequence removal ", to_string(unique_id)));
 }
 
 void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& new_name)
@@ -308,7 +314,7 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
     const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
     const auto new_disk_name = make_sequence_filename(new_name, unique_id);
 
-    perform_commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to "),
+    auto ok = perform_commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to "),
         [this, &old_seq_on_disk, &new_disk_name]() {
             const auto old_path = this->path_ / old_seq_on_disk.path;
             const auto new_path = this->path_ / new_disk_name;
@@ -322,6 +328,8 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
             return new_disk_name;
         },
         old_seq_on_disk.path);
+    if (not ok)
+        throw Error(cat("Cannot commit sequence rename ", to_string(unique_id)));
 }
 
 void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& new_name)
@@ -332,10 +340,12 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
 
 void SequenceManager::store_sequence(const Sequence& seq)
 {
-    perform_commit("Modify sequence ",
+    auto ok = perform_commit("Modify sequence ",
         [this, &seq]() {
             return this->write_sequence_to_disk(seq);
         });
+    if (not ok)
+        throw Error(cat("Cannot commit sequence store ", to_string(seq.get_unique_id())));
 }
 
 std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
