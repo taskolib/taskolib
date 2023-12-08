@@ -574,19 +574,18 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (gul14::starts_with(elm.path_name, "git_sequence_1"))
-            {
-                seq_exists = true;
+            if (not gul14::starts_with(elm.path_name, "git_sequence_1"))
+                continue;
+            seq_exists = true;
 
-                // if staging did not work: 
-                //      elm.handling == "untracked"
-                //      elm.changes == "untracked"
-                // if commit did not work
-                //      elm.handling == "staged"
-                //      elm.changes == "new file"
-                REQUIRE(elm.handling == "unchanged");
-                REQUIRE(elm.changes == "unchanged");
-            }
+            // if staging did not work:
+            //      elm.handling == "untracked"
+            //      elm.changes == "untracked"
+            // if commit did not work
+            //      elm.handling == "staged"
+            //      elm.changes == "new file"
+            REQUIRE(elm.handling == "unchanged");
+            REQUIRE(elm.changes == "unchanged");
         }
         // check if created sequence is at least indexed by git
         REQUIRE(seq_exists);
@@ -623,19 +622,18 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (gul14::starts_with(elm.path_name, "git_sequence_1[0000abcdef123456]/sequence.lua"))
-            {
-                seq_exists = true;
+            if (not gul14::starts_with(elm.path_name, "git_sequence_1[0000abcdef123456]/sequence.lua"))
+                continue;
+            seq_exists = true;
 
-                // if staging did not work: 
-                //      elm.handling == "unstaged"
-                //      elm.changes == "modified"
-                // if commit did not work
-                //      elm.handling == "staged"
-                //      elm.changes == "modified"
-                REQUIRE(elm.handling == "unchanged");
-                REQUIRE(elm.changes == "unchanged");
-            }
+            // if staging did not work:
+            //      elm.handling == "unstaged"
+            //      elm.changes == "modified"
+            // if commit did not work
+            //      elm.handling == "staged"
+            //      elm.changes == "modified"
+            REQUIRE(elm.handling == "unchanged");
+            REQUIRE(elm.changes == "unchanged");
         }
         // check if created sequence is at least indexed by git
         REQUIRE(seq_exists);
@@ -750,7 +748,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
             {
                 seq_exists = true;
 
-                // if staging did not work: 
+                // if staging did not work:
                 //      elm.handling == "untracked"
                 //      elm.changes == "untracked"
                 // if commit did not work
@@ -787,7 +785,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            // if staging did not work: 
+            // if staging did not work:
             //      elm.handling == "unstaged"
             //      elm.changes == "deleted"
             // if commit did not work
