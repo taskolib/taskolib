@@ -69,6 +69,13 @@ std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path
     return result;
 }
 
+gul14::optional<SequenceManager::SequenceOnDisk> find_sequence_by_name(std::vector<SequenceManager::SequenceOnDisk> const& list, gul14::string_view name) {
+    for (auto const& s : list)
+        if (s.name.string() == name)
+            return s;
+    return { };
+}
+
 } // anonymous namespace
 
 
@@ -644,28 +651,22 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         SequenceManager manager{ git_dir };
 
         // find sequence unique ID
-        UniqueId uID{ 0 };
-        for (auto elm: manager.list_sequences())
-        {
-            if (elm.name == SequenceName{ "git_sequence_1" }) uID = elm.unique_id;
-        }
-        REQUIRE(uID == UniqueId{ 0xabcdef123456 });
+        auto s1 = find_sequence_by_name(manager.list_sequences(), "git_sequence_1");
+        REQUIRE(s1.has_value());
+        REQUIRE(s1->unique_id == UniqueId{ 0xabcdef123456 });
 
         manager.copy_sequence(UniqueId{ 0xabcdef123456 }, SequenceName{ "git_sequence_2" });
 
         git::GitRepository repo{ git_dir };
 
         // find sequence full name
-        std::filesystem::path seq_name{ "" };
-        for (auto elm: manager.list_sequences())
-        {
-            if (elm.name == SequenceName{ "git_sequence_2" }) seq_name = elm.path;
-        }
-        REQUIRE(seq_name != "");
+        auto s2 = find_sequence_by_name(manager.list_sequences(), "git_sequence_2");
+        REQUIRE(s2.has_value());
+        REQUIRE(s2->path != "");
 
         // check commit message
         const std::string expected_msg = gul14::cat("Copy sequence git_sequence_1[0000abcdef123456] "
-            "to ", seq_name.string(), "\n\n"
+            "to ", s2->path.string(), "\n\n"
             "- new file: sequence.lua\n"
             "- new file: step_1_while.lua");
         const auto last_msg = repo.get_last_commit_message();
@@ -701,35 +702,22 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         SequenceManager manager{ git_dir };
 
         // find sequence unique ID and full name
-        UniqueId uID{ 0 };
-        std::filesystem::path seq2{ "" };
-        for (auto elm: manager.list_sequences())
-        {
-            if (elm.name == SequenceName{ "git_sequence_2" })
-            {
-                uID = elm.unique_id;
-                seq2 = elm.path;
-            }
-        }
-        REQUIRE(uID != UniqueId{ 0 });
-        REQUIRE(seq2 != "");
+        auto s2 = find_sequence_by_name(manager.list_sequences(), "git_sequence_2");
+        REQUIRE(s2.has_value());
+        REQUIRE(s2->unique_id != UniqueId{ 0 });
+        REQUIRE(s2->path != "");
 
-
-        manager.rename_sequence(uID, SequenceName{ "git_sequence_3" });
+        manager.rename_sequence(s2->unique_id, SequenceName{ "git_sequence_3" });
 
         // find sequence paths
-        std::filesystem::path seq3{ "" };
-        for (auto elm: manager.list_sequences())
-        {
-
-            if (elm.name == SequenceName{ "git_sequence_3" }) seq3 = elm.path;
-        }
-        REQUIRE(seq3 != "");
+        auto s3 = find_sequence_by_name(manager.list_sequences(), "git_sequence_3");
+        REQUIRE(s3.has_value());
+        REQUIRE(s3->path != "");
 
         git::GitRepository repo{ git_dir };
 
         const std::string expected_msg = gul14::cat("Rename ",
-            seq2.string(), " to ", seq3.string(), "\n\n",
+            s2->path.string(), " to ", s3->path.string(), "\n\n"
             "- deleted: sequence.lua\n"
             "- deleted: step_1_while.lua\n"
             "- new file: sequence.lua\n"
