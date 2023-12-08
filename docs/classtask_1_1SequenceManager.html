@@ -47,6 +47,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classtask_1_1SequenceManager-members.html">List of all members</a>  </div>
@@ -68,7 +69,7 @@ $(function() {
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Sequence &quot;</span> &lt;&lt; seq.get_name() &lt;&lt; <span class="stringliteral">&quot; has &quot;</span> &lt;&lt; seq.get_steps().size()</div>
 <div class="line">              &lt;&lt; <span class="stringliteral">&quot; steps\n&quot;</span>;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasstask_1_1SequenceManager_html_a1de48cda21bd0aef903d007b6cdf5323"><div class="ttname"><a href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">task::SequenceManager::SequenceManager</a></div><div class="ttdeci">SequenceManager(std::filesystem::path path)</div><div class="ttdoc">Create a SequenceManager to manage sequences that are stored in a given directory.</div><div class="ttdef"><b>Definition:</b> SequenceManager.cc:96</div></div>
+<div class="ttc" id="aclasstask_1_1SequenceManager_html_a1de48cda21bd0aef903d007b6cdf5323"><div class="ttname"><a href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">task::SequenceManager::SequenceManager</a></div><div class="ttdeci">SequenceManager(std::filesystem::path path)</div><div class="ttdoc">Create a SequenceManager to manage sequences that are stored in a given directory.</div><div class="ttdef"><b>Definition:</b> SequenceManager.cc:84</div></div>
 </div><!-- fragment --> </div>
 <p><code>#include &lt;<a class="el" href="SequenceManager_8h_source.html">SequenceManager.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -83,12 +84,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1de48cda21bd0aef903d007b6cdf5323"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">SequenceManager</a> (std::filesystem::path path)</td></tr>
 <tr class="memdesc:a1de48cda21bd0aef903d007b6cdf5323"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <a class="el" href="classtask_1_1SequenceManager.html" title="A class for listing, loading, storing, and renaming sequences in a given file system directory.">SequenceManager</a> to manage sequences that are stored in a given directory.  <a href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">More...</a><br /></td></tr>
 <tr class="separator:a1de48cda21bd0aef903d007b6cdf5323"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6db2d16b425200cc66aa3bd28589397"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">copy_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> original_uid, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name) const</td></tr>
-<tr class="memdesc:ad6db2d16b425200cc66aa3bd28589397"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a copy of an existing sequence (from disk).  <a href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">More...</a><br /></td></tr>
-<tr class="separator:ad6db2d16b425200cc66aa3bd28589397"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61382a6aaa6748cd453c8b177abc3ca1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence</a> (gul14::string_view label=&quot;&quot;, <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> name=<a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>{}) const</td></tr>
-<tr class="memdesc:a61382a6aaa6748cd453c8b177abc3ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an empty sequence on disk.  <a href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">More...</a><br /></td></tr>
-<tr class="separator:a61382a6aaa6748cd453c8b177abc3ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6daf44fa91222b5e05a6668fbcc8b88a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> original_uid, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name)</td></tr>
+<tr class="memdesc:a6daf44fa91222b5e05a6668fbcc8b88a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a copy of an existing sequence (from disk).  <a href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">More...</a><br /></td></tr>
+<tr class="separator:a6daf44fa91222b5e05a6668fbcc8b88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6143ea5165be52bad7141247ade66176"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence</a> (gul14::string_view label=&quot;&quot;, <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> name=<a class="el" href="classtask_1_1SequenceName.html">SequenceName</a>{})</td></tr>
+<tr class="memdesc:a6143ea5165be52bad7141247ade66176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an empty sequence on disk.  <a href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">More...</a><br /></td></tr>
+<tr class="separator:a6143ea5165be52bad7141247ade66176"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a28bef2aa4989b8fc4886d39476a25"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path</a> () const</td></tr>
 <tr class="memdesc:a49a28bef2aa4989b8fc4886d39476a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the base path of the serialized sequences.  <a href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">More...</a><br /></td></tr>
 <tr class="separator:a49a28bef2aa4989b8fc4886d39476a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,18 +101,34 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a27eaff59b68048dd8ffb26704ec6f8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea1b55d76cb8d92c1bce63dc19d437a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">load_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> uid, const std::vector&lt; <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceOnDisk</a> &gt; &amp;sequences) const</td></tr>
 <tr class="separator:aea1b55d76cb8d92c1bce63dc19d437a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51ff9ab1bf859c5c4ba4620c35ae2ab8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a51ff9ab1bf859c5c4ba4620c35ae2ab8">remove_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> unique_id) const</td></tr>
-<tr class="memdesc:a51ff9ab1bf859c5c4ba4620c35ae2ab8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a sequence from the base folder.  <a href="classtask_1_1SequenceManager.html#a51ff9ab1bf859c5c4ba4620c35ae2ab8">More...</a><br /></td></tr>
-<tr class="separator:a51ff9ab1bf859c5c4ba4620c35ae2ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94ca99ad13829507b85e4f356f1d0b39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">rename_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> unique_id, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name) const</td></tr>
-<tr class="memdesc:a94ca99ad13829507b85e4f356f1d0b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the machine-friendly name of a sequence on disk.  <a href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">More...</a><br /></td></tr>
-<tr class="separator:a94ca99ad13829507b85e4f356f1d0b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69d344fb994bb53b77a09b1b559913a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a69d344fb994bb53b77a09b1b559913a4">rename_sequence</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name) const</td></tr>
-<tr class="memdesc:a69d344fb994bb53b77a09b1b559913a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the machine-friendly name of a sequence, both in a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object and on disk.  <a href="classtask_1_1SequenceManager.html#a69d344fb994bb53b77a09b1b559913a4">More...</a><br /></td></tr>
-<tr class="separator:a69d344fb994bb53b77a09b1b559913a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa38a467f1b53b20a5bbd53f110a3fc0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">store_sequence</a> (const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence) const</td></tr>
-<tr class="memdesc:aa38a467f1b53b20a5bbd53f110a3fc0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the given sequence in a subfolder under the base directory of this object.  <a href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">More...</a><br /></td></tr>
-<tr class="separator:aa38a467f1b53b20a5bbd53f110a3fc0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad27c5410a38a8aff0576459b2e768e70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> unique_id)</td></tr>
+<tr class="memdesc:ad27c5410a38a8aff0576459b2e768e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a sequence from the base folder.  <a href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">More...</a><br /></td></tr>
+<tr class="separator:ad27c5410a38a8aff0576459b2e768e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ce90a2e52ebf50c0a9a1761a5a28082"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">rename_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> unique_id, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name)</td></tr>
+<tr class="memdesc:a3ce90a2e52ebf50c0a9a1761a5a28082"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the machine-friendly name of a sequence on disk.  <a href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">More...</a><br /></td></tr>
+<tr class="separator:a3ce90a2e52ebf50c0a9a1761a5a28082"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4570b2c114077387ad2ef42c14cec907"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a4570b2c114077387ad2ef42c14cec907">rename_sequence</a> (<a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence, const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;new_name)</td></tr>
+<tr class="memdesc:a4570b2c114077387ad2ef42c14cec907"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the machine-friendly name of a sequence, both in a <a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object and on disk.  <a href="classtask_1_1SequenceManager.html#a4570b2c114077387ad2ef42c14cec907">More...</a><br /></td></tr>
+<tr class="separator:a4570b2c114077387ad2ef42c14cec907"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17baf5133f4572d49462bf0ad629fa40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">store_sequence</a> (const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
+<tr class="memdesc:a17baf5133f4572d49462bf0ad629fa40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the given sequence in a subfolder under the base directory of this object.  <a href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">More...</a><br /></td></tr>
+<tr class="separator:a17baf5133f4572d49462bf0ad629fa40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a0a709c44f3cb6c5442fe18d1def3ad6c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a0a709c44f3cb6c5442fe18d1def3ad6c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit</a> (std::string message, T action, std::string extra_dir=&quot;&quot;)</td></tr>
+<tr class="memdesc:a0a709c44f3cb6c5442fe18d1def3ad6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform changes and commit them to the git repository.  <a href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">More...</a><br /></td></tr>
+<tr class="separator:a0a709c44f3cb6c5442fe18d1def3ad6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5b40faaf98add2ab3b87d96ee727212"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#ab5b40faaf98add2ab3b87d96ee727212">stage_files_in_directory</a> (const std::string &amp;directory)</td></tr>
+<tr class="memdesc:ab5b40faaf98add2ab3b87d96ee727212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stage all changes to files in the given directory for the next git commit.  <a href="classtask_1_1SequenceManager.html#ab5b40faaf98add2ab3b87d96ee727212">More...</a><br /></td></tr>
+<tr class="separator:ab5b40faaf98add2ab3b87d96ee727212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d6f42a47dff5835ec8f3e3496d3fe1e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a7d6f42a47dff5835ec8f3e3496d3fe1e">stage_files</a> (const std::string &amp;glob)</td></tr>
+<tr class="memdesc:a7d6f42a47dff5835ec8f3e3496d3fe1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stage files matching the specified glob for the next git commit.  <a href="classtask_1_1SequenceManager.html#a7d6f42a47dff5835ec8f3e3496d3fe1e">More...</a><br /></td></tr>
+<tr class="separator:a7d6f42a47dff5835ec8f3e3496d3fe1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acad7d0ac841d78769085b80f34b2f434"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">write_sequence_to_disk</a> (const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
+<tr class="memdesc:acad7d0ac841d78769085b80f34b2f434"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actually write a sequence to disk (without commit in git)  <a href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">More...</a><br /></td></tr>
+<tr class="separator:acad7d0ac841d78769085b80f34b2f434"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -130,6 +147,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a9756b5e8e4b87748b849147f79b478b3"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a></td></tr>
 <tr class="memdesc:a9756b5e8e4b87748b849147f79b478b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base path to the sequences.  <a href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">More...</a><br /></td></tr>
 <tr class="separator:a9756b5e8e4b87748b849147f79b478b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5cccbb04e745504448ff806f304fce"><td class="memItemLeft" align="right" valign="top">git::GitRepository&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#afd5cccbb04e745504448ff806f304fce">git_repo_</a></td></tr>
+<tr class="memdesc:afd5cccbb04e745504448ff806f304fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Git repository in path_ that holds the sequences.  <a href="classtask_1_1SequenceManager.html#afd5cccbb04e745504448ff806f304fce">More...</a><br /></td></tr>
+<tr class="separator:afd5cccbb04e745504448ff806f304fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1de48cda21bd0aef903d007b6cdf5323"></a>
@@ -175,8 +195,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad6db2d16b425200cc66aa3bd28589397"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6db2d16b425200cc66aa3bd28589397">&#9670;&nbsp;</a></span>copy_sequence()</h2>
+<a id="a6daf44fa91222b5e05a6668fbcc8b88a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6daf44fa91222b5e05a6668fbcc8b88a">&#9670;&nbsp;</a></span>copy_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +216,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -218,12 +238,12 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="classtask_1_1Sequence.html#ad246a5d71f854c4924573f112e41123f">task::Sequence::set_name()</a>, <a class="el" href="classtask_1_1Sequence.html#a92ac39847db60ccf2606c03dbca606a9">task::Sequence::set_unique_id()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">store_sequence()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">find_sequence_on_disk()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html#a8d6f12eac764079bd94cfbaf57144796">task::SequenceManager::SequenceOnDisk::path</a>, <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
 </div>
 </div>
-<a id="a61382a6aaa6748cd453c8b177abc3ca1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61382a6aaa6748cd453c8b177abc3ca1">&#9670;&nbsp;</a></span>create_sequence()</h2>
+<a id="a6143ea5165be52bad7141247ade66176"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6143ea5165be52bad7141247ade66176">&#9670;&nbsp;</a></span>create_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,7 +263,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -265,7 +285,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit()</a>, <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">write_sequence_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -301,7 +321,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
 
 </div>
 </div>
@@ -349,7 +369,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a51ff9ab1bf859c5c4ba4620c35ae2ab8">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">rename_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">rename_sequence()</a>.</p>
 
 </div>
 </div>
@@ -408,9 +428,9 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">make_sequence_name_from_label()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">store_sequence()</a>, and <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">make_sequence_name_from_label()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>, and <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">write_sequence_to_disk()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a51ff9ab1bf859c5c4ba4620c35ae2ab8">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">rename_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">rename_sequence()</a>.</p>
 
 </div>
 </div>
@@ -447,7 +467,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">copy_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
 
 </div>
 </div>
@@ -522,8 +542,87 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a51ff9ab1bf859c5c4ba4620c35ae2ab8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51ff9ab1bf859c5c4ba4620c35ae2ab8">&#9670;&nbsp;</a></span>remove_sequence()</h2>
+<a id="a0a709c44f3cb6c5442fe18d1def3ad6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a709c44f3cb6c5442fe18d1def3ad6c">&#9670;&nbsp;</a></span>perform_commit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task::SequenceManager::perform_commit </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>message</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>extra_dir</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform changes and commit them to the git repository. </p>
+<p>This function allows to introduce some changes to the filesystem and create a git commit from the changes; but if something fails the repository is rolled back safely.</p>
+<p>Committed are just changes in the directories given in dirs and the message starts with the specified message. Both dirs and message can be extended by the actual actions that are performed.</p>
+<ul>
+<li>Repository is prepared (reset)</li>
+<li>The actions are performed (closure is executed) - they should change the filesystem</li>
+<li>Git searches for changes (just in the directories given by dirs)</li>
+<li>The changes are added and committed using the given message as title</li>
+<li>The commit body contains details about the changed files</li>
+<li>If at any point an error occurs the commit is aborted and the filesystem is reset to where we started (changes are undone)</li>
+</ul>
+<p>Sometimes we do not know the actual path we want change and commit before the real actions are performed. The closure can return a string; and that is a path to be also considered/added to the commit. The path as string is also added at the end of the title.</p>
+<p>The signature of the closure can be <code>void action()</code> or <code>std::string action()</code>.</p>
+<p>It is not possible to add a path to dirs while keeping the commit title unchanged.</p>
+<p>All dirs are relative to the git repository root.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dirs</td><td>List of directories to add for this commit (usually just one) </td></tr>
+    <tr><td class="paramname">message</td><td>The commit message title </td></tr>
+    <tr><td class="paramname">action</td><td>Closure that performs the actual modifications on the filesystem </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the commit was successful, false if nothing found to commit </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">task::Error</a>,git::Error,or</td><td>any other type can be thrown </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#afd5cccbb04e745504448ff806f304fce">git_repo_</a>, and <a class="el" href="classtask_1_1SequenceManager.html#ab5b40faaf98add2ab3b87d96ee727212">stage_files_in_directory()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">rename_sequence()</a>.</p>
+
+</div>
+</div>
+<a id="ad27c5410a38a8aff0576459b2e768e70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad27c5410a38a8aff0576459b2e768e70">&#9670;&nbsp;</a></span>remove_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -533,7 +632,7 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtask_1_1UniqueId.html">UniqueId</a>&#160;</td>
           <td class="paramname"><em>unique_id</em></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -553,12 +652,12 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">find_sequence_on_disk()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">find_sequence_on_disk()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
 </div>
 </div>
-<a id="a69d344fb994bb53b77a09b1b559913a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69d344fb994bb53b77a09b1b559913a4">&#9670;&nbsp;</a></span>rename_sequence() <span class="overload">[1/2]</span></h2>
+<a id="a4570b2c114077387ad2ef42c14cec907"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4570b2c114077387ad2ef42c14cec907">&#9670;&nbsp;</a></span>rename_sequence() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -578,7 +677,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -599,12 +698,12 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">task::Sequence::get_unique_id()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">rename_sequence()</a>, and <a class="el" href="classtask_1_1Sequence.html#ad246a5d71f854c4924573f112e41123f">task::Sequence::set_name()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">task::Sequence::get_unique_id()</a>, and <a class="el" href="classtask_1_1Sequence.html#ad246a5d71f854c4924573f112e41123f">task::Sequence::set_name()</a>.</p>
 
 </div>
 </div>
-<a id="a94ca99ad13829507b85e4f356f1d0b39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94ca99ad13829507b85e4f356f1d0b39">&#9670;&nbsp;</a></span>rename_sequence() <span class="overload">[2/2]</span></h2>
+<a id="a3ce90a2e52ebf50c0a9a1761a5a28082"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ce90a2e52ebf50c0a9a1761a5a28082">&#9670;&nbsp;</a></span>rename_sequence() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -624,7 +723,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> const</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -645,14 +744,86 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">find_sequence_on_disk()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a69d344fb994bb53b77a09b1b559913a4">rename_sequence()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">find_sequence_on_disk()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit()</a>.</p>
 
 </div>
 </div>
-<a id="aa38a467f1b53b20a5bbd53f110a3fc0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa38a467f1b53b20a5bbd53f110a3fc0c">&#9670;&nbsp;</a></span>store_sequence()</h2>
+<a id="a7d6f42a47dff5835ec8f3e3496d3fe1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d6f42a47dff5835ec8f3e3496d3fe1e">&#9670;&nbsp;</a></span>stage_files()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task::SequenceManager::stage_files </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>glob</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stage files matching the specified glob for the next git commit. </p>
+<p>This function is similar to "git add", but it can also stage files for removal like "git rm".</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">glob</td><td>A git glob specifying which files to stage. If it is empty, all files in the repository are considered. Examples: "", "*.txt", "foo/backup_[0-9].dat" </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a partial commit message containing information about the staged changes. The returned string starts with a linebreak. </dd></dl>
+
+</div>
+</div>
+<a id="ab5b40faaf98add2ab3b87d96ee727212"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5b40faaf98add2ab3b87d96ee727212">&#9670;&nbsp;</a></span>stage_files_in_directory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task::SequenceManager::stage_files_in_directory </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>directory</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stage all changes to files in the given directory for the next git commit. </p>
+<p>This function is similar to "git add", but it can also stage files for removal like "git rm". It recursively stages all changes to files in the given directory and in its subdirectories.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">directory</td><td>Directory whose contents should be staged. Glob/wildcard characters like '*' or '?' are considered a literal part of the directory name and escaped automatically. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a partial commit message containing information about the staged changes. The returned string starts with a linebreak. </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit()</a>.</p>
+
+</div>
+</div>
+<a id="a17baf5133f4572d49462bf0ad629fa40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17baf5133f4572d49462bf0ad629fa40">&#9670;&nbsp;</a></span>store_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -662,13 +833,13 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
           <td class="paramname"><em>sequence</em></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Store the given sequence in a subfolder under the base directory of this object. </p>
-<p>This function generates a subfolder name from the sequence name and unique ID. If such a subfolder exists already, it is removed. Afterwards, a subfolder is newly created and the sequence is stored inside it. Inside the folder, each step is stored in a separate file. The filenames start with <code>step</code> followed by a consecutive number followed by the type of the step and the extension &lsquo;&rsquo;.lua'`. The step number is zero-filled to allow alphanumerical sorting (e.g. <code>step_01_action.lua</code>).</p>
+<p>This function generates a subfolder name from the sequence name and unique ID. If such a subfolder exists already, it is removed. Afterwards, a subfolder is newly created and the sequence is stored inside it. Inside the folder, each step is stored in a separate file. The filenames start with <code>step</code> followed by a consecutive number followed by the type of the step and the extension &lsquo;&rsquo;.lua'`. The step number is zero-filled to allow alphanumerical sorting (e.g. <code>step_01_action.lua</code>). This function use git.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sequence</td><td>the sequence to be stored </td></tr>
@@ -676,13 +847,76 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">task::sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>, and <a class="el" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">task::store_step()</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">task::Sequence::get_unique_id()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">task::to_string()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">copy_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+</div>
+</div>
+<a id="acad7d0ac841d78769085b80f34b2f434"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acad7d0ac841d78769085b80f34b2f434">&#9670;&nbsp;</a></span>write_sequence_to_disk()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task::SequenceManager::write_sequence_to_disk </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
+          <td class="paramname"><em>sequence</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Actually write a sequence to disk (without commit in git) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sequence</td><td><a class="el" href="classtask_1_1Sequence.html" title="A sequence of steps that can be modified and executed.">Sequence</a> object to save </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Folder of the sequence on disk (relative to path_) </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">task::sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>, and <a class="el" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">task::store_step()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="afd5cccbb04e745504448ff806f304fce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd5cccbb04e745504448ff806f304fce">&#9670;&nbsp;</a></span>git_repo_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">git::GitRepository task::SequenceManager::git_repo_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Git repository in path_ that holds the sequences. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit()</a>.</p>
+
+</div>
+</div>
 <a id="a9756b5e8e4b87748b849147f79b478b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9756b5e8e4b87748b849147f79b478b3">&#9670;&nbsp;</a></span>path_</h2>
 
@@ -705,7 +939,7 @@ Private Attributes</h2></td></tr>
 
 <p>Base path to the sequences. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a51ff9ab1bf859c5c4ba4620c35ae2ab8">remove_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">rename_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">SequenceManager()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">store_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">SequenceManager()</a>.</p>
 
 </div>
 </div>
@@ -716,7 +950,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 23 2023 16:02:06 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 8 2023 15:42:51 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

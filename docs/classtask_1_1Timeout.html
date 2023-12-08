@@ -72,8 +72,8 @@ $(function() {
 <div class="line"><span class="keyword">auto</span> d = <a class="code" href="classtask_1_1Timeout.html#add0ef3cabf8c9a6bd714889bacf4ee58">Timeout::infinity</a>(); <span class="comment">// static member function for generating infinite timeouts</span></div>
 <div class="line">assert(!<a class="code" href="classtask_1_1Timeout.html#a5e8a2d028c73f1041e364154d3e63127">isfinite</a>(d));</div>
 <div class="ttc" id="aclasstask_1_1Timeout_html_a30dde1d0dfbf6bf325a77cdb21b72bdc"><div class="ttname"><a href="classtask_1_1Timeout.html#a30dde1d0dfbf6bf325a77cdb21b72bdc">task::Timeout::Timeout</a></div><div class="ttdeci">Timeout()=default</div><div class="ttdoc">Default-construct an infinite timeout.</div></div>
-<div class="ttc" id="aclasstask_1_1Timeout_html_a5e8a2d028c73f1041e364154d3e63127"><div class="ttname"><a href="classtask_1_1Timeout.html#a5e8a2d028c73f1041e364154d3e63127">task::Timeout::isfinite</a></div><div class="ttdeci">friend bool isfinite(Timeout timeout) noexcept</div><div class="ttdoc">Determine if the timeout has a finite duration.</div><div class="ttdef"><b>Definition:</b> Timeout.h:126</div></div>
-<div class="ttc" id="aclasstask_1_1Timeout_html_add0ef3cabf8c9a6bd714889bacf4ee58"><div class="ttname"><a href="classtask_1_1Timeout.html#add0ef3cabf8c9a6bd714889bacf4ee58">task::Timeout::infinity</a></div><div class="ttdeci">static constexpr Timeout infinity()</div><div class="ttdoc">A constant to use for &quot;infinite&quot; timeout durations.</div><div class="ttdef"><b>Definition:</b> Timeout.h:123</div></div>
+<div class="ttc" id="aclasstask_1_1Timeout_html_a5e8a2d028c73f1041e364154d3e63127"><div class="ttname"><a href="classtask_1_1Timeout.html#a5e8a2d028c73f1041e364154d3e63127">task::Timeout::isfinite</a></div><div class="ttdeci">friend bool isfinite(Timeout timeout) noexcept</div><div class="ttdoc">Determine if the timeout has a finite duration.</div><div class="ttdef"><b>Definition:</b> Timeout.h:127</div></div>
+<div class="ttc" id="aclasstask_1_1Timeout_html_add0ef3cabf8c9a6bd714889bacf4ee58"><div class="ttname"><a href="classtask_1_1Timeout.html#add0ef3cabf8c9a6bd714889bacf4ee58">task::Timeout::infinity</a></div><div class="ttdeci">static constexpr Timeout infinity()</div><div class="ttdoc">A constant to use for &quot;infinite&quot; timeout durations.</div><div class="ttdef"><b>Definition:</b> Timeout.h:124</div></div>
 </div><!-- fragment --><p>For convenience, implicit conversion to floating-point types is supported, with an output in seconds: </p><div class="fragment"><div class="line"><span class="keywordtype">double</span> seconds = <a class="code" href="classtask_1_1Timeout.html#a30dde1d0dfbf6bf325a77cdb21b72bdc">Timeout</a>{ 2500ms };</div>
 <div class="line">assert(seconds == 2.5);</div>
 <div class="line"> </div>
@@ -683,7 +683,7 @@ template&lt;typename FloatT , std::enable_if_t&lt; std::is_floating_point&lt; Fl
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 23 2023 16:02:06 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 8 2023 15:42:51 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

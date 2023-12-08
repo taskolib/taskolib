@@ -88,7 +88,7 @@ $(function() {
 : <a class="el" href="classtask_1_1SequenceName.html#ab2185a10adddbb0298956150f41fb99f">task::SequenceName</a>
 </li>
 <li>copy_sequence()
-: <a class="el" href="classtask_1_1SequenceManager.html#ad6db2d16b425200cc66aa3bd28589397">task::SequenceManager</a>
+: <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">task::SequenceManager</a>
 </li>
 <li>copy_used_variables_from_context_to_lua()
 : <a class="el" href="classtask_1_1Step.html#a7b6c9eb3ad90efaef0ccb08e9bf1a7a7">task::Step</a>
@@ -103,7 +103,7 @@ $(function() {
 : <a class="el" href="classtask_1_1Sequence.html#a4ea29da6621ac63e9c45433111a45739">task::Sequence</a>
 </li>
 <li>create_sequence()
-: <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">task::SequenceManager</a>
+: <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">task::SequenceManager</a>
 </li>
 <li>create_unique_id()
 : <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">task::SequenceManager</a>
@@ -171,6 +171,7 @@ $(function() {
 </li>
 <li>format()
 : <a class="el" href="structfmt_1_1formatter_3_01task_1_1Message_01_4.html#a01b3719d51bb095e260bde34ade4eb9a">fmt::formatter&lt; task::Message &gt;</a>
+, <a class="el" href="structfmt_1_1formatter_3_01task_1_1Timeout_01_4.html#ad67e47b87c7aef461cf5beab2b5dd069">fmt::formatter&lt; task::Timeout &gt;</a>
 , <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;</a>
 </li>
 <li>from_string()
@@ -349,7 +350,11 @@ $(function() {
 <h3><a id="index_p"></a>- p -</h3><ul>
 <li>parse()
 : <a class="el" href="structfmt_1_1formatter_3_01task_1_1Message_01_4.html#a5bf102ac4d7ab06f78fb4e5d88ada7f1">fmt::formatter&lt; task::Message &gt;</a>
+, <a class="el" href="structfmt_1_1formatter_3_01task_1_1Timeout_01_4.html#ac8a7bee446ebe8ca270cfa410408fb9e">fmt::formatter&lt; task::Timeout &gt;</a>
 , <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#aae3dfb890e4c9f38a2c15fcca18404b6">fmt::formatter&lt; task::TimePoint &gt;</a>
+</li>
+<li>perform_commit()
+: <a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">task::SequenceManager</a>
 </li>
 <li>pop()
 : <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;</a>
@@ -371,10 +376,10 @@ $(function() {
 : <a class="el" href="classtask_1_1Sequence.html#a030c0d55cdc04a0818e7e478ed4a0063">task::Sequence</a>
 </li>
 <li>remove_sequence()
-: <a class="el" href="classtask_1_1SequenceManager.html#a51ff9ab1bf859c5c4ba4620c35ae2ab8">task::SequenceManager</a>
+: <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">task::SequenceManager</a>
 </li>
 <li>rename_sequence()
-: <a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">task::SequenceManager</a>
+: <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">task::SequenceManager</a>
 </li>
 <li>rend()
 : <a class="el" href="classtask_1_1Sequence.html#a308ae77701dc9fb19a49f33fbc7b7fd1">task::Sequence</a>
@@ -399,7 +404,7 @@ $(function() {
 : <a class="el" href="classtask_1_1SequenceManager.html#a1de48cda21bd0aef903d007b6cdf5323">task::SequenceManager</a>
 </li>
 <li>SequenceName()
-: <a class="el" href="classtask_1_1SequenceName.html#a8581c6b4ad5fe9e4279b1abb3383a170">task::SequenceName</a>
+: <a class="el" href="classtask_1_1SequenceName.html#aa1166f89c1f926aa751c260d016af8b3">task::SequenceName</a>
 </li>
 <li>set_disabled()
 : <a class="el" href="classtask_1_1Step.html#a7c1bb384bb657161de1279d3e8d7b0da">task::Step</a>
@@ -465,11 +470,17 @@ $(function() {
 , <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence</a>
 , <a class="el" href="classtask_1_1VariableName.html#ab1711edeadfd0bc550d2824aefa27946">task::VariableName</a>
 </li>
+<li>stage_files()
+: <a class="el" href="classtask_1_1SequenceManager.html#a7d6f42a47dff5835ec8f3e3496d3fe1e">task::SequenceManager</a>
+</li>
+<li>stage_files_in_directory()
+: <a class="el" href="classtask_1_1SequenceManager.html#ab5b40faaf98add2ab3b87d96ee727212">task::SequenceManager</a>
+</li>
 <li>Step()
 : <a class="el" href="classtask_1_1Step.html#a8e7699c74d2208008516eefa3490b118">task::Step</a>
 </li>
 <li>store_sequence()
-: <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">task::SequenceManager</a>
+: <a class="el" href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">task::SequenceManager</a>
 </li>
 <li>string()
 : <a class="el" href="classtask_1_1SequenceName.html#adc50658049e3ee5026a54aab8a56fef3">task::SequenceName</a>
@@ -517,6 +528,13 @@ $(function() {
 </ul>
 
 
+<h3><a id="index_w"></a>- w -</h3><ul>
+<li>write_sequence_to_disk()
+: <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">task::SequenceManager</a>
+</li>
+</ul>
+
+
 <h3><a id="index__7E"></a>- ~ -</h3><ul>
 <li>~Executor()
 : <a class="el" href="classtask_1_1Executor.html#a304eb22bf94cf143ee675c6f74a2c490">task::Executor</a>
@@ -525,7 +543,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 23 2023 16:02:06 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 8 2023 15:42:51 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

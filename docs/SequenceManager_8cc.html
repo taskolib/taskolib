@@ -60,66 +60,68 @@ $(function() {
 <p>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>. </p>
 </div><div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
-<code>#include &lt;gul14/substring_checks.h&gt;</code><br />
+<code>#include &lt;gul14/gul.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="deserialize__sequence_8h_source.html">deserialize_sequence.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="internals_8h_source.html">internals.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="serialize__sequence_8h_source.html">serialize_sequence.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="SequenceManager_8h_source.html">taskolib/SequenceManager.h</a>&quot;</code><br />
+<code>#include &lt;libgit4cpp/Error.h&gt;</code><br />
+<code>#include &lt;libgit4cpp/GitRepository.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for SequenceManager.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="SequenceManager_8cc__incl.png" border="0" usemap="#aSequenceManager_8cc" alt=""/></div>
 <map name="aSequenceManager_8cc" id="aSequenceManager_8cc">
-<area shape="rect" title="Manage and control sequences." alt="" coords="854,5,1013,32"/>
+<area shape="rect" title="Manage and control sequences." alt="" coords="1939,5,2098,32"/>
 <area shape="rect" title=" " alt="" coords="144,229,229,256"/>
-<area shape="rect" title=" " alt="" coords="1113,80,1186,107"/>
-<area shape="rect" title=" " alt="" coords="1211,80,1397,107"/>
-<area shape="rect" href="deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="306,80,481,107"/>
-<area shape="rect" href="internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="2465,155,2556,181"/>
-<area shape="rect" href="serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="582,80,741,107"/>
-<area shape="rect" href="SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="829,80,1037,107"/>
-<area shape="rect" title=" " alt="" coords="424,229,515,256"/>
-<area shape="rect" title=" " alt="" coords="392,155,472,181"/>
-<area shape="rect" title=" " alt="" coords="459,617,586,644"/>
-<area shape="rect" href="Sequence_8h.html" title="A sequence of Steps." alt="" coords="979,155,1131,181"/>
-<area shape="rect" href="SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="539,386,730,413"/>
-<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="1423,229,1542,256"/>
-<area shape="rect" href="UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="253,229,400,256"/>
-<area shape="rect" title=" " alt="" coords="1197,617,1264,644"/>
-<area shape="rect" title=" " alt="" coords="2391,468,2478,495"/>
-<area shape="rect" title=" " alt="" coords="1084,468,1143,495"/>
-<area shape="rect" title=" " alt="" coords="2063,617,2121,644"/>
-<area shape="rect" title=" " alt="" coords="2794,229,2854,256"/>
-<area shape="rect" title=" " alt="" coords="2707,229,2770,256"/>
-<area shape="rect" title=" " alt="" coords="691,229,786,256"/>
-<area shape="rect" title=" " alt="" coords="811,229,936,256"/>
-<area shape="rect" title=" " alt="" coords="857,468,1005,495"/>
-<area shape="rect" title=" " alt="" coords="961,229,1069,256"/>
-<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="2567,386,2753,413"/>
-<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="1319,543,1473,569"/>
-<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1926,304,2066,331"/>
-<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1793,468,1953,495"/>
-<area shape="rect" href="TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="1217,304,1404,331"/>
-<area shape="rect" title=" " alt="" coords="2503,468,2569,495"/>
-<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="2593,468,2769,495"/>
-<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="2091,468,2237,495"/>
-<area shape="rect" title=" " alt="" coords="2391,543,2534,569"/>
-<area shape="rect" title=" " alt="" coords="2559,543,2623,569"/>
-<area shape="rect" title=" " alt="" coords="2647,543,2803,569"/>
-<area shape="rect" title=" " alt="" coords="2039,543,2095,569"/>
-<area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="1497,543,1660,569"/>
-<area shape="rect" title=" " alt="" coords="1363,617,1429,644"/>
-<area shape="rect" title=" " alt="" coords="1794,386,1918,413"/>
-<area shape="rect" title=" " alt="" coords="1942,386,2010,413"/>
-<area shape="rect" title=" " alt="" coords="2034,386,2126,413"/>
-<area shape="rect" href="default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="2252,379,2441,420"/>
-<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1487,386,1668,413"/>
-<area shape="rect" title=" " alt="" coords="1735,543,1801,569"/>
-<area shape="rect" title=" " alt="" coords="1826,543,1913,569"/>
-<area shape="rect" title=" " alt="" coords="1428,304,1471,331"/>
-<area shape="rect" href="Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="1269,386,1411,413"/>
-<area shape="rect" title=" " alt="" coords="1319,468,1382,495"/>
-<area shape="rect" title=" " alt="" coords="341,304,413,331"/>
+<area shape="rect" title=" " alt="" coords="1394,80,1467,107"/>
+<area shape="rect" title=" " alt="" coords="1491,80,1586,107"/>
+<area shape="rect" href="deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="1610,80,1784,107"/>
+<area shape="rect" href="internals_8h.html" title="Declaration of internal constants and functions." alt="" coords="2660,155,2750,181"/>
+<area shape="rect" href="serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="1939,80,2098,107"/>
+<area shape="rect" href="SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="2266,80,2474,107"/>
+<area shape="rect" title=" " alt="" coords="2846,155,3036,181"/>
+<area shape="rect" title=" " alt="" coords="2600,80,2732,107"/>
+<area shape="rect" title=" " alt="" coords="2322,229,2413,256"/>
+<area shape="rect" title=" " alt="" coords="1422,155,1502,181"/>
+<area shape="rect" title=" " alt="" coords="442,617,568,644"/>
+<area shape="rect" href="Sequence_8h.html" title="A sequence of Steps." alt="" coords="1577,155,1729,181"/>
+<area shape="rect" href="SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="1095,386,1286,413"/>
+<area shape="rect" href="Step_8h.html" title="Declaration of the Step class." alt="" coords="740,229,859,256"/>
+<area shape="rect" href="UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="2101,229,2248,256"/>
+<area shape="rect" title=" " alt="" coords="182,617,249,644"/>
+<area shape="rect" title=" " alt="" coords="2182,468,2268,495"/>
+<area shape="rect" title=" " alt="" coords="880,468,938,495"/>
+<area shape="rect" title=" " alt="" coords="1984,617,2042,644"/>
+<area shape="rect" title=" " alt="" coords="2524,229,2584,256"/>
+<area shape="rect" title=" " alt="" coords="2438,229,2500,256"/>
+<area shape="rect" title=" " alt="" coords="1648,229,1743,256"/>
+<area shape="rect" title=" " alt="" coords="1768,229,1893,256"/>
+<area shape="rect" title=" " alt="" coords="2380,468,2528,495"/>
+<area shape="rect" title=" " alt="" coords="1918,229,2026,256"/>
+<area shape="rect" href="CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="886,386,1071,413"/>
+<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="1096,543,1250,569"/>
+<area shape="rect" href="Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1472,304,1612,331"/>
+<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="594,468,754,495"/>
+<area shape="rect" href="TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="405,304,592,331"/>
+<area shape="rect" title=" " alt="" coords="1064,468,1130,495"/>
+<area shape="rect" href="LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="354,543,530,569"/>
+<area shape="rect" href="Message_8h.html" title="Declaration of the Message class." alt="" coords="1382,468,1529,495"/>
+<area shape="rect" title=" " alt="" coords="1372,543,1448,569"/>
+<area shape="rect" href="time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="808,543,970,569"/>
+<area shape="rect" title=" " alt="" coords="1140,617,1206,644"/>
+<area shape="rect" title=" " alt="" coords="1463,386,1587,413"/>
+<area shape="rect" title=" " alt="" coords="1611,386,1679,413"/>
+<area shape="rect" title=" " alt="" coords="1703,386,1795,413"/>
+<area shape="rect" href="default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="1820,379,2009,420"/>
+<area shape="rect" href="VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="2134,386,2316,413"/>
+<area shape="rect" title=" " alt="" coords="717,543,784,569"/>
+<area shape="rect" title=" " alt="" coords="606,543,692,569"/>
+<area shape="rect" title=" " alt="" coords="666,304,709,331"/>
+<area shape="rect" href="Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="515,386,658,413"/>
+<area shape="rect" title=" " alt="" coords="406,468,468,495"/>
+<area shape="rect" title=" " alt="" coords="2446,304,2518,331"/>
+<area shape="rect" title=" " alt="" coords="2434,155,2584,181"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -132,7 +134,7 @@ Namespaces</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 23 2023 16:02:06 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 8 2023 15:42:51 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

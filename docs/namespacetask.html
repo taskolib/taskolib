@@ -193,6 +193,8 @@ Functions</h2></td></tr>
 <tr class="separator:a77a3adfb97957bfee85dbc4a0a5ea371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8a13e460561c228be4437ac6e92a4f8"><td class="memItemLeft" align="right" valign="top">std::time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa8a13e460561c228be4437ac6e92a4f8">timegm</a> (const std::tm &amp;t)</td></tr>
 <tr class="separator:aa8a13e460561c228be4437ac6e92a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af05a71100f0069d77f7ab177512bfdaa"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">operator&lt;&lt;</a> (std::ostream &amp;stream, const <a class="el" href="classtask_1_1Timeout.html">Timeout</a> &amp;timeout)</td></tr>
+<tr class="separator:af05a71100f0069d77f7ab177512bfdaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f382e8c5663f8f71d7b2229f8c60db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1SequenceInfo.html">SequenceInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">get_sequence_info_from_filename</a> (gul14::string_view filename)</td></tr>
 <tr class="memdesc:a93f382e8c5663f8f71d7b2229f8c60db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the label, name, and unique ID of a sequence from a filename, if possible.  <a href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">More...</a><br /></td></tr>
 <tr class="separator:a93f382e8c5663f8f71d7b2229f8c60db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1236,7 +1238,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a024b0c34822b2577c63036287bf09c18">task::Sequence::get_name()</a>, and <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">task::Sequence::get_unique_id()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a61382a6aaa6748cd453c8b177abc3ca1">task::SequenceManager::create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">task::SequenceManager::list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a94ca99ad13829507b85e4f356f1d0b39">task::SequenceManager::rename_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">task::SequenceManager::store_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">task::SequenceManager::list_sequences()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">task::SequenceManager::rename_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">task::SequenceManager::write_sequence_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -1334,7 +1336,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div>
 </div>
 <a id="a2bb441c55c946559ff32889db4e735ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bb441c55c946559ff32889db4e735ca">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb441c55c946559ff32889db4e735ca">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1375,7 +1377,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div>
 </div>
 <a id="a2246f61abd992f460cb3afe7ce45bac2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2246f61abd992f460cb3afe7ce45bac2">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2246f61abd992f460cb3afe7ce45bac2">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1412,6 +1414,42 @@ the collection of context variable names can also be an empty list, ie. <code></
 <dl class="section return"><dt>Returns</dt><dd>passed output stream </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Step.html#a72a8522a7cade223be1acdd1cf50428e">task::Step::get_label()</a>, <a class="el" href="classtask_1_1Step.html#a8efc866ad8e341fff4cc2f7fd12434cb">task::Step::get_script()</a>, <a class="el" href="classtask_1_1Step.html#a07150f0d3373f67cc709cab7208e407d">task::Step::get_time_of_last_execution()</a>, <a class="el" href="classtask_1_1Step.html#aba452f58a7dddc0de47091d877f4daeb">task::Step::get_time_of_last_modification()</a>, <a class="el" href="classtask_1_1Step.html#a132d88f025cb41b15ed50b9917b23747">task::Step::get_timeout()</a>, <a class="el" href="classtask_1_1Step.html#a56b65bdabb98ece059fc5fa7c8e83ad6">task::Step::get_type()</a>, <a class="el" href="classtask_1_1Step.html#afa91f9591a0f743beaea0c04be7f1e1e">task::Step::get_used_context_variable_names()</a>, <a class="el" href="classtask_1_1Step.html#ac4f0f6d8a8361a59ebe7be98e4bb9dc7">task::Step::is_disabled()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">to_string()</a>.</p>
+
+</div>
+</div>
+<a id="af05a71100f0069d77f7ab177512bfdaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af05a71100f0069d77f7ab177512bfdaa">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream&amp; task::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtask_1_1Timeout.html">Timeout</a> &amp;&#160;</td>
+          <td class="paramname"><em>timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1707,7 +1745,7 @@ the collection of context variable names can also be an empty list, ie. <code></
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">task::SequenceManager::store_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">task::SequenceManager::write_sequence_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -1747,7 +1785,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Return a lower-case name for a step type ("action", "if", "end"). </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55">task::Sequence::execute()</a>, <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step::execute_impl()</a>, <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">task::SequenceManager::find_sequence_on_disk()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">make_sequence_filename()</a>, and <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">task::SequenceManager::copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">task::SequenceManager::create_sequence()</a>, <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55">task::Sequence::execute()</a>, <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step::execute_impl()</a>, <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">task::SequenceManager::find_sequence_on_disk()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">make_sequence_filename()</a>, <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>, <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">task::SequenceManager::remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a17baf5133f4572d49462bf0ad629fa40">task::SequenceManager::store_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1844,14 +1882,14 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Define the Lua sequence filename for storing and loading Lua script. </p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">load_sequence_parameters()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#aa38a467f1b53b20a5bbd53f110a3fc0c">task::SequenceManager::store_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">load_sequence_parameters()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">task::SequenceManager::write_sequence_to_disk()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 23 2023 16:02:06 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Dec 8 2023 15:42:51 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
