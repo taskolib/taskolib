@@ -16,17 +16,17 @@
             }
         },
         {
-            "type": "meson",
-            "target": "tests/taskolib_test",
-            "mode": "run",
-            "group":{
+            "command": "${workspaceRoot}/builddir/tests/taskolib_test",
+            "args": [],
+            "group": {
                 "kind": "test",
                 "isDefault": true
             },
-            "problemMatcher": ["$gcc"],
-            "label": "Meson: Run taskolib_test",
-            "dependsOn": [ "Meson: Build all targets" ],
-            "presentation":{
+            "dependsOn": [
+                "Meson: Build all targets"
+            ],
+            "label": "Run unit tests",
+            "presentation": {
                 "clear": false
             }
         }
