@@ -204,11 +204,13 @@ public:
      * consecutive number followed by the type of the step and the extension `'.lua'`.
      * The step number is zero-filled to allow alphanumerical sorting
      * (e.g. `step_01_action.lua`).
-     * This function use git.
+     * This function uses git.
      *
      * \param sequence  the sequence to be stored
+     * \returns True if the sequence has been stored or false if it was unmodified
+     * \exception git::Error is thrown if git could not handle the operation
      */
-    void store_sequence(const Sequence& sequence);
+    bool store_sequence(const Sequence& sequence);
 
 private:
     /// Base path to the sequences.
