@@ -338,14 +338,12 @@ void SequenceManager::rename_sequence(Sequence& sequence, const SequenceName& ne
     sequence.set_name(new_name);
 }
 
-void SequenceManager::store_sequence(const Sequence& seq)
+bool SequenceManager::store_sequence(const Sequence& seq)
 {
-    auto ok = perform_commit("Modify sequence ",
+    return perform_commit("Modify sequence ",
         [this, &seq]() {
             return this->write_sequence_to_disk(seq);
         });
-    if (not ok)
-        throw Error{ cat("Cannot commit sequence store ", to_string(seq.get_unique_id())) };
 }
 
 std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
