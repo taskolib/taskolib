@@ -156,7 +156,6 @@ SequenceManager::find_sequence_on_disk(UniqueId uid,
 std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() const
 {
     std::vector<SequenceOnDisk> sequences;
-    std::vector<std::filesystem::path> suspicious_folders;
 
     for (const auto& entry : std::filesystem::directory_iterator{ path_ })
     {
@@ -168,58 +167,14 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         SequenceInfo seq_info = get_sequence_info_from_filename(
             entry.path().filename().string());
 
-        auto rel_path = std::filesystem::relative(entry.path(), path_);
-
+        // Accept only folders with a valid name and unique ID
         if (seq_info.name.has_value() && seq_info.unique_id.has_value())
         {
             sequences.push_back(SequenceOnDisk{
-                std::move(rel_path),
-                std::move(*seq_info.name),
-                std::move(*seq_info.unique_id) });
+                std::filesystem::relative(entry.path(), path_),
+                seq_info.name.value(),
+                seq_info.unique_id.value() });
         }
-        else
-        {
-            suspicious_folders.push_back(std::move(rel_path));
-        }
-    }
-
-    // Loop over all folders that did not have name and unique ID in their name.
-    for (const auto& folder : suspicious_folders)
-    {
-        // It could be a non-sequence folder or a sequence folder from an older version.
-        // We only believe it is the latter if it contains a sequence.lua file.
-        if (not std::filesystem::exists(path_ / folder / "sequence.lua"))
-            continue;
-
-        // So it is a sequence folder after all. We automatically generate a unique ID
-        // and rename the folder.
-        UniqueId unique_id = create_unique_id(sequences);
-
-        const auto [label, dummy1, dummy2] =
-            get_sequence_info_from_filename(folder.string());
-
-        SequenceName name = make_sequence_name_from_label(label);
-
-        const auto new_folder_name = make_sequence_filename(name, unique_id);
-
-        std::error_code error;
-        std::filesystem::rename(path_ / folder, path_ / new_folder_name, error);
-        if (error)
-        {
-            throw Error{ gul14::cat("Sequence folder ", folder.string(),
-                " does not contain a unique ID and cannot be renamed to ",
-                new_folder_name, ": ", error.message()) };
-        }
-
-        auto seq = load_sequence(unique_id);
-        if (seq.get_label().empty()) // legacy sequences do not store the label in the lua file
-        {
-            seq.set_label(label);
-            // Ugly change-on-list_sequences() will go away once we remove legathy stuff:
-            const_cast<SequenceManager*>(this)->write_sequence_to_disk(seq);
-        }
-
-        sequences.push_back(SequenceOnDisk{ new_folder_name, name, unique_id });
     }
 
     return sequences;
