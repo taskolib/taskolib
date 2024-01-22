@@ -219,10 +219,10 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
     std::filesystem::create_directory(root / "some_weirdo_folder[x1234567890abcdef]");
 
     // create a sequence directory without a unique ID, but with a sequence.lua file
+    // (should be ignored)
     std::filesystem::create_directory(root / "A legacy sequence");
     std::fstream f2(root / "A legacy sequence/sequence.lua", std::ios::out);
     f2.close();
-
 
     SequenceManager sm{ root };
     auto sequences = sm.list_sequences();
@@ -232,22 +232,17 @@ TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
             return a.path < b.path;
         });
 
-    REQUIRE(sequences.size() == 3);
+    REQUIRE(sequences.size() == 2);
 
-    REQUIRE_THAT(sequences[0].path, StartsWith("A_legacy_sequence["));
+    REQUIRE_THAT(sequences[0].path, StartsWith("test.seq.1["));
     REQUIRE_THAT(sequences[0].path, EndsWith("]"));
-    REQUIRE(sequences[0].name == SequenceName{ "A_legacy_sequence" });
+    REQUIRE(sequences[0].name == SequenceName{ "test.seq.1" });
     REQUIRE(sequences[0].unique_id != 0_uid);
 
-    REQUIRE_THAT(sequences[1].path, StartsWith("test.seq.1["));
+    REQUIRE_THAT(sequences[1].path, StartsWith("test.seq.2["));
     REQUIRE_THAT(sequences[1].path, EndsWith("]"));
-    REQUIRE(sequences[1].name == SequenceName{ "test.seq.1" });
+    REQUIRE(sequences[1].name == SequenceName{ "test.seq.2" });
     REQUIRE(sequences[1].unique_id != 0_uid);
-
-    REQUIRE_THAT(sequences[2].path, StartsWith("test.seq.2["));
-    REQUIRE_THAT(sequences[2].path, EndsWith("]"));
-    REQUIRE(sequences[2].name == SequenceName{ "test.seq.2" });
-    REQUIRE(sequences[2].unique_id != 0_uid);
 }
 
 TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[SequenceManager]")

@@ -117,18 +117,13 @@ public:
     std::filesystem::path get_path() const { return path_; }
 
     /**
-     * Return an unsorted list of all valid sequences that are found inside the base path
-     * and rename sequence folders that do not contain a valid unique ID.
+     * Return an unsorted list of all valid sequences that are found in the base path.
      *
-     * This function examines all folders inside the base path. If any of these folder
-     * names does not contain a valid unique ID, one is randomly generated and the folder
-     * is renamed accordingly.
+     * This function quietly ignores folders that do not follow the naming convention for
+     * sequences.
      *
      * \returns a vector containing one SequenceOnDisk object for each sequence that was
      *          found. The paths in the returned objects are relative to the base path.
-     *
-     * \exception Error is thrown if one of the folders needs to be renamed but the
-     *            renaming fails.
      */
     std::vector<SequenceOnDisk> list_sequences() const;
 
