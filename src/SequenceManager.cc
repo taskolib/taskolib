@@ -1,10 +1,10 @@
 /**
- * \file   SequenceManager.cc
- * \author Marcus Walla, Lars Fröhlich
- * \date   Created on July 22, 2022
- * \brief  Manage and control sequences.
+ * \file    SequenceManager.cc
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on July 22, 2022
+ * \brief   Manage and control sequences.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -33,7 +33,7 @@
 #include "taskolib/SequenceManager.h"
 
 #include <libgit4cpp/Error.h>
-#include <libgit4cpp/GitRepository.h>
+#include <libgit4cpp/Repository.h>
 
 using namespace std::literals::string_literals;
 using gul14::cat;

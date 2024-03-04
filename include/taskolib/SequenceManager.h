@@ -1,10 +1,10 @@
 /**
- * \file   SequenceManager.h
- * \author Marcus Walla, Lars Fröhlich
- * \date   Created on July 22, 2022
- * \brief  Manage and control sequences.
+ * \file    SequenceManager.h
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on July 22, 2022
+ * \brief   Manage and control sequences.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -31,7 +31,7 @@
 
 #include <gul14/string_view.h>
 #include <gul14/SmallVector.h>
-#include <libgit4cpp/GitRepository.h>
+#include <libgit4cpp/Repository.h>
 
 #include "taskolib/Sequence.h"
 #include "taskolib/UniqueId.h"
@@ -212,7 +212,7 @@ private:
     std::filesystem::path path_;
 
     /// Git repository in path_ that holds the sequences
-    git::GitRepository git_repo_;
+    git::Repository git_repo_;
 
     /**
      * Create a random unique ID that does not collide with the ID of any sequence in the

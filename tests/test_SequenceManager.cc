@@ -1,10 +1,10 @@
 /**
- * \file   test_SequenceManager.cc
- * \author Marcus Walla, Lars Fröhlich
- * \date   Created on July 22, 2022
- * \brief  Test suite for the SequenceManager class.
+ * \file    test_SequenceManager.cc
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on July 22, 2022
+ * \brief   Test suite for the SequenceManager class.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -31,7 +31,7 @@
 
 #include <gul14/catch.h>
 #include <gul14/substring_checks.h>
-#include <libgit4cpp/GitRepository.h>
+#include <libgit4cpp/Repository.h>
 
 #include "internals.h"
 #include "serialize_sequence.h"
@@ -560,7 +560,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         // unable to reach repo debug functions without a new function in sequenceManager
         // Therefore a standalone git handler has to be initialized
-        git::GitRepository repo{ git_dir };
+        git::Repository repo{ git_dir };
 
         // check if commit was done
         const std::string expected_msg = "Modify sequence git_sequence_1[0000abcdef123456]\n\n"
@@ -611,7 +611,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         // store sequence
         manager.store_sequence(seq);
 
-        git::GitRepository repo{ git_dir };
+        git::Repository repo{ git_dir };
 
         const std::string expected_msg = "Modify sequence git_sequence_1[0000abcdef123456]\n\n"
             "- modified: sequence.lua";
@@ -652,7 +652,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         manager.copy_sequence(UniqueId{ 0xabcdef123456 }, SequenceName{ "git_sequence_2" });
 
-        git::GitRepository repo{ git_dir };
+        git::Repository repo{ git_dir };
 
         // find sequence full name
         auto s2 = find_sequence_by_name(manager.list_sequences(), "git_sequence_2");
@@ -709,7 +709,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         REQUIRE(s3.has_value());
         REQUIRE(s3->path != "");
 
-        git::GitRepository repo{ git_dir };
+        git::Repository repo{ git_dir };
 
         const std::string expected_msg = gul14::cat("Rename ",
             s2->path.string(), " to ", s3->path.string(), "\n\n"
@@ -755,7 +755,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         // create object here so that manager.store_sequence throws error
         // if init repository did not work
-        git::GitRepository repo{ git_dir };
+        git::Repository repo{ git_dir };
 
         const std::string expected_msg = "Remove sequence git_sequence_1[0000abcdef123456]\n\n"
             "- deleted: sequence.lua\n"
