@@ -4,6 +4,7 @@ test_src = files(
     'test_Context.cc',
     'test_deserialize_sequence.cc',
     'test_exceptions.cc',
+    'test_execute_lua_script.cc',
     'test_Executor.cc',
     'test_internals.cc',
     'test_LockedQueue.cc',
