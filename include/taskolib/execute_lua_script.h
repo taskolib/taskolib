@@ -2,9 +2,9 @@
  * \file   execute_lua_script.h
  * \author Lars Fröhlich
  * \date   Created on November 15, 2022
- * \brief  Declaration of execute_lua_script().
+ * \brief  Declaration of execute_lua_script() and load_lua_script().
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -28,6 +28,8 @@
 #include <string>
 #include <variant>
 
+#include <gul14/expected.h>
+
 #include "sol/sol.hpp"
 
 namespace task {
@@ -45,6 +47,20 @@ namespace task {
  */
 std::variant<sol::object, std::string>
 execute_lua_script(sol::state& lua, sol::string_view script);
+
+/**
+ * Load a Lua script into the given Lua state and check its syntax without running it.
+ *
+ * \returns a sol::load_result proxy object that can be called to run the script or cast
+ *          to a sol::function/sol::protected_function. If the syntax check failed, a
+ *          string with an error message is returned instead. This error message is
+ *          pre-processed to a certain degree: Unhelpful parts like the chunk name of the
+ *          script (`[string "..."]:`) are removed, and a few known special messages are
+ *          replaced by more readable explanations.
+ */
+gul14::expected<sol::load_result, std::string>
+load_lua_script(sol::state& lua, sol::string_view script);
+
 
 } // namespace task
 

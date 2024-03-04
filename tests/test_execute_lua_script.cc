@@ -4,7 +4,7 @@
  * \date   Created on October 28, 2022
  * \brief  Test suite for Lua-related internal functions.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,7 +25,8 @@
 #include <gul14/catch.h>
 #include <gul14/time_util.h>
 
-#include "taskomat/execute_lua_script.h"
+#include "lua_details.h"
+#include "taskolib/execute_lua_script.h"
 
 using namespace std::literals;
 using namespace task;
@@ -195,4 +196,21 @@ TEST_CASE("execute_lua_script(): C++ exceptions", "[Step]")
         REQUIRE(result != nullptr);
         REQUIRE(result->as<int>() == 42);
     }
+}
+
+TEST_CASE("load_lua_script()", "[lua_details]")
+{
+    sol::state lua;
+
+    auto result = load_lua_script(lua, "return 42");
+    REQUIRE(result.has_value());
+    int function_call_result = (*result)();
+    REQUIRE(function_call_result == 42);
+
+    REQUIRE(load_lua_script(lua, "a = b").has_value());
+    REQUIRE(load_lua_script(lua, "a = unknown.variable").has_value());
+    REQUIRE(load_lua_script(lua, "a = 'asf").error() != "");
+    REQUIRE(load_lua_script(lua, "a = asf'").error() != "");
+    REQUIRE(load_lua_script(lua, "a = = 2").error() != "");
+    REQUIRE(load_lua_script(lua, "Hello world!").error() != "");
 }
