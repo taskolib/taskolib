@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.0.1</span>
+   &#160;<span id="projectnumber">1.0.2</span>
    </div>
   </td>
  </tr>
@@ -94,7 +94,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a49a28bef2aa4989b8fc4886d39476a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the base path of the serialized sequences.  <a href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">More...</a><br /></td></tr>
 <tr class="separator:a49a28bef2aa4989b8fc4886d39476a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb018b6d4d91e735352c01d023264bef"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html">SequenceOnDisk</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences</a> () const</td></tr>
-<tr class="memdesc:abb018b6d4d91e735352c01d023264bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an unsorted list of all valid sequences that are found inside the base path and rename sequence folders that do not contain a valid unique ID.  <a href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">More...</a><br /></td></tr>
+<tr class="memdesc:abb018b6d4d91e735352c01d023264bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an unsorted list of all valid sequences that are found in the base path.  <a href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">More...</a><br /></td></tr>
 <tr class="separator:abb018b6d4d91e735352c01d023264bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27eaff59b68048dd8ffb26704ec6f8bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Sequence.html">Sequence</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence</a> (<a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> uid) const</td></tr>
 <tr class="memdesc:a27eaff59b68048dd8ffb26704ec6f8bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a sequence from the base folder.  <a href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">More...</a><br /></td></tr>
@@ -321,7 +321,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>.</p>
 
 </div>
 </div>
@@ -418,17 +418,11 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Return an unsorted list of all valid sequences that are found inside the base path and rename sequence folders that do not contain a valid unique ID. </p>
-<p>This function examines all folders inside the base path. If any of these folder names does not contain a valid unique ID, one is randomly generated and the folder is renamed accordingly.</p>
-<dl class="section return"><dt>Returns</dt><dd>a vector containing one <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html" title="A struct to represent a sequence on disk.">SequenceOnDisk</a> object for each sequence that was found. The paths in the returned objects are relative to the base path.</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a></td><td>is thrown if one of the folders needs to be renamed but the renaming fails. </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Return an unsorted list of all valid sequences that are found in the base path. </p>
+<p>This function quietly ignores folders that do not follow the naming convention for sequences.</p>
+<dl class="section return"><dt>Returns</dt><dd>a vector containing one <a class="el" href="structtask_1_1SequenceManager_1_1SequenceOnDisk.html" title="A struct to represent a sequence on disk.">SequenceOnDisk</a> object for each sequence that was found. The paths in the returned objects are relative to the base path. </dd></dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id()</a>, <a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">make_sequence_name_from_label()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>, and <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">write_sequence_to_disk()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">task::get_sequence_info_from_filename()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, <a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a>, and <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a27eaff59b68048dd8ffb26704ec6f8bc">load_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">rename_sequence()</a>.</p>
 
@@ -467,7 +461,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence()</a>.</p>
 
 </div>
 </div>
@@ -501,7 +495,7 @@ Private Attributes</h2></td></tr>
 <p>This overload allows to pass in a list of sequences to avoid having to examine the base path again:</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sequences</td><td>a list of sequences as obtained from <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef" title="Return an unsorted list of all valid sequences that are found inside the base path and rename sequenc...">list_sequences()</a> </td></tr>
+    <tr><td class="paramname">sequences</td><td>a list of sequences as obtained from <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef" title="Return an unsorted list of all valid sequences that are found in the base path.">list_sequences()</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -537,8 +531,6 @@ Private Attributes</h2></td></tr>
 <p>Generate a machine-friendly sequence name from a human-readable label. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1SequenceName.html#a6d4891f62777c07fcedf397042125ac3">task::SequenceName::max_length</a>, and <a class="el" href="classtask_1_1SequenceName.html#acc59a4978c873c954f1969afd5c3d07d">task::SequenceName::valid_characters</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
 
 </div>
 </div>
@@ -891,7 +883,7 @@ template&lt;typename T &gt; </div>
 
 <p class="reference">References <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">task::sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#ae4370fd20f8a5c2c897f0f11581e9732">task::Sequence::size()</a>, and <a class="el" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">task::store_step()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">list_sequences()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence()</a>.</p>
 
 </div>
 </div>
@@ -955,7 +947,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 22 2024 08:20:48 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 4 2024 14:32:40 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
