@@ -21,7 +21,7 @@
 <area shape="rect" id="node17" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="1551,379,1662,405"/>
 <area shape="rect" id="node19" href="$send__message_8cc.html" title="Declaration of the send_message() function." alt="" coords="1390,379,1527,405"/>
 <area shape="rect" id="node21" href="$Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="169,155,257,181"/>
-<area shape="rect" id="node24" href="$execute__lua__script_8cc.html" title="Implementation of execute_lua_script()." alt="" coords="699,155,861,181"/>
+<area shape="rect" id="node24" href="$execute__lua__script_8cc.html" title="Implementation of execute_lua_script() and load_lua_script()." alt="" coords="699,155,861,181"/>
 <area shape="rect" id="node25" href="$internals_8cc.html" title="Definition of internal constants and functions." alt="" coords="885,155,982,181"/>
 <area shape="rect" id="node26" href="$SequenceName_8cc.html" title="Implementation of the SequenceName class." alt="" coords="1006,155,1149,181"/>
 <area shape="rect" id="node27" href="$time__types_8cc.html" title="Conversion for TimePoint." alt="" coords="282,155,395,181"/>

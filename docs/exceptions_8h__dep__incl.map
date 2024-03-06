@@ -6,7 +6,7 @@
 <area shape="rect" id="node13" href="$Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="795,80,883,107"/>
 <area shape="rect" id="node16" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="769,304,838,331"/>
 <area shape="rect" id="node19" href="$lua__details_8cc.html" title="Implementation of free functions dealing with Lua specifics." alt="" coords="964,304,1075,331"/>
-<area shape="rect" id="node20" href="$execute__lua__script_8cc.html" title="Implementation of execute_lua_script()." alt="" coords="1207,80,1368,107"/>
+<area shape="rect" id="node20" href="$execute__lua__script_8cc.html" title="Implementation of execute_lua_script() and load_lua_script()." alt="" coords="1207,80,1368,107"/>
 <area shape="rect" id="node21" href="$internals_8cc.html" title="Definition of internal constants and functions." alt="" coords="1392,80,1489,107"/>
 <area shape="rect" id="node22" href="$SequenceName_8cc.html" title="Implementation of the SequenceName class." alt="" coords="1513,80,1656,107"/>
 <area shape="rect" id="node23" href="$time__types_8cc.html" title="Conversion for TimePoint." alt="" coords="1680,80,1793,107"/>
