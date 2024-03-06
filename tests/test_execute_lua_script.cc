@@ -32,8 +32,25 @@ using namespace std::literals;
 using namespace task;
 using namespace Catch::Matchers;
 
+TEST_CASE("load_lua_script()", "[execute_lua_script]")
+{
+    sol::state lua;
+
+    auto result = load_lua_script(lua, "return 42");
+    REQUIRE(result.has_value());
+    int function_call_result = (*result)();
+    REQUIRE(function_call_result == 42);
+
+    REQUIRE(load_lua_script(lua, "a = b").has_value());
+    REQUIRE(load_lua_script(lua, "a = unknown.variable").has_value());
+    REQUIRE(load_lua_script(lua, "a = 'asf").error() != "");
+    REQUIRE(load_lua_script(lua, "a = asf'").error() != "");
+    REQUIRE(load_lua_script(lua, "a = = 2").error() != "");
+    REQUIRE(load_lua_script(lua, "Hello world!").error() != "");
+}
+
 TEST_CASE("execute_lua_script(): Return values from simple scripts without errors",
-    "[lua_details]")
+    "[execute_lua_script]")
 {
     sol::state lua;
 
@@ -94,7 +111,7 @@ TEST_CASE("execute_lua_script(): Return values from simple scripts without error
     }
 }
 
-TEST_CASE("execute_lua_script(): Lua exceptions", "[lua_details]")
+TEST_CASE("execute_lua_script(): Lua exceptions", "[execute_lua_script]")
 {
     sol::state lua;
     open_safe_library_subset(lua); // for error() and pcall()
@@ -142,7 +159,7 @@ TEST_CASE("execute_lua_script(): Lua exceptions", "[lua_details]")
     }
 }
 
-TEST_CASE("execute_lua_script(): C++ exceptions", "[Step]")
+TEST_CASE("execute_lua_script(): C++ exceptions", "[execute_lua_script]")
 {
     sol::state lua;
     open_safe_library_subset(lua); // for error() and pcall()
@@ -196,21 +213,4 @@ TEST_CASE("execute_lua_script(): C++ exceptions", "[Step]")
         REQUIRE(result != nullptr);
         REQUIRE(result->as<int>() == 42);
     }
-}
-
-TEST_CASE("load_lua_script()", "[lua_details]")
-{
-    sol::state lua;
-
-    auto result = load_lua_script(lua, "return 42");
-    REQUIRE(result.has_value());
-    int function_call_result = (*result)();
-    REQUIRE(function_call_result == 42);
-
-    REQUIRE(load_lua_script(lua, "a = b").has_value());
-    REQUIRE(load_lua_script(lua, "a = unknown.variable").has_value());
-    REQUIRE(load_lua_script(lua, "a = 'asf").error() != "");
-    REQUIRE(load_lua_script(lua, "a = asf'").error() != "");
-    REQUIRE(load_lua_script(lua, "a = = 2").error() != "");
-    REQUIRE(load_lua_script(lua, "Hello world!").error() != "");
 }
