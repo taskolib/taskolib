@@ -1,10 +1,10 @@
 /**
- * \file   Step.cc
- * \author Lars Fröhlich, Marcus Walla
- * \date   Created on December 7, 2021
- * \brief  Implementation of the Step class.
+ * \file    Step.cc
+ * \authors Lars Fröhlich, Marcus Walla
+ * \date    Created on December 7, 2021
+ * \brief   Implementation of the Step class.
  *
- * \copyright Copyright 2021-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -128,19 +128,19 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
 
     if (executes_script(get_type()) and not context.step_setup_script.empty())
     {
-        const auto result_or_error = execute_lua_script(lua, context.step_setup_script);
-        if (std::holds_alternative<std::string>(result_or_error))
-            throw Error(gul14::cat("[setup] ",std::get<std::string>(result_or_error)));
+        const auto result = execute_lua_script(lua, context.step_setup_script);
+        if (not result.has_value())
+            throw Error(gul14::cat("[setup] ", result.error()));
     }
 
     copy_used_variables_from_context_to_lua(context, lua);
-    const auto result_or_error = execute_lua_script(lua, get_script());
+    const auto result = execute_lua_script(lua, get_script());
     copy_used_variables_from_lua_to_context(lua, context);
 
-    if (std::holds_alternative<std::string>(result_or_error))
-        throw Error(std::get<std::string>(result_or_error));
+    if (not result.has_value())
+        throw Error(result.error());
 
-    const auto& obj = std::get<sol::object>(result_or_error);
+    const auto& obj = result.value();
 
     if (requires_bool_return_value(get_type()))
     {

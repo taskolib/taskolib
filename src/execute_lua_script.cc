@@ -57,7 +57,7 @@ std::string process_msg(gul14::string_view msg)
 
 } // anonymous namespace
 
-std::variant<sol::object, std::string>
+gul14::expected<sol::object, std::string>
 execute_lua_script(sol::state& lua, sol::string_view script)
 {
     try
@@ -68,18 +68,18 @@ execute_lua_script(sol::state& lua, sol::string_view script)
         if (!protected_result.valid())
         {
             sol::error err = protected_result;
-            return process_msg(err.what());
+            return gul14::unexpected(process_msg(err.what()));
         }
 
         return static_cast<sol::object>(protected_result);
     }
     catch(const std::exception& e)
     {
-        return process_msg(e.what());
+        return gul14::unexpected(process_msg(e.what()));
     }
     catch(...)
     {
-        return std::string{ "Unknown C++ exception" };
+        return gul14::unexpected("Unknown C++ exception");
     }
 }
 

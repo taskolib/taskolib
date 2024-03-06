@@ -26,7 +26,6 @@
 #define TASKOLIB_EXECUTE_LUA_SCRIPT_H_
 
 #include <string>
-#include <variant>
 
 #include <gul14/expected.h>
 
@@ -38,25 +37,26 @@ namespace task {
  * Execute a Lua script safely, intercepting all possible exceptions that may occur during
  * its execution.
  *
- * This function returns a variant: If the Lua script finishes without error, it contains
- * a sol::object representing the return value of the script. If a Lua error or C++
- * exception occurs, the variant contains a string with an error message. The error
- * message is pre-processed to a certain degree: Unhelpful parts like the chunk name of
- * the script (`[string "..."]:`) are removed, and a few known special messages are
+ * This function returns a gul14::expected object: If the Lua script finishes without
+ * error, it contains a sol::object representing the return value of the script. If a Lua
+ * error or C++ exception occurs, the variant contains a string with an error message. The
+ * error message is pre-processed to a certain degree: Unhelpful parts like the chunk name
+ * of the script (`[string "..."]:`) are removed, and a few known special messages are
  * replaced by more readable explanations.
  */
-std::variant<sol::object, std::string>
+gul14::expected<sol::object, std::string>
 execute_lua_script(sol::state& lua, sol::string_view script);
 
 /**
  * Load a Lua script into the given Lua state and check its syntax without running it.
  *
- * \returns a sol::load_result proxy object that can be called to run the script or cast
- *          to a sol::function/sol::protected_function. If the syntax check failed, a
- *          string with an error message is returned instead. This error message is
- *          pre-processed to a certain degree: Unhelpful parts like the chunk name of the
- *          script (`[string "..."]:`) are removed, and a few known special messages are
- *          replaced by more readable explanations.
+ * This function returns a gul14::expected object: If the syntax of the Lua script is OK,
+ * it contains a sol::load_result proxy object that can be called to run the script or
+ * cast to a sol::function/sol::protected_function. If the syntax check fails, a string
+ * with an error message is returned instead. This error message is pre-processed to a
+ * certain degree: Unhelpful parts like the chunk name of the script (`[string "..."]:`)
+ * are removed, and a few known special messages are replaced by more readable
+ * explanations.
  */
 gul14::expected<sol::load_result, std::string>
 load_lua_script(sol::state& lua, sol::string_view script);
