@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.0.2</span>
+   &#160;<span id="projectnumber">1.0.4</span>
    </div>
   </td>
  </tr>
@@ -52,7 +52,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Declaration of <a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53" title="Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution...">execute_lua_script()</a> and <a class="el" href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d" title="Load a Lua script into the given Lua state and check its syntax without running it.">load_lua_script()</a>. </p>
+<div class="textblock"><p>Declaration of <a class="el" href="namespacetask.html#acb86f7d798ec1052ae04cb23f09a287e" title="Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution...">execute_lua_script()</a> and <a class="el" href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d" title="Load a Lua script into the given Lua state and check its syntax without running it.">load_lua_script()</a>. </p>
 <dl class="section author"><dt>Author</dt><dd>Lars Fröhlich </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>Created on November 15, 2022</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg</dd></dl>
@@ -60,7 +60,6 @@ $(function() {
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
 <p>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>. </p>
 </div><div class="textblock"><code>#include &lt;string&gt;</code><br />
-<code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;gul14/expected.h&gt;</code><br />
 <code>#include &quot;sol/sol.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -68,11 +67,10 @@ Include dependency graph for execute_lua_script.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="execute__lua__script_8h__incl.png" border="0" usemap="#aexecute__lua__script_8h" alt=""/></div>
 <map name="aexecute__lua__script_8h" id="aexecute__lua__script_8h">
-<area shape="rect" title="Declaration of execute_lua_script() and load_lua_script()." alt="" coords="108,5,263,32"/>
+<area shape="rect" title="Declaration of execute_lua_script() and load_lua_script()." alt="" coords="79,5,233,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,64,107"/>
-<area shape="rect" title=" " alt="" coords="89,80,157,107"/>
-<area shape="rect" title=" " alt="" coords="181,80,315,107"/>
-<area shape="rect" title=" " alt="" coords="339,80,431,107"/>
+<area shape="rect" title=" " alt="" coords="89,80,223,107"/>
+<area shape="rect" title=" " alt="" coords="247,80,339,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -97,9 +95,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a35d53ce03d32e28bba0d984385941d53"><td class="memItemLeft" align="right" valign="top">std::variant&lt; sol::object, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">task::execute_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
-<tr class="memdesc:a35d53ce03d32e28bba0d984385941d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution.  <a href="namespacetask.html#a35d53ce03d32e28bba0d984385941d53">More...</a><br /></td></tr>
-<tr class="separator:a35d53ce03d32e28bba0d984385941d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb86f7d798ec1052ae04cb23f09a287e"><td class="memItemLeft" align="right" valign="top">gul14::expected&lt; sol::object, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#acb86f7d798ec1052ae04cb23f09a287e">task::execute_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
+<tr class="memdesc:acb86f7d798ec1052ae04cb23f09a287e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution.  <a href="namespacetask.html#acb86f7d798ec1052ae04cb23f09a287e">More...</a><br /></td></tr>
+<tr class="separator:acb86f7d798ec1052ae04cb23f09a287e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85a3be5635b05139328c99c9c1df5d7d"><td class="memItemLeft" align="right" valign="top">gul14::expected&lt; sol::load_result, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d">task::load_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
 <tr class="memdesc:a85a3be5635b05139328c99c9c1df5d7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a Lua script into the given Lua state and check its syntax without running it.  <a href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d">More...</a><br /></td></tr>
 <tr class="separator:a85a3be5635b05139328c99c9c1df5d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,7 +105,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 6 2024 17:41:29 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Mar 22 2024 13:24:36 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
