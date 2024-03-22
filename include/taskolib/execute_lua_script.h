@@ -39,7 +39,7 @@ namespace task {
  *
  * This function returns a gul14::expected object: If the Lua script finishes without
  * error, it contains a sol::object representing the return value of the script. If a Lua
- * error or C++ exception occurs, the variant contains a string with an error message. The
+ * error or C++ exception occurs, the returned object contains a string with an error message. The
  * error message is pre-processed to a certain degree: Unhelpful parts like the chunk name
  * of the script (`[string "..."]:`) are removed, and a few known special messages are
  * replaced by more readable explanations.
