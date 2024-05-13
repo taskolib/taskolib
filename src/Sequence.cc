@@ -1,10 +1,10 @@
 /**
- * \file   Sequence.cc
- * \author Marcus Walla, Lars Fröhlich
- * \date   Created on February 8, 2022
- * \brief  A sequence of Steps.
+ * \file    Sequence.cc
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on February 8, 2022
+ * \brief   A sequence of Steps.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -31,6 +31,7 @@
 #include "internals.h"
 #include "lua_details.h"
 #include "send_message.h"
+#include "serialize_sequence.h"
 #include "taskolib/exceptions.h"
 #include "taskolib/Sequence.h"
 #include "taskolib/Step.h"
@@ -361,6 +362,11 @@ Sequence::execute(Context& context, CommChannel* comm_channel,
             timeout_trigger_.reset();
             execute_range(steps_.begin(), steps_.end(), context, comm);
         });
+}
+
+std::filesystem::path Sequence::get_folder_name() const
+{
+    return make_sequence_filename(get_name(), get_unique_id());
 }
 
 gul14::optional<Error>

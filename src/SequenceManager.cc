@@ -304,7 +304,7 @@ bool SequenceManager::store_sequence(const Sequence& seq)
 std::string SequenceManager::write_sequence_to_disk(const Sequence& seq)
 {
     const int max_digits = int( seq.size() / 10 ) + 1;
-    const auto folder = make_sequence_filename(seq);
+    const auto folder = seq.get_folder_name();
     const auto seq_path = path_ / folder;
     std::error_code error;
     std::filesystem::remove_all(seq_path, error); // remove previous storage

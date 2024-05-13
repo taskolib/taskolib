@@ -1,10 +1,10 @@
 /**
- * \file   test_Sequence.cc
- * \author Marcus Walla, Lars Fröhlich, Ulf Fini Jastrow
- * \date   Created on February 8, 2022
- * \brief  Test suite for the the Sequence class.
+ * \file    test_Sequence.cc
+ * \authors Marcus Walla, Lars Fröhlich, Ulf Fini Jastrow
+ * \date    Created on February 8, 2022
+ * \brief   Test suite for the the Sequence class.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -225,6 +225,16 @@ TEST_CASE("Sequence: get_error()", "[Sequence]")
     REQUIRE(seq.get_error()->what() == "Test2"s);
     REQUIRE(seq.get_error()->get_index().has_value());
     REQUIRE(seq.get_error()->get_index().value() == 42);
+}
+
+TEST_CASE("Sequence: get_folder_name()", "[Sequence]")
+{
+    REQUIRE(Sequence{ "", SequenceName{ "name" }, 0xfeeddeadbeef_uid }.get_folder_name()
+        == "name[0000feeddeadbeef]");
+    REQUIRE(Sequence{ "A/\"sequence\"$<again>", SequenceName{ "my_seq_name" }, 1_uid }
+        .get_folder_name() == "my_seq_name[0000000000000001]");
+    REQUIRE(Sequence{ "", SequenceName{}, 0x1234_uid }.get_folder_name()
+        == "[0000000000001234]");
 }
 
 TEST_CASE("Sequence: get_label()", "[Sequence]")

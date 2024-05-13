@@ -37,15 +37,6 @@
 namespace task {
 
 /**
- * Return a unique filename for the given sequence.
- *
- * The filename is constructed from the machine-friendly sequence name and the unique ID.
- * It is guaranteed that the filename does not contain filesystem-unsafe characters like
- * / or \.
- */
-std::string make_sequence_filename(const Sequence& sequence);
-
-/**
  * Return a filename for the given combination of machine-friendly sequence name and
  * unique ID.
  *

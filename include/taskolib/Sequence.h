@@ -1,10 +1,10 @@
 /**
- * \file   Sequence.h
- * \author Marcus Walla, Lars Fröhlich
- * \date   Created on February 8, 2022
- * \brief  A sequence of Steps.
+ * \file    Sequence.h
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on February 8, 2022
+ * \brief   A sequence of Steps.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -360,6 +360,15 @@ public:
      * If the sequence finished normally, nullopt is returned.
      */
     gul14::optional<Error> get_error() const { return error_; }
+
+    /**
+     * Return the (relative) folder name associated with this sequence.
+     *
+     * The folder name is derived from the machine-friendly sequence name and the unique
+     * ID (e.g. "MY_SEQUENCE[08159e372cbf1d4e]"). There is no guarantee that the folder
+     * exists. The SequenceManager class deals with stored sequences.
+    */
+    std::filesystem::path get_folder_name() const;
 
     /**
      * Return an error string if the sequence is not consistently nested, or an empty
