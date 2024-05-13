@@ -29,13 +29,12 @@
 #include <string>
 #include <vector>
 
+#include <gul14/optional.h>
 #include <gul14/string_view.h>
-#include <gul14/SmallVector.h>
 #include <libgit4cpp/Repository.h>
 
 #include "taskolib/Sequence.h"
 #include "taskolib/UniqueId.h"
-
 
 namespace task {
 
@@ -67,6 +66,16 @@ public:
         std::filesystem::path path; ///< Path to the sequence, relative to SequenceManager base path
         SequenceName name; ///< Machine-friendly name of the sequence
         UniqueId unique_id; ///< Unique ID of the sequence
+
+        friend bool operator==(const SequenceOnDisk& a, const SequenceOnDisk& b) noexcept
+        {
+            return a.unique_id == b.unique_id && a.name == b.name && a.path == b.path;
+        }
+
+        friend bool operator!=(const SequenceOnDisk& a, const SequenceOnDisk& b) noexcept
+        {
+            return !(a == b);
+        }
     };
 
     /**
@@ -148,6 +157,17 @@ public:
      */
     Sequence
     load_sequence(UniqueId uid, const std::vector<SequenceOnDisk>& sequences) const;
+
+    /**
+     * Determine the name and unique ID of a sequence from a folder name, if possible.
+     *
+     * Taskolib stores sequences in a folder following the scheme "name[uid]". This
+     * function extracts the final folder name from the given path and splits it into name
+     * and unique ID. If the folder does not follow the naming scheme, nullopt is
+     * returned.
+     */
+    static gul14::optional<SequenceOnDisk>
+    parse_folder_name(const std::filesystem::path& folder);
 
     /**
      * Remove a sequence from the base folder.
