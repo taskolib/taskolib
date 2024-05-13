@@ -240,20 +240,33 @@ Sequence SequenceManager::load_sequence(UniqueId uid,
     const std::vector<SequenceOnDisk>& sequences) const
 {
     const auto seq_on_disk = find_sequence_on_disk(uid, sequences);
+    return load_sequence(seq_on_disk);
+}
 
-    const auto folder = path_ / seq_on_disk.path;
+Sequence SequenceManager::load_sequence(std::filesystem::path folder) const
+{
+    const auto seq_on_disk = parse_folder_name(folder);
+    if (not seq_on_disk)
+        throw Error{ cat("Invalid sequence folder name: ", folder.string()) };
+    return load_sequence(*seq_on_disk);
+}
 
-    if (not std::filesystem::exists(folder))
-        throw Error{ cat("Sequence file path does not exist: ", folder.string()) };
-    else if (not std::filesystem::is_directory(folder))
-        throw Error{ cat("Sequence file path is not a directory: ", folder.string()) };
+Sequence SequenceManager::load_sequence(const SequenceOnDisk& seq_on_disk) const
+{
+    const auto path = seq_on_disk.path.is_absolute() ?
+         seq_on_disk.path : path_ / seq_on_disk.path;
+
+    if (not std::filesystem::exists(path))
+        throw Error{ cat("Sequence file path does not exist: ", path.string()) };
+    else if (not std::filesystem::is_directory(path))
+        throw Error{ cat("Sequence file path is not a directory: ", path.string()) };
 
     Sequence seq{ "", seq_on_disk.name, seq_on_disk.unique_id };
 
-    load_sequence_parameters(folder, seq);
+    load_sequence_parameters(path, seq);
 
     std::vector<std::filesystem::path> steps;
-    for (auto const& entry : std::filesystem::directory_iterator{ folder })
+    for (auto const& entry : std::filesystem::directory_iterator{ path })
     {
         if (entry.is_regular_file()
             and gul14::starts_with(entry.path().filename().string(), "step_"))

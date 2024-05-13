@@ -63,7 +63,10 @@ public:
     /// A struct to represent a sequence on disk.
     struct SequenceOnDisk
     {
-        std::filesystem::path path; ///< Path to the sequence, relative to SequenceManager base path
+        /// Path to the sequence (usually relative to SequenceManager base path, but can
+        /// also be absolute)
+        std::filesystem::path path;
+
         SequenceName name; ///< Machine-friendly name of the sequence
         UniqueId unique_id; ///< Unique ID of the sequence
 
@@ -159,6 +162,19 @@ public:
     load_sequence(UniqueId uid, const std::vector<SequenceOnDisk>& sequences) const;
 
     /**
+     * Load a sequence from an arbitrary folder on disk.
+     *
+     * This function can be used to load a sequence from a folder that is not managed by
+     * the SequenceManager. The machine-friendly name and unique ID of the sequence are
+     * parsed from its folder name.
+     *
+     * \param folder  The sequence folder to be loaded
+     *
+     * \exception Error is thrown if the sequence cannot be loaded.
+     */
+    Sequence load_sequence(std::filesystem::path folder) const;
+
+    /**
      * Determine the name and unique ID of a sequence from a folder name, if possible.
      *
      * Taskolib stores sequences in a folder following the scheme "name[uid]". This
@@ -241,6 +257,9 @@ private:
      * \exception Error is thrown if no unique ID can be found.
      */
     static UniqueId create_unique_id(const std::vector<SequenceOnDisk>& sequences);
+
+    /// Load a sequence from the specified path, with the given name and unique ID.
+    Sequence load_sequence(const SequenceOnDisk& seq_on_disk) const;
 
     /**
      * Perform changes and commit them to the git repository.
