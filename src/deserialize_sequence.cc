@@ -4,7 +4,7 @@
  * \date   Created on May 24, 2022
  * \brief  Deserialize Sequence and Steps from storage hardware.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -43,59 +43,6 @@ using gul14::cat;
 namespace task {
 
 namespace {
-
-/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
-int hex2dec(const char c)
-{
-    static constexpr gul14::string_view table { "0123456789abcdef" };
-    auto pos = table.find(c);
-    if (pos == table.npos)
-        return -1;
-    else
-        return static_cast<int>(pos);
-}
-
-/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
-// str must be at least 2 chars long; returns negative if conversion failed.
-int hex2dec_2chars(gul14::string_view str)
-{
-    const int a = hex2dec(str[0]);
-    const int b = hex2dec(str[1]);
-    if (a < 0 or b < 0)
-        return -1;
-    return (a << 4) | b;
-}
-
-/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
-std::string unescape_filename_characters(gul14::string_view str)
-{
-    std::string out;
-    out.reserve(str.size());
-
-    for (size_t i = 0; i < str.size(); ++i)
-    {
-        const char c = str[i];
-        if (c != '$' or (i + 2) >= str.size())
-        {
-            out.push_back(c);
-            continue;
-        }
-
-        // Decode $ sequence
-        int val = hex2dec_2chars(str.substr(i+1, 2));
-        if (val < 32)
-        {
-            out.push_back('$');
-        }
-        else
-        {
-            out.push_back(val);
-            i += 2;
-        }
-    }
-
-    return out;
-}
 
 /**
  * Separate a comment line from a Lua script into a keyword and a remainder.
@@ -227,33 +174,6 @@ void extract_disabled(gul14::string_view extract, Step& step)
 }
 
 } // anonymous namespace
-
-SequenceInfo get_sequence_info_from_filename(gul14::string_view filename)
-{
-    SequenceInfo result;
-
-    const std::string str = unescape_filename_characters(filename);
-
-    auto opening_bracket = str.rfind('[');
-    auto closing_bracket = str.find(']', opening_bracket);
-    if (opening_bracket != filename.npos && closing_bracket == str.size() - 1)
-    {
-        result.name = SequenceName::from_string(
-            gul14::trim(str.substr(0, opening_bracket)));
-        result.unique_id = UniqueId::from_string(
-            str.substr(opening_bracket + 1, closing_bracket - opening_bracket - 1));
-
-        if (result.name && result.unique_id)
-            return result;
-    }
-
-    // The filename is not in the new format "name[uid]". We assume it is just the label.
-    result.label = gul14::trim(str);
-    result.name = gul14::nullopt;
-    result.unique_id = gul14::nullopt;
-
-    return result;
-}
 
 std::istream& operator>>(std::istream& stream, Step& step)
 {

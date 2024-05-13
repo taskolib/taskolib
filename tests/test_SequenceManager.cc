@@ -259,6 +259,18 @@ TEST_CASE("SequenceManager: load_sequence() - Nonexistent unique ID", "[Sequence
     REQUIRE_THROWS_AS(manager.load_sequence(UniqueId{ }), Error);
 }
 
+TEST_CASE("parse_folder_name()", "[SequenceManager]")
+{
+    REQUIRE(SequenceManager::parse_folder_name("my_sequence[deadbeef]")
+        == SequenceManager::SequenceOnDisk{
+            "my_sequence[deadbeef]", SequenceName{ "my_sequence" }, 0xdeadbeef_uid });
+    REQUIRE(SequenceManager::parse_folder_name("[1234567890abcdef]")
+        == SequenceManager::SequenceOnDisk{
+            "[1234567890abcdef]", SequenceName{ "" }, 0x1234567890abcdef_uid });
+    REQUIRE(SequenceManager::parse_folder_name("A$2f$22sequence$22$24$3cagain$3e [my_uid]")
+        == gul14::nullopt);
+}
+
 TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
 {
     const auto dir = temp_dir / "remove_sequence_test";

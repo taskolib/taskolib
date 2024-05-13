@@ -79,6 +79,59 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
     stream << seq;
 }
 
+/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
+int hex2dec(const char c)
+{
+    static constexpr gul14::string_view table { "0123456789abcdef" };
+    auto pos = table.find(c);
+    if (pos == table.npos)
+        return -1;
+    else
+        return static_cast<int>(pos);
+}
+
+/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
+// str must be at least 2 chars long; returns negative if conversion failed.
+int hex2dec_2chars(gul14::string_view str)
+{
+    const int a = hex2dec(str[0]);
+    const int b = hex2dec(str[1]);
+    if (a < 0 or b < 0)
+        return -1;
+    return (a << 4) | b;
+}
+
+/// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
+std::string unescape_filename_characters(gul14::string_view str)
+{
+    std::string out;
+    out.reserve(str.size());
+
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        const char c = str[i];
+        if (c != '$' or (i + 2) >= str.size())
+        {
+            out.push_back(c);
+            continue;
+        }
+
+        // Decode $ sequence
+        int val = hex2dec_2chars(str.substr(i+1, 2));
+        if (val < 32)
+        {
+            out.push_back('$');
+        }
+        else
+        {
+            out.push_back(val);
+            i += 2;
+        }
+    }
+
+    return out;
+}
+
 } // anonymous namespace
 
 SequenceManager::SequenceManager(std::filesystem::path path)
@@ -164,16 +217,14 @@ std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() c
         if (entry.path().filename() == ".git")
             continue;
 
-        SequenceInfo seq_info = get_sequence_info_from_filename(
-            entry.path().filename().string());
+        auto seq_info = parse_folder_name(entry.path());
 
         // Accept only folders with a valid name and unique ID
-        if (seq_info.name.has_value() && seq_info.unique_id.has_value())
+        if (seq_info)
         {
             sequences.push_back(SequenceOnDisk{
                 std::filesystem::relative(entry.path(), path_),
-                seq_info.name.value(),
-                seq_info.unique_id.value() });
+                seq_info->name, seq_info->unique_id });
         }
     }
 
@@ -241,6 +292,28 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
     }
 
     return SequenceName{ name };
+}
+
+gul14::optional<SequenceManager::SequenceOnDisk> SequenceManager::parse_folder_name(
+    const std::filesystem::path& folder)
+{
+    const std::string str = unescape_filename_characters(folder.filename().string());
+
+    auto opening_bracket = str.rfind('[');
+    auto closing_bracket = str.find(']', opening_bracket);
+    if (opening_bracket != std::string::npos && closing_bracket == str.size() - 1)
+    {
+        auto name = SequenceName::from_string(
+            gul14::trim(str.substr(0, opening_bracket)));
+        auto unique_id = UniqueId::from_string(
+            str.substr(opening_bracket + 1, closing_bracket - opening_bracket - 1));
+
+        if (name && unique_id)
+            return SequenceOnDisk{ folder, *name, *unique_id };
+    }
+
+    // The filename has an invalid format
+    return {};
 }
 
 void SequenceManager::remove_sequence(UniqueId unique_id)
