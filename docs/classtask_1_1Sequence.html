@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.0.4</span>
+   &#160;<span id="projectnumber">1.1.0</span>
    </div>
   </td>
  </tr>
@@ -79,7 +79,7 @@ $(function() {
 <div class="line"> </div>
 <div class="line">Context context;</div>
 <div class="line"><span class="keyword">auto</span> maybe_error = seq.execute(context);</div>
-<div class="ttc" id="aclasstask_1_1Sequence_html_acd3f2fde9ae7dcb932bd6e028cc9c941"><div class="ttname"><a href="classtask_1_1Sequence.html#acd3f2fde9ae7dcb932bd6e028cc9c941">task::Sequence::Sequence</a></div><div class="ttdeci">Sequence(gul14::string_view label=&quot;&quot;, SequenceName name=SequenceName{}, UniqueId uid=UniqueId{})</div><div class="ttdoc">Construct an empty sequence.</div><div class="ttdef"><b>Definition:</b> Sequence.cc:66</div></div>
+<div class="ttc" id="aclasstask_1_1Sequence_html_acd3f2fde9ae7dcb932bd6e028cc9c941"><div class="ttname"><a href="classtask_1_1Sequence.html#acd3f2fde9ae7dcb932bd6e028cc9c941">task::Sequence::Sequence</a></div><div class="ttdeci">Sequence(gul14::string_view label=&quot;&quot;, SequenceName name=SequenceName{}, UniqueId uid=UniqueId{})</div><div class="ttdoc">Construct an empty sequence.</div><div class="ttdef"><b>Definition:</b> Sequence.cc:67</div></div>
 <div class="ttc" id="aclasstask_1_1Step_html_a883bca847a5eb2882d74af8bf13ba3fda0684bc74189c4e7fd25efaaf1fe27aef"><div class="ttname"><a href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fda0684bc74189c4e7fd25efaaf1fe27aef">task::Step::type_end</a></div><div class="ttdeci">@ type_end</div><div class="ttdef"><b>Definition:</b> Step.h:58</div></div>
 <div class="ttc" id="aclasstask_1_1Step_html_a883bca847a5eb2882d74af8bf13ba3fda19a8db265aed968c4c7ac7a11540629f"><div class="ttname"><a href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fda19a8db265aed968c4c7ac7a11540629f">task::Step::type_catch</a></div><div class="ttdeci">@ type_catch</div><div class="ttdef"><b>Definition:</b> Step.h:59</div></div>
 <div class="ttc" id="aclasstask_1_1Step_html_a883bca847a5eb2882d74af8bf13ba3fda39cc3eb41e1d417d6e0ac4a98befe1bd"><div class="ttname"><a href="classtask_1_1Step.html#a883bca847a5eb2882d74af8bf13ba3fda39cc3eb41e1d417d6e0ac4a98befe1bd">task::Step::type_action</a></div><div class="ttdeci">@ type_action</div><div class="ttdef"><b>Definition:</b> Step.h:58</div></div>
@@ -180,6 +180,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a184bce2d60f0201676feb3b924c39b8f"><td class="memItemLeft" align="right" valign="top">gul14::optional&lt; <a class="el" href="classtask_1_1Error.html">Error</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a184bce2d60f0201676feb3b924c39b8f">get_error</a> () const</td></tr>
 <tr class="memdesc:a184bce2d60f0201676feb3b924c39b8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an optional <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> object explaining why the sequence stopped prematurely.  <a href="classtask_1_1Sequence.html#a184bce2d60f0201676feb3b924c39b8f">More...</a><br /></td></tr>
 <tr class="separator:a184bce2d60f0201676feb3b924c39b8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca3381e605b9dc4440ebe42c7a640652"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#aca3381e605b9dc4440ebe42c7a640652">get_folder</a> () const</td></tr>
+<tr class="memdesc:aca3381e605b9dc4440ebe42c7a640652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the (relative) folder name associated with this sequence.  <a href="classtask_1_1Sequence.html#aca3381e605b9dc4440ebe42c7a640652">More...</a><br /></td></tr>
+<tr class="separator:aca3381e605b9dc4440ebe42c7a640652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54c45da8bd6b16762c77cad8642f8301"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a54c45da8bd6b16762c77cad8642f8301">get_indentation_error</a> () const noexcept</td></tr>
 <tr class="memdesc:a54c45da8bd6b16762c77cad8642f8301"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an error string if the sequence is not consistently nested, or an empty string if the nesting is correct.  <a href="classtask_1_1Sequence.html#a54c45da8bd6b16762c77cad8642f8301">More...</a><br /></td></tr>
 <tr class="separator:a54c45da8bd6b16762c77cad8642f8301"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1679,7 +1682,7 @@ Private Attributes</h2></td></tr>
 <div class="line">  ACTION</div>
 <div class="line">END</div>
 <div class="line">ACTION   &lt;- <a class="code" href="classtask_1_1Sequence.html#a0f375c7c46e63820c630bb0124b45811">find_end_of_continuation</a>(block_start)</div>
-<div class="ttc" id="aclasstask_1_1Sequence_html_a0f375c7c46e63820c630bb0124b45811"><div class="ttname"><a href="classtask_1_1Sequence.html#a0f375c7c46e63820c630bb0124b45811">task::Sequence::find_end_of_continuation</a></div><div class="ttdeci">Iterator find_end_of_continuation(Iterator block_start)</div><div class="ttdoc">Return an iterator past the END step that ends the block-with-continuation starting at a given iterat...</div><div class="ttdef"><b>Definition:</b> Sequence.cc:565</div></div>
+<div class="ttc" id="aclasstask_1_1Sequence_html_a0f375c7c46e63820c630bb0124b45811"><div class="ttname"><a href="classtask_1_1Sequence.html#a0f375c7c46e63820c630bb0124b45811">task::Sequence::find_end_of_continuation</a></div><div class="ttdeci">Iterator find_end_of_continuation(Iterator block_start)</div><div class="ttdoc">Return an iterator past the END step that ends the block-with-continuation starting at a given iterat...</div><div class="ttdef"><b>Definition:</b> Sequence.cc:571</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>an iterator past the matching END step or steps_.end() if there is no matching END step. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>.</p>
@@ -1715,6 +1718,30 @@ Private Attributes</h2></td></tr>
 <p>If the sequence finished normally, nullopt is returned. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ab7eede5c5003539bef2c2617d1aee1ce">error_</a>.</p>
+
+</div>
+</div>
+<a id="aca3381e605b9dc4440ebe42c7a640652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca3381e605b9dc4440ebe42c7a640652">&#9670;&nbsp;</a></span>get_folder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::filesystem::path task::Sequence::get_folder </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the (relative) folder name associated with this sequence. </p>
+<p>The folder name is derived from the machine-friendly sequence name and the unique ID (e.g. "MY_SEQUENCE[08159e372cbf1d4e]"). There is no guarantee that the folder exists. The <a class="el" href="classtask_1_1SequenceManager.html" title="A class for listing, loading, storing, and renaming sequences in a given file system directory.">SequenceManager</a> class deals with stored sequences. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a024b0c34822b2577c63036287bf09c18">get_name()</a>, <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">get_unique_id()</a>, and <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">task::make_sequence_filename()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">task::SequenceManager::write_sequence_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -1835,7 +1862,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a58891e5076a89c0ae672376eee7d871a">name_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#aca3381e605b9dc4440ebe42c7a640652">get_folder()</a>.</p>
 
 </div>
 </div>
@@ -1959,7 +1986,7 @@ Private Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ac619364ed93d0db6e2a3184286c15034">unique_id_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a4570b2c114077387ad2ef42c14cec907">task::SequenceManager::rename_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#aca3381e605b9dc4440ebe42c7a640652">get_folder()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a4570b2c114077387ad2ef42c14cec907">task::SequenceManager::rename_sequence()</a>.</p>
 
 </div>
 </div>
@@ -3145,7 +3172,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 22 2024 13:24:36 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon May 13 2024 15:45:21 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -1,13 +1,13 @@
 <map id="Step.h" name="Step.h">
-<area shape="rect" id="node1" title="Declaration of the Step class." alt="" coords="528,5,591,32"/>
-<area shape="rect" id="node2" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="399,80,496,107"/>
+<area shape="rect" id="node1" title="Declaration of the Step class." alt="" coords="607,5,669,32"/>
+<area shape="rect" id="node2" href="$Sequence_8h.html" title="A sequence of Steps." alt="" coords="464,80,561,107"/>
 <area shape="rect" id="node4" href="$taskolib_8h.html" title="Main include file for Taskolib." alt="" coords="125,229,210,256"/>
-<area shape="rect" id="node8" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="404,155,579,181"/>
-<area shape="rect" id="node10" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="785,155,888,181"/>
-<area shape="rect" id="node11" href="$serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="603,155,761,181"/>
-<area shape="rect" id="node13" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="673,80,742,107"/>
-<area shape="rect" id="node3" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="61,155,151,181"/>
-<area shape="rect" id="node6" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="227,155,380,181"/>
+<area shape="rect" id="node8" href="$deserialize__sequence_8h.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="425,155,600,181"/>
+<area shape="rect" id="node10" href="$Sequence_8cc.html" title="A sequence of Steps." alt="" coords="809,229,912,256"/>
+<area shape="rect" id="node11" href="$serialize__sequence_8h.html" title="Serialize Sequence and Steps on storage hardware." alt="" coords="624,155,783,181"/>
+<area shape="rect" id="node13" href="$Step_8cc.html" title="Implementation of the Step class." alt="" coords="909,80,978,107"/>
+<area shape="rect" id="node3" href="$Executor_8h.html" title="Declaration of the Executor class." alt="" coords="83,155,172,181"/>
+<area shape="rect" id="node6" href="$SequenceManager_8h.html" title="Manage and control sequences." alt="" coords="248,155,401,181"/>
 <area shape="rect" id="node5" href="$Executor_8cc.html" title="Implementation of the Executor class." alt="" coords="5,229,100,256"/>
 <area shape="rect" id="node7" href="$SequenceManager_8cc.html" title="Manage and control sequences." alt="" coords="439,229,597,256"/>
 <area shape="rect" id="node9" href="$deserialize__sequence_8cc.html" title="Deserialize Sequence and Steps from storage hardware." alt="" coords="235,229,415,256"/>

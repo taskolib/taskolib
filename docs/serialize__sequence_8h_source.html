@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.0.4</span>
+   &#160;<span id="projectnumber">1.1.0</span>
    </div>
   </td>
  </tr>
@@ -65,30 +65,28 @@ $(function() {
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetask.html">task</a> {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;std::string <a class="code" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">make_sequence_filename</a>(<span class="keyword">const</span> Sequence&amp; sequence);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;std::string <a class="code" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">make_sequence_filename</a>(SequenceName sequence_name, UniqueId unique_id);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;std::string <a class="code" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">make_sequence_filename</a>(SequenceName sequence_name, UniqueId unique_id);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;std::ostream&amp; <a class="code" href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> Step&amp; step);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">store_step</a>(<span class="keyword">const</span> std::filesystem::path&amp; lua_file, <span class="keyword">const</span> Step&amp; step);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;std::ostream&amp; <a class="code" href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> Sequence&amp; sequence);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// namespace task</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;std::ostream&amp; <a class="code" href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> Step&amp; step);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">store_step</a>(<span class="keyword">const</span> std::filesystem::path&amp; lua_file, <span class="keyword">const</span> Step&amp; step);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;std::ostream&amp; <a class="code" href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> Sequence&amp; sequence);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} <span class="comment">// namespace task</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aSequence_8h_html"><div class="ttname"><a href="Sequence_8h.html">Sequence.h</a></div><div class="ttdoc">A sequence of Steps.</div></div>
 <div class="ttc" id="aStep_8h_html"><div class="ttname"><a href="Step_8h.html">Step.h</a></div><div class="ttdoc">Declaration of the Step class.</div></div>
 <div class="ttc" id="aUniqueId_8h_html"><div class="ttname"><a href="UniqueId_8h.html">UniqueId.h</a></div><div class="ttdoc">Declaration of the UniqueId class.</div></div>
 <div class="ttc" id="anamespacetask_html"><div class="ttname"><a href="namespacetask.html">task</a></div><div class="ttdoc">Namespace task contains all Taskolib functions and classes.</div><div class="ttdef"><b>Definition:</b> CommChannel.h:33</div></div>
-<div class="ttc" id="anamespacetask_html_a67a00ba5f07d8f2d59b7e8d156986437"><div class="ttname"><a href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">task::make_sequence_filename</a></div><div class="ttdeci">std::string make_sequence_filename(const Sequence &amp;sequence)</div><div class="ttdoc">Return a unique filename for the given sequence.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:49</div></div>
-<div class="ttc" id="anamespacetask_html_adf47d649e6e2db7cf0e50298701558d4"><div class="ttname"><a href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">task::store_step</a></div><div class="ttdeci">void store_step(const std::filesystem::path &amp;lua_file, const Step &amp;step)</div><div class="ttdoc">Store a Step in a file.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:88</div></div>
+<div class="ttc" id="anamespacetask_html_a0a68055bbd6dce627cb95a2a3429e9dd"><div class="ttname"><a href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">task::make_sequence_filename</a></div><div class="ttdeci">std::string make_sequence_filename(SequenceName sequence_name, UniqueId unique_id)</div><div class="ttdoc">Return a filename for the given combination of machine-friendly sequence name and unique ID.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:49</div></div>
+<div class="ttc" id="anamespacetask_html_adf47d649e6e2db7cf0e50298701558d4"><div class="ttname"><a href="namespacetask.html#adf47d649e6e2db7cf0e50298701558d4">task::store_step</a></div><div class="ttdeci">void store_step(const std::filesystem::path &amp;lua_file, const Step &amp;step)</div><div class="ttdoc">Store a Step in a file.</div><div class="ttdef"><b>Definition:</b> serialize_sequence.cc:83</div></div>
 <div class="ttc" id="anamespacetask_html_af05a71100f0069d77f7ab177512bfdaa"><div class="ttname"><a href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">task::operator&lt;&lt;</a></div><div class="ttdeci">std::ostream &amp; operator&lt;&lt;(std::ostream &amp;stream, const Timeout &amp;timeout)</div><div class="ttdef"><b>Definition:</b> Timeout.h:190</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 22 2024 13:24:36 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon May 13 2024 15:45:21 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

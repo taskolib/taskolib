@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.0.4</span>
+   &#160;<span id="projectnumber">1.1.0</span>
    </div>
   </td>
  </tr>
@@ -253,9 +253,6 @@ Functions</h2></td></tr>
 <tr class="memitem:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">send_message</a> (<a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4">Message::Type</a> type, gul14::string_view text, <a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> timestamp, <a class="el" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> index, const <a class="el" href="structtask_1_1Context.html">Context</a> &amp;context, <a class="el" href="structtask_1_1CommChannel.html">CommChannel</a> *comm_channel=nullptr)</td></tr>
 <tr class="memdesc:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the message callback and enqueue the message in the given communication channel, if any.  <a href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">More...</a><br /></td></tr>
 <tr class="separator:aa3297d57e5d2ff3b328beb5d94910f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67a00ba5f07d8f2d59b7e8d156986437"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">make_sequence_filename</a> (const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;sequence)</td></tr>
-<tr class="memdesc:a67a00ba5f07d8f2d59b7e8d156986437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a unique filename for the given sequence.  <a href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437">More...</a><br /></td></tr>
-<tr class="separator:a67a00ba5f07d8f2d59b7e8d156986437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a68055bbd6dce627cb95a2a3429e9dd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">make_sequence_filename</a> (<a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> sequence_name, <a class="el" href="classtask_1_1UniqueId.html">UniqueId</a> unique_id)</td></tr>
 <tr class="memdesc:a0a68055bbd6dce627cb95a2a3429e9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a filename for the given combination of machine-friendly sequence name and unique ID.  <a href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">More...</a><br /></td></tr>
 <tr class="separator:a0a68055bbd6dce627cb95a2a3429e9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -901,7 +898,7 @@ Variables</h2></td></tr>
 
 <p>Determine the label, name, and unique ID of a sequence from a filename, if possible. </p>
 <p>New versions of Taskolib store sequences in a folder following the scheme "name[uid]", whereas old versions just used an escaped form of the label as the folder name. This function looks for the angle brackets to figure out which of the two formats is used.</p>
-<p>This is the reverse function to <a class="el" href="namespacetask.html#a67a00ba5f07d8f2d59b7e8d156986437" title="Return a unique filename for the given sequence.">make_sequence_filename()</a>. </p>
+<p>This is the reverse function to <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd" title="Return a filename for the given combination of machine-friendly sequence name and unique ID.">make_sequence_filename()</a>. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1SequenceName.html#a52f7aa25a85a0c1da4934208aeea31e9">task::SequenceName::from_string()</a>, <a class="el" href="classtask_1_1UniqueId.html#a14e7e033905a22bfc71140328394df0e">task::UniqueId::from_string()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a3a114f94df4e448e5713ebf0daff6e44">task::SequenceInfo::label</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, and <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>.</p>
 
@@ -1251,33 +1248,8 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 </div>
 </div>
-<a id="a67a00ba5f07d8f2d59b7e8d156986437"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67a00ba5f07d8f2d59b7e8d156986437">&#9670;&nbsp;</a></span>make_sequence_filename() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string task::make_sequence_filename </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtask_1_1Sequence.html">Sequence</a> &amp;&#160;</td>
-          <td class="paramname"><em>sequence</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return a unique filename for the given sequence. </p>
-<p>The filename is constructed from the machine-friendly sequence name and the unique ID. It is guaranteed that the filename does not contain filesystem-unsafe characters like / or . </p>
-
-<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a024b0c34822b2577c63036287bf09c18">task::Sequence::get_name()</a>, and <a class="el" href="classtask_1_1Sequence.html#a326e5256f72a574a30bfce1787599122">task::Sequence::get_unique_id()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">task::SequenceManager::rename_sequence()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#acad7d0ac841d78769085b80f34b2f434">task::SequenceManager::write_sequence_to_disk()</a>.</p>
-
-</div>
-</div>
 <a id="a0a68055bbd6dce627cb95a2a3429e9dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a68055bbd6dce627cb95a2a3429e9dd">&#9670;&nbsp;</a></span>make_sequence_filename() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a68055bbd6dce627cb95a2a3429e9dd">&#9670;&nbsp;</a></span>make_sequence_filename()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1306,6 +1278,8 @@ the collection of context variable names can also be an empty list, ie. <code></
 <p>It is guaranteed that the filename does not contain filesystem-unsafe characters like / or . </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1SequenceName.html#adc50658049e3ee5026a54aab8a56fef3">task::SequenceName::string()</a>, and <a class="el" href="namespacetask.html#a7ea37a86e93c0787a6a6d84eeba336e8">to_string()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#aca3381e605b9dc4440ebe42c7a640652">task::Sequence::get_folder()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#a3ce90a2e52ebf50c0a9a1761a5a28082">task::SequenceManager::rename_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1923,7 +1897,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 22 2024 13:24:36 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon May 13 2024 15:45:21 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
