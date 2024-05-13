@@ -206,6 +206,23 @@ SequenceManager::find_sequence_on_disk(UniqueId uid,
     return *it;
 }
 
+Sequence SequenceManager::import_sequence(const std::filesystem::path& path)
+{
+    auto seq = load_sequence(path);
+
+    const UniqueId new_unique_id = create_unique_id(list_sequences());
+    seq.set_unique_id(new_unique_id);
+
+    auto ok = perform_commit(gul14::cat("Import sequence from ", path.string(), " to "),
+        [this, &seq]() {
+            return this->write_sequence_to_disk(seq);
+        });
+    if (not ok)
+        throw Error{ cat("Cannot commit imported sequence ", to_string(new_unique_id)) };
+
+    return seq;
+}
+
 std::vector<SequenceManager::SequenceOnDisk> SequenceManager::list_sequences() const
 {
     std::vector<SequenceOnDisk> sequences;

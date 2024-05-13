@@ -172,6 +172,46 @@ TEST_CASE("SequenceManager: create_sequence()", "[SequenceManager]")
     REQUIRE(manager.list_sequences().size() == 4);
 }
 
+TEST_CASE("SequenceManager: import_sequence()", "[SequenceManager]")
+{
+    const auto src_dir = temp_dir / "import_sequence_source";
+    const auto dest_dir = temp_dir / "import_sequence_destination";
+
+    std::filesystem::remove_all(src_dir);
+    std::filesystem::remove_all(dest_dir);
+
+    std::filesystem::create_directories(src_dir);
+    SequenceManager src_manager{ src_dir };
+
+    // Create a sequence and store it
+    Sequence seq{ "First sequence", SequenceName{ "Pippo" } };
+    Step step{ Step::type_action };
+    step.set_script("answer = 42");
+    seq.push_back(step);
+    src_manager.store_sequence(seq);
+
+    auto src_path = std::filesystem::absolute(src_manager.get_path() / seq.get_folder());
+
+    // Create destination directory
+    std::filesystem::create_directories(dest_dir);
+    SequenceManager dest_manager{ dest_dir };
+
+    // Import the sequence
+    Sequence imported = dest_manager.import_sequence(src_path);
+
+    // Compare original and copy
+    REQUIRE(imported.get_label() == "First sequence");
+    REQUIRE(imported.get_name() == SequenceName{ "Pippo" });
+    REQUIRE(imported.size() == seq.size());
+    REQUIRE(imported[0].get_type() == seq[0].get_type());
+    REQUIRE(imported[0].get_script() == seq[0].get_script());
+
+    // Examine base folder
+    auto list = dest_manager.list_sequences();
+    REQUIRE(list.size() == 1);
+    REQUIRE(list[0].name == SequenceName{ "Pippo" });
+}
+
 TEST_CASE("SequenceManager: list_sequences()", "[SequenceManager]")
 {
     auto root = temp_dir / "sequences";

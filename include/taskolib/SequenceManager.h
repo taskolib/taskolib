@@ -129,6 +129,22 @@ public:
     std::filesystem::path get_path() const { return path_; }
 
     /**
+     * Import a sequence from a folder, assigning a new unique ID to it.
+     *
+     * This function loads an existing sequence from the specified path. If the import is
+     * successful, the new sequence is stored in the base folder. It keeps the name and
+     * label of the original, but a random unique ID is assigned.
+     *
+     * \param path  Path to the original sequence folder
+     *
+     * \returns the copied sequence as if it had been loaded from disk.
+     *
+     * \exception Error is thrown if the original sequence cannot be loaded or if the new
+     *            sequence folder cannot be created.
+     */
+    Sequence import_sequence(const std::filesystem::path& path);
+
+    /**
      * Return an unsorted list of all valid sequences that are found in the base path.
      *
      * This function quietly ignores folders that do not follow the naming convention for
