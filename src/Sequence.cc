@@ -364,7 +364,7 @@ Sequence::execute(Context& context, CommChannel* comm_channel,
         });
 }
 
-std::filesystem::path Sequence::get_folder_name() const
+std::filesystem::path Sequence::get_folder() const
 {
     return make_sequence_filename(get_name(), get_unique_id());
 }

@@ -368,7 +368,7 @@ public:
      * ID (e.g. "MY_SEQUENCE[08159e372cbf1d4e]"). There is no guarantee that the folder
      * exists. The SequenceManager class deals with stored sequences.
     */
-    std::filesystem::path get_folder_name() const;
+    std::filesystem::path get_folder() const;
 
     /**
      * Return an error string if the sequence is not consistently nested, or an empty

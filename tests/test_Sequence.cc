@@ -227,13 +227,13 @@ TEST_CASE("Sequence: get_error()", "[Sequence]")
     REQUIRE(seq.get_error()->get_index().value() == 42);
 }
 
-TEST_CASE("Sequence: get_folder_name()", "[Sequence]")
+TEST_CASE("Sequence: get_folder()", "[Sequence]")
 {
-    REQUIRE(Sequence{ "", SequenceName{ "name" }, 0xfeeddeadbeef_uid }.get_folder_name()
+    REQUIRE(Sequence{ "", SequenceName{ "name" }, 0xfeeddeadbeef_uid }.get_folder()
         == "name[0000feeddeadbeef]");
     REQUIRE(Sequence{ "A/\"sequence\"$<again>", SequenceName{ "my_seq_name" }, 1_uid }
-        .get_folder_name() == "my_seq_name[0000000000000001]");
-    REQUIRE(Sequence{ "", SequenceName{}, 0x1234_uid }.get_folder_name()
+        .get_folder() == "my_seq_name[0000000000000001]");
+    REQUIRE(Sequence{ "", SequenceName{}, 0x1234_uid }.get_folder()
         == "[0000000000001234]");
 }
 
