@@ -41,18 +41,6 @@ static const std::filesystem::path temp_dir{ "unit_test_files" };
 
 } // anonymous namespace
 
-TEST_CASE("make_sequence_filename(Sequence)", "[serialize_sequence]")
-{
-    REQUIRE(make_sequence_filename(
-        Sequence{ "A sequence", SequenceName{ "A_sequence" }, 0xdeadbeef_uid })
-        == "A_sequence[00000000deadbeef]");
-    REQUIRE(make_sequence_filename(
-        Sequence{ "A/\"sequence\"$<again>", SequenceName{ "my_seq_name" }, 1_uid })
-        == "my_seq_name[0000000000000001]");
-    REQUIRE(make_sequence_filename(
-        Sequence{ "", SequenceName{}, 0x1234_uid }) == "[0000000000001234]");
-}
-
 TEST_CASE("make_sequence_filename(SequenceName, UniqueId)", "[serialize_sequence]")
 {
     REQUIRE(make_sequence_filename(SequenceName{ "A_sequence" }, 0xdeadbeef_uid)

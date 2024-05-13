@@ -410,7 +410,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Label, name, UI
     Sequence sequence{ label, name };
     sequence.push_back(Step{ });
 
-    const auto seq_folder = make_sequence_filename(sequence);
+    const auto seq_folder = sequence.get_folder_name();
 
     std::filesystem::remove_all(dir / seq_folder);
 
@@ -493,7 +493,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Maintainers, ti
     Sequence seq{ "Test sequence with maintainers" };
 
     // remove previously stored sequence
-    std::filesystem::remove_all(dir / make_sequence_filename(seq));
+    std::filesystem::remove_all(dir / seq.get_folder_name());
 
     seq.set_maintainers("John Doe john.doe@universe.org; Bob Smith boby@milkyway.edu");
     seq.set_timeout(task::Timeout{ 1min });
@@ -526,7 +526,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Empty sequence"
     SECTION("Deserialize empty sequence (part 2)")
     {
         // Remove previously stored sequence
-        std::filesystem::remove_all(dir / make_sequence_filename(seq));
+        std::filesystem::remove_all(dir / seq.get_folder_name());
 
         manager.store_sequence(seq);
 

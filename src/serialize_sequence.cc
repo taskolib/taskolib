@@ -46,11 +46,6 @@ void check_stream(std::ostream& stream)
 
 } // anonymous namespace
 
-std::string make_sequence_filename(const Sequence& sequence)
-{
-    return make_sequence_filename(sequence.get_name(), sequence.get_unique_id());
-}
-
 std::string make_sequence_filename(SequenceName sequence_name, UniqueId unique_id)
 {
     return cat(sequence_name.string(), '[', to_string(unique_id), ']');
