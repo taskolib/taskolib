@@ -348,7 +348,7 @@ public:
      * \returns nullopt if the execution finished successfully, or an Error object if the
      *          script cannot be executed due to a syntax error or if it raises an error
      *          during execution. The return value is also stored in the Sequence object
-     *          and can be retrieved with get_error_message().
+     *          and can be retrieved with get_error().
      */
     [[nodiscard]]
     gul14::optional<Error> execute(Context& context, CommChannel* comm_channel,
