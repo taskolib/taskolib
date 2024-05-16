@@ -103,8 +103,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1VariableName.html">VariableName</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A variable name is a string with limited functionality and some limitations on the allowed characters.  <a href="classtask_1_1VariableName.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtask_1_1SequenceInfo.html">SequenceInfo</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -198,9 +196,6 @@ Functions</h2></td></tr>
 <tr class="separator:aa8a13e460561c228be4437ac6e92a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af05a71100f0069d77f7ab177512bfdaa"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#af05a71100f0069d77f7ab177512bfdaa">operator&lt;&lt;</a> (std::ostream &amp;stream, const <a class="el" href="classtask_1_1Timeout.html">Timeout</a> &amp;timeout)</td></tr>
 <tr class="separator:af05a71100f0069d77f7ab177512bfdaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93f382e8c5663f8f71d7b2229f8c60db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtask_1_1SequenceInfo.html">SequenceInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">get_sequence_info_from_filename</a> (gul14::string_view filename)</td></tr>
-<tr class="memdesc:a93f382e8c5663f8f71d7b2229f8c60db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the label, name, and unique ID of a sequence from a filename, if possible.  <a href="namespacetask.html#a93f382e8c5663f8f71d7b2229f8c60db">More...</a><br /></td></tr>
-<tr class="separator:a93f382e8c5663f8f71d7b2229f8c60db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6267718d543a5b3e74455d4e78de04f3"><td class="memItemLeft" align="right" valign="top">std::istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">operator&gt;&gt;</a> (std::istream &amp;stream, <a class="el" href="classtask_1_1Step.html">Step</a> &amp;step)</td></tr>
 <tr class="memdesc:a6267718d543a5b3e74455d4e78de04f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialize parameters of <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> from the input stream.  <a href="namespacetask.html#a6267718d543a5b3e74455d4e78de04f3">More...</a><br /></td></tr>
 <tr class="separator:a6267718d543a5b3e74455d4e78de04f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -880,32 +875,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a93f382e8c5663f8f71d7b2229f8c60db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93f382e8c5663f8f71d7b2229f8c60db">&#9670;&nbsp;</a></span>get_sequence_info_from_filename()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtask_1_1SequenceInfo.html">SequenceInfo</a> task::get_sequence_info_from_filename </td>
-          <td>(</td>
-          <td class="paramtype">gul14::string_view&#160;</td>
-          <td class="paramname"><em>filename</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Determine the label, name, and unique ID of a sequence from a filename, if possible. </p>
-<p>New versions of Taskolib store sequences in a folder following the scheme "name[uid]", whereas old versions just used an escaped form of the label as the folder name. This function looks for the angle brackets to figure out which of the two formats is used.</p>
-<p>This is the reverse function to <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd" title="Return a filename for the given combination of machine-friendly sequence name and unique ID.">make_sequence_filename()</a>. </p>
-
-<p class="reference">References <a class="el" href="classtask_1_1SequenceName.html#a52f7aa25a85a0c1da4934208aeea31e9">task::SequenceName::from_string()</a>, <a class="el" href="classtask_1_1UniqueId.html#a14e7e033905a22bfc71140328394df0e">task::UniqueId::from_string()</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a3a114f94df4e448e5713ebf0daff6e44">task::SequenceInfo::label</a>, <a class="el" href="structtask_1_1SequenceInfo.html#a2f8726a0408dbc4caf8e981319a1e1e3">task::SequenceInfo::name</a>, and <a class="el" href="structtask_1_1SequenceInfo.html#a7b1bee3a023a0be8410059c49461b646">task::SequenceInfo::unique_id</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#abb018b6d4d91e735352c01d023264bef">task::SequenceManager::list_sequences()</a>.</p>
-
-</div>
-</div>
 <a id="a1ccb3dd2dcf762c092f177671fca1d5e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1ccb3dd2dcf762c092f177671fca1d5e">&#9670;&nbsp;</a></span>get_step_idx_from_registry()</h2>
 
@@ -1189,7 +1158,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="namespacetask.html#a8af56c4748ce21663c6e542f150dc389">sequence_lua_filename</a>, <a class="el" href="classtask_1_1Sequence.html#a4549f7958067eaf3e2d3e5f049cb262b">task::Sequence::set_label()</a>, <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808">task::Sequence::set_maintainers()</a>, <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">task::Sequence::set_step_setup_script()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">task::Sequence::set_timeout()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">task::SequenceManager::load_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a9b3c2bc2b6f8ed7a63ed753bd1df08a7">task::SequenceManager::load_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1244,7 +1213,7 @@ if <code>&gt;time of last modification</code> is not provided in the file it is 
 the collection of context variable names can also be an empty list, ie. <code></code>[] .</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>the deserialized <a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> object. </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">task::SequenceManager::load_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a9b3c2bc2b6f8ed7a63ed753bd1df08a7">task::SequenceManager::load_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1793,7 +1762,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 
 <p>Return a lower-case name for a step type ("action", "if", "end"). </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">task::SequenceManager::copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">task::SequenceManager::create_sequence()</a>, <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55">task::Sequence::execute()</a>, <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step::execute_impl()</a>, <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">task::SequenceManager::find_sequence_on_disk()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">make_sequence_filename()</a>, <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">task::SequenceManager::remove_sequence()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">task::SequenceManager::copy_sequence()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">task::SequenceManager::create_sequence()</a>, <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55">task::Sequence::execute()</a>, <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step::execute_impl()</a>, <a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">task::SequenceManager::find_sequence_on_disk()</a>, <a class="el" href="structfmt_1_1formatter_3_01task_1_1TimePoint_01_4.html#a421afd18fe22e2818fc99ea203f23ebd">fmt::formatter&lt; task::TimePoint &gt;::format()</a>, <a class="el" href="classtask_1_1SequenceManager.html#a3b53c1ef7c9d0e1004fb72d76474977f">task::SequenceManager::import_sequence()</a>, <a class="el" href="namespacetask.html#a0a68055bbd6dce627cb95a2a3429e9dd">make_sequence_filename()</a>, <a class="el" href="namespacetask.html#a2246f61abd992f460cb3afe7ce45bac2">operator&lt;&lt;()</a>, and <a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">task::SequenceManager::remove_sequence()</a>.</p>
 
 </div>
 </div>
@@ -1897,7 +1866,7 @@ the collection of context variable names can also be an empty list, ie. <code></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 14 2024 08:49:23 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu May 16 2024 10:23:38 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
