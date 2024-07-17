@@ -255,6 +255,12 @@ TEST_CASE("Sequence: get_name()", "[Sequence]")
     REQUIRE(s.get_name() == SequenceName{ "a_rose_by_any_other_name" });
 }
 
+TEST_CASE("Sequence: get_tags()", "[Sequence]")
+{
+    Sequence s;
+    REQUIRE(s.get_tags().empty());
+}
+
 TEST_CASE("Sequence: get_unique_id()", "[Sequence]")
 {
     Sequence seq1;

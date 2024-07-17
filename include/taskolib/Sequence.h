@@ -46,6 +46,7 @@
 #include "taskolib/SequenceName.h"
 #include "taskolib/Step.h"
 #include "taskolib/StepIndex.h"
+#include "taskolib/Tag.h"
 #include "taskolib/TimeoutTrigger.h"
 #include "taskolib/UniqueId.h"
 
@@ -402,7 +403,10 @@ public:
      *
      * \returns the step setup script.
      */
-    const std::string& get_step_setup_script() const noexcept{ return step_setup_script_; }
+    const std::string& get_step_setup_script() const noexcept { return step_setup_script_; }
+
+    /// Return the tags associated with this sequence.
+    const std::vector<Tag>& get_tags() const noexcept { return tags_; }
 
     /**
      * Returns time of last execution. It returns TimePoint{} on a fresh created sequence.
@@ -691,15 +695,15 @@ private:
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
 
-    UniqueId unique_id_; ///< Unique ID.
-    SequenceName name_; ///< Machine-readable name.
-    std::string label_; ///< Human-readable sequence label.
-    std::string maintainers_; ///< One or more maintainers.
+    UniqueId unique_id_;            ///< Unique ID.
+    SequenceName name_;             ///< Machine-readable name.
+    std::string label_;             ///< Human-readable sequence label.
+    std::string maintainers_;       ///< One or more maintainers.
     std::string step_setup_script_; ///< Step setup script.
+    std::vector<Tag> tags_;         ///< Tags for categorizing the sequence.
+    std::vector<Step> steps_;       ///< Collection of steps.
 
-    std::vector<Step> steps_; ///< Collection of steps.
-
-    bool is_running_{false}; ///< Flag to determine if the sequence is running.
+    bool is_running_{ false }; ///< Flag to determine if the sequence is running.
 
     TimeoutTrigger timeout_trigger_; ///< Logic to check for elapsed sequence timeout.
 
