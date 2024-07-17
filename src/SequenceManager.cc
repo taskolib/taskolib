@@ -76,6 +76,10 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
 
     stream << "-- label: " << seq.get_label() << '\n';
     stream << "-- timeout: " << seq.get_timeout() << '\n';
+    stream << "-- tags:";
+    for (const Tag& tag : seq.get_tags())
+        stream << ' ' << tag;
+    stream << '\n';
     stream << seq;
 }
 
