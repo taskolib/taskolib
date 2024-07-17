@@ -16,6 +16,7 @@ test_src = files(
     'test_SequenceManager.cc',
     'test_serialize_sequence.cc',
     'test_Step.cc',
+    'test_Tag.cc',
     'test_time_types.cc',
     'test_Timeout.cc',
     'test_UniqueId.cc',

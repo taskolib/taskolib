@@ -15,6 +15,7 @@ public_headers = [
    'taskolib/SequenceName.h',
    'taskolib/Step.h',
    'taskolib/StepIndex.h',
+   'taskolib/Tag.h',
    'taskolib/taskolib.h',
    'taskolib/time_types.h',
    'taskolib/Timeout.h',
