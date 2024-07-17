@@ -1,8 +1,8 @@
 /**
- * \file   deserialize_sequence.h
- * \author Marcus Walla
- * \date   Created on May 24, 2022
- * \brief  Deserialize Sequence and Steps from storage hardware.
+ * \file    deserialize_sequence.h
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on May 24, 2022
+ * \brief   Deserialize Sequence and Steps from storage hardware.
  *
  * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -27,9 +27,13 @@
 
 #include <filesystem>
 #include <iostream>
+#include <vector>
+
+#include <gul14/string_view.h>
 
 #include "taskolib/Sequence.h"
 #include "taskolib/Step.h"
+#include "taskolib/Tag.h"
 
 namespace task {
 
@@ -104,6 +108,13 @@ Step load_step(const std::filesystem::path& lua_file);
  * \see Sequence for step setup script.
  */
 void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence);
+
+/**
+ * Parse a whitespace-separated string into a list of tags.
+ *
+ * Invalid tags are silently discarded.
+ */
+std::vector<Tag> parse_tags(gul14::string_view str);
 
 } // namespace task
 

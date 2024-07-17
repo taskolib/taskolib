@@ -1,8 +1,8 @@
 /**
- * \file   deserialize_sequence.cc
- * \author Marcus Walla
- * \date   Created on May 24, 2022
- * \brief  Deserialize Sequence and Steps from storage hardware.
+ * \file    deserialize_sequence.cc
+ * \authors Marcus Walla, Lars Fröhlich
+ * \date    Created on May 24, 2022
+ * \brief   Deserialize Sequence and Steps from storage hardware.
  *
  * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
@@ -311,12 +311,33 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
                 sequence.set_label(gul14::trim_sv(keyword.substr(9)));
             else if (gul14::starts_with(keyword, "-- timeout:"))
                 sequence.set_timeout(parse_timeout(keyword.substr(11)));
+            else if (gul14::starts_with(keyword, "-- tags:"))
+                sequence.set_tags(parse_tags(keyword.substr(8)));
             else
                 step_setup_script += (line + '\n');
         }
     }
 
     sequence.set_step_setup_script(step_setup_script);
+}
+
+std::vector<Tag> parse_tags(gul14::string_view str)
+{
+    const auto tokens = gul14::tokenize_sv(str);
+
+    std::vector<Tag> tags;
+    tags.reserve(tokens.size());
+
+    for (auto tok : tokens)
+    {
+        auto maybe_tag = Tag::from_string(tok);
+
+        // Silently drop invalid tags
+        if (maybe_tag)
+            tags.push_back(*maybe_tag);
+    }
+
+    return tags;
 }
 
 } // namespace task
