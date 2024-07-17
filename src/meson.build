@@ -11,6 +11,7 @@ sources = files(
     'SequenceName.cc',
     'serialize_sequence.cc',
     'Step.cc',
+    'Tag.cc',
     'time_types.cc',
     'UniqueId.cc',
     'VariableName.cc',
