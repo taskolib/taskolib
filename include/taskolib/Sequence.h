@@ -405,7 +405,7 @@ public:
      */
     const std::string& get_step_setup_script() const noexcept { return step_setup_script_; }
 
-    /// Return the tags associated with this sequence.
+    /// Return the tags associated with this sequence in alphabetical order.
     const std::vector<Tag>& get_tags() const noexcept { return tags_; }
 
     /**
@@ -670,6 +670,13 @@ public:
      * \exception Error is thrown if the sequence is currently running.
      */
     void set_step_setup_script(gul14::string_view step_setup_script);
+
+    /**
+     * Set the tags associated with this sequence.
+     *
+     * Duplicate tags are removed silently.
+     */
+    void set_tags(const std::vector<Tag>& tags);
 
     /// Set the timeout duration for executing the sequence.
     void set_timeout(Timeout timeout) { timeout_trigger_.set_timeout(timeout); }
