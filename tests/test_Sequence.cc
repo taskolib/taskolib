@@ -259,6 +259,14 @@ TEST_CASE("Sequence: get_tags()", "[Sequence]")
 {
     Sequence s;
     REQUIRE(s.get_tags().empty());
+
+    const std::vector<Tag> tags{ Tag{ "tag1" }, Tag{ "tag2" }, Tag{ "tag3" } };
+
+    s.set_tags(tags);
+    REQUIRE(s.get_tags() == tags);
+
+    s.set_tags(std::vector<Tag>{});
+    REQUIRE(s.get_tags().empty());
 }
 
 TEST_CASE("Sequence: get_unique_id()", "[Sequence]")
@@ -563,6 +571,23 @@ TEST_CASE("Sequence: set_running()", "[Sequence]")
         REQUIRE_THROWS_AS(seq.set_step_setup_script("b = 1"), Error);
         REQUIRE(seq.get_step_setup_script() == "");
     }
+}
+
+TEST_CASE("Sequence: set_tags()", "[Sequence]")
+{
+    Sequence s;
+
+    const std::vector<Tag> tags{ Tag{ "tag1" }, Tag{ "tag2" }, Tag{ "tag3" } };
+
+    s.set_tags(tags);
+    REQUIRE(s.get_tags() == tags);
+
+    s.set_tags(std::vector<Tag>{});
+    REQUIRE(s.get_tags().empty());
+
+    s.set_tags(
+        std::vector<Tag>{ Tag{ "TAG3" }, Tag{ "Tag2" }, Tag{ "tag3" }, Tag{ "tag1" } });
+    REQUIRE(s.get_tags() == tags);
 }
 
 TEST_CASE("Sequence: set_unique_id()", "[Sequence]")

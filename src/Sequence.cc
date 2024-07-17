@@ -748,6 +748,14 @@ void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
     step_setup_script_.assign(step_setup_script.data(), step_setup_script.size());
 }
 
+void Sequence::set_tags(const std::vector<Tag>& new_tags)
+{
+    auto tags = new_tags;
+    std::sort(tags.begin(), tags.end());
+    tags.erase(std::unique(tags.begin(), tags.end()), tags.end());
+    tags_ = std::move(tags);
+}
+
 void Sequence::throw_if_full() const
 {
     if (steps_.size() == max_size())
