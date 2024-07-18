@@ -33,6 +33,8 @@ TEST_CASE("parse_tags()", "[deserialize_sequence]")
     REQUIRE(parse_tags("").empty());
     REQUIRE(parse_tags(" tag1 tag2\ttag3\n")
         == std::vector{ Tag{ "tag1" }, Tag{ "tag2" }, Tag{ "tag3" } });
-    REQUIRE(parse_tags(" ta*g1 tag2\ttag3\nYet-Another-Tag")
-        == std::vector{ Tag{ "tag2" }, Tag{ "tag3" }, Tag{ "yet-another-tag" } });
+    REQUIRE(parse_tags("c    Yet-Another-Tag")
+        == std::vector{ Tag{ "c" }, Tag{ "yet-another-tag" } });
+    REQUIRE_THROWS_AS(parse_tags("tag*"), Error);
+    REQUIRE_THROWS_AS(parse_tags("tag2 tag3 Yet-Another-Tag NOT_ALLOWED"), Error);
 }

@@ -325,18 +325,9 @@ std::vector<Tag> parse_tags(gul14::string_view str)
 {
     const auto tokens = gul14::tokenize_sv(str);
 
-    std::vector<Tag> tags;
-    tags.reserve(tokens.size());
-
-    for (auto tok : tokens)
-    {
-        auto maybe_tag = Tag::from_string(tok);
-
-        // Silently drop invalid tags
-        if (maybe_tag)
-            tags.push_back(*maybe_tag);
-    }
-
+    std::vector<Tag> tags(tokens.size());
+    std::transform(tokens.begin(), tokens.end(), tags.begin(),
+                   [](gul14::string_view token) { return Tag{ token }; });
     return tags;
 }
 
