@@ -146,6 +146,15 @@ namespace task {
  * The sequence stores the timestamp of when it was last executed.
  *
  * \see get_time_of_last_execution()
+ *
+ * ### Tags
+ *
+ * An arbitrary number of tags can be associated with a sequence. Tags are used to
+ * categorize sequences and to make them easier to find. Tags are small pieces of text
+ * that may contain only the lowercase letters a-z, digits, or the hyphen ("-"). Their
+ * length can range from 1 to 32 characters. Tags are stored in alphabetical order.
+ *
+ * \see get_tags(), set_tags()
  */
 class Sequence
 {
