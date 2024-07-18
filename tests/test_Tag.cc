@@ -52,22 +52,6 @@ TEST_CASE("Tag: Constructor from string", "[Tag]")
     REQUIRE_THROWS_AS(Tag{ ".abcd" }, Error);
 }
 
-TEST_CASE("Tag: from_string()", "[Tag]")
-{
-    REQUIRE(Tag::from_string("1234") == Tag{ "1234" });
-    REQUIRE(Tag::from_string("extremely-weird-Combination")
-            == Tag{ "extremely-WEIRD-combination" });
-    REQUIRE(Tag::from_string("-1-a-B-C-") == Tag{ "-1-A-b-c-" });
-
-    REQUIRE(Tag::from_string("") == gul14::nullopt);
-    REQUIRE(Tag::from_string(std::string(Tag::max_length + 1, 'a')) == gul14::nullopt);
-    REQUIRE(Tag::from_string("string with whitespace") == gul14::nullopt);
-    REQUIRE(Tag::from_string("abcd#e") == gul14::nullopt);
-    REQUIRE(Tag::from_string("abcd(e)") == gul14::nullopt);
-    REQUIRE(Tag::from_string("abcd[e]") == gul14::nullopt);
-    REQUIRE(Tag::from_string(".abcd") == gul14::nullopt);
-}
-
 TEST_CASE("Tag: operator==()", "[Tag]")
 {
     REQUIRE(Tag{ "1234" } == Tag{ "1234" });

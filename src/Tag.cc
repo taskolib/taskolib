@@ -56,24 +56,7 @@ gul14::string_view Tag::check_validity(gul14::string_view name)
     return name;
 }
 
-gul14::optional<Tag> Tag::from_string(gul14::string_view name)
-{
-    try
-    {
-        return Tag{ name };
-    }
-    catch (const Error&)
-    {
-        return {};
-    }
-}
-
 const gul14::string_view Tag::valid_characters{ "abcdefghijklmnopqrstuvwxyz0123456789-" };
-
-
-//
-// Associated free functions
-//
 
 std::ostream& operator<<(std::ostream& stream, const Tag& tag)
 {

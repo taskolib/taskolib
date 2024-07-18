@@ -28,7 +28,6 @@
 #include <iosfwd>
 #include <string>
 
-#include <gul14/optional.h>
 #include <gul14/string_view.h>
 
 namespace task {
@@ -64,14 +63,6 @@ public:
      *            characters.
      */
     explicit Tag(gul14::string_view name);
-
-    /**
-     * Create a Tag from the given string, returning an empty optional if the string
-     * violates length or character constraints.
-     *
-     * The uppercase ASCII characters A-Z are automatically converted to lowercase.
-     */
-    static gul14::optional<Tag> from_string(gul14::string_view name);
 
     /// Determine if two tags are equal.
     friend bool operator==(const Tag& a, const Tag& b)
