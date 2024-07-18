@@ -386,41 +386,25 @@ public:
      */
     const std::string& get_indentation_error() const noexcept { return indentation_error_; }
 
-    /**
-     * Return the human-readable sequence label.
-     *
-     * @returns a descriptive name for the sequence.
-     */
+    /// Return the human-readable sequence label.
     const std::string& get_label() const noexcept { return label_; }
 
-    /**
-     * Return the maintainers of the sequence.
-     *
-     * \returns the maintainers of the sequence.
-     */
+    /// Return a string listing the maintainer(s) of the sequence.
     const std::string& get_maintainers() const noexcept { return maintainers_; }
 
-    /**
-     * Return the machine-friendly name of the sequence.
-     *
-     * \returns the unique ID.
-     */
+    /// Return the machine-friendly name of the sequence.
     const SequenceName& get_name() const noexcept { return name_; }
 
-    /**
-     * Get the step setup script.
-     *
-     * \returns the step setup script.
-     */
+    /// Return the step setup script.
     const std::string& get_step_setup_script() const noexcept { return step_setup_script_; }
 
     /// Return the tags associated with this sequence in alphabetical order.
     const std::vector<Tag>& get_tags() const noexcept { return tags_; }
 
     /**
-     * Returns time of last execution. It returns TimePoint{} on a fresh created sequence.
+     * Determine when the sequence was last executed.
      *
-     * \returns time of the last execution.
+     * For a sequence that was never run, TimePoint{} is returned.
      */
     TimePoint get_time_of_last_execution() const
     {
@@ -430,11 +414,7 @@ public:
     /// Return the timeout duration for executing the sequence.
     Timeout get_timeout() const { return timeout_trigger_.get_timeout(); }
 
-    /**
-     * Return the unique ID of the sequence.
-     *
-     * \returns the unique ID.
-     */
+    /// Return the unique ID of the sequence.
     UniqueId get_unique_id() const noexcept { return unique_id_; }
 
     /**
