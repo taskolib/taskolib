@@ -116,6 +116,16 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
  */
 std::vector<Tag> parse_tags(gul14::string_view str);
 
+/**
+ * Parse a string into a Timeout value.
+ *
+ * The string may contain a (positive) number of milliseconds or the string "infinite". It
+ * may be surrounded by whitespace.
+ *
+ * \exception Error is thrown if the string does not represent a valid Timeout.
+ */
+Timeout parse_timeout(gul14::string_view str);
+
 } // namespace task
 
 #endif

@@ -139,30 +139,6 @@ void extract_time_of_last_execution(gul14::string_view extract, Step& step)
     step.set_time_of_last_execution(extract_time("time of last execution", extract));
 }
 
-Timeout parse_timeout(gul14::string_view extract)
-{
-    auto start_timeout = extract.find_first_not_of(" \t");
-    if (start_timeout == std::string::npos)
-        throw Error(gul14::cat("timeout: unable to parse ('", extract, "')"));
-
-    auto timeout = gul14::trim(extract.substr(start_timeout));
-    if ("infinite" == timeout)
-    {
-        return Timeout::infinity();
-    }
-    else
-    {
-        try
-        {
-            return Timeout{std::chrono::milliseconds(std::stoull(timeout))};
-        }
-        catch(...) // catch any exception from std::stoull (Component::set_timeout throws)
-        {
-            throw Error(gul14::cat("timeout: unable to parse number ('", timeout, "')"));
-        }
-    }
-}
-
 void extract_disabled(gul14::string_view extract, Step& step)
 {
     bool val{ };
@@ -329,6 +305,30 @@ std::vector<Tag> parse_tags(gul14::string_view str)
     std::transform(tokens.begin(), tokens.end(), tags.begin(),
                    [](gul14::string_view token) { return Tag{ token }; });
     return tags;
+}
+
+Timeout parse_timeout(gul14::string_view str)
+{
+    auto start_timeout = str.find_first_not_of(" \t");
+    if (start_timeout == std::string::npos)
+        throw Error(gul14::cat("timeout: unable to parse ('", str, "')"));
+
+    auto timeout = gul14::trim(str.substr(start_timeout));
+    if ("infinite" == timeout)
+    {
+        return Timeout::infinity();
+    }
+    else
+    {
+        try
+        {
+            return Timeout{std::chrono::milliseconds(std::stoull(timeout))};
+        }
+        catch(...) // catch any exception from std::stoull (Component::set_timeout throws)
+        {
+            throw Error(gul14::cat("timeout: unable to parse number ('", timeout, "')"));
+        }
+    }
 }
 
 } // namespace task
