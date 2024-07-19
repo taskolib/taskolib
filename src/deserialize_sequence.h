@@ -112,7 +112,7 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
 /**
  * Parse a whitespace-separated string into a list of tags.
  *
- * Invalid tags are silently discarded.
+ * \exception Error is thrown if a tag with an invalid name is encountered.
  */
 std::vector<Tag> parse_tags(gul14::string_view str);
 
