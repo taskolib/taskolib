@@ -56,4 +56,6 @@ TEST_CASE("parse_timeout()", "[deserialize_sequence]")
     REQUIRE_THROWS_AS(parse_timeout("hello"), Error);
     REQUIRE_THROWS_AS(parse_timeout("10s"), Error);
     REQUIRE_THROWS_AS(parse_timeout("10 us"), Error);
+    REQUIRE_THROWS_AS(parse_timeout("-10"), Error);
+
 }
