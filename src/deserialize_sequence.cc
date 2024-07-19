@@ -309,26 +309,16 @@ std::vector<Tag> parse_tags(gul14::string_view str)
 
 Timeout parse_timeout(gul14::string_view str)
 {
-    auto start_timeout = str.find_first_not_of(" \t");
-    if (start_timeout == std::string::npos)
-        throw Error(gul14::cat("timeout: unable to parse ('", str, "')"));
+    str = gul14::trim_sv(str);
 
-    auto timeout = gul14::trim(str.substr(start_timeout));
-    if ("infinite" == timeout)
-    {
+    if (gul14::equals_nocase(str, "infinite"))
         return Timeout::infinity();
-    }
-    else
-    {
-        try
-        {
-            return Timeout{std::chrono::milliseconds(std::stoull(timeout))};
-        }
-        catch(...) // catch any exception from std::stoull (Component::set_timeout throws)
-        {
-            throw Error(gul14::cat("timeout: unable to parse number ('", timeout, "')"));
-        }
-    }
+
+    const auto maybe_msec = gul14::to_number<unsigned long long>(str);
+    if (!maybe_msec)
+        throw Error(gul14::cat("Cannot parse timeout from \"", str, '"'));
+
+    return Timeout{ std::chrono::milliseconds{ *maybe_msec } };
 }
 
 } // namespace task
