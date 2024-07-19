@@ -1,47 +1,49 @@
 <map id="Sequence.h" name="Sequence.h">
-<area shape="rect" id="node1" title="A sequence of Steps." alt="" coords="1946,5,2043,32"/>
+<area shape="rect" id="node1" title="A sequence of Steps." alt="" coords="2114,5,2211,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,80,91,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="196,468,263,495"/>
-<area shape="rect" id="node4" title=" " alt="" coords="2337,80,2428,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="1759,319,1846,345"/>
-<area shape="rect" id="node6" title=" " alt="" coords="267,319,325,345"/>
-<area shape="rect" id="node7" title=" " alt="" coords="1176,468,1235,495"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2453,80,2513,107"/>
-<area shape="rect" id="node9" title=" " alt="" coords="2537,80,2599,107"/>
-<area shape="rect" id="node10" title=" " alt="" coords="2623,80,2718,107"/>
-<area shape="rect" id="node11" title=" " alt="" coords="2743,80,2868,107"/>
-<area shape="rect" id="node12" title=" " alt="" coords="2198,468,2325,495"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1922,319,2070,345"/>
-<area shape="rect" id="node14" title=" " alt="" coords="2893,80,3001,107"/>
-<area shape="rect" id="node15" href="$CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="691,237,877,263"/>
-<area shape="rect" id="node26" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="2019,393,2173,420"/>
-<area shape="rect" id="node29" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1325,155,1465,181"/>
-<area shape="rect" id="node35" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1524,319,1684,345"/>
-<area shape="rect" id="node38" href="$SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="2033,237,2223,263"/>
-<area shape="rect" id="node39" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="613,80,731,107"/>
-<area shape="rect" id="node43" href="$TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="317,155,504,181"/>
-<area shape="rect" id="node44" href="$UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="2349,237,2496,263"/>
-<area shape="rect" id="node16" title=" " alt="" coords="691,319,757,345"/>
-<area shape="rect" id="node17" href="$LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="832,319,1008,345"/>
-<area shape="rect" id="node21" href="$Message_8h.html" title="Declaration of the Message class." alt="" coords="1157,319,1304,345"/>
-<area shape="rect" id="node18" title=" " alt="" coords="874,393,1017,420"/>
-<area shape="rect" id="node19" title=" " alt="" coords="605,393,669,420"/>
-<area shape="rect" id="node20" title=" " alt="" coords="694,393,850,420"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1437,393,1493,420"/>
-<area shape="rect" id="node23" title=" " alt="" coords="1517,393,1595,420"/>
-<area shape="rect" id="node24" title=" " alt="" coords="1041,393,1117,420"/>
-<area shape="rect" id="node25" title=" " alt="" coords="1293,393,1413,420"/>
+<area shape="rect" id="node4" title=" " alt="" coords="2428,80,2519,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="1877,319,1963,345"/>
+<area shape="rect" id="node6" title=" " alt="" coords="667,319,725,345"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1503,468,1561,495"/>
+<area shape="rect" id="node8" title=" " alt="" coords="2543,80,2603,107"/>
+<area shape="rect" id="node9" title=" " alt="" coords="2627,80,2690,107"/>
+<area shape="rect" id="node10" title=" " alt="" coords="2714,80,2809,107"/>
+<area shape="rect" id="node11" title=" " alt="" coords="2833,80,2959,107"/>
+<area shape="rect" id="node12" title=" " alt="" coords="2453,468,2579,495"/>
+<area shape="rect" id="node13" title=" " alt="" coords="2178,319,2326,345"/>
+<area shape="rect" id="node14" title=" " alt="" coords="2983,80,3091,107"/>
+<area shape="rect" id="node15" href="$CommChannel_8h.html" title="Declaration of the CommChannel struct." alt="" coords="799,237,985,263"/>
+<area shape="rect" id="node26" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="1924,393,2079,420"/>
+<area shape="rect" id="node29" href="$Context_8h.html" title="Declaration of the Context and VariableValue types." alt="" coords="1438,155,1578,181"/>
+<area shape="rect" id="node35" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="1583,319,1743,345"/>
+<area shape="rect" id="node38" href="$SequenceName_8h.html" title="Declaration of the SequenceName class." alt="" coords="2327,237,2518,263"/>
+<area shape="rect" id="node39" href="$Step_8h.html" title="Declaration of the Step class." alt="" coords="570,80,689,107"/>
+<area shape="rect" id="node43" href="$TimeoutTrigger_8h.html" title="Logic to check if a timeout elapsed." alt="" coords="267,155,453,181"/>
+<area shape="rect" id="node44" href="$Tag_8h.html" title="Declaration of the Tag class." alt="" coords="2090,237,2201,263"/>
+<area shape="rect" id="node46" href="$UniqueId_8h.html" title="Declaration of the UniqueId class." alt="" coords="2543,237,2689,263"/>
+<area shape="rect" id="node16" title=" " alt="" coords="1000,319,1067,345"/>
+<area shape="rect" id="node17" href="$LockedQueue_8h.html" title="Declaration of the LockedQueue class." alt="" coords="749,319,925,345"/>
+<area shape="rect" id="node21" href="$Message_8h.html" title="Declaration of the Message class." alt="" coords="1091,319,1237,345"/>
+<area shape="rect" id="node18" title=" " alt="" coords="555,393,698,420"/>
+<area shape="rect" id="node19" title=" " alt="" coords="723,393,787,420"/>
+<area shape="rect" id="node20" title=" " alt="" coords="811,393,967,420"/>
+<area shape="rect" id="node22" title=" " alt="" coords="1143,393,1199,420"/>
+<area shape="rect" id="node23" title=" " alt="" coords="1223,393,1300,420"/>
+<area shape="rect" id="node24" title=" " alt="" coords="991,393,1067,420"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1324,393,1444,420"/>
 <area shape="rect" id="node28" href="$time__types_8h.html" title="Declaration of time&#45;related types." alt="" coords="317,393,480,420"/>
-<area shape="rect" id="node27" title=" " alt="" coords="2063,468,2129,495"/>
-<area shape="rect" id="node30" title=" " alt="" coords="1422,237,1546,263"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1570,237,1638,263"/>
-<area shape="rect" id="node32" title=" " alt="" coords="1662,237,1754,263"/>
-<area shape="rect" id="node33" href="$default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="1003,229,1192,271"/>
-<area shape="rect" id="node34" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1216,237,1397,263"/>
-<area shape="rect" id="node36" title=" " alt="" coords="1781,393,1848,420"/>
-<area shape="rect" id="node37" title=" " alt="" coords="1670,393,1757,420"/>
-<area shape="rect" id="node40" title=" " alt="" coords="680,155,723,181"/>
-<area shape="rect" id="node41" href="$Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="411,237,554,263"/>
-<area shape="rect" id="node42" title=" " alt="" coords="451,319,514,345"/>
-<area shape="rect" id="node45" title=" " alt="" coords="2349,319,2421,345"/>
+<area shape="rect" id="node27" title=" " alt="" coords="1968,468,2035,495"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1274,237,1398,263"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1422,237,1490,263"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1514,237,1606,263"/>
+<area shape="rect" id="node33" href="$default__message__callback_8h.html" title="Declaration of the default_message_callback() function." alt="" coords="1060,229,1249,271"/>
+<area shape="rect" id="node34" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="1732,237,1913,263"/>
+<area shape="rect" id="node36" title=" " alt="" coords="1620,393,1687,420"/>
+<area shape="rect" id="node37" title=" " alt="" coords="1711,393,1798,420"/>
+<area shape="rect" id="node40" title=" " alt="" coords="579,155,621,181"/>
+<area shape="rect" id="node41" href="$Timeout_8h.html" title="Declaration of the Timeout class." alt="" coords="581,237,723,263"/>
+<area shape="rect" id="node42" title=" " alt="" coords="579,319,642,345"/>
+<area shape="rect" id="node45" title=" " alt="" coords="2089,319,2153,345"/>
+<area shape="rect" id="node47" title=" " alt="" coords="2604,319,2676,345"/>
 </map>

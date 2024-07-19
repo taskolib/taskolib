@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.1.0</span>
+   &#160;<span id="projectnumber">1.2.1</span>
    </div>
   </td>
  </tr>
@@ -102,11 +102,11 @@ Unique ID</h3>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Maintainers</h3>
 <p>The sequence carries a list of maintainers or sequence authors as a string. By default, it is empty, and it can hold whatever information seems useful.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be" title="Return the maintainers of the sequence.">get_maintainers()</a>, <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808" title="Add one or more maintainers to the sequence.">set_maintainers()</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be" title="Return a string listing the maintainer(s) of the sequence.">get_maintainers()</a>, <a class="el" href="classtask_1_1Sequence.html#a1e5653c7f9281980a90a850ec809e808" title="Add one or more maintainers to the sequence.">set_maintainers()</a></dd></dl>
 <h3><a class="anchor" id="autotoc_md5"></a>
 Step setup script</h3>
 <p>The sequence contains a common setup script that is shared by all of its steps. It is called automatically before the execution of the script from each step, just after executing the lua_step_setup. It is typically used like a small library for defining common functions or constants. The setup script is only executed for steps that actually execute a script themselves (ACTION, IF, ELSEIF, WHILE).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00" title="Get the step setup script.">get_step_setup_script()</a>, <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956" title="Sets the step setup script.">set_step_setup_script()</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00" title="Return the step setup script.">get_step_setup_script()</a>, <a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956" title="Sets the step setup script.">set_step_setup_script()</a></dd></dl>
 <h3><a class="anchor" id="autotoc_md6"></a>
 Sequence timeout</h3>
 <p>The sequence has a global timeout that starts counting down when <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55" title="Execute the sequence (or just one of its steps) within a given context.">execute()</a> is called. By default, it is set to infinity (i.e., no timeout).</p>
@@ -114,7 +114,11 @@ Sequence timeout</h3>
 <h3><a class="anchor" id="autotoc_md7"></a>
 Time of last execution</h3>
 <p>The sequence stores the timestamp of when it was last executed.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a" title="Returns time of last execution.">get_time_of_last_execution()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a" title="Determine when the sequence was last executed.">get_time_of_last_execution()</a></dd></dl>
+<h3><a class="anchor" id="autotoc_md8"></a>
+Tags</h3>
+<p>An arbitrary number of tags can be associated with a sequence. Tags are used to categorize sequences and to make them easier to find. Tags are small pieces of text that may contain only the lowercase letters a-z, digits, or the hyphen ("-"). Their length can range from 1 to 32 characters. Tags are stored in alphabetical order.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1Sequence.html#a94d58e136d7b73fbb68fbe2cc4c82552" title="Return the tags associated with this sequence in alphabetical order.">get_tags()</a>, <a class="el" href="classtask_1_1Sequence.html#ae19d2ff08d4da5635a7e1f9c64a8ded2" title="Set the tags associated with this sequence.">set_tags()</a> </dd></dl>
 </div>
 <p><code>#include &lt;<a class="el" href="Sequence_8h_source.html">Sequence.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -190,16 +194,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad2c6281b29b351dc92a491ae0e0858a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the human-readable sequence label.  <a href="classtask_1_1Sequence.html#ad2c6281b29b351dc92a491ae0e0858a9">More...</a><br /></td></tr>
 <tr class="separator:ad2c6281b29b351dc92a491ae0e0858a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6be5f8d61bdd4d4aaa376eaad917a4be"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be">get_maintainers</a> () const noexcept</td></tr>
-<tr class="memdesc:a6be5f8d61bdd4d4aaa376eaad917a4be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the maintainers of the sequence.  <a href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be">More...</a><br /></td></tr>
+<tr class="memdesc:a6be5f8d61bdd4d4aaa376eaad917a4be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a string listing the maintainer(s) of the sequence.  <a href="classtask_1_1Sequence.html#a6be5f8d61bdd4d4aaa376eaad917a4be">More...</a><br /></td></tr>
 <tr class="separator:a6be5f8d61bdd4d4aaa376eaad917a4be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a024b0c34822b2577c63036287bf09c18"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtask_1_1SequenceName.html">SequenceName</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a024b0c34822b2577c63036287bf09c18">get_name</a> () const noexcept</td></tr>
 <tr class="memdesc:a024b0c34822b2577c63036287bf09c18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the machine-friendly name of the sequence.  <a href="classtask_1_1Sequence.html#a024b0c34822b2577c63036287bf09c18">More...</a><br /></td></tr>
 <tr class="separator:a024b0c34822b2577c63036287bf09c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ed60cdee75155853cc830f03fe17b00"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00">get_step_setup_script</a> () const noexcept</td></tr>
-<tr class="memdesc:a7ed60cdee75155853cc830f03fe17b00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the step setup script.  <a href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00">More...</a><br /></td></tr>
+<tr class="memdesc:a7ed60cdee75155853cc830f03fe17b00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the step setup script.  <a href="classtask_1_1Sequence.html#a7ed60cdee75155853cc830f03fe17b00">More...</a><br /></td></tr>
 <tr class="separator:a7ed60cdee75155853cc830f03fe17b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94d58e136d7b73fbb68fbe2cc4c82552"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classtask_1_1Tag.html">Tag</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a94d58e136d7b73fbb68fbe2cc4c82552">get_tags</a> () const noexcept</td></tr>
+<tr class="memdesc:a94d58e136d7b73fbb68fbe2cc4c82552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tags associated with this sequence in alphabetical order.  <a href="classtask_1_1Sequence.html#a94d58e136d7b73fbb68fbe2cc4c82552">More...</a><br /></td></tr>
+<tr class="separator:a94d58e136d7b73fbb68fbe2cc4c82552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a">get_time_of_last_execution</a> () const</td></tr>
-<tr class="memdesc:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns time of last execution.  <a href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a">More...</a><br /></td></tr>
+<tr class="memdesc:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine when the sequence was last executed.  <a href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a">More...</a><br /></td></tr>
 <tr class="separator:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13e7536da87d1b09756f8eed40fb47e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1Timeout.html">Timeout</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a13e7536da87d1b09756f8eed40fb47e3">get_timeout</a> () const</td></tr>
 <tr class="memdesc:a13e7536da87d1b09756f8eed40fb47e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the timeout duration for executing the sequence.  <a href="classtask_1_1Sequence.html#a13e7536da87d1b09756f8eed40fb47e3">More...</a><br /></td></tr>
@@ -257,6 +264,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afe88c1be0a28fd17200fffdfe0374956"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">set_step_setup_script</a> (gul14::string_view step_setup_script)</td></tr>
 <tr class="memdesc:afe88c1be0a28fd17200fffdfe0374956"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the step setup script.  <a href="classtask_1_1Sequence.html#afe88c1be0a28fd17200fffdfe0374956">More...</a><br /></td></tr>
 <tr class="separator:afe88c1be0a28fd17200fffdfe0374956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae19d2ff08d4da5635a7e1f9c64a8ded2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#ae19d2ff08d4da5635a7e1f9c64a8ded2">set_tags</a> (const std::vector&lt; <a class="el" href="classtask_1_1Tag.html">Tag</a> &gt; &amp;tags)</td></tr>
+<tr class="memdesc:ae19d2ff08d4da5635a7e1f9c64a8ded2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the tags associated with this sequence.  <a href="classtask_1_1Sequence.html#ae19d2ff08d4da5635a7e1f9c64a8ded2">More...</a><br /></td></tr>
+<tr class="separator:ae19d2ff08d4da5635a7e1f9c64a8ded2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c5242a66d9b6d1eaebfe3f9d27f712c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">set_timeout</a> (<a class="el" href="classtask_1_1Timeout.html">Timeout</a> timeout)</td></tr>
 <tr class="memdesc:a7c5242a66d9b6d1eaebfe3f9d27f712c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the timeout duration for executing the sequence.  <a href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">More...</a><br /></td></tr>
 <tr class="separator:a7c5242a66d9b6d1eaebfe3f9d27f712c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -361,10 +371,13 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a02dfab2d5b15e3756f9a1cc5909616a7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">step_setup_script_</a></td></tr>
 <tr class="memdesc:a02dfab2d5b15e3756f9a1cc5909616a7"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> setup script.  <a href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">More...</a><br /></td></tr>
 <tr class="separator:a02dfab2d5b15e3756f9a1cc5909616a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a2bddb13ad28c053ba627ca62f7d93c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtask_1_1Tag.html">Tag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a9a2bddb13ad28c053ba627ca62f7d93c">tags_</a></td></tr>
+<tr class="memdesc:a9a2bddb13ad28c053ba627ca62f7d93c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tags for categorizing the sequence.  <a href="classtask_1_1Sequence.html#a9a2bddb13ad28c053ba627ca62f7d93c">More...</a><br /></td></tr>
+<tr class="separator:a9a2bddb13ad28c053ba627ca62f7d93c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab686b0b31a65bd763dd51ed2e96a3e80"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtask_1_1Step.html">Step</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a></td></tr>
 <tr class="memdesc:ab686b0b31a65bd763dd51ed2e96a3e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of steps.  <a href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">More...</a><br /></td></tr>
 <tr class="separator:ab686b0b31a65bd763dd51ed2e96a3e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb90ea97f9f7c51ee11baaac26db7473"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a> {false}</td></tr>
+<tr class="memitem:adb90ea97f9f7c51ee11baaac26db7473"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a> { false }</td></tr>
 <tr class="memdesc:adb90ea97f9f7c51ee11baaac26db7473"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to determine if the sequence is running.  <a href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">More...</a><br /></td></tr>
 <tr class="separator:adb90ea97f9f7c51ee11baaac26db7473"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a516348120ad129fe8eccc78e7b108e23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1TimeoutTrigger.html">TimeoutTrigger</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a516348120ad129fe8eccc78e7b108e23">timeout_trigger_</a></td></tr>
@@ -1798,7 +1811,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the human-readable sequence label. </p>
-<dl class="section return"><dt>Returns</dt><dd>a descriptive name for the sequence. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#acabb4f67da8fa2ba6a9382b7dc457405">label_</a>.</p>
 
@@ -1827,8 +1839,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Return the maintainers of the sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>the maintainers of the sequence. </dd></dl>
+<p>Return a string listing the maintainer(s) of the sequence. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a16847049da1e3844a4356b506895ed8a">maintainers_</a>.</p>
 
@@ -1858,7 +1869,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the machine-friendly name of the sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>the unique ID. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a58891e5076a89c0ae672376eee7d871a">name_</a>.</p>
 
@@ -1889,12 +1899,40 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the step setup script. </p>
-<dl class="section return"><dt>Returns</dt><dd>the step setup script. </dd></dl>
+<p>Return the step setup script. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">step_setup_script_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetask.html#a2bb441c55c946559ff32889db4e735ca">task::operator&lt;&lt;()</a>.</p>
+
+</div>
+</div>
+<a id="a94d58e136d7b73fbb68fbe2cc4c82552"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94d58e136d7b73fbb68fbe2cc4c82552">&#9670;&nbsp;</a></span>get_tags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt;<a class="el" href="classtask_1_1Tag.html">Tag</a>&gt;&amp; task::Sequence::get_tags </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the tags associated with this sequence in alphabetical order. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a9a2bddb13ad28c053ba627ca62f7d93c">tags_</a>.</p>
 
 </div>
 </div>
@@ -1921,9 +1959,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns time of last execution. </p>
-<p>It returns TimePoint{} on a fresh created sequence.</p>
-<dl class="section return"><dt>Returns</dt><dd>time of the last execution. </dd></dl>
+<p>Determine when the sequence was last executed. </p>
+<p>For a sequence that was never run, TimePoint{} is returned. </p>
 
 <p class="reference">References <a class="el" href="classtask_1_1TimeoutTrigger.html#aa81a4c388e518eddb448f5b7ca0c81d9">task::TimeoutTrigger::get_start_time()</a>, and <a class="el" href="classtask_1_1Sequence.html#a516348120ad129fe8eccc78e7b108e23">timeout_trigger_</a>.</p>
 
@@ -1982,7 +2019,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the unique ID of the sequence. </p>
-<dl class="section return"><dt>Returns</dt><dd>the unique ID. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ac619364ed93d0db6e2a3184286c15034">unique_id_</a>.</p>
 
@@ -2687,6 +2723,31 @@ template&lt;typename Closure &gt; </div>
 
 </div>
 </div>
+<a id="ae19d2ff08d4da5635a7e1f9c64a8ded2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae19d2ff08d4da5635a7e1f9c64a8ded2">&#9670;&nbsp;</a></span>set_tags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::Sequence::set_tags </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classtask_1_1Tag.html">Tag</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the tags associated with this sequence. </p>
+<p>Duplicate tags are removed silently. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a9a2bddb13ad28c053ba627ca62f7d93c">tags_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters()</a>.</p>
+
+</div>
+</div>
 <a id="a7c5242a66d9b6d1eaebfe3f9d27f712c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7c5242a66d9b6d1eaebfe3f9d27f712c">&#9670;&nbsp;</a></span>set_timeout()</h2>
 
@@ -2941,7 +3002,7 @@ template&lt;typename Closure &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool task::Sequence::is_running_ {false}</td>
+          <td class="memname">bool task::Sequence::is_running_ { false }</td>
         </tr>
       </table>
   </td>
@@ -3113,6 +3174,32 @@ template&lt;typename Closure &gt; </div>
 
 </div>
 </div>
+<a id="a9a2bddb13ad28c053ba627ca62f7d93c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a2bddb13ad28c053ba627ca62f7d93c">&#9670;&nbsp;</a></span>tags_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classtask_1_1Tag.html">Tag</a>&gt; task::Sequence::tags_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tags for categorizing the sequence. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a94d58e136d7b73fbb68fbe2cc4c82552">get_tags()</a>, and <a class="el" href="classtask_1_1Sequence.html#ae19d2ff08d4da5635a7e1f9c64a8ded2">set_tags()</a>.</p>
+
+</div>
+</div>
 <a id="a516348120ad129fe8eccc78e7b108e23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a516348120ad129fe8eccc78e7b108e23">&#9670;&nbsp;</a></span>timeout_trigger_</h2>
 
@@ -3172,7 +3259,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 16 2024 10:23:38 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Jul 19 2024 09:14:20 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
