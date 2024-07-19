@@ -27,6 +27,7 @@
 #include "deserialize_sequence.h"
 
 using namespace task;
+using namespace std::literals;
 
 TEST_CASE("parse_tags()", "[deserialize_sequence]")
 {
@@ -37,4 +38,22 @@ TEST_CASE("parse_tags()", "[deserialize_sequence]")
         == std::vector{ Tag{ "c" }, Tag{ "yet-another-tag" } });
     REQUIRE_THROWS_AS(parse_tags("tag*"), Error);
     REQUIRE_THROWS_AS(parse_tags("tag2 tag3 Yet-Another-Tag NOT_ALLOWED"), Error);
+}
+
+TEST_CASE("parse_timeout()", "[deserialize_sequence]")
+{
+    REQUIRE(parse_timeout("0") == Timeout{ 0ms });
+    REQUIRE(parse_timeout("10") == Timeout{ 10ms });
+    REQUIRE(parse_timeout("30000") == Timeout{ 30s });
+    REQUIRE(parse_timeout(" 42 \t\n") == Timeout{ 42ms });
+    REQUIRE(parse_timeout("86400000") == Timeout{ 24h });
+    REQUIRE(parse_timeout("infinite") == Timeout::infinity());
+    REQUIRE(parse_timeout("Infinite") == Timeout::infinity());
+    REQUIRE(parse_timeout("INFINITE") == Timeout::infinity());
+    REQUIRE(parse_timeout("\ninfinite \t") == Timeout::infinity());
+
+    REQUIRE_THROWS_AS(parse_timeout(""), Error);
+    REQUIRE_THROWS_AS(parse_timeout("hello"), Error);
+    REQUIRE_THROWS_AS(parse_timeout("10s"), Error);
+    REQUIRE_THROWS_AS(parse_timeout("10 us"), Error);
 }
