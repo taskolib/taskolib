@@ -91,10 +91,16 @@ std::istream& operator>>(std::istream& stream, Step& step);
  *
  * The label is explicitly escaped on storing and unescaped on loading.
  *
- * \note for time interpretation see <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>
- * \note if <tt>>time of last modification</tt> is not provided in the file it is set to
- * the time on loading the step.
- * \note the collection of context variable names can also be an empty list, ie. \c [] .
+ * \note
+ * See <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> for the date and time
+ * format.
+ *
+ * \note
+ * If <tt>time of last modification</tt> is not provided in the file, it is set to
+ * the time of loading the step.
+ *
+ * \note
+ * The collection of context variable names can also be an empty list, ie. \c [] .
  *
  * \returns the deserialized Step object.
  */
