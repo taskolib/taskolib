@@ -29,6 +29,7 @@
 #include "taskolib/exceptions.h"
 #include "taskolib/Tag.h"
 
+using namespace std::literals;
 using namespace task;
 
 TEST_CASE("Tag: Default constructor", "[Tag]")
@@ -100,6 +101,16 @@ TEST_CASE("Tag: operator<=()", "[Tag]")
     REQUIRE(Tag{ "12" } <= Tag{ "21" });
     REQUIRE(Tag{ "banana" } <= Tag{ "cherry" });
     REQUIRE(Tag{ "apple" } <= Tag{ "apple" });
+}
+
+TEST_CASE("operator+(string, Tag)", "[Tag]")
+{
+    REQUIRE("Hello "s + Tag{ "world" } == "Hello world");
+}
+
+TEST_CASE("operator+(Tag, string)", "[Tag]")
+{
+    REQUIRE(Tag{ "gung" } + "-ho"s == "gung-ho");
 }
 
 TEST_CASE("operator<<(std::ostream&, Tag)", "[Tag]")
