@@ -106,6 +106,18 @@ public:
         return a.name_ >= b.name_;
     }
 
+    /// Concatenate a string and a tag.
+    friend std::string operator+(const std::string& lhs, const Tag& rhs)
+    {
+        return lhs + rhs.name_;
+    }
+
+    /// Concatenate a tag and a string.
+    friend std::string operator+(const Tag& lhs, const std::string& rhs)
+    {
+        return lhs.name_ + rhs;
+    }
+
     /// Output the tag name to the given stream.
     friend std::ostream& operator<<(std::ostream& stream, const Tag& tag);
 
