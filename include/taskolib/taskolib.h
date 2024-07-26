@@ -4,7 +4,7 @@
  * \date   Created on November 26, 2021
  * \brief  Main include file for Taskolib.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -32,6 +32,7 @@
 #include "taskolib/Sequence.h"
 #include "taskolib/SequenceManager.h"
 #include "taskolib/Step.h"
+#include "taskolib/Tag.h"
 #include "taskolib/time_types.h"
 #include "taskolib/Timeout.h"
 #include "taskolib/VariableName.h"
