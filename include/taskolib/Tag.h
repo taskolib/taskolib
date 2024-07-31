@@ -118,6 +118,13 @@ public:
         return lhs.name_ + rhs;
     }
 
+    /// Concatenate a string and a tag.
+    friend std::string& operator+=(std::string& lhs, const Tag& rhs)
+    {
+        lhs += rhs.name_;
+        return lhs;
+    }
+
     /// Output the tag name to the given stream.
     friend std::ostream& operator<<(std::ostream& stream, const Tag& tag);
 

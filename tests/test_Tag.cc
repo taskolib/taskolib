@@ -113,6 +113,13 @@ TEST_CASE("operator+(Tag, string)", "[Tag]")
     REQUIRE(Tag{ "gung" } + "-ho"s == "gung-ho");
 }
 
+TEST_CASE("operator+=(string, Tag)", "[Tag]")
+{
+    std::string str = "Hello ";
+    str += Tag{ "world" };
+    REQUIRE(str == "Hello world");
+}
+
 TEST_CASE("operator<<(std::ostream&, Tag)", "[Tag]")
 {
     std::ostringstream stream;
