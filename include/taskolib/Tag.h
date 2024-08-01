@@ -128,6 +128,9 @@ public:
     /// Output the tag name to the given stream.
     friend std::ostream& operator<<(std::ostream& stream, const Tag& tag);
 
+    /// Return the length of the tag name.
+    std::size_t size() const noexcept { return name_.size(); }
+
     /// Return the name of the tag as a string.
     const std::string& string() const noexcept { return name_; }
 
