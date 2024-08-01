@@ -25,6 +25,7 @@
 #include <sstream>
 
 #include <gul14/catch.h>
+#include <gul14/join_split.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/Tag.h"
@@ -127,10 +128,23 @@ TEST_CASE("operator<<(std::ostream&, Tag)", "[Tag]")
     REQUIRE(stream.str() == "bloody sunday");
 }
 
+TEST_CASE("Tag: size()", "[Tag]")
+{
+    REQUIRE(Tag{ "1234" }.size() == 4);
+    REQUIRE(Tag{ "Gulag" }.size() == 5);
+    REQUIRE(Tag{ "hallo-welt" }.size() == 10);
+}
+
 TEST_CASE("Tag: string()", "[Tag]")
 {
     REQUIRE(Tag{ "1234" }.string() == "1234");
     REQUIRE(Tag{ "Extremely-Weird-Combination" }.string()
             == "extremely-weird-combination");
     REQUIRE(Tag{ "-1-a-B-C-" }.string() == "-1-a-b-c-");
+}
+
+TEST_CASE("Tag: Usability with gul14::join()", "[Tag]")
+{
+    std::vector tags{ Tag{ "a" }, Tag{ "b" }, Tag{ "c" } };
+    REQUIRE(gul14::join(tags, ", ") == "a, b, c");
 }
