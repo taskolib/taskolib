@@ -59,3 +59,13 @@ TEST_CASE("parse_timeout()", "[deserialize_sequence]")
     REQUIRE_THROWS_AS(parse_timeout("-10"), Error);
 
 }
+
+TEST_CASE("parse_automation()", "[deserialize_sequence]")
+{
+    REQUIRE(parse_automation("true"));
+    REQUIRE_FALSE(parse_automation("false"));
+
+    REQUIRE_FALSE(parse_automation("TRUE"));
+    REQUIRE_FALSE(parse_automation(""));
+    REQUIRE_FALSE(parse_automation("1"));
+}

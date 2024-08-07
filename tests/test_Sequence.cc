@@ -4069,3 +4069,14 @@ TEST_CASE("Sequence: label with control character", "[serialize_sequence]")
     Sequence sequence{ "Test sequence" };
     REQUIRE_THROWS_AS(sequence.set_label("A\bbell"), Error);
 }
+
+TEST_CASE("Sequence: sequence automation", "[Sequence]")
+{
+    Sequence seq("test_sequence");
+
+    REQUIRE_FALSE(seq.get_automation());
+    seq.set_automation(true);
+    REQUIRE(seq.get_automation());
+    seq.set_automation(false);
+    REQUIRE_FALSE(seq.get_automation());
+}

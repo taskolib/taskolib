@@ -103,6 +103,7 @@ void store_step(const std::filesystem::path& lua_file, const Step& step)
 
 std::ostream& operator<<(std::ostream& stream, const Sequence& sequence)
 {
+    stream << "-- automation: " << (sequence.get_automation() ? "true" : "false") << '\n';
     stream << sequence.get_step_setup_script();
 
     check_stream(stream);
