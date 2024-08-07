@@ -67,6 +67,7 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 Sequence::Sequence(gul14::string_view label, SequenceName name, UniqueId uid)
     : unique_id_{ uid }
     , name_{ std::move(name) }
+    , automation_{ false }
 {
     set_label(label);
 }
@@ -754,6 +755,11 @@ void Sequence::set_tags(const std::vector<Tag>& new_tags)
     std::sort(tags.begin(), tags.end());
     tags.erase(std::unique(tags.begin(), tags.end()), tags.end());
     tags_ = std::move(tags);
+}
+
+void Sequence::set_automation(bool automation)
+{
+    automation_ = automation;
 }
 
 void Sequence::throw_if_full() const

@@ -38,6 +38,17 @@
 namespace task {
 
 /**
+ * Deserialize parameters of Sequence from the input stream.
+ *
+ * No checking of any stream failure is done and should be performed by the caller.
+ *
+ * \param stream input stream
+ * \param sequence Sequence to be deserialized.
+ * \return passed input stream
+ */
+std::istream& operator>>(std::istream& stream, Sequence& sequence);
+
+/**
  * Deserialize parameters of Step from the input stream.
  *
  * No checking of any stream failure is done and should be performed by the caller.
@@ -121,6 +132,11 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
  * \exception Error is thrown if a tag with an invalid name is encountered.
  */
 std::vector<Tag> parse_tags(gul14::string_view str);
+
+/**
+ * Parse the automation flag from a string.
+ */
+bool parse_automation(gul14::string_view str);
 
 /**
  * Parse a string into a Timeout value.
