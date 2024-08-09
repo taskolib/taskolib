@@ -151,34 +151,6 @@ void extract_disabled(gul14::string_view extract, Step& step)
 
 } // anonymous namespace
 
-std::istream& operator>>(std::istream& stream, Sequence& sequence)
-{
-    std::string step_setup_script;
-
-    std::string line;
-    while(std::getline(stream, line, '\n'))
-    {
-        auto keyword = gul14::trim_left_sv(line);
-
-        if (gul14::starts_with(keyword, "-- maintainers:"))
-            sequence.set_maintainers(keyword.substr(15));
-        else if (gul14::starts_with(keyword, "-- label:"))
-            sequence.set_label(gul14::trim_sv(keyword.substr(9)));
-        else if (gul14::starts_with(keyword, "-- timeout:"))
-            sequence.set_timeout(parse_timeout(keyword.substr(11)));
-        else if (gul14::starts_with(keyword, "-- tags:"))
-            sequence.set_tags(parse_tags(keyword.substr(8)));
-        else if (gul14::starts_with(keyword, "-- automation:"))
-            sequence.set_automation(parse_automation(keyword.substr(14)));
-        else
-            step_setup_script += (line + '\n');
-    }
-
-    sequence.set_step_setup_script(step_setup_script);
-
-    return stream;
-}
-
 std::istream& operator>>(std::istream& stream, Step& step)
 {
     TimePoint last_modification{}; // since any manipulation on step sets a new time point
@@ -300,8 +272,32 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
 
     auto stream = std::ifstream(folder / sequence_lua_filename);
+
+    std::string step_setup_script;
+
+    std::string line;
     if (stream.good())
-        stream >> sequence;
+    {
+        while(std::getline(stream, line, '\n'))
+        {
+            auto keyword = gul14::trim_left_sv(line);
+
+            if (gul14::starts_with(keyword, "-- maintainers:"))
+                sequence.set_maintainers(keyword.substr(15));
+            else if (gul14::starts_with(keyword, "-- label:"))
+                sequence.set_label(gul14::trim_sv(keyword.substr(9)));
+            else if (gul14::starts_with(keyword, "-- timeout:"))
+                sequence.set_timeout(parse_timeout(keyword.substr(11)));
+            else if (gul14::starts_with(keyword, "-- tags:"))
+                sequence.set_tags(parse_tags(keyword.substr(8)));
+            else if (gul14::starts_with(keyword, "-- autorun:"))
+                sequence.set_autorun(parse_autorun(keyword.substr(11)));
+            else
+                step_setup_script += (line + '\n');
+    }
+
+    sequence.set_step_setup_script(step_setup_script);
+    }
 }
 
 std::vector<Tag> parse_tags(gul14::string_view str)
@@ -314,9 +310,15 @@ std::vector<Tag> parse_tags(gul14::string_view str)
     return tags;
 }
 
-bool parse_automation(gul14::string_view str)
+bool parse_autorun(gul14::string_view str)
 {
-    return gul14::trim(str) == "true" ? true : false;
+    auto autorun{gul14::trim(str)};
+    if (autorun == "true" )
+        return true;
+    else if (autorun == "false")
+        return false;
+    else
+        throw Error(gul14::cat("Cannot parse autorun flag from \"", str, '"'));
 }
 
 Timeout parse_timeout(gul14::string_view str)
