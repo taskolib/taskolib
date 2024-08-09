@@ -30,6 +30,7 @@
 
 #include "deserialize_sequence.h"
 #include "serialize_sequence.h"
+#include "taskolib/Sequence.h"
 
 using namespace std::literals;
 using namespace task;

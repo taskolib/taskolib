@@ -271,12 +271,13 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
     if (not std::filesystem::exists(folder))
         throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
 
+    auto stream = std::ifstream(folder / sequence_lua_filename);
+
     std::string step_setup_script;
 
-    auto stream = std::ifstream(folder / sequence_lua_filename);
+    std::string line;
     if (stream.good())
     {
-        std::string line;
         while(std::getline(stream, line, '\n'))
         {
             auto keyword = gul14::trim_left_sv(line);
@@ -289,12 +290,14 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
                 sequence.set_timeout(parse_timeout(keyword.substr(11)));
             else if (gul14::starts_with(keyword, "-- tags:"))
                 sequence.set_tags(parse_tags(keyword.substr(8)));
+            else if (gul14::starts_with(keyword, "-- autorun:"))
+                sequence.set_autorun(parse_autorun(keyword.substr(11)));
             else
                 step_setup_script += (line + '\n');
-        }
     }
 
     sequence.set_step_setup_script(step_setup_script);
+    }
 }
 
 std::vector<Tag> parse_tags(gul14::string_view str)
@@ -305,6 +308,17 @@ std::vector<Tag> parse_tags(gul14::string_view str)
     std::transform(tokens.begin(), tokens.end(), tags.begin(),
                    [](gul14::string_view token) { return Tag{ token }; });
     return tags;
+}
+
+bool parse_autorun(gul14::string_view str)
+{
+    auto autorun{gul14::trim(str)};
+    if (autorun == "true" )
+        return true;
+    else if (autorun == "false")
+        return false;
+    else
+        throw Error(gul14::cat("Cannot parse autorun flag from \"", str, '"'));
 }
 
 Timeout parse_timeout(gul14::string_view str)

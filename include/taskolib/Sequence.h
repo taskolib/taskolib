@@ -401,6 +401,9 @@ public:
     /// Return the tags associated with this sequence in alphabetical order.
     const std::vector<Tag>& get_tags() const noexcept { return tags_; }
 
+    /// Return true if an automatic execution can be performed otherwise false.
+    bool get_autorun() const noexcept { return autorun_; }
+
     /**
      * Determine when the sequence was last executed.
      *
@@ -667,6 +670,14 @@ public:
      */
     void set_tags(const std::vector<Tag>& tags);
 
+    /**
+     * Set the autorun flag.
+     *
+     * This flag is only informative but it can be used by third party code to decide when
+     * the autorun happens and when.
+     */
+    void set_autorun(bool autorun);
+
     /// Set the timeout duration for executing the sequence.
     void set_timeout(Timeout timeout) { timeout_trigger_.set_timeout(timeout); }
 
@@ -697,6 +708,7 @@ private:
     std::string maintainers_;       ///< One or more maintainers.
     std::string step_setup_script_; ///< Step setup script.
     std::vector<Tag> tags_;         ///< Tags for categorizing the sequence.
+    bool autorun_{ false }   ;      ///< Flag for automatic execution.
     std::vector<Step> steps_;       ///< Collection of steps.
 
     bool is_running_{ false }; ///< Flag to determine if the sequence is running.
