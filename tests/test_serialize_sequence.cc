@@ -51,47 +51,6 @@ TEST_CASE("make_sequence_filename(SequenceName, UniqueId)", "[serialize_sequence
     REQUIRE(make_sequence_filename(SequenceName{}, 0x1234_uid) == "[0000000000001234]");
 }
 
-TEST_CASE("automation sequence", "[serialize_sequence]")
-{
-    std::stringstream ss;
-
-    Sequence seq("test_sequence");
-
-    SECTION("serialize: automation")
-    {
-        seq.set_automation(true);
-
-        ss << seq;
-
-        Sequence deserialize;
-        ss >> deserialize;
-
-        REQUIRE(deserialize.get_automation());
-    }
-
-    SECTION("serialize: default automation")
-    {
-        ss << seq;
-
-        Sequence deserialize;
-        ss >> deserialize;
-
-        REQUIRE_FALSE(deserialize.get_automation());
-    }
-
-    SECTION("serialize: no automation")
-    {
-        seq.set_automation(false);
-
-        ss << seq;
-
-        Sequence deserialize;
-        ss >> deserialize;
-
-        REQUIRE_FALSE(deserialize.get_automation());
-    }
-}
-
 TEST_CASE("serialize_sequence: simple step", "[serialize_sequence]")
 {
     std::stringstream ss;

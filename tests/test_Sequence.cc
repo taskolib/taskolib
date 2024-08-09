@@ -4070,13 +4070,13 @@ TEST_CASE("Sequence: label with control character", "[serialize_sequence]")
     REQUIRE_THROWS_AS(sequence.set_label("A\bbell"), Error);
 }
 
-TEST_CASE("Sequence: sequence automation", "[Sequence]")
+TEST_CASE("Sequence: sequence autorun", "[Sequence]")
 {
     Sequence seq("test_sequence");
 
-    REQUIRE_FALSE(seq.get_automation());
-    seq.set_automation(true);
-    REQUIRE(seq.get_automation());
-    seq.set_automation(false);
-    REQUIRE_FALSE(seq.get_automation());
+    REQUIRE_FALSE(seq.get_autorun());
+    seq.set_autorun(true);
+    REQUIRE(seq.get_autorun());
+    seq.set_autorun(false);
+    REQUIRE_FALSE(seq.get_autorun());
 }
