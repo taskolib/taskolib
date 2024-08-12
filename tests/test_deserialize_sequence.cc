@@ -22,12 +22,29 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <filesystem>
+#include <fstream>
+
 #include <gul14/catch.h>
 
 #include "deserialize_sequence.h"
+#include "internals.h"
 
 using namespace task;
 using namespace std::literals;
+
+namespace {
+
+static const std::filesystem::path temp_dir{ "unit_test_files" };
+
+void remove_temp_dir()
+{
+    if (std::filesystem::exists(temp_dir))
+        std::filesystem::remove_all(temp_dir);
+    std::filesystem::create_directory(temp_dir);
+}
+
+} // namespace
 
 TEST_CASE("parse_tags()", "[deserialize_sequence]")
 {
@@ -68,4 +85,60 @@ TEST_CASE("parse_bool()", "[deserialize_sequence]")
     REQUIRE_THROWS_AS(parse_bool("TRUE"), Error);
     REQUIRE_THROWS_AS(parse_bool(""), Error);
     REQUIRE_THROWS_AS(parse_bool("1"), Error);
+}
+
+TEST_CASE("Ancient sequence", "[deserialize_sequence]")
+{
+    std::filesystem::path path = temp_dir / sequence_lua_filename;
+    Sequence seq;
+
+    SECTION("Ancient sequence without parameter autorun and disable")
+    {
+        remove_temp_dir();
+        std::ofstream stream(path);
+
+        if (stream.fail())
+            FAIL(gul14::cat("Could not create file: " + path.string()));
+
+        stream << "-- label: some label\n";
+        stream.close();
+
+        load_sequence_parameters(temp_dir, seq);
+        REQUIRE_FALSE(seq.get_autorun());
+        REQUIRE_FALSE(seq.is_disable());
+    }
+
+    SECTION("Ancient sequence without parameter disable")
+    {
+        remove_temp_dir();
+        std::ofstream stream(path);
+
+        if (stream.fail())
+            FAIL(gul14::cat("Could not create file: " + path.string()));
+
+        stream << "-- label: some label\n";
+        stream << "-- autorun: true\n";
+        stream.close();
+
+        load_sequence_parameters(temp_dir, seq);
+        REQUIRE(seq.get_autorun());
+        REQUIRE_FALSE(seq.is_disable());
+    }
+
+    SECTION("Ancient sequence without parameter autorun")
+    {
+        //remove_temp_dir();
+        std::ofstream stream(path);
+
+        if (stream.fail())
+            FAIL(gul14::cat("Could not create file: " + path.string()));
+
+        stream << "-- label: some label\n";
+        stream << "-- disable: true\n";
+        stream.close();
+
+        load_sequence_parameters(temp_dir, seq);
+        REQUIRE_FALSE(seq.get_autorun());
+        REQUIRE(seq.is_disable());
+    }
 }
