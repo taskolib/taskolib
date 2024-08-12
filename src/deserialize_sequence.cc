@@ -291,7 +291,9 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
             else if (gul14::starts_with(keyword, "-- tags:"))
                 sequence.set_tags(parse_tags(keyword.substr(8)));
             else if (gul14::starts_with(keyword, "-- autorun:"))
-                sequence.set_autorun(parse_autorun(keyword.substr(11)));
+                sequence.set_autorun(parse_bool(keyword.substr(11)));
+            else if (gul14::starts_with(keyword, "-- disable:"))
+                sequence.set_disable(parse_bool(keyword.substr(11)));
             else
                 step_setup_script += (line + '\n');
         }
@@ -310,15 +312,15 @@ std::vector<Tag> parse_tags(gul14::string_view str)
     return tags;
 }
 
-bool parse_autorun(gul14::string_view str)
+bool parse_bool(gul14::string_view str)
 {
-    auto autorun{gul14::trim(str)};
-    if (autorun == "true" )
+    auto bool_expression{gul14::trim(str)};
+    if (bool_expression == "true" )
         return true;
-    else if (autorun == "false")
+    else if (bool_expression == "false")
         return false;
     else
-        throw Error(gul14::cat("Cannot parse autorun flag from \"", str, '"'));
+        throw Error(gul14::cat("Cannot parse bool expression from \"", str, '"'));
 }
 
 Timeout parse_timeout(gul14::string_view str)

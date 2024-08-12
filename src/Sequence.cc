@@ -68,6 +68,7 @@ Sequence::Sequence(gul14::string_view label, SequenceName name, UniqueId uid)
     : unique_id_{ uid }
     , name_{ std::move(name) }
     , autorun_{ false }
+    , is_disable_{ false }
 {
     set_label(label);
 }
@@ -389,6 +390,7 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
 
     try
     {
+        throw_if_disabled();
         runner(context, comm);
     }
     catch (const Error& e)
@@ -762,6 +764,11 @@ void Sequence::set_autorun(bool autorun)
     autorun_ = autorun;
 }
 
+void Sequence::set_disable(bool is_disable)
+{
+    is_disable_ = is_disable;
+}
+
 void Sequence::throw_if_full() const
 {
     if (steps_.size() == max_size())
@@ -772,6 +779,12 @@ void Sequence::throw_if_running() const
 {
     if (is_running_)
         throw Error("Cannot change a running sequence");
+}
+
+void Sequence::throw_if_disabled() const
+{
+    if (is_disable_)
+        throw Error("Sequence is disabled");
 }
 
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator /*it*/,

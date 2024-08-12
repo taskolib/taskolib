@@ -60,12 +60,12 @@ TEST_CASE("parse_timeout()", "[deserialize_sequence]")
 
 }
 
-TEST_CASE("parse_autorun()", "[deserialize_sequence]")
+TEST_CASE("parse_bool()", "[deserialize_sequence]")
 {
-    REQUIRE(parse_autorun("true"));
-    REQUIRE_FALSE(parse_autorun("false"));
+    REQUIRE(parse_bool("true"));
+    REQUIRE_FALSE(parse_bool("false"));
 
-    REQUIRE_THROWS_AS(parse_autorun("TRUE"), Error);
-    REQUIRE_THROWS_AS(parse_autorun(""), Error);
-    REQUIRE_THROWS_AS(parse_autorun("1"), Error);
+    REQUIRE_THROWS_AS(parse_bool("TRUE"), Error);
+    REQUIRE_THROWS_AS(parse_bool(""), Error);
+    REQUIRE_THROWS_AS(parse_bool("1"), Error);
 }

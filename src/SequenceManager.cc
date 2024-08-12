@@ -81,6 +81,7 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
         stream << ' ' << tag;
     stream << '\n';
     stream << "-- autorun: " << (seq.get_autorun() ? "true" : "false") << '\n';
+    stream << "-- disable: " << (seq.is_disable() ? "true" : "false") << '\n';
     stream << seq;
 }
 
