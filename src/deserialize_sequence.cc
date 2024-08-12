@@ -294,9 +294,9 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
                 sequence.set_autorun(parse_autorun(keyword.substr(11)));
             else
                 step_setup_script += (line + '\n');
-    }
+        }
 
-    sequence.set_step_setup_script(step_setup_script);
+        sequence.set_step_setup_script(step_setup_script);
     }
 }
 
