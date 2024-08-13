@@ -37,7 +37,7 @@ namespace {
 
 static const std::filesystem::path temp_dir{ "unit_test_files" };
 
-void remove_temp_dir()
+void create_temp_dir()
 {
     if (std::filesystem::exists(temp_dir))
         std::filesystem::remove_all(temp_dir);
@@ -94,7 +94,7 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
 
     SECTION("Ancient sequence without parameter autorun and disable")
     {
-        remove_temp_dir();
+        create_temp_dir();
         std::ofstream stream(path);
 
         if (stream.fail())
@@ -110,7 +110,7 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
 
     SECTION("Ancient sequence without parameter disable")
     {
-        remove_temp_dir();
+        create_temp_dir();
         std::ofstream stream(path);
 
         if (stream.fail())
@@ -127,7 +127,7 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
 
     SECTION("Ancient sequence without parameter autorun")
     {
-        //remove_temp_dir();
+        create_temp_dir();
         std::ofstream stream(path);
 
         if (stream.fail())
