@@ -1,6 +1,6 @@
 /**
  * \file   test_deserialize_sequence.cc
- * \author Lars Fröhlich
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on July 26, 2023
  * \brief  Test suite for free functions declared in deserialize_sequence.h.
  *
