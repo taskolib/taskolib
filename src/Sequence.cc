@@ -68,7 +68,7 @@ Sequence::Sequence(gul14::string_view label, SequenceName name, UniqueId uid)
     : unique_id_{ uid }
     , name_{ std::move(name) }
     , autorun_{ false }
-    , is_disable_{ false }
+    , is_disabled_{ false }
 {
     set_label(label);
 }
@@ -764,9 +764,9 @@ void Sequence::set_autorun(bool autorun)
     autorun_ = autorun;
 }
 
-void Sequence::set_disable(bool is_disable)
+void Sequence::set_disabled(bool is_disabled)
 {
-    is_disable_ = is_disable;
+    is_disabled_ = is_disabled;
 }
 
 void Sequence::throw_if_full() const
@@ -783,7 +783,7 @@ void Sequence::throw_if_running() const
 
 void Sequence::throw_if_disabled() const
 {
-    if (is_disable_)
+    if (is_disabled_)
         throw Error("Sequence is disabled");
 }
 

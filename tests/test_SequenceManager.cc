@@ -34,6 +34,7 @@
 #include <libgit4cpp/Repository.h>
 
 #include "internals.h"
+#include "internals_unit_test.h"
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
 
@@ -43,8 +44,6 @@ using namespace task;
 using namespace task::literals;
 
 namespace {
-
-static const std::filesystem::path temp_dir{ "unit_test_files" };
 
 // Helper that returns all entries of a directory (i.e. files or subdirs)
 std::vector<std::string> collect_filenames(const std::filesystem::path& path)

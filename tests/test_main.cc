@@ -22,15 +22,15 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <filesystem>
-
 #define CATCH_CONFIG_RUNNER
 #include <gul14/catch.h>
 
+#include "internals_unit_test.h"
+
 int main(int argc, char* argv[])
 {
-    if (std::filesystem::exists("unit_test_files"))
-        std::filesystem::remove_all("unit_test_files");
+    if (std::filesystem::exists(temp_dir))
+        std::filesystem::remove_all(temp_dir);
 
     return Catch::Session().run(argc, argv);
 }

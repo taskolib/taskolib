@@ -29,18 +29,13 @@
 #include <gul14/catch.h>
 
 #include "deserialize_sequence.h"
+#include "internals_unit_test.h"
 #include "serialize_sequence.h"
 #include "taskolib/Sequence.h"
 
 using namespace std::literals;
 using namespace task;
 using namespace task::literals;
-
-namespace {
-
-static const std::filesystem::path temp_dir{ "unit_test_files" };
-
-} // anonymous namespace
 
 TEST_CASE("make_sequence_filename(SequenceName, UniqueId)", "[serialize_sequence]")
 {

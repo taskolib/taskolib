@@ -292,8 +292,8 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
                 sequence.set_tags(parse_tags(keyword.substr(8)));
             else if (gul14::starts_with(keyword, "-- autorun:"))
                 sequence.set_autorun(parse_bool(keyword.substr(11)));
-            else if (gul14::starts_with(keyword, "-- disable:"))
-                sequence.set_disable(parse_bool(keyword.substr(11)));
+            else if (gul14::starts_with(keyword, "-- disabled:"))
+                sequence.set_disabled(parse_bool(keyword.substr(12)));
             else
                 step_setup_script += (line + '\n');
         }
@@ -314,7 +314,7 @@ std::vector<Tag> parse_tags(gul14::string_view str)
 
 bool parse_bool(gul14::string_view str)
 {
-    auto bool_expression{gul14::trim(str)};
+    auto bool_expression{gul14::trim_sv(str)};
     if (bool_expression == "true" )
         return true;
     else if (bool_expression == "false")

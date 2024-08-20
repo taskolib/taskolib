@@ -28,23 +28,11 @@
 #include <gul14/catch.h>
 
 #include "deserialize_sequence.h"
+#include "internals_unit_test.h"
 #include "internals.h"
 
 using namespace task;
 using namespace std::literals;
-
-namespace {
-
-static const std::filesystem::path temp_dir{ "unit_test_files" };
-
-void create_temp_dir()
-{
-    if (std::filesystem::exists(temp_dir))
-        std::filesystem::remove_all(temp_dir);
-    std::filesystem::create_directory(temp_dir);
-}
-
-} // namespace
 
 TEST_CASE("parse_tags()", "[deserialize_sequence]")
 {
@@ -92,9 +80,11 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
     std::filesystem::path path = temp_dir / sequence_lua_filename;
     Sequence seq;
 
+    if (not std::filesystem::exists(temp_dir))
+        std::filesystem::create_directory(temp_dir);
+
     SECTION("Ancient sequence without parameter autorun and disable")
     {
-        create_temp_dir();
         std::ofstream stream(path);
 
         if (stream.fail())
@@ -105,12 +95,11 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
 
         load_sequence_parameters(temp_dir, seq);
         REQUIRE_FALSE(seq.get_autorun());
-        REQUIRE_FALSE(seq.is_disable());
+        REQUIRE_FALSE(seq.is_disabled());
     }
 
     SECTION("Ancient sequence without parameter disable")
     {
-        create_temp_dir();
         std::ofstream stream(path);
 
         if (stream.fail())
@@ -122,23 +111,22 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
 
         load_sequence_parameters(temp_dir, seq);
         REQUIRE(seq.get_autorun());
-        REQUIRE_FALSE(seq.is_disable());
+        REQUIRE_FALSE(seq.is_disabled());
     }
 
     SECTION("Ancient sequence without parameter autorun")
     {
-        create_temp_dir();
         std::ofstream stream(path);
 
         if (stream.fail())
             FAIL(gul14::cat("Could not create file: " + path.string()));
 
         stream << "-- label: some label\n";
-        stream << "-- disable: true\n";
+        stream << "-- disabled: true\n";
         stream.close();
 
         load_sequence_parameters(temp_dir, seq);
         REQUIRE_FALSE(seq.get_autorun());
-        REQUIRE(seq.is_disable());
+        REQUIRE(seq.is_disabled());
     }
 }
