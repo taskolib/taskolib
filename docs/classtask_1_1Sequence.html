@@ -208,6 +208,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae780738087366be7887133c35ac61f0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#ae780738087366be7887133c35ac61f0f">get_autorun</a> () const noexcept</td></tr>
 <tr class="memdesc:ae780738087366be7887133c35ac61f0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if an automatic execution can be performed otherwise false.  <a href="classtask_1_1Sequence.html#ae780738087366be7887133c35ac61f0f">More...</a><br /></td></tr>
 <tr class="separator:ae780738087366be7887133c35ac61f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22e0f2a6887734ce39d80162ae56c285"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a22e0f2a6887734ce39d80162ae56c285">is_disabled</a> () const noexcept</td></tr>
+<tr class="memdesc:a22e0f2a6887734ce39d80162ae56c285"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the disable flag. When set to true it will prohibit any execution.  <a href="classtask_1_1Sequence.html#a22e0f2a6887734ce39d80162ae56c285">More...</a><br /></td></tr>
+<tr class="separator:a22e0f2a6887734ce39d80162ae56c285"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a">get_time_of_last_execution</a> () const</td></tr>
 <tr class="memdesc:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine when the sequence was last executed.  <a href="classtask_1_1Sequence.html#a56dcb68b8a921ca0a4bddd3d04316c2a">More...</a><br /></td></tr>
 <tr class="separator:a56dcb68b8a921ca0a4bddd3d04316c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -273,6 +276,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abdfd70bb6842ad6482dd25fd61578abb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#abdfd70bb6842ad6482dd25fd61578abb">set_autorun</a> (bool autorun)</td></tr>
 <tr class="memdesc:abdfd70bb6842ad6482dd25fd61578abb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the autorun flag.  <a href="classtask_1_1Sequence.html#abdfd70bb6842ad6482dd25fd61578abb">More...</a><br /></td></tr>
 <tr class="separator:abdfd70bb6842ad6482dd25fd61578abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a536fb9252c455da62f68f07f5c6d4f5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a536fb9252c455da62f68f07f5c6d4f5a">set_disabled</a> (bool disabled=true)</td></tr>
+<tr class="memdesc:a536fb9252c455da62f68f07f5c6d4f5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the disable flag.  <a href="classtask_1_1Sequence.html#a536fb9252c455da62f68f07f5c6d4f5a">More...</a><br /></td></tr>
+<tr class="separator:a536fb9252c455da62f68f07f5c6d4f5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c5242a66d9b6d1eaebfe3f9d27f712c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">set_timeout</a> (<a class="el" href="classtask_1_1Timeout.html">Timeout</a> timeout)</td></tr>
 <tr class="memdesc:a7c5242a66d9b6d1eaebfe3f9d27f712c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the timeout duration for executing the sequence.  <a href="classtask_1_1Sequence.html#a7c5242a66d9b6d1eaebfe3f9d27f712c">More...</a><br /></td></tr>
 <tr class="separator:a7c5242a66d9b6d1eaebfe3f9d27f712c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -350,6 +356,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a3d217e1589b645acfd1845732140190d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a3d217e1589b645acfd1845732140190d">throw_if_running</a> () const</td></tr>
 <tr class="memdesc:a3d217e1589b645acfd1845732140190d"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the sequence is executed it rejects with an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception.  <a href="classtask_1_1Sequence.html#a3d217e1589b645acfd1845732140190d">More...</a><br /></td></tr>
 <tr class="separator:a3d217e1589b645acfd1845732140190d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8125e0feb44e20f68d1277618edf833f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a8125e0feb44e20f68d1277618edf833f">throw_if_disabled</a> () const</td></tr>
+<tr class="memdesc:a8125e0feb44e20f68d1277618edf833f"><td class="mdescLeft">&#160;</td><td class="mdescRight">When the sequence is disabled it rejects with an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception.  <a href="classtask_1_1Sequence.html#a8125e0feb44e20f68d1277618edf833f">More...</a><br /></td></tr>
+<tr class="separator:a8125e0feb44e20f68d1277618edf833f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99779d1ae21f9225e60cf598dd9e4bee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a99779d1ae21f9225e60cf598dd9e4bee">throw_syntax_error_for_step</a> (<a class="el" href="classtask_1_1Sequence.html#af25e2e69a711e192c98e90b94f3a0d82">ConstIterator</a> it, gul14::string_view msg) const</td></tr>
 <tr class="memdesc:a99779d1ae21f9225e60cf598dd9e4bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw a syntax error for the specified step.  <a href="classtask_1_1Sequence.html#a99779d1ae21f9225e60cf598dd9e4bee">More...</a><br /></td></tr>
 <tr class="separator:a99779d1ae21f9225e60cf598dd9e4bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -383,6 +392,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a6eccd7c3f8c4b0efa2066fcb4f9f0b06"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a6eccd7c3f8c4b0efa2066fcb4f9f0b06">autorun_</a> { false }</td></tr>
 <tr class="memdesc:a6eccd7c3f8c4b0efa2066fcb4f9f0b06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag for automatic execution.  <a href="classtask_1_1Sequence.html#a6eccd7c3f8c4b0efa2066fcb4f9f0b06">More...</a><br /></td></tr>
 <tr class="separator:a6eccd7c3f8c4b0efa2066fcb4f9f0b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54a2a0060843e80f0291a0f9d1096d0a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#a54a2a0060843e80f0291a0f9d1096d0a">is_disabled_</a> { false }</td></tr>
+<tr class="memdesc:a54a2a0060843e80f0291a0f9d1096d0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disabled sequence. Used for execution control.  <a href="classtask_1_1Sequence.html#a54a2a0060843e80f0291a0f9d1096d0a">More...</a><br /></td></tr>
+<tr class="separator:a54a2a0060843e80f0291a0f9d1096d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab686b0b31a65bd763dd51ed2e96a3e80"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtask_1_1Step.html">Step</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a></td></tr>
 <tr class="memdesc:ab686b0b31a65bd763dd51ed2e96a3e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of steps.  <a href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">More...</a><br /></td></tr>
 <tr class="separator:ab686b0b31a65bd763dd51ed2e96a3e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1704,7 +1716,7 @@ Private Attributes</h2></td></tr>
 <div class="line">  ACTION</div>
 <div class="line">END</div>
 <div class="line">ACTION   &lt;- <a class="code" href="classtask_1_1Sequence.html#a0f375c7c46e63820c630bb0124b45811">find_end_of_continuation</a>(block_start)</div>
-<div class="ttc" id="aclasstask_1_1Sequence_html_a0f375c7c46e63820c630bb0124b45811"><div class="ttname"><a href="classtask_1_1Sequence.html#a0f375c7c46e63820c630bb0124b45811">task::Sequence::find_end_of_continuation</a></div><div class="ttdeci">Iterator find_end_of_continuation(Iterator block_start)</div><div class="ttdoc">Return an iterator past the END step that ends the block-with-continuation starting at a given iterat...</div><div class="ttdef"><b>Definition:</b> Sequence.cc:572</div></div>
+<div class="ttc" id="aclasstask_1_1Sequence_html_a0f375c7c46e63820c630bb0124b45811"><div class="ttname"><a href="classtask_1_1Sequence.html#a0f375c7c46e63820c630bb0124b45811">task::Sequence::find_end_of_continuation</a></div><div class="ttdeci">Iterator find_end_of_continuation(Iterator block_start)</div><div class="ttdoc">Return an iterator past the END step that ends the block-with-continuation starting at a given iterat...</div><div class="ttdef"><b>Definition:</b> Sequence.cc:574</div></div>
 </div><!-- fragment --><dl class="section return"><dt>Returns</dt><dd>an iterator past the matching END step or steps_.end() if there is no matching END step. </dd></dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>.</p>
@@ -2122,7 +2134,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>nullopt if the execution function finished successfully, or an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> object if anything went wrong. </dd></dl>
 
-<p class="reference">References <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">task::aborted</a>, <a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a>, <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">task::send_message()</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c">task::Message::sequence_started</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4afbfb3cd476005a7cafb0ea7a1a10e6c7">task::Message::sequence_stopped</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">task::Message::sequence_stopped_with_error</a>, <a class="el" href="classtask_1_1Sequence.html#ab45e55eb4ea1009ad121de6c113e8a77">set_error()</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, <a class="el" href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">step_setup_script_</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">task::terminated_by_script</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">task::uncaught_error</a>.</p>
+<p class="reference">References <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2adfb7069bfc6e0064a6c667626eca07b4">task::aborted</a>, <a class="el" href="classtask_1_1Sequence.html#adb90ea97f9f7c51ee11baaac26db7473">is_running_</a>, <a class="el" href="namespacetask.html#adfba3503e0ced28341fcfe37f25eb244">task::remove_abort_markers()</a>, <a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">task::send_message()</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a6375b8b4d95341776c7faa210984326c">task::Message::sequence_started</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4afbfb3cd476005a7cafb0ea7a1a10e6c7">task::Message::sequence_stopped</a>, <a class="el" href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">task::Message::sequence_stopped_with_error</a>, <a class="el" href="classtask_1_1Sequence.html#ab45e55eb4ea1009ad121de6c113e8a77">set_error()</a>, <a class="el" href="structtask_1_1Context.html#a5da357f420f72276a99d89767c0e907c">task::Context::step_setup_script</a>, <a class="el" href="classtask_1_1Sequence.html#a02dfab2d5b15e3756f9a1cc5909616a7">step_setup_script_</a>, <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2aef2fd40d277f2d58436785372052c9c2">task::terminated_by_script</a>, <a class="el" href="classtask_1_1Sequence.html#a8125e0feb44e20f68d1277618edf833f">throw_if_disabled()</a>, and <a class="el" href="namespacetask.html#ab7ac2691887079331ac27d8acbe0f8d2a216eec8eb9b8781bf4d52f5845ebd6c4">task::uncaught_error</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55">execute()</a>.</p>
 
@@ -2215,6 +2227,37 @@ template&lt;typename StepType , std::enable_if_t&lt; std::is_same&lt; gul14::rem
 </dl>
 
 <p class="reference">References <a class="el" href="classtask_1_1Sequence.html#adcf4b6ff1a3e0845184984b31f45a5cb">cbegin()</a>, <a class="el" href="classtask_1_1Sequence.html#ab116c1ea75a0319ad0089b1bde1260d4">correct_error_index()</a>, <a class="el" href="classtask_1_1Sequence.html#a14fa1434eea59986931308d69ded8123">enforce_invariants()</a>, <a class="el" href="classtask_1_1Sequence.html#ab686b0b31a65bd763dd51ed2e96a3e80">steps_</a>, <a class="el" href="classtask_1_1Sequence.html#a2b07ec71a9ba5cf56a857de45afd73e2">throw_if_full()</a>, and <a class="el" href="classtask_1_1Sequence.html#a3d217e1589b645acfd1845732140190d">throw_if_running()</a>.</p>
+
+</div>
+</div>
+<a id="a22e0f2a6887734ce39d80162ae56c285"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22e0f2a6887734ce39d80162ae56c285">&#9670;&nbsp;</a></span>is_disabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task::Sequence::is_disabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the disable flag. When set to true it will prohibit any execution. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a54a2a0060843e80f0291a0f9d1096d0a">is_disabled_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a536fb9252c455da62f68f07f5c6d4f5a">set_disabled()</a>.</p>
 
 </div>
 </div>
@@ -2576,6 +2619,30 @@ template&lt;typename Closure &gt; </div>
 
 </div>
 </div>
+<a id="a536fb9252c455da62f68f07f5c6d4f5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a536fb9252c455da62f68f07f5c6d4f5a">&#9670;&nbsp;</a></span>set_disabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::Sequence::set_disabled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>disabled</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the disable flag. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a22e0f2a6887734ce39d80162ae56c285">is_disabled()</a>, and <a class="el" href="classtask_1_1Sequence.html#a54a2a0060843e80f0291a0f9d1096d0a">is_disabled_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetask.html#a5eeedb324f13bee35b988881a6806d82">task::load_sequence_parameters()</a>.</p>
+
+</div>
+</div>
 <a id="ab45e55eb4ea1009ad121de6c113e8a77"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab45e55eb4ea1009ad121de6c113e8a77">&#9670;&nbsp;</a></span>set_error()</h2>
 
@@ -2899,6 +2966,37 @@ template&lt;typename Closure &gt; </div>
 
 </div>
 </div>
+<a id="a8125e0feb44e20f68d1277618edf833f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8125e0feb44e20f68d1277618edf833f">&#9670;&nbsp;</a></span>throw_if_disabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task::Sequence::throw_if_disabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>When the sequence is disabled it rejects with an <a class="el" href="classtask_1_1Error.html" title="An exception class carrying an error message and, optionally, the index of the step in which the erro...">Error</a> exception. </p>
+
+<p class="reference">References <a class="el" href="classtask_1_1Sequence.html#a54a2a0060843e80f0291a0f9d1096d0a">is_disabled_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a7a1122dafe2e31be1d1b903584ad3fa9">handle_execution()</a>.</p>
+
+</div>
+</div>
 <a id="a2b07ec71a9ba5cf56a857de45afd73e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b07ec71a9ba5cf56a857de45afd73e2">&#9670;&nbsp;</a></span>throw_if_full()</h2>
 
@@ -3078,6 +3176,32 @@ template&lt;typename Closure &gt; </div>
 <p>Empty if indentation is correct and complete, error message otherwise. </p>
 
 <p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#ae23605d38b5fe5be9c3c7ee64a542226">check_syntax()</a>, <a class="el" href="classtask_1_1Sequence.html#a54c45da8bd6b16762c77cad8642f8301">get_indentation_error()</a>, and <a class="el" href="classtask_1_1Sequence.html#a8a3fe135a95f6639974bf38c87e1f9e7">indent()</a>.</p>
+
+</div>
+</div>
+<a id="a54a2a0060843e80f0291a0f9d1096d0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54a2a0060843e80f0291a0f9d1096d0a">&#9670;&nbsp;</a></span>is_disabled_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task::Sequence::is_disabled_ { false }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Disabled sequence. Used for execution control. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Sequence.html#a22e0f2a6887734ce39d80162ae56c285">is_disabled()</a>, <a class="el" href="classtask_1_1Sequence.html#a536fb9252c455da62f68f07f5c6d4f5a">set_disabled()</a>, and <a class="el" href="classtask_1_1Sequence.html#a8125e0feb44e20f68d1277618edf833f">throw_if_disabled()</a>.</p>
 
 </div>
 </div>
@@ -3348,7 +3472,7 @@ template&lt;typename Closure &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 07:26:55 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Aug 21 2024 14:15:27 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
