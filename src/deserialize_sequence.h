@@ -123,9 +123,9 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
 std::vector<Tag> parse_tags(gul14::string_view str);
 
 /**
- * Parse the automation flag from a string.
+ * Parse a bool expression from a string.
  */
-bool parse_autorun(gul14::string_view str);
+bool parse_bool(gul14::string_view str);
 
 /**
  * Parse a string into a Timeout value.

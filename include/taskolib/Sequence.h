@@ -404,6 +404,9 @@ public:
     /// Return true if an automatic execution can be performed otherwise false.
     bool get_autorun() const noexcept { return autorun_; }
 
+    /// Return the disable flag. When set to true it will prohibit any execution.
+    bool is_disabled() const noexcept { return is_disabled_; }
+
     /**
      * Determine when the sequence was last executed.
      *
@@ -678,6 +681,9 @@ public:
      */
     void set_autorun(bool autorun);
 
+    /// Set the disable flag.
+    void set_disabled(bool disabled = true);
+
     /// Set the timeout duration for executing the sequence.
     void set_timeout(Timeout timeout) { timeout_trigger_.set_timeout(timeout); }
 
@@ -709,6 +715,7 @@ private:
     std::string step_setup_script_; ///< Step setup script.
     std::vector<Tag> tags_;         ///< Tags for categorizing the sequence.
     bool autorun_{ false }   ;      ///< Flag for automatic execution.
+    bool is_disabled_{ false };     ///< Disabled sequence. Used for execution control.
     std::vector<Step> steps_;       ///< Collection of steps.
 
     bool is_running_{ false }; ///< Flag to determine if the sequence is running.
@@ -929,6 +936,9 @@ private:
 
     /// When the sequence is executed it rejects with an Error exception.
     void throw_if_running() const;
+
+    /// When the sequence is disabled it rejects with an Error exception.
+    void throw_if_disabled() const;
 
     /**
      * Throw a syntax error for the specified step.

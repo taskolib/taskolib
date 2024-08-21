@@ -1,6 +1,6 @@
 /**
  * \file   test_deserialize_sequence.cc
- * \author Lars Fröhlich
+ * \author Lars Fröhlich, Marcus Walla
  * \date   Created on July 26, 2023
  * \brief  Test suite for free functions declared in deserialize_sequence.h.
  *
@@ -22,9 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <filesystem>
+#include <fstream>
+
 #include <gul14/catch.h>
 
 #include "deserialize_sequence.h"
+#include "internals_unit_test.h"
+#include "internals.h"
 
 using namespace task;
 using namespace std::literals;
@@ -60,12 +65,68 @@ TEST_CASE("parse_timeout()", "[deserialize_sequence]")
 
 }
 
-TEST_CASE("parse_autorun()", "[deserialize_sequence]")
+TEST_CASE("parse_bool()", "[deserialize_sequence]")
 {
-    REQUIRE(parse_autorun("true"));
-    REQUIRE_FALSE(parse_autorun("false"));
+    REQUIRE(parse_bool("true"));
+    REQUIRE_FALSE(parse_bool("false"));
 
-    REQUIRE_THROWS_AS(parse_autorun("TRUE"), Error);
-    REQUIRE_THROWS_AS(parse_autorun(""), Error);
-    REQUIRE_THROWS_AS(parse_autorun("1"), Error);
+    REQUIRE_THROWS_AS(parse_bool("TRUE"), Error);
+    REQUIRE_THROWS_AS(parse_bool(""), Error);
+    REQUIRE_THROWS_AS(parse_bool("1"), Error);
+}
+
+TEST_CASE("Ancient sequence", "[deserialize_sequence]")
+{
+    std::filesystem::path path = temp_dir / sequence_lua_filename;
+    Sequence seq;
+
+    if (not std::filesystem::exists(temp_dir))
+        std::filesystem::create_directory(temp_dir);
+
+    SECTION("Ancient sequence without parameter autorun and disable")
+    {
+        std::ofstream stream(path);
+
+        if (stream.fail())
+            FAIL(gul14::cat("Could not create file: " + path.string()));
+
+        stream << "-- label: some label\n";
+        stream.close();
+
+        load_sequence_parameters(temp_dir, seq);
+        REQUIRE_FALSE(seq.get_autorun());
+        REQUIRE_FALSE(seq.is_disabled());
+    }
+
+    SECTION("Ancient sequence without parameter disable")
+    {
+        std::ofstream stream(path);
+
+        if (stream.fail())
+            FAIL(gul14::cat("Could not create file: " + path.string()));
+
+        stream << "-- label: some label\n";
+        stream << "-- autorun: true\n";
+        stream.close();
+
+        load_sequence_parameters(temp_dir, seq);
+        REQUIRE(seq.get_autorun());
+        REQUIRE_FALSE(seq.is_disabled());
+    }
+
+    SECTION("Ancient sequence without parameter autorun")
+    {
+        std::ofstream stream(path);
+
+        if (stream.fail())
+            FAIL(gul14::cat("Could not create file: " + path.string()));
+
+        stream << "-- label: some label\n";
+        stream << "-- disabled: true\n";
+        stream.close();
+
+        load_sequence_parameters(temp_dir, seq);
+        REQUIRE_FALSE(seq.get_autorun());
+        REQUIRE(seq.is_disabled());
+    }
 }

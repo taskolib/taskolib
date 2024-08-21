@@ -1,10 +1,10 @@
 /**
- * \file   test_main.cc
- * \author Lars Fröhlich
- * \date   Created on November 26, 2019
- * \brief  Implementation of main() for the Taskolib unit test suite.
+ * \file   internals_unit_test.g
+ * \author Marcus Walla
+ * \date   Created on August 20, 2024
+ * \brief  Internal settings for the unit test.
  *
- * \copyright Copyright 2021-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,15 +22,14 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#define CATCH_CONFIG_RUNNER
-#include <gul14/catch.h>
+#ifndef INTERNALS_UNIT_TEST_H
 
-#include "internals_unit_test.h"
+#include <filesystem>
 
-int main(int argc, char* argv[])
-{
-    if (std::filesystem::exists(temp_dir))
-        std::filesystem::remove_all(temp_dir);
+namespace {
 
-    return Catch::Session().run(argc, argv);
-}
+    static const std::filesystem::path temp_dir{ "unit_test_files" };
+
+} // namespace
+
+#endif // INTERNALS_UNIT_TEST_H

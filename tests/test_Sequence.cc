@@ -4080,3 +4080,30 @@ TEST_CASE("Sequence: sequence autorun", "[Sequence]")
     seq.set_autorun(false);
     REQUIRE_FALSE(seq.get_autorun());
 }
+
+TEST_CASE("Sequence: disable a sequence", "[Sequence]")
+{
+    Sequence seq("test_sequence");
+
+    REQUIRE_FALSE(seq.is_disabled());
+    seq.set_disabled(true);
+    REQUIRE(seq.is_disabled());
+    seq.set_disabled(false);
+    REQUIRE_FALSE(seq.is_disabled());
+}
+
+TEST_CASE("Sequence: prohibit execution of disabled sequence", "[Sequence]")
+{
+    Sequence seq("test_sequence");
+    seq.push_back(Step{Step::type_action});
+
+    Context ctx;
+
+    auto execution = seq.execute(ctx, nullptr);
+    REQUIRE_FALSE(execution.has_value());
+
+    seq.set_disabled(true);
+    auto error = seq.execute(ctx, nullptr);
+    REQUIRE(error.has_value());
+    REQUIRE(error.value() == Error("Sequence is disabled"));
+}
