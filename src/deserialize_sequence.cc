@@ -39,6 +39,7 @@
 #include "taskolib/hash_string.h"
 
 using gul14::cat;
+using gul14::escape;
 
 namespace task {
 
@@ -93,7 +94,7 @@ void extract_type(gul14::string_view extract, Step& step)
         case "end"_sh:
             step.set_type(Step::type_end); break;
         default:
-            throw Error(gul14::cat("type: unable to parse ('", keyword, "')"));
+            throw Error(gul14::cat("type: unable to parse (\"", escape(keyword), "\")"));
     }
 }
 
@@ -127,7 +128,7 @@ TimePoint extract_time(const std::string& issue, gul14::string_view extract)
     std::tm t;
 
     if (strptime(std::string{ extract }.c_str(), "%Y-%m-%d %H:%M:%S",&t) == nullptr)
-        throw Error(gul14::cat(issue, ": unable to parse time ('", extract, "')"));
+        throw Error(gul14::cat(issue, ": unable to parse time (\"", escape(extract), "\")"));
     t.tm_isdst = -1; // Daylight Saving Time (DST) is unknown -> use local time zone
     auto convert = std::mktime(&t);
 
@@ -249,7 +250,7 @@ Step load_step(const std::filesystem::path& lua_file)
     std::ifstream stream(lua_file);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file '", lua_file.string(), "'"));
+        throw Error(gul14::cat("I/O error: unable to open file \"", escape(lua_file.string()), '"'));
 
     stream >> step; // RAII closes the stream (let the destructor do the job)
 
@@ -259,7 +260,7 @@ Step load_step(const std::filesystem::path& lua_file)
 void load_sequence_parameters(const std::filesystem::path& folder, Sequence& sequence)
 {
     if (not std::filesystem::exists(folder))
-        throw Error(gul14::cat("Folder does not exist: '", folder.string(), '\''));
+        throw Error(gul14::cat("Folder does not exist: \"", escape(folder.string()), '"'));
 
     auto stream = std::ifstream(folder / sequence_lua_filename);
 
@@ -309,8 +310,7 @@ bool parse_bool(gul14::string_view str)
         return true;
     else if (bool_expression == "false")
         return false;
-    else
-        throw Error(gul14::cat("Cannot parse bool expression from \"", str, '"'));
+    throw Error(gul14::cat("Cannot parse bool expression from \"", escape(str), '"'));
 }
 
 Timeout parse_timeout(gul14::string_view str)
@@ -322,7 +322,7 @@ Timeout parse_timeout(gul14::string_view str)
 
     const auto maybe_msec = gul14::to_number<unsigned long long>(str);
     if (!maybe_msec)
-        throw Error(gul14::cat("Cannot parse timeout from \"", str, '"'));
+        throw Error(gul14::cat("Cannot parse timeout from \"", escape(str), '"'));
 
     return Timeout{ std::chrono::milliseconds{ *maybe_msec } };
 }
