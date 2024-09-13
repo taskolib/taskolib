@@ -139,16 +139,6 @@ void extract_time_of_last_execution(gul14::string_view extract, Step& step)
     step.set_time_of_last_execution(extract_time("time of last execution", extract));
 }
 
-void extract_disabled(gul14::string_view extract, Step& step)
-{
-    bool val{ };
-    std::stringstream ss{ std::string{ extract } };
-    ss >> std::boolalpha >> val;
-    if (ss.fail())
-        throw Error("disabled: unknown value, expect true or false");
-    step.set_disabled(val);
-}
-
 } // anonymous namespace
 
 std::istream& operator>>(std::istream& stream, Step& step)
@@ -216,7 +206,7 @@ std::istream& operator>>(std::istream& stream, Step& step)
                 break;
 
             case "disabled"_sh:
-                extract_disabled(remaining_line, step_internal);
+                step_internal.set_disabled(parse_bool(remaining_line));
                 break;
 
             default:
