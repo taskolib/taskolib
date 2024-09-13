@@ -67,8 +67,6 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 Sequence::Sequence(gul14::string_view label, SequenceName name, UniqueId uid)
     : unique_id_{ uid }
     , name_{ std::move(name) }
-    , autorun_{ false }
-    , is_disabled_{ false }
 {
     set_label(label);
 }
