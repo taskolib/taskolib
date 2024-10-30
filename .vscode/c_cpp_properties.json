@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Ubuntu-x64",
+            "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
                 "/export/doocs/lib/include"
