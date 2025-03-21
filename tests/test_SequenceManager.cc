@@ -30,6 +30,7 @@
 #include <vector>
 
 #include <gul14/catch.h>
+#include <gul14/finalizer.h>
 #include <gul14/substring_checks.h>
 #include <libgit4cpp/Repository.h>
 
@@ -38,6 +39,7 @@
 #include "serialize_sequence.h"
 #include "taskolib/SequenceManager.h"
 
+using Catch::CaseSensitive;
 using namespace Catch::Matchers;
 using namespace std::literals;
 using namespace task;
@@ -831,4 +833,57 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         REQUIRE(! seq_exists);
     }
 
+}
+
+TEST_CASE("SequenceManager: fail creating sequence", "[SequenceManager]")
+{
+    const auto dir = temp_dir / "store_wp";
+    std::filesystem::create_directory(dir);
+    std::filesystem::permissions(
+        dir,
+        std::filesystem::perms::owner_write,
+        std::filesystem::perm_options::remove
+    );
+    auto _ = gul14::finally([dir]() {
+        std::filesystem::permissions(
+            dir,
+            std::filesystem::perms::owner_write,
+            std::filesystem::perm_options::add
+        );
+    });
+
+    CHECK_THROWS_WITH(new SequenceManager{ dir },
+        Contains("git", CaseSensitive::No)
+        and Contains("init", CaseSensitive::No));
+}
+
+TEST_CASE("SequenceManager: fail storing sequence", "[SequenceManager]")
+{
+    const auto dir = temp_dir / "store_wp";
+    std::filesystem::create_directory(dir);
+
+    SequenceManager manager{ dir };
+    Sequence seq{ "Some attempt", SequenceName{ "attempt2" } };
+    Step step{ Step::type_action };
+    step.set_script("v = 23");
+    seq.push_back(step);
+    manager.store_sequence(seq);
+
+    auto d = dir / seq.get_folder();
+    std::filesystem::permissions(
+        d,
+        std::filesystem::perms::owner_write,
+        std::filesystem::perm_options::remove
+    );
+    auto _ = gul14::finally([d]() {
+        std::filesystem::permissions(
+            d,
+            std::filesystem::perms::owner_write,
+            std::filesystem::perm_options::add
+        );
+    });
+
+    CHECK_THROWS_WITH(manager.store_sequence(seq),
+        Contains("I/O", CaseSensitive::No)
+        and Contains("permission", CaseSensitive::No));
 }

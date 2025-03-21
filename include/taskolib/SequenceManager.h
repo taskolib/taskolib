@@ -338,7 +338,7 @@ private:
                 git_repo_.reset(0);
             }
             catch (...) {}
-            throw e;
+            throw;
         }
         return true;
     }
