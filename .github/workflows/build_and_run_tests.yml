@@ -72,7 +72,7 @@ jobs:
         ./meson.py test -C build.release
 
     - name: Save error logs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ always() && steps.buildnormal.outcome == 'failure' }}
       with:
         name: Meson-logs-${{ matrix.os }}
@@ -83,7 +83,7 @@ jobs:
       run: ./meson.py test -C build.asan
 
     - name: Save error logs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: ${{ always() && steps.buildasan.outcome == 'failure' }}
       with:
         name: Meson-logs-${{ matrix.os }}
