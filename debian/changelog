@@ -1,3 +1,9 @@
+taskolib-1-4-3 (1.4.4) unstable; urgency=low
+
+  * new version 
+
+ -- Lars Froehlich <lars.froehlich@desy.de>  Thu, 08 May 2025 10:03:06 +0200
+
 taskolib-1-4-3 (1.4.3) unstable; urgency=low
 
   * automatically added debian changelog entry
