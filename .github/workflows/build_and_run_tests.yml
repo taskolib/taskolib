@@ -62,8 +62,8 @@ jobs:
 
     - name: Configure build directories
       run: |
-        ./meson.py --wrap-mode forcefallback --buildtype=release build.release
-        ./meson.py --wrap-mode forcefallback --buildtype=debug build.asan -Db_sanitize=address
+        ./meson.py --wrap-mode forcefallback -Dgul17:tests=false --buildtype=release build.release
+        ./meson.py --wrap-mode forcefallback -Dgul17:tests=false --buildtype=debug build.asan -Db_sanitize=address
     - name: Build and run release tests
       id: buildnormal
       run: |
