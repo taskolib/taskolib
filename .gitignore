@@ -2,3 +2,4 @@
 docs/html/
 build*/
 subprojects/*/
+unit_test_files/
