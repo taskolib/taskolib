@@ -24,14 +24,20 @@ test_src = files(
     #'tests/test_format.cc' needs fmt{} library
 )
 
+catch2_dep = dependency(
+    'catch2',
+    version : '>=3.4.1',
+    fallback : [ 'catch2', 'catch2_dep' ]
+)
+
 # The tests are executed in the build dir to avoid pollution of the git repository with
 # the test executable's output files
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
         dependencies : [
+            catch2_dep,
             taskolib_dep,
-            dependency('catch2'),
         ],
     ),
     workdir : meson.current_build_dir(),
@@ -44,8 +50,8 @@ if fmt_dep.found()
         executable(meson.project_name() + '_format_test',
             [ 'test_format.cc', 'test_main.cc', ],
             dependencies : [
+                catch2_dep,
                 taskolib_dep,
-                dependency('catch2'),
                 dependency('fmt'),
             ],
         ),
