@@ -4,7 +4,7 @@
  * \date    Created on February 8, 2022
  * \brief   A sequence of Steps.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,11 +22,12 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/join_split.h>
-#include <gul14/SmallVector.h>
-#include <gul14/string_view.h>
-#include <gul14/substring_checks.h>
-#include <gul14/trim.h>
+#include <string_view>
+
+#include <gul17/join_split.h>
+#include <gul17/SmallVector.h>
+#include <gul17/substring_checks.h>
+#include <gul17/trim.h>
 
 #include "internals.h"
 #include "lua_details.h"
@@ -37,7 +38,7 @@
 #include "taskolib/Step.h"
 #include "taskolib/time_types.h"
 
-using gul14::cat;
+using gul17::cat;
 
 namespace task {
 
@@ -64,7 +65,7 @@ find_end_of_indented_block(IteratorT begin, IteratorT end, short min_indentation
 } // anonymous namespace
 
 
-Sequence::Sequence(gul14::string_view label, SequenceName name, UniqueId uid)
+Sequence::Sequence(std::string_view label, SequenceName name, UniqueId uid)
     : unique_id_{ uid }
     , name_{ std::move(name) }
 {
@@ -293,7 +294,7 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
         [erased_idx = return_iter - cbegin()](StepIndex error_idx) -> OptionalStepIndex
         {
             if (erased_idx == error_idx)
-                return gul14::nullopt;
+                return std::nullopt;
             else if (erased_idx < error_idx)
                 return error_idx - 1;
             else
@@ -321,7 +322,7 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
         [erased_begin_idx, erased_end_idx](StepIndex error_idx) -> OptionalStepIndex
         {
             if (error_idx >= erased_begin_idx && error_idx < erased_end_idx)
-                return gul14::nullopt;
+                return std::nullopt;
             else if (error_idx >= erased_end_idx)
                 return error_idx - (erased_end_idx - erased_begin_idx);
             else
@@ -332,7 +333,7 @@ Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator begin,
     return return_iter;
 }
 
-gul14::optional<Error>
+std::optional<Error>
 Sequence::execute(Context& context, CommChannel* comm_channel,
                   OptionalStepIndex opt_step_index)
 {
@@ -369,22 +370,22 @@ std::filesystem::path Sequence::get_folder() const
     return make_sequence_filename(get_name(), get_unique_id());
 }
 
-gul14::optional<Error>
+std::optional<Error>
 Sequence::handle_execution(Context& context, CommChannel* comm,
-                           gul14::string_view exec_block_name,
+                           std::string_view exec_block_name,
                            std::function<void(Context&, CommChannel*)> runner)
 {
     const auto clear_is_running_at_function_exit =
-        gul14::finally([this]{ is_running_ = false; });
+        gul17::finally([this]{ is_running_ = false; });
 
     is_running_ = true;
 
     context.step_setup_script = step_setup_script_;
 
     send_message(Message::Type::sequence_started, cat(exec_block_name, " started"),
-                 Clock::now(), gul14::nullopt, context, comm);
+                 Clock::now(), std::nullopt, context, comm);
 
-    gul14::optional<Error> maybe_error;
+    std::optional<Error> maybe_error;
 
     try
     {
@@ -409,7 +410,7 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
         case ErrorCause::terminated_by_script:
             send_message(Message::Type::sequence_stopped, msg, Clock::now(),
                          maybe_error->get_index(), context, comm);
-            return gul14::nullopt; // silently return to the caller
+            return std::nullopt; // silently return to the caller
         case ErrorCause::aborted:
             msg = cat(exec_block_name, " aborted: ", msg);
             break;
@@ -424,7 +425,7 @@ Sequence::handle_execution(Context& context, CommChannel* comm,
     else
     {
         send_message(Message::Type::sequence_stopped, cat(exec_block_name, " finished"),
-                     Clock::now(), gul14::nullopt, context, comm);
+                     Clock::now(), std::nullopt, context, comm);
     }
 
     set_error(maybe_error);
@@ -485,7 +486,7 @@ Sequence::execute_range(Iterator step_begin, Iterator step_end, Context& context
 
         if (comm and comm->immediate_termination_requested_)
         {
-            throw Error{ gul14::cat(abort_marker, "Stop on user request"),
+            throw Error{ gul17::cat(abort_marker, "Stop on user request"),
                          static_cast<StepIndex>(step - steps_.begin()) };
         }
 
@@ -546,7 +547,7 @@ Sequence::execute_try_block(Iterator begin, Iterator end, Context& context,
     {
         // Typical error message with (non-literal) abort marker:
         // "Error while executing script of step 3: sol: runtime error: [ABORT]Stop on user request[ABORT]"
-        if (gul14::contains(e.what(), abort_marker))
+        if (gul17::contains(e.what(), abort_marker))
             throw;
 
         execute_range(it_catch + 1, it_catch_block_end, context, comm);
@@ -685,7 +686,7 @@ void Sequence::pop_back()
             [erased_idx = size() - 1](StepIndex error_idx) -> OptionalStepIndex
             {
                 if (erased_idx == error_idx)
-                    return gul14::nullopt;
+                    return std::nullopt;
                 else
                     return error_idx;
             });
@@ -710,14 +711,14 @@ void Sequence::push_back(Step&& step)
     enforce_invariants();
 }
 
-void Sequence::set_error(gul14::optional<Error> opt_error)
+void Sequence::set_error(std::optional<Error> opt_error)
 {
     error_ = std::move(opt_error);
 }
 
-void Sequence::set_label(gul14::string_view label)
+void Sequence::set_label(std::string_view label)
 {
-    label = gul14::trim_sv(label);
+    label = gul17::trim_sv(label);
 
     check_for_control_characters(label);
 
@@ -730,21 +731,21 @@ void Sequence::set_label(gul14::string_view label)
     label_.assign(label.begin(), label.end());
 }
 
-void Sequence::set_maintainers(gul14::string_view maintainers)
+void Sequence::set_maintainers(std::string_view maintainers)
 {
-    maintainers = gul14::trim_sv(maintainers);
+    maintainers = gul17::trim_sv(maintainers);
 
     check_for_control_characters(maintainers);
 
     maintainers_.assign(maintainers.begin(), maintainers.end());
 }
 
-void Sequence::set_step_setup_script(gul14::string_view step_setup_script)
+void Sequence::set_step_setup_script(std::string_view step_setup_script)
 {
     throw_if_running();
 
     // remove trailing whitespaces
-    step_setup_script = gul14::trim_right_sv(step_setup_script);
+    step_setup_script = gul17::trim_right_sv(step_setup_script);
 
     step_setup_script_.assign(step_setup_script.data(), step_setup_script.size());
 }
@@ -786,7 +787,7 @@ void Sequence::throw_if_disabled() const
 }
 
 void Sequence::throw_syntax_error_for_step(Sequence::ConstIterator /*it*/,
-    gul14::string_view msg) const
+    std::string_view msg) const
 {
     throw Error(cat("Syntax error: ", msg));
 }

@@ -88,7 +88,7 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
         std::ofstream stream(path);
 
         if (stream.fail())
-            FAIL(gul14::cat("Could not create file: " + path.string()));
+            FAIL(gul17::cat("Could not create file: " + path.string()));
 
         stream << "-- label: some label\n";
         stream.close();
@@ -103,7 +103,7 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
         std::ofstream stream(path);
 
         if (stream.fail())
-            FAIL(gul14::cat("Could not create file: " + path.string()));
+            FAIL(gul17::cat("Could not create file: " + path.string()));
 
         stream << "-- label: some label\n";
         stream << "-- autorun: true\n";
@@ -119,7 +119,7 @@ TEST_CASE("Ancient sequence", "[deserialize_sequence]")
         std::ofstream stream(path);
 
         if (stream.fail())
-            FAIL(gul14::cat("Could not create file: " + path.string()));
+            FAIL(gul17::cat("Could not create file: " + path.string()));
 
         stream << "-- label: some label\n";
         stream << "-- disabled: true\n";

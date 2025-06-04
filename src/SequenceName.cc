@@ -4,7 +4,7 @@
  * \date   Created on July 26, 2023
  * \brief  Implementation of the SequenceName class.
  *
- * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,22 +22,22 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/cat.h>
-#include <gul14/escape.h>
-#include <gul14/substring_checks.h>
+#include <gul17/cat.h>
+#include <gul17/escape.h>
+#include <gul17/substring_checks.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/SequenceName.h"
 
-using gul14::cat;
+using gul17::cat;
 
 namespace task {
 
-SequenceName::SequenceName(gul14::string_view str)
+SequenceName::SequenceName(std::string_view str)
     : str_{ check_validity(str) }
 {}
 
-gul14::string_view SequenceName::check_validity(gul14::string_view str)
+std::string_view SequenceName::check_validity(std::string_view str)
 {
     if (str.size() > max_length)
     {
@@ -45,19 +45,19 @@ gul14::string_view SequenceName::check_validity(gul14::string_view str)
             " bytes > ", max_length, " bytes"));
     }
 
-    if (str.find_first_not_of(valid_characters) != gul14::string_view::npos)
+    if (str.find_first_not_of(valid_characters) != std::string_view::npos)
     {
-        throw Error(cat("Sequence name '", gul14::escape(str),
+        throw Error(cat("Sequence name '", gul17::escape(str),
             "' contains invalid characters"));
     }
 
-    if (gul14::starts_with(str, '.'))
+    if (gul17::starts_with(str, '.'))
         throw Error(cat("A sequence name may not start with a period ('", str, "'"));
 
     return str;
 }
 
-gul14::optional<SequenceName> SequenceName::from_string(gul14::string_view str)
+std::optional<SequenceName> SequenceName::from_string(std::string_view str)
 {
     try
     {
@@ -69,7 +69,7 @@ gul14::optional<SequenceName> SequenceName::from_string(gul14::string_view str)
     }
 }
 
-const gul14::string_view SequenceName::valid_characters{
+const std::string_view SequenceName::valid_characters{
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_." };
 
 } // namespace task

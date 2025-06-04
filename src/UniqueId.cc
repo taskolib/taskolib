@@ -4,7 +4,7 @@
  * \date   Created on July 26, 2023
  * \brief  Implementation of the UniqueId class.
  *
- * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,9 +24,9 @@
 
 #include <charconv>
 
-#include <gul14/cat.h>
-#include <gul14/escape.h>
-#include <gul14/string_util.h>
+#include <gul17/cat.h>
+#include <gul17/escape.h>
+#include <gul17/string_util.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/UniqueId.h"
@@ -45,7 +45,7 @@ UniqueId::UniqueId(ValueType id)
     : id_{ id }
 {}
 
-gul14::optional<UniqueId> UniqueId::from_string(gul14::string_view str)
+std::optional<UniqueId> UniqueId::from_string(std::string_view str)
 {
     if (str.empty() || str.size() > sizeof(ValueType) * 2)
         return {};
@@ -63,7 +63,7 @@ thread_local std::mt19937_64 UniqueId::random_number_generator_{ std::random_dev
 
 std::string to_string(UniqueId uid)
 {
-    return gul14::hex_string(uid.id_);
+    return gul17::hex_string(uid.id_);
 }
 
 } // namespace task

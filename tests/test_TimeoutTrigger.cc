@@ -23,7 +23,7 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <catch2/catch_test_macros.hpp>
-#include <gul14/time_util.h>
+#include <gul17/time_util.h>
 
 #include "taskolib/TimeoutTrigger.h"
 
@@ -91,6 +91,6 @@ TEST_CASE("TimeoutTrigger: check elapsed timeout", "[TimeoutTrigger]")
 
     timeout_trigger.set_timeout(200ms);
 
-    gul14::sleep(10ms);
+    gul17::sleep(10ms);
     REQUIRE(timeout_trigger.is_elapsed() == true);
 }

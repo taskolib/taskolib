@@ -24,8 +24,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <gul14/substring_checks.h>
-#include <gul14/time_util.h>
+#include <gul17/substring_checks.h>
+#include <gul17/time_util.h>
 
 #include "taskolib/Executor.h"
 
@@ -77,7 +77,7 @@ TEST_CASE("Executor: run_asynchronously()", "[Executor]")
     for (const auto& step : sequence)
         REQUIRE(step.is_running() == false);
 
-    const auto t0 = gul14::tic();
+    const auto t0 = gul17::tic();
 
     // Start the sequence in a separate thread
     executor.run_asynchronously(sequence, context);
@@ -101,13 +101,13 @@ TEST_CASE("Executor: run_asynchronously()", "[Executor]")
             std::any_of(sequence.begin(), sequence.end(),
                         [](const Step& s) { return s.is_running(); });
 
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
     }
 
     // We must have seen a step marked as "is_running" at least once during execution.
     REQUIRE(have_seen_running_step == true);
 
-    REQUIRE(gul14::toc(t0) >= 0.02);
+    REQUIRE(gul17::toc(t0) >= 0.02);
 
     // Thread has now finished. As long as we do not start another one, update() keeps
     // returning false.
@@ -145,7 +145,7 @@ TEST_CASE("Executor: run_asynchronously(), failing sequence", "[Executor]")
 
     // Process messages as long as the thread is running
     while (executor.update(sequence))
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
 
     // Thread has now finished. As long as we do not start another one, update() keeps
     // returning false.
@@ -180,7 +180,7 @@ TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
 
     SECTION("Running a step successfully")
     {
-        const auto t0 = gul14::tic();
+        const auto t0 = gul17::tic();
 
         // Invalid step index must throw
         REQUIRE_THROWS_AS(
@@ -205,10 +205,10 @@ TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
         {
             REQUIRE(sequence[0].is_running() == false);
             step2_seen_running |= sequence[1].is_running();
-            gul14::sleep(5ms);
+            gul17::sleep(5ms);
         }
 
-        REQUIRE(gul14::toc(t0) >= 0.02);
+        REQUIRE(gul17::toc(t0) >= 0.02);
         REQUIRE(step2_seen_running == true);
 
         // Thread has now finished. As long as we do not start another one, update() keeps
@@ -236,7 +236,7 @@ TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
         while (executor.update(sequence))
         {
             REQUIRE(sequence[1].is_running() == false);
-            gul14::sleep(5ms);
+            gul17::sleep(5ms);
         }
 
         REQUIRE(sequence.is_running() == false);
@@ -265,11 +265,11 @@ TEST_CASE("Executor: cancel() endless step loop", "[Executor]")
 
     executor.run_asynchronously(sequence, context);
 
-    gul14::sleep(1ms);
+    gul17::sleep(1ms);
     executor.cancel(sequence);
 
     while (executor.update(sequence)) {
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
     }
 
     // Make sure that exactly the desired error message comes out
@@ -290,7 +290,7 @@ TEST_CASE("Executor: Destruct while Lua script is running", "[Executor]")
     {
         Executor executor;
         executor.run_asynchronously(sequence, context);
-        gul14::sleep(1ms);
+        gul17::sleep(1ms);
     } // executor is destructed here
 
     REQUIRE(sequence.get_error().has_value() == false);
@@ -309,15 +309,15 @@ TEST_CASE("Executor: cancel() within Lua sleep()", "[Executor]")
 
     Executor executor;
 
-    const auto t0 = gul14::tic();
+    const auto t0 = gul17::tic();
 
     executor.run_asynchronously(sequence, context);
 
-    gul14::sleep(5ms);
+    gul17::sleep(5ms);
     executor.cancel();
 
-    REQUIRE(gul14::toc(t0) >= 0.005);
-    REQUIRE(gul14::toc(t0) < 0.2);
+    REQUIRE(gul17::toc(t0) >= 0.005);
+    REQUIRE(gul17::toc(t0) < 0.2);
 
     // Thread has now finished. As long as we do not start another one, update() keeps
     // returning false.
@@ -364,15 +364,15 @@ TEST_CASE("Executor: cancel() within pcalls and CATCH blocks", "[Executor]")
 
     Executor executor;
 
-    const auto t0 = gul14::tic();
+    const auto t0 = gul17::tic();
 
     executor.run_asynchronously(sequence, context);
 
-    gul14::sleep(5ms);
+    gul17::sleep(5ms);
     executor.cancel();
 
-    REQUIRE(gul14::toc(t0) >= 0.005);
-    REQUIRE(gul14::toc(t0) < 0.2);
+    REQUIRE(gul17::toc(t0) >= 0.005);
+    REQUIRE(gul17::toc(t0) < 0.2);
 
     // Thread has now finished. As long as we do not start another one, update() keeps
     // returning false.
@@ -408,7 +408,7 @@ TEST_CASE("Executor: Redirection of print() output", "[Executor]")
     executor.run_asynchronously(sequence, context);
 
     while (executor.update(sequence))
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
 
     REQUIRE(output == "Mary had\t3\tlittle lambs.\n");
 }
@@ -428,14 +428,14 @@ TEST_CASE("Executor: Access context after run", "[Executor]")
         seq.modify(s, [](Step& step) { step.set_used_context_variable_names(VariableNames{ "a" }); });
 
     // Execute directly
-    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+    REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
     REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 11 );
 
     // Execute async
     Executor executor{ };
     executor.run_asynchronously(seq, ctx);
     while (executor.update(seq))
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
     auto vars = executor.get_context_variables();
     REQUIRE(std::get<VarInteger>(vars["a"]) == 21);
 }
@@ -491,7 +491,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with explict termination",
 
     // Process messages as long as the thread is running
     while (executor.update(seq))
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
 
     // Thread has now finished. As long as we do not start another one, update() keeps
     // returning false.
@@ -540,7 +540,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
     REQUIRE(seq.is_running() == true);
 
     while (executor.update(seq))
-        gul14::sleep(5ms);
+        gul17::sleep(5ms);
 
     REQUIRE(executor.update(seq) == false);
 
@@ -593,7 +593,7 @@ TEST_CASE("Executor: Message callbacks", "[execute_sequence]")
         executor.run_asynchronously(sequence, context);
 
         while (executor.update(sequence))
-            gul14::sleep(5ms);
+            gul17::sleep(5ms);
 
         REQUIRE(str ==
             "[SEQ_START]"
@@ -616,7 +616,7 @@ TEST_CASE("Executor: Message callbacks", "[execute_sequence]")
         executor.run_asynchronously(sequence, context);
 
         while (executor.update(sequence))
-            gul14::sleep(5ms);
+            gul17::sleep(5ms);
 
         REQUIRE(str ==
             "[SEQ_START]"

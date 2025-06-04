@@ -4,7 +4,7 @@
  * \date   Created on August 30, 2022
  * \brief  Definition of internal constants and functions.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,10 +22,10 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/cat.h>
-#include <gul14/join_split.h>
-#include <gul14/replace.h>
-#include <gul14/SmallVector.h>
+#include <gul17/cat.h>
+#include <gul17/join_split.h>
+#include <gul17/replace.h>
+#include <gul17/SmallVector.h>
 
 #include "internals.h"
 
@@ -33,18 +33,18 @@
 
 namespace task {
 
-const gul14::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
+const std::string_view abort_marker{ u8"\U0001F6D1ABORT\U0001F6D1" };
 
-std::string beautify_message(gul14::string_view msg)
+std::string beautify_message(std::string_view msg)
 {
     // Replace the Lua stack trace header with a more friendly one including a big UTF-8
     // bullet point ("black circle") that visually separates the main message text from
     // the stack trace.
-    return gul14::replace(msg, "\nstack traceback:\n",
+    return gul17::replace(msg, "\nstack traceback:\n",
         u8"\n\u25cf Stack traceback:\n");
 }
 
-void check_for_control_characters(gul14::string_view str)
+void check_for_control_characters(std::string_view str)
 {
     auto count = std::count_if(str.cbegin(), str.cend(),
         [](unsigned char c) -> bool { return std::iscntrl(c); });
@@ -53,9 +53,9 @@ void check_for_control_characters(gul14::string_view str)
         throw Error("String should not contain any control character.");
 }
 
-std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message)
+std::pair<std::string, ErrorCause> remove_abort_markers(std::string_view error_message)
 {
-    const auto tokens = gul14::split<gul14::SmallVector<gul14::string_view, 3>>(
+    const auto tokens = gul17::split<gul17::SmallVector<std::string_view, 3>>(
         error_message, abort_marker);
 
     std::string msg;
@@ -67,7 +67,7 @@ std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error
         return std::make_pair(beautify_message(error_message),
             ErrorCause::uncaught_error);
     case 2: // one marker
-        msg = beautify_message(gul14::cat(tokens[0], tokens[1]));
+        msg = beautify_message(gul17::cat(tokens[0], tokens[1]));
         break;
     case 3: // The real error message is between the first 2 abort markers.
     default:

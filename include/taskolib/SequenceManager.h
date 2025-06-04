@@ -4,7 +4,7 @@
  * \date    Created on July 22, 2022
  * \brief   Manage and control sequences.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,11 +26,11 @@
 #define TASKOLIB_SEQUENCEMANAGER_H_
 
 #include <filesystem>
+#include <optional>
+#include <string_view>
 #include <string>
 #include <vector>
 
-#include <gul14/optional.h>
-#include <gul14/string_view.h>
 #include <libgit4cpp/Repository.h>
 
 #include "taskolib/Sequence.h"
@@ -119,7 +119,7 @@ public:
      *
      * \exception Error is thrown if the sequence folder cannot be created.
      */
-    Sequence create_sequence(gul14::string_view label = "", SequenceName name = SequenceName{});
+    Sequence create_sequence(std::string_view label = "", SequenceName name = SequenceName{});
 
     /**
      * Return the base path of the serialized sequences.
@@ -198,7 +198,7 @@ public:
      * and unique ID. If the folder does not follow the naming scheme, nullopt is
      * returned.
      */
-    static gul14::optional<SequenceOnDisk>
+    static std::optional<SequenceOnDisk>
     parse_folder_name(const std::filesystem::path& folder);
 
     /**
@@ -331,7 +331,7 @@ private:
                 commit_body = stage_files_in_directory(extra_dir);
             if (commit_body.empty())
                 return false;
-            git_repo_.commit(gul14::cat(message, "\n", commit_body));
+            git_repo_.commit(gul17::cat(message, "\n", commit_body));
         }
         catch (std::exception const& e) {
             try {
@@ -380,7 +380,7 @@ private:
         const std::vector<SequenceOnDisk>& sequences);
 
     /// Generate a machine-friendly sequence name from a human-readable label.
-    static SequenceName make_sequence_name_from_label(gul14::string_view label);
+    static SequenceName make_sequence_name_from_label(std::string_view label);
 
     /**
      * Actually write a sequence to disk (without commit in git)

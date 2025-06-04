@@ -32,8 +32,8 @@
 #include <catch2/catch_case_sensitive.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <gul14/finalizer.h>
-#include <gul14/substring_checks.h>
+#include <gul17/finalizer.h>
+#include <gul17/substring_checks.h>
 #include <libgit4cpp/Repository.h>
 
 #include "internals.h"
@@ -72,7 +72,7 @@ std::vector<std::string> collect_lua_filenames(const std::filesystem::path& path
     return result;
 }
 
-gul14::optional<SequenceManager::SequenceOnDisk> find_sequence_by_name(std::vector<SequenceManager::SequenceOnDisk> const& list, gul14::string_view name) {
+std::optional<SequenceManager::SequenceOnDisk> find_sequence_by_name(std::vector<SequenceManager::SequenceOnDisk> const& list, std::string_view name) {
     for (auto const& s : list)
         if (s.name.string() == name)
             return s;
@@ -311,7 +311,7 @@ TEST_CASE("parse_folder_name()", "[SequenceManager]")
         == SequenceManager::SequenceOnDisk{
             "[1234567890abcdef]", SequenceName{ "" }, 0x1234567890abcdef_uid });
     REQUIRE(SequenceManager::parse_folder_name("A$2f$22sequence$22$24$3cagain$3e [my_uid]")
-        == gul14::nullopt);
+        == std::nullopt);
 }
 
 TEST_CASE("SequenceManager: remove_sequence()", "[SequenceManager]")
@@ -438,7 +438,7 @@ TEST_CASE("SequenceManager: store_sequence() & load_sequence() - Steps",
             and lhs.get_label() == rhs.get_label()
             and lhs.get_script() == rhs.get_script();
         if (not r)
-            WARN(gul14::cat("Step '", lhs.get_label(), "' is unequal."));
+            WARN(gul17::cat("Step '", lhs.get_label(), "' is unequal."));
         return r;
     };
 
@@ -631,7 +631,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (not gul14::starts_with(elm.path_name, "git_sequence_1"))
+            if (not gul17::starts_with(elm.path_name, "git_sequence_1"))
                 continue;
             seq_exists = true;
 
@@ -679,7 +679,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (not gul14::starts_with(elm.path_name, "git_sequence_1[0000abcdef123456]/sequence.lua"))
+            if (not gul17::starts_with(elm.path_name, "git_sequence_1[0000abcdef123456]/sequence.lua"))
                 continue;
             seq_exists = true;
 
@@ -715,7 +715,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         REQUIRE(s2->path != "");
 
         // check commit message
-        const std::string expected_msg = gul14::cat("Copy sequence git_sequence_1[0000abcdef123456] "
+        const std::string expected_msg = gul17::cat("Copy sequence git_sequence_1[0000abcdef123456] "
             "to ", s2->path.string(), "\n\n"
             "- new file: sequence.lua\n"
             "- new file: step_1_while.lua");
@@ -728,7 +728,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (gul14::starts_with(elm.path_name, "git_sequence_2"))
+            if (gul17::starts_with(elm.path_name, "git_sequence_2"))
             {
                 seq_exists = true;
 
@@ -766,7 +766,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
 
         git::Repository repo{ git_dir };
 
-        const std::string expected_msg = gul14::cat("Rename ",
+        const std::string expected_msg = gul17::cat("Rename ",
             s2->path.string(), " to ", s3->path.string(), "\n\n"
             "- deleted: sequence.lua\n"
             "- deleted: step_1_while.lua\n"
@@ -782,7 +782,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
         bool seq_exists = false;
         for(const auto& elm: stats)
         {
-            if (gul14::starts_with(elm.path_name, "git_sequence_3"))
+            if (gul17::starts_with(elm.path_name, "git_sequence_3"))
             {
                 seq_exists = true;
 
@@ -829,7 +829,7 @@ TEST_CASE("SequenceManager: git repository", "[SequenceManager]")
             // if commit did not work
             //      elm.handling == "staged"
             //      elm.changes == "deleted"
-            REQUIRE(! gul14::starts_with(elm.path_name, "git_sequence_1"));
+            REQUIRE(! gul17::starts_with(elm.path_name, "git_sequence_1"));
         }
         // check if sequence got removed from index
         REQUIRE(! seq_exists);
@@ -846,7 +846,7 @@ TEST_CASE("SequenceManager: fail creating sequence", "[SequenceManager]")
         std::filesystem::perms::owner_write,
         std::filesystem::perm_options::remove
     );
-    auto _ = gul14::finally([dir]() {
+    auto _ = gul17::finally([dir]() {
         std::filesystem::permissions(
             dir,
             std::filesystem::perms::owner_write,
@@ -877,7 +877,7 @@ TEST_CASE("SequenceManager: fail storing sequence", "[SequenceManager]")
         std::filesystem::perms::owner_write,
         std::filesystem::perm_options::remove
     );
-    auto _ = gul14::finally([d]() {
+    auto _ = gul17::finally([d]() {
         std::filesystem::permissions(
             d,
             std::filesystem::perms::owner_write,

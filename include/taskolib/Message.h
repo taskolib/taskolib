@@ -1,10 +1,10 @@
 /**
- * \file   Message.h
- * \author Lars Fröhlich, Marcus Walla
- * \date   Created on April 1, 2022
- * \brief  Declaration of the Message class.
+ * \file    Message.h
+ * \authors Lars Fröhlich, Marcus Walla
+ * \date    Created on April 1, 2022
+ * \brief   Declaration of the Message class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -30,7 +30,7 @@
 #include <ostream>
 #include <string>
 
-#include <gul14/escape.h>
+#include <gul17/escape.h>
 
 #include "taskolib/StepIndex.h"
 #include "taskolib/time_types.h"
@@ -128,7 +128,7 @@ public:
         stream
             << mess.type_
             << " \""
-            << gul14::escape(mess.text_)
+            << gul17::escape(mess.text_)
             << "\" "
             << to_string(mess.timestamp_)
             << " }\n";

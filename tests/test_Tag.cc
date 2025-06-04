@@ -25,7 +25,7 @@
 #include <sstream>
 
 #include <catch2/catch_test_macros.hpp>
-#include <gul14/join_split.h>
+#include <gul17/join_split.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/Tag.h"
@@ -143,8 +143,8 @@ TEST_CASE("Tag: string()", "[Tag]")
     REQUIRE(Tag{ "-1-a-B-C-" }.string() == "-1-a-b-c-");
 }
 
-TEST_CASE("Tag: Usability with gul14::join()", "[Tag]")
+TEST_CASE("Tag: Usability with gul17::join()", "[Tag]")
 {
     std::vector tags{ Tag{ "a" }, Tag{ "b" }, Tag{ "c" } };
-    REQUIRE(gul14::join(tags, ", ") == "a, b, c");
+    REQUIRE(gul17::join(tags, ", ") == "a, b, c");
 }

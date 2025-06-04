@@ -27,7 +27,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <gul14/time_util.h>
+#include <gul17/time_util.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/Step.h"
@@ -504,9 +504,9 @@ TEST_CASE("execute(): Custom commands", "[Step]")
     {
         step.set_script("sleep(0.001)");
 
-        auto t0 = gul14::tic();
+        auto t0 = gul17::tic();
         step.execute(context);
-        REQUIRE(gul14::toc(t0) >= 0.001);
+        REQUIRE(gul17::toc(t0) >= 0.001);
     }
 }
 
@@ -517,27 +517,27 @@ TEST_CASE("execute(): Timeout", "[Step]")
 
     SECTION("Simple infinite loop is terminated")
     {
-        auto t0 = gul14::tic();
+        auto t0 = gul17::tic();
         step.set_script("while true do end; return true");
         step.set_timeout(20ms);
         REQUIRE_THROWS_AS(step.execute(context), Error);
-        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
-        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
+        REQUIRE(gul17::toc<std::chrono::milliseconds>(t0) >= 20);
+        REQUIRE(gul17::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
 
     SECTION("sleep() is terminated")
     {
-        auto t0 = gul14::tic();
+        auto t0 = gul17::tic();
         step.set_script("sleep(10)");
         step.set_timeout(5ms);
         REQUIRE_THROWS_AS(step.execute(context), Error);
-        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 5);
-        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
+        REQUIRE(gul17::toc<std::chrono::milliseconds>(t0) >= 5);
+        REQUIRE(gul17::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
 
     SECTION("Infinite loop is terminated despite pcall protection")
     {
-        auto t0 = gul14::tic();
+        auto t0 = gul17::tic();
         step.set_script(R"(
             local function infinite_loop()
                 while true do
@@ -552,8 +552,8 @@ TEST_CASE("execute(): Timeout", "[Step]")
             )");
         step.set_timeout(20ms);
         REQUIRE_THROWS_AS(step.execute(context), Error);
-        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) >= 20);
-        REQUIRE(gul14::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
+        REQUIRE(gul17::toc<std::chrono::milliseconds>(t0) >= 20);
+        REQUIRE(gul17::toc<std::chrono::milliseconds>(t0) < 200); // leave some time for system hiccups
     }
 }
 

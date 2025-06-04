@@ -4,7 +4,7 @@
  * \date    Created on February 8, 2022
  * \brief   A sequence of Steps.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,19 +26,18 @@
 #define TASKOLIB_SEQUENCE_H_
 
 #include <algorithm>
-#include <chrono>
 #include <filesystem>
 #include <functional>
 #include <limits>
+#include <optional>
+#include <string_view>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <gul14/cat.h>
-#include <gul14/finalizer.h>
-#include <gul14/optional.h>
-#include <gul14/string_view.h>
-#include <gul14/traits.h>
+#include <gul17/cat.h>
+#include <gul17/finalizer.h>
+#include <gul17/traits.h>
 
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
@@ -184,7 +183,7 @@ public:
      * \exception Error is thrown if the label is too long or if it contains at least one
      *            control character.
      */
-    Sequence(gul14::string_view label = "", SequenceName name = SequenceName{},
+    Sequence(std::string_view label = "", SequenceName name = SequenceName{},
         UniqueId uid = UniqueId{});
 
     /**
@@ -361,15 +360,15 @@ public:
      *          and can be retrieved with get_error().
      */
     [[nodiscard]]
-    gul14::optional<Error> execute(Context& context, CommChannel* comm_channel,
-                                   OptionalStepIndex opt_step_index = gul14::nullopt);
+    std::optional<Error> execute(Context& context, CommChannel* comm_channel,
+                                   OptionalStepIndex opt_step_index = std::nullopt);
 
     /**
      * Return an optional Error object explaining why the sequence stopped prematurely.
      *
      * If the sequence finished normally, nullopt is returned.
      */
-    gul14::optional<Error> get_error() const { return error_; }
+    std::optional<Error> get_error() const { return error_; }
 
     /**
      * Return the (relative) folder name associated with this sequence.
@@ -437,7 +436,7 @@ public:
      *            or if it is currently running.
      */
     template <typename StepType, std::enable_if_t<
-        std::is_same<gul14::remove_cvref_t<StepType>, Step>::value, bool> = true>
+        std::is_same<gul17::remove_cvref_t<StepType>, Step>::value, bool> = true>
     ConstIterator insert(ConstIterator iter, StepType step)
     {
         throw_if_running();
@@ -509,7 +508,7 @@ public:
         const auto it = steps_.begin() + (iter - steps_.cbegin());
 
         // Reindent at the end of the function, even if an exception is thrown
-        auto indent_if_necessary = gul14::finally(
+        auto indent_if_necessary = gul17::finally(
             [this,
              it,
              old_indentation_level = it->get_indentation_level(),
@@ -610,7 +609,7 @@ public:
      *
      * \see get_error()
      */
-    void set_error(gul14::optional<Error> opt_error);
+    void set_error(std::optional<Error> opt_error);
 
     /**
      * Set the human-readable sequence label.
@@ -624,7 +623,7 @@ public:
      * \exception Error is thrown if the label is empty, its length exceeds
      *            max_label_length bytes or has some control characters.
      */
-    void set_label(gul14::string_view label);
+    void set_label(std::string_view label);
 
     /**
      * Add one or more maintainers to the sequence. You are free to choose what ever you
@@ -637,7 +636,7 @@ public:
      *
      * \exception Error is thrown if control characters are detected.
      */
-    void set_maintainers(gul14::string_view maintainers);
+    void set_maintainers(std::string_view maintainers);
 
     /**
      * Set the machine-friendly sequence name.
@@ -664,7 +663,7 @@ public:
      *
      * \exception Error is thrown if the sequence is currently running.
      */
-    void set_step_setup_script(gul14::string_view step_setup_script);
+    void set_step_setup_script(std::string_view step_setup_script);
 
     /**
      * Set the tags associated with this sequence.
@@ -703,7 +702,7 @@ private:
      * An optional Error object describing why the Sequence stopped prematurely (if it has
      * a value) or that it finished normally (if it is nullopt).
      */
-    gul14::optional<Error> error_;
+    std::optional<Error> error_;
 
     /// Empty if indentation is correct and complete, error message otherwise
     std::string indentation_error_;
@@ -915,9 +914,9 @@ private:
      *          object if anything went wrong.
      */
     [[nodiscard]]
-    gul14::optional<Error>
+    std::optional<Error>
     handle_execution(Context& context, CommChannel* comm_channel,
-                     gul14::string_view exec_block_name,
+                     std::string_view exec_block_name,
                      std::function<void(Context&, CommChannel*)> runner);
 
     /**
@@ -944,7 +943,7 @@ private:
      * Throw a syntax error for the specified step.
      * The error message reports the step number.
      */
-    void throw_syntax_error_for_step(ConstIterator it, gul14::string_view msg) const;
+    void throw_syntax_error_for_step(ConstIterator it, std::string_view msg) const;
 };
 
 } // namespace task

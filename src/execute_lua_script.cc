@@ -4,7 +4,7 @@
  * \date   Created on November 15, 2022
  * \brief  Implementation of execute_lua_script() and load_lua_script().
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,9 +23,9 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <stdexcept>
+#include <string_view>
 
-#include <gul14/replace.h>
-#include <gul14/string_view.h>
+#include <gul17/replace.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/execute_lua_script.h"
@@ -35,9 +35,9 @@ namespace task {
 namespace {
 
 const std::string anchor = u8"\u2693";
-constexpr gul14::string_view chunk_prefix{ u8"[string \"\u2693\"]:" };
+constexpr std::string_view chunk_prefix{ u8"[string \"\u2693\"]:" };
 
-std::string process_msg(gul14::string_view msg)
+std::string process_msg(std::string_view msg)
 {
     // If C++ code is called by Lua and throws an exception that is not derived
     // from std::exception, the exception is not intercepted by the Sol
@@ -52,12 +52,12 @@ std::string process_msg(gul14::string_view msg)
         return "Unknown exception";
     }
 
-    return gul14::replace(msg, chunk_prefix, "");
+    return gul17::replace(msg, chunk_prefix, "");
 }
 
 } // anonymous namespace
 
-gul14::expected<sol::object, std::string>
+gul17::expected<sol::object, std::string>
 execute_lua_script(sol::state& lua, sol::string_view script)
 {
     try
@@ -68,29 +68,29 @@ execute_lua_script(sol::state& lua, sol::string_view script)
         if (!protected_result.valid())
         {
             sol::error err = protected_result;
-            return gul14::unexpected(process_msg(err.what()));
+            return gul17::unexpected(process_msg(err.what()));
         }
 
         return static_cast<sol::object>(protected_result);
     }
     catch(const std::exception& e)
     {
-        return gul14::unexpected(process_msg(e.what()));
+        return gul17::unexpected(process_msg(e.what()));
     }
     catch(...)
     {
-        return gul14::unexpected("Unknown C++ exception");
+        return gul17::unexpected("Unknown C++ exception");
     }
 }
 
-gul14::expected<sol::load_result, std::string>
+gul17::expected<sol::load_result, std::string>
 load_lua_script(sol::state& lua, sol::string_view script)
 {
     sol::load_result result = lua.load(script, anchor);
     if (result.valid())
         return result;
 
-    return gul14::unexpected(static_cast<sol::error>(result).what());
+    return gul17::unexpected(static_cast<sol::error>(result).what());
 }
 
 } // namespace task

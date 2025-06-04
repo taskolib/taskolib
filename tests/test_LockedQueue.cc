@@ -27,7 +27,7 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <gul14/time_util.h>
+#include <gul17/time_util.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/Message.h"
@@ -134,7 +134,7 @@ TEST_CASE("LockedQueue: push() & pop() across threads", "[LockedQueue]")
                 queue.push(MyMessage(i));
         });
 
-    gul14::sleep(0.005);
+    gul17::sleep(0.005);
     // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
@@ -168,7 +168,7 @@ TEST_CASE("LockedQueue: try_pop() single-threaded", "[LockedQueue]")
     LockedQueue<int> queue{ 2 };
     REQUIRE(queue.size() == 0);
 
-    REQUIRE(queue.try_pop() == gul14::nullopt);
+    REQUIRE(queue.try_pop() == std::nullopt);
 
     queue.push(1);
     queue.push(2);
@@ -182,7 +182,7 @@ TEST_CASE("LockedQueue: try_pop() single-threaded", "[LockedQueue]")
     REQUIRE(opt.has_value());
     REQUIRE(*opt == 2);
 
-    REQUIRE(queue.try_pop() == gul14::nullopt);
+    REQUIRE(queue.try_pop() == std::nullopt);
 }
 
 TEST_CASE("LockedQueue: try_push() single-threaded", "[LockedQueue]")
@@ -232,7 +232,7 @@ TEST_CASE("LockedQueue: try_push() & try_pop() across threads", "[LockedQueue]")
     // Pull all 100 messages out of the queue from the main thread
     for (int i = 1; i <= 100; ++i)
     {
-        gul14::optional<MyMessage> opt_msg;
+        std::optional<MyMessage> opt_msg;
         do
         {
             opt_msg = queue.try_pop();

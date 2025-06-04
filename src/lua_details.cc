@@ -4,7 +4,7 @@
  * \date   Created on June 15, 2022
  * \brief  Implementation of free functions dealing with Lua specifics.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,7 +24,7 @@
 
 #include <limits>
 
-#include <gul14/gul.h>
+#include <gul17/gul.h>
 
 #include "internals.h"
 #include "lua_details.h"
@@ -32,7 +32,7 @@
 #include "taskolib/CommChannel.h"
 #include "taskolib/exceptions.h"
 
-using gul14::cat;
+using gul17::cat;
 
 namespace {
 
@@ -64,7 +64,7 @@ void abort_script_with_error(lua_State* lua_state, const std::string& msg)
     // The [ABORT] marker ("ABORT" surrounded by two Unicode stop signs) marks this error
     // as one that can not be caught by CATCH blocks.
     // We store the error message in the registry...
-    registry[abort_error_message_key] = gul14::cat(abort_marker, msg, abort_marker);
+    registry[abort_error_message_key] = gul17::cat(abort_marker, msg, abort_marker);
 
     // ... and call the abort hook which raises a Lua error with the message from the
     // registry.
@@ -168,7 +168,7 @@ OptionalStepIndex get_step_idx_from_registry(lua_State* lua_state)
 
     // The step index stored in the Lua registry is negative if it is not available.
     if (*maybe_lua_step_idx < 0)
-        return gul14::nullopt;
+        return std::nullopt;
 
     return static_cast<StepIndex>(*maybe_lua_step_idx);
 }
@@ -262,13 +262,13 @@ void print_fct(sol::this_state sol, sol::variadic_args va)
 
     try
     {
-        gul14::SmallVector<std::string, 8> stringified_args;
+        gul17::SmallVector<std::string, 8> stringified_args;
         stringified_args.reserve(va.size());
 
         for (auto v : va)
             stringified_args.push_back(tostring(v));
 
-        send_message(Message::Type::output, gul14::join(stringified_args, "\t") + "\n",
+        send_message(Message::Type::output, gul17::join(stringified_args, "\t") + "\n",
                      Clock::now(), get_step_idx_from_registry(sol),
                      get_context_from_registry(sol),
                      get_comm_channel_ptr_from_registry(sol));
@@ -281,12 +281,12 @@ void print_fct(sol::this_state sol, sol::variadic_args va)
 
 void sleep_fct(double seconds, sol::this_state sol)
 {
-    auto t0 = gul14::tic();
-    while (gul14::toc(t0) < seconds)
+    auto t0 = gul17::tic();
+    while (gul17::toc(t0) < seconds)
     {
         hook_check_timeout_and_termination_request(sol, nullptr);
-        double sec = gul14::clamp(seconds - gul14::toc(t0), 0.0, 0.01);
-        gul14::sleep(sec);
+        double sec = gul17::clamp(seconds - gul17::toc(t0), 0.0, 0.01);
+        gul17::sleep(sec);
     }
 }
 

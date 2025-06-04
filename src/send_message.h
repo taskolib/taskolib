@@ -4,7 +4,7 @@
  * \date   Created on January 30, 2023, based on older code
  * \brief  Declaration of the send_message() function.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,7 +25,7 @@
 #ifndef TASKOLIB_SEND_MESSAGE_H_
 #define TASKOLIB_SEND_MESSAGE_H_
 
-#include <gul14/string_view.h>
+#include <string_view>
 
 #include "taskolib/CommChannel.h"
 #include "taskolib/Context.h"
@@ -47,7 +47,7 @@ namespace task {
  *                      function does not attempt to push the message into any message
  *                      queue.
  */
-void send_message(Message::Type type, gul14::string_view text, TimePoint timestamp,
+void send_message(Message::Type type, std::string_view text, TimePoint timestamp,
                   OptionalStepIndex index, const Context& context,
                   CommChannel* comm_channel = nullptr);
 

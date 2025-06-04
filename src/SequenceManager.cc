@@ -4,7 +4,7 @@
  * \date    Created on July 22, 2022
  * \brief   Manage and control sequences.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include <gul14/gul.h>
+#include <gul17/gul.h>
 
 #include "deserialize_sequence.h"
 #include "internals.h"
@@ -36,7 +36,7 @@
 #include <libgit4cpp/Repository.h>
 
 using namespace std::literals::string_literals;
-using gul14::cat;
+using gul17::cat;
 
 namespace task {
 
@@ -88,7 +88,7 @@ void store_sequence_parameters(const std::filesystem::path& lua_file, const Sequ
 /// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
 int hex2dec(const char c)
 {
-    static constexpr gul14::string_view table { "0123456789abcdef" };
+    static constexpr std::string_view table { "0123456789abcdef" };
     auto pos = table.find(c);
     if (pos == table.npos)
         return -1;
@@ -98,7 +98,7 @@ int hex2dec(const char c)
 
 /// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
 // str must be at least 2 chars long; returns negative if conversion failed.
-int hex2dec_2chars(gul14::string_view str)
+int hex2dec_2chars(std::string_view str)
 {
     const int a = hex2dec(str[0]);
     const int b = hex2dec(str[1]);
@@ -108,7 +108,7 @@ int hex2dec_2chars(gul14::string_view str)
 }
 
 /// Extracted from High Level Controls Utility Library (DESY), file string_util.h/cc
-std::string unescape_filename_characters(gul14::string_view str)
+std::string unescape_filename_characters(std::string_view str)
 {
     std::string out;
     out.reserve(str.size());
@@ -159,7 +159,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 
     const auto old_name = find_sequence_on_disk(original_uid, sequences).path;
 
-    auto ok = perform_commit(gul14::cat("Copy sequence ", old_name.string(), " to "),
+    auto ok = perform_commit(gul17::cat("Copy sequence ", old_name.string(), " to "),
         [this, &seq]() {
             return this->write_sequence_to_disk(seq);
         });
@@ -170,7 +170,7 @@ SequenceManager::copy_sequence(UniqueId original_uid, const SequenceName& new_na
 }
 
 Sequence
-SequenceManager::create_sequence(gul14::string_view label, SequenceName name)
+SequenceManager::create_sequence(std::string_view label, SequenceName name)
 {
     const auto sequences = list_sequences();
     const UniqueId unique_id = create_unique_id(sequences);
@@ -219,7 +219,7 @@ Sequence SequenceManager::import_sequence(const std::filesystem::path& path)
     const UniqueId new_unique_id = create_unique_id(list_sequences());
     seq.set_unique_id(new_unique_id);
 
-    auto ok = perform_commit(gul14::cat("Import sequence from ", path.string(), " to "),
+    auto ok = perform_commit(gul17::cat("Import sequence from ", path.string(), " to "),
         [this, &seq]() {
             return this->write_sequence_to_disk(seq);
         });
@@ -292,7 +292,7 @@ Sequence SequenceManager::load_sequence(const SequenceOnDisk& seq_on_disk) const
     for (auto const& entry : std::filesystem::directory_iterator{ path })
     {
         if (entry.is_regular_file()
-            and gul14::starts_with(entry.path().filename().string(), "step_"))
+            and gul17::starts_with(entry.path().filename().string(), "step_"))
         {
             steps.push_back(entry.path());
         }
@@ -312,7 +312,7 @@ Sequence SequenceManager::load_sequence(const SequenceOnDisk& seq_on_disk) const
     return seq;
 }
 
-SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view label)
+SequenceName SequenceManager::make_sequence_name_from_label(std::string_view label)
 {
     std::string name;
 
@@ -321,7 +321,7 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
 
     for (const auto c : label)
     {
-        if (gul14::contains(SequenceName::valid_characters, c))
+        if (gul17::contains(SequenceName::valid_characters, c))
             name.push_back(c);
         else
             name.push_back('_');
@@ -330,7 +330,7 @@ SequenceName SequenceManager::make_sequence_name_from_label(gul14::string_view l
     return SequenceName{ name };
 }
 
-gul14::optional<SequenceManager::SequenceOnDisk> SequenceManager::parse_folder_name(
+std::optional<SequenceManager::SequenceOnDisk> SequenceManager::parse_folder_name(
     const std::filesystem::path& folder)
 {
     const std::string str = unescape_filename_characters(folder.filename().string());
@@ -340,7 +340,7 @@ gul14::optional<SequenceManager::SequenceOnDisk> SequenceManager::parse_folder_n
     if (opening_bracket != std::string::npos && closing_bracket == str.size() - 1)
     {
         auto name = SequenceName::from_string(
-            gul14::trim(str.substr(0, opening_bracket)));
+            gul17::trim(str.substr(0, opening_bracket)));
         auto unique_id = UniqueId::from_string(
             str.substr(opening_bracket + 1, closing_bracket - opening_bracket - 1));
 
@@ -378,7 +378,7 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
     const auto old_seq_on_disk = find_sequence_on_disk(unique_id, sequences);
     const auto new_disk_name = make_sequence_filename(new_name, unique_id);
 
-    auto ok = perform_commit(gul14::cat("Rename ", old_seq_on_disk.path.string(), " to "),
+    auto ok = perform_commit(gul17::cat("Rename ", old_seq_on_disk.path.string(), " to "),
         [this, &old_seq_on_disk, &new_disk_name]() {
             const auto old_path = this->path_ / old_seq_on_disk.path;
             const auto new_path = this->path_ / new_disk_name;
@@ -386,7 +386,7 @@ void SequenceManager::rename_sequence(UniqueId unique_id, const SequenceName& ne
             std::filesystem::rename(old_path, new_path, error);
             if (error)
             {
-                throw Error{ gul14::cat("Cannot rename folder ", old_path.string(),
+                throw Error{ gul17::cat("Cannot rename folder ", old_path.string(),
                     " to ", new_path.string(), ": ", error.message()) };
             }
             return new_disk_name;
@@ -440,7 +440,7 @@ std::string SequenceManager::stage_files(const std::string& glob)
         if (elm.handling != "staged")
             continue;
         auto filename = std::filesystem::path{ elm.path_name }.filename();
-        git_msg = gul14::cat(git_msg, "\n- ", elm.changes, ": ", filename.c_str());
+        git_msg = gul17::cat(git_msg, "\n- ", elm.changes, ": ", filename.c_str());
     }
     return git_msg;
 }

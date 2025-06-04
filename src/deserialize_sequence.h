@@ -4,7 +4,7 @@
  * \date    Created on May 24, 2022
  * \brief   Deserialize Sequence and Steps from storage hardware.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -27,9 +27,8 @@
 
 #include <filesystem>
 #include <iostream>
+#include <string_view>
 #include <vector>
-
-#include <gul14/string_view.h>
 
 #include "taskolib/Sequence.h"
 #include "taskolib/Step.h"
@@ -120,12 +119,12 @@ void load_sequence_parameters(const std::filesystem::path& folder, Sequence& seq
  *
  * \exception Error is thrown if a tag with an invalid name is encountered.
  */
-std::vector<Tag> parse_tags(gul14::string_view str);
+std::vector<Tag> parse_tags(std::string_view str);
 
 /**
  * Parse a bool expression from a string.
  */
-bool parse_bool(gul14::string_view str);
+bool parse_bool(std::string_view str);
 
 /**
  * Parse a string into a Timeout value.
@@ -135,7 +134,7 @@ bool parse_bool(gul14::string_view str);
  *
  * \exception Error is thrown if the string does not represent a valid Timeout.
  */
-Timeout parse_timeout(gul14::string_view str);
+Timeout parse_timeout(std::string_view str);
 
 } // namespace task
 

@@ -4,7 +4,7 @@
  * \date   Created on August 25, 2023, based on older code
  * \brief  Declaration of the SequenceName class.
  *
- * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,10 +25,9 @@
 #ifndef TASKOLIB_SEQUENCENAME_H_
 #define TASKOLIB_SEQUENCENAME_H_
 
+#include <optional>
+#include <string_view>
 #include <string>
-
-#include <gul14/optional.h>
-#include <gul14/string_view.h>
 
 namespace task {
 
@@ -47,7 +46,7 @@ public:
     static constexpr std::size_t max_length = 64;
 
     /// A string containing all of the valid characters of a sequence name.
-    static const gul14::string_view valid_characters;
+    static const std::string_view valid_characters;
 
 
     /// Default-construct an empty sequence name.
@@ -58,13 +57,13 @@ public:
      * \exception Error is thrown if the string is too long or if it contains invalid
      *            characters.
      */
-    explicit SequenceName(gul14::string_view str);
+    explicit SequenceName(std::string_view str);
 
     /**
      * Create a sequence name from the given string, returning an empty optional if the
      * string violates the length or character constraints of a sequence name.
      */
-    static gul14::optional<SequenceName> from_string(gul14::string_view str);
+    static std::optional<SequenceName> from_string(std::string_view str);
 
     /// Determine if two sequence names are equal.
     friend bool operator==(const SequenceName& a, const SequenceName& b)
@@ -88,7 +87,7 @@ private:
      * Throw an exception if the given string violates the length or character constraints
      * of a sequence name; otherwise, return the unmodified string view.
      */
-    static gul14::string_view check_validity(gul14::string_view);
+    static std::string_view check_validity(std::string_view);
 };
 
 } // namespace task

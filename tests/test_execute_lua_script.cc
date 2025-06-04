@@ -24,7 +24,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <gul14/time_util.h>
+#include <gul17/time_util.h>
 
 #include "lua_details.h"
 #include "taskolib/execute_lua_script.h"

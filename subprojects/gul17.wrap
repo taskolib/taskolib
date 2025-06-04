@@ -1,0 +1,8 @@
+[wrap-git]
+directory = gul17
+url = https://github.com/gul-cpp/gul17.git
+revision = main
+
+[provide]
+dependency_names = gul17
+gul17 = libgul_dep

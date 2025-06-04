@@ -4,7 +4,7 @@
  * \date   Created on May 30, 2022
  * \brief  Implementation of the Executor class.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,13 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/cat.h>
+#include <gul17/cat.h>
 
 #include "lua_details.h"
 #include "sol/sol.hpp"
 #include "taskolib/Executor.h"
 
-using gul14::cat;
+using gul17::cat;
 using namespace std::literals;
 
 namespace task {
@@ -115,12 +115,12 @@ void Executor::launch_async_execution(Sequence& sequence, Context context,
                          std::move(context), comm_channel_, step_index);
 
     sequence.set_running(true);
-    sequence.set_error(gul14::nullopt);
+    sequence.set_error(std::nullopt);
 }
 
 void Executor::run_asynchronously(Sequence& sequence, Context context)
 {
-    launch_async_execution(sequence, context, gul14::nullopt);
+    launch_async_execution(sequence, context, std::nullopt);
 }
 
 void Executor::run_single_step_asynchronously(Sequence& sequence, Context context,

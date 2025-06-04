@@ -116,7 +116,7 @@ public:
      * \see For more information about step setup scripts see at Sequence.
      */
     bool execute(Context& context, CommChannel* comm_channel = nullptr,
-                 OptionalStepIndex opt_step_index = gul14::nullopt,
+                 OptionalStepIndex opt_step_index = std::nullopt,
                  TimeoutTrigger* sequence_timeout = nullptr);
 
     /**

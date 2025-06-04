@@ -4,7 +4,7 @@
  * \date   Created on August 30, 2022
  * \brief  Declaration of internal constants and functions.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -28,7 +28,7 @@
 #include <string>
 #include <utility>
 
-#include <gul14/string_view.h>
+#include <string_view>
 
 namespace task {
 
@@ -42,14 +42,14 @@ const char sequence_lua_filename[] = "sequence.lua";
  * A marker string (the word "ABORT" surrounded by Unicode stop signs) whose presence
  * anywhere in an error message signals that the execution of a script should be stopped.
  */
-extern const gul14::string_view abort_marker;
+extern const std::string_view abort_marker;
 
 /**
  * Throw an exception if the string contains control characters.
  *
  * \exception Error is thrown if the string contains any control characters.
  */
-void check_for_control_characters(gul14::string_view str);
+void check_for_control_characters(std::string_view str);
 
 /**
  * Remove abort markers from the given error message, beautify it, and determine the cause
@@ -77,7 +77,7 @@ void check_for_control_characters(gul14::string_view str);
  * \returns a pair consisting of the (possibly) modified error message and of an
  *          ErrorCause.
  */
-std::pair<std::string, ErrorCause> remove_abort_markers(gul14::string_view error_message);
+std::pair<std::string, ErrorCause> remove_abort_markers(std::string_view error_message);
 
 } // namespace task
 

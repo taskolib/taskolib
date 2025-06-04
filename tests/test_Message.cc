@@ -27,7 +27,7 @@
 #include <type_traits>
 
 #include <catch2/catch_test_macros.hpp>
-#include <gul14/trim.h>
+#include <gul17/trim.h>
 
 #include "taskolib/Message.h"
 #include "taskolib/Sequence.h"
@@ -111,7 +111,7 @@ TEST_CASE("Message: set_index()", "[Message]")
     REQUIRE(msg.get_index().has_value() == true);
     REQUIRE(*(msg.get_index()) == 0);
 
-    msg.set_index(gul14::nullopt);
+    msg.set_index(std::nullopt);
     REQUIRE(msg.get_index().has_value() == false);
 }
 
@@ -160,11 +160,11 @@ TEST_CASE("Message: Dump to stream", "[Message]")
 
     std::stringstream ss{ };
     ss << msg;
-    REQUIRE(gul14::trim(ss.str()) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
+    REQUIRE(gul17::trim(ss.str()) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
 
     // msg.set_type(Message::Type::output); We don't have that yet
     msg.set_text("Lua print() has been called\n");
     ss.str(""s);
     ss << msg;
-    REQUIRE(gul14::trim(ss.str()) == "Message{ 32: step_started \"Lua print() has been called\\n\" 1970-01-01 00:00:00 UTC }");
+    REQUIRE(gul17::trim(ss.str()) == "Message{ 32: step_started \"Lua print() has been called\\n\" 1970-01-01 00:00:00 UTC }");
 }

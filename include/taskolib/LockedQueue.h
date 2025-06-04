@@ -4,7 +4,7 @@
  * \date   Created on April 1, 2022
  * \brief  Declaration of the LockedQueue class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -27,8 +27,9 @@
 
 #include <condition_variable>
 #include <mutex>
-#include <gul14/optional.h>
-#include <gul14/SlidingBuffer.h>
+#include <optional>
+
+#include <gul17/SlidingBuffer.h>
 
 namespace task {
 
@@ -161,12 +162,12 @@ public:
      *
      * \see try_pop()
      */
-    gul14::optional<MessageType> try_pop()
+    std::optional<MessageType> try_pop()
     {
         std::unique_lock<std::mutex> lock(mutex_);
 
         if (queue_.empty())
-            return gul14::nullopt;
+            return std::nullopt;
 
         auto msg = std::move(queue_.front());
         queue_.pop_front();
@@ -209,7 +210,7 @@ private:
     /// Condition variable, triggered when at least one slot in the queue has been freed.
     mutable std::condition_variable cv_slot_available_;
 
-    gul14::SlidingBuffer<MessageType> queue_;
+    gul17::SlidingBuffer<MessageType> queue_;
 };
 
 } // namespace task

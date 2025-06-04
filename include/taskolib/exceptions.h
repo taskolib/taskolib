@@ -72,12 +72,12 @@ namespace task {
 class Error : public std::runtime_error
 {
 public:
-    explicit Error(const std::string& msg, OptionalStepIndex opt_step_index = gul14::nullopt)
+    explicit Error(const std::string& msg, OptionalStepIndex opt_step_index = std::nullopt)
         : std::runtime_error(msg)
         , index_{ opt_step_index }
     {}
 
-    explicit Error(const char* msg, OptionalStepIndex opt_step_index = gul14::nullopt)
+    explicit Error(const char* msg, OptionalStepIndex opt_step_index = std::nullopt)
         : std::runtime_error(msg)
         , index_{ opt_step_index }
     {}

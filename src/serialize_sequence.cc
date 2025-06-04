@@ -4,7 +4,7 @@
  * \date   Created on May 06, 2022
  * \brief  Implementation of the store_sequence() free function.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,12 +25,12 @@
 #include <fstream>
 #include <sstream>
 
-#include <gul14/gul.h>
+#include <gul17/gul.h>
 
 #include "internals.h"
 #include "serialize_sequence.h"
 
-using gul14::cat;
+using gul17::cat;
 
 namespace task {
 
@@ -58,10 +58,10 @@ std::ostream& operator<<(std::ostream& stream, const Step& step)
     //    << LUA_VERSION_MAJOR << ", Sol2 version: " << SOL_VERSION_STRING << '\n';
 
     stream << "-- type: " << to_string(step.get_type()) << '\n';
-    stream << "-- label: " << gul14::escape(step.get_label()) << '\n';
+    stream << "-- label: " << gul17::escape(step.get_label()) << '\n';
 
     stream << "-- use context variable names: [";
-    stream << gul14::join(step.get_used_context_variable_names(), ", ") << "]\n";
+    stream << gul17::join(step.get_used_context_variable_names(), ", ") << "]\n";
 
     auto modify = TimePoint::clock::to_time_t(step.get_time_of_last_modification());
     stream << "-- time of last modification: "
@@ -96,7 +96,7 @@ void store_step(const std::filesystem::path& lua_file, const Step& step)
     std::ofstream stream(lua_file);
 
     if (not stream.is_open())
-        throw Error(gul14::cat("I/O error: unable to open file (", lua_file.string(), ")"));
+        throw Error(gul17::cat("I/O error: unable to open file (", lua_file.string(), ")"));
 
     stream << step; // RAII closes the stream (let the destructor do the job)
 }

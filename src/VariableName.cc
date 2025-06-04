@@ -4,7 +4,7 @@
  * \date   Created on January 6, 2022
  * \brief  Implementation of the VariableName class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,11 +24,13 @@
 
 #include <algorithm>
 #include <cctype>
-#include <gul14/cat.h>
+
+#include <gul17/cat.h>
+
 #include "taskolib/exceptions.h"
 #include "taskolib/VariableName.h"
 
-using gul14::cat;
+using gul17::cat;
 
 namespace task {
 
@@ -36,7 +38,7 @@ namespace task {
 namespace {
 
 // Check that the given name is a valid variable name or throw a task::Error.
-void check_name(gul14::string_view name)
+void check_name(std::string_view name)
 {
     if (name.empty())
         throw Error("A variable name may not be empty");
@@ -78,9 +80,9 @@ VariableName::VariableName(std::string&& name)
     name_ = std::move(name);
 }
 
-VariableName& VariableName::operator+=(gul14::string_view suffix)
+VariableName& VariableName::operator+=(std::string_view suffix)
 {
-    std::string new_name = name_ + suffix;
+    std::string new_name = cat(name_, suffix);
 
     check_name(new_name);
 
