@@ -4,7 +4,7 @@
  * \date    Created on February 8, 2022
  * \brief   Test suite for the the Sequence class.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,7 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <gul14/time_util.h>
 
 #include "taskolib/Sequence.h"
@@ -30,7 +31,7 @@
 using namespace std::literals;
 using namespace task;
 using namespace task::literals;
-using Catch::Matchers::Contains;
+using Catch::Matchers::ContainsSubstring;
 
 TEST_CASE("Sequence: Constructor", "[Sequence]")
 {
@@ -3777,7 +3778,7 @@ TEST_CASE("execute(): Single step", "[Sequence]")
     {
         auto maybe_error = sequence.execute(context, nullptr, 2);
         REQUIRE(maybe_error.has_value());
-        REQUIRE_THAT(maybe_error->what(), Contains("Action Boom"));
+        REQUIRE_THAT(maybe_error->what(), ContainsSubstring("Action Boom"));
         REQUIRE(maybe_error->get_index().has_value());
         REQUIRE(maybe_error->get_index().value() == 2);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 3 });
@@ -4034,7 +4035,7 @@ TEST_CASE("Sequence: sequence timeout", "[Sequence]")
     REQUIRE(seq.get_time_of_last_execution() != task::TimePoint{});
 
     REQUIRE(maybe_error.has_value());
-    REQUIRE_THAT(maybe_error->what(), Contains("Timeout: Sequence"));
+    REQUIRE_THAT(maybe_error->what(), ContainsSubstring("Timeout: Sequence"));
 }
 
 TEST_CASE("Sequence: add maintainer", "[Sequence]")

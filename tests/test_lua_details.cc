@@ -4,7 +4,7 @@
  * \date   Created on October 28, 2022
  * \brief  Test suite for Lua-related internal functions.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,7 +24,7 @@
 
 #include <limits>
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
 
 #include "lua_details.h"
 

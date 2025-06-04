@@ -4,7 +4,7 @@
  * \date    Created on July 22, 2022
  * \brief   Test suite for the SequenceManager class.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -29,7 +29,9 @@
 #include <utility>
 #include <vector>
 
-#include <gul14/catch.h>
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <gul14/finalizer.h>
 #include <gul14/substring_checks.h>
 #include <libgit4cpp/Repository.h>
@@ -853,8 +855,8 @@ TEST_CASE("SequenceManager: fail creating sequence", "[SequenceManager]")
     });
 
     CHECK_THROWS_WITH(new SequenceManager{ dir },
-        Contains("git", CaseSensitive::No)
-        and Contains("init", CaseSensitive::No));
+        ContainsSubstring("git", CaseSensitive::No)
+        and ContainsSubstring("init", CaseSensitive::No));
 }
 
 TEST_CASE("SequenceManager: fail storing sequence", "[SequenceManager]")
@@ -884,6 +886,6 @@ TEST_CASE("SequenceManager: fail storing sequence", "[SequenceManager]")
     });
 
     CHECK_THROWS_WITH(manager.store_sequence(seq),
-        Contains("I/O", CaseSensitive::No)
-        and Contains("permission", CaseSensitive::No));
+        ContainsSubstring("I/O", CaseSensitive::No)
+        and ContainsSubstring("permission", CaseSensitive::No));
 }

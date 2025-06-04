@@ -4,7 +4,7 @@
  * \date   Created on February 21, 2023
  * \brief  Test suite for the TriggerTimeout class.
  *
- * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,7 +22,7 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
 #include <gul14/time_util.h>
 
 #include "taskolib/TimeoutTrigger.h"

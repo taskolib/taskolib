@@ -4,7 +4,7 @@
  * \date   Created on November 28, 2022
  * \brief  Test suite for the Timeout class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,13 +26,12 @@
 #include <stdexcept>
 #include <sstream>
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
 
 #include "taskolib/Timeout.h"
 
 using namespace std::literals;
 using namespace task;
-using namespace Catch::Matchers;
 
 TEST_CASE("Timeout: Default constructor", "[Timeout]")
 {

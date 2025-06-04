@@ -4,7 +4,7 @@
  * \date   Created on January 30, 2023, based on older code
  * \brief  Test suite for the send_message() function.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,7 +24,7 @@
 
 #include <thread>
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
 
 #include "send_message.h"
 #include "taskolib/CommChannel.h"

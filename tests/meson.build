@@ -29,7 +29,10 @@ test_src = files(
 test('all',
     executable(meson.project_name() + '_test',
         test_src,
-        dependencies : taskolib_dep,
+        dependencies : [
+            taskolib_dep,
+            dependency('catch2'),
+        ],
     ),
     workdir : meson.current_build_dir(),
     timeout : 10,
@@ -40,7 +43,11 @@ if fmt_dep.found()
     test('format',
         executable(meson.project_name() + '_format_test',
             [ 'test_format.cc', 'test_main.cc', ],
-            dependencies : [ taskolib_dep, dependency('fmt'), ],
+            dependencies : [
+                taskolib_dep,
+                dependency('catch2'),
+                dependency('fmt'),
+            ],
         ),
         timeout : 10,
     )

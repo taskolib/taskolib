@@ -4,7 +4,7 @@
  * \date   Created on January 6, 2022
  * \brief  Test suite for the VariableName class.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,8 +23,10 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <array>
-#include <gul14/catch.h>
+
+#include <catch2/catch_test_macros.hpp>
 #include <gul14/join_split.h>
+
 #include "taskolib/exceptions.h"
 #include "taskolib/VariableName.h"
 

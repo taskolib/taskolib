@@ -4,7 +4,7 @@
  * \date   Created on December 10, 2021
  * \brief  Test suite for the Error exception class.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,7 +23,9 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <string>
-#include <gul14/catch.h>
+
+#include <catch2/catch_test_macros.hpp>
+
 #include "taskolib/exceptions.h"
 
 using namespace std::literals;

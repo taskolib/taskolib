@@ -4,7 +4,7 @@
  * \date   Created on October 28, 2022
  * \brief  Test suite for Lua-related internal functions.
  *
- * \copyright Copyright 2022-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,7 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <gul14/time_util.h>
 
 #include "lua_details.h"
@@ -135,8 +136,8 @@ TEST_CASE("execute_lua_script(): Lua exceptions", "[execute_lua_script]")
         auto result = execute_lua_script(
             lua, "function boom(); error('', 0); end; boom()");
         REQUIRE(result.has_value() == false);
-        REQUIRE_THAT(result.error(), not Contains("Unknown"));
-        REQUIRE_THAT(result.error(), not Contains("exception"));
+        REQUIRE_THAT(result.error(), not ContainsSubstring("Unknown"));
+        REQUIRE_THAT(result.error(), not ContainsSubstring("exception"));
     }
 
     SECTION("Runtime error, caught by pcall()")
@@ -168,8 +169,8 @@ TEST_CASE("execute_lua_script(): C++ exceptions", "[execute_lua_script]")
     {
         auto result = execute_lua_script(lua, "throw_logic_error_without_msg()");
         REQUIRE(result.has_value() == false);
-        REQUIRE_THAT(result.error(), not Contains("Unknown"));
-        REQUIRE_THAT(result.error(), not Contains("exception"));
+        REQUIRE_THAT(result.error(), not ContainsSubstring("Unknown"));
+        REQUIRE_THAT(result.error(), not ContainsSubstring("exception"));
     }
 
     SECTION("Nonstandard C++ exceptions are reported as errors")
