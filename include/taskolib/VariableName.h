@@ -5,7 +5,7 @@
  * \brief  Declaration of the VariableName class and of an associated specialization of
  *         std::hash.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -28,7 +28,9 @@
 
 #include <functional>
 #include <string>
-#include <gul14/string_view.h>
+#include <string_view>
+
+#include <gul17/cat.h>
 
 namespace task {
 
@@ -114,7 +116,7 @@ public:
      *
      * \exception Error is thrown if the resulting variable name is not valid.
      */
-    VariableName& operator+=(gul14::string_view suffix);
+    VariableName& operator+=(std::string_view suffix);
 
     /// Append a VariableName to a std::string.
     friend std::string& operator+=(std::string& lhs, const VariableName& rhs)
@@ -124,15 +126,15 @@ public:
     }
 
     /// Concatenate a VariableName and a string_view.
-    friend std::string operator+(const VariableName& lhs, gul14::string_view rhs)
+    friend std::string operator+(const VariableName& lhs, std::string_view rhs)
     {
-        return lhs.string() + rhs;
+        return gul17::cat(lhs.string(), rhs);
     }
 
     /// Concatenate a string_view and a VariableName.
-    friend std::string operator+(gul14::string_view lhs, const VariableName& rhs)
+    friend std::string operator+(std::string_view lhs, const VariableName& rhs)
     {
-        return lhs + rhs.string();
+        return gul17::cat(lhs, rhs.string());
     }
 
     /// Convert the VariableName to a std::string.

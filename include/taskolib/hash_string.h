@@ -35,14 +35,14 @@
 #ifndef TASKOLIB_CASE_STRING_H_
 #define TASKOLIB_CASE_STRING_H_
 
-#include <gul14/string_view.h>
+#include <string_view>
 
 namespace task {
 
 /// Adapt switch statement with stringify items:
 /// https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
 /// Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
-inline constexpr unsigned long hash_djb2a(gul14::string_view sv) {
+inline constexpr unsigned long hash_djb2a(std::string_view sv) {
     unsigned long hash{ 5381 };
     for (unsigned char c : sv) {
         hash = ((hash << 5) + hash) ^ c;
@@ -54,7 +54,7 @@ inline constexpr unsigned long hash_djb2a(gul14::string_view sv) {
 /// https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
 /// Version 1.4: 2022/01/15, MIT license, (c) 2020-22 Richard Spencer
 inline constexpr unsigned long operator"" _sh(const char *str, std::size_t len) {
-    return hash_djb2a(gul14::string_view{ str, len });
+    return hash_djb2a(std::string_view{ str, len });
 }
 
 } // namespace task

@@ -56,12 +56,12 @@ TEST_CASE("SequenceName: from_string()", "[SequenceName]")
             == SequenceName{ "extremely-weird-combination" });
     REQUIRE(SequenceName::from_string("a.b-C_D") == SequenceName{ "a.b-C_D" });
 
-    REQUIRE(SequenceName::from_string(std::string(SequenceName::max_length + 1, 'a')) == gul14::nullopt);
-    REQUIRE(SequenceName::from_string("string with whitespace") == gul14::nullopt);
-    REQUIRE(SequenceName::from_string("abcd#e") == gul14::nullopt);
-    REQUIRE(SequenceName::from_string("abcd(e)") == gul14::nullopt);
-    REQUIRE(SequenceName::from_string("abcd[e]") == gul14::nullopt);
-    REQUIRE(SequenceName::from_string(".abcd") == gul14::nullopt);
+    REQUIRE(SequenceName::from_string(std::string(SequenceName::max_length + 1, 'a')) == std::nullopt);
+    REQUIRE(SequenceName::from_string("string with whitespace") == std::nullopt);
+    REQUIRE(SequenceName::from_string("abcd#e") == std::nullopt);
+    REQUIRE(SequenceName::from_string("abcd(e)") == std::nullopt);
+    REQUIRE(SequenceName::from_string("abcd[e]") == std::nullopt);
+    REQUIRE(SequenceName::from_string(".abcd") == std::nullopt);
 }
 
 TEST_CASE("SequenceName: operator==()", "[SequenceName]")

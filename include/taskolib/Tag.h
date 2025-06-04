@@ -4,7 +4,7 @@
  * \date   Created on July 17, 2024
  * \brief  Declaration of the Tag class.
  *
- * \copyright Copyright 2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2024-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,9 +26,8 @@
 #define TASKOLIB_TAG_H_
 
 #include <iosfwd>
+#include <string_view>
 #include <string>
-
-#include <gul14/string_view.h>
 
 namespace task {
 
@@ -47,7 +46,7 @@ public:
     static constexpr std::size_t max_length = 32;
 
     /// A string containing all of the valid characters for a tag name.
-    static const gul14::string_view valid_characters;
+    static const std::string_view valid_characters;
 
 
     /// Default-construct a tag with the name "-".
@@ -62,7 +61,7 @@ public:
      * \exception Error is thrown if the string is too long or if it contains invalid
      *            characters.
      */
-    explicit Tag(gul14::string_view name);
+    explicit Tag(std::string_view name);
 
     /// Determine if two tags are equal.
     friend bool operator==(const Tag& a, const Tag& b)
@@ -142,7 +141,7 @@ private:
      * of a tag name; otherwise, return the unmodified string view. Uppercase ASCII
      * characters are rejected.
      */
-    static gul14::string_view check_validity(gul14::string_view);
+    static std::string_view check_validity(std::string_view);
 };
 
 } // namespace task

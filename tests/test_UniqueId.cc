@@ -22,6 +22,9 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <algorithm>
+#include <array>
+
 #include <catch2/catch_test_macros.hpp>
 
 #include "taskolib/exceptions.h"

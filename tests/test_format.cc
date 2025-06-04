@@ -24,7 +24,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <fmt/format.h>
-#include <gul14/trim.h>
+#include <gul17/trim.h>
 
 #include "taskolib/Message.h"
 #include "taskolib/time_types.h"
@@ -42,7 +42,7 @@ TEST_CASE("format: Message", "[format]")
     msg.set_index(32);
 
     auto x = fmt::format("{}", msg);
-    REQUIRE(gul14::trim(x) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
+    REQUIRE(gul17::trim(x) == "Message{ 32: step_started \"Beware of the foxes\" 1970-01-01 00:00:00 UTC }");
 }
 
 TEST_CASE("format: Timeout", "[format]")

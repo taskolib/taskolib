@@ -24,7 +24,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <gul14/time_util.h>
+#include <gul17/time_util.h>
 
 #include "taskolib/Sequence.h"
 
@@ -216,7 +216,7 @@ TEST_CASE("Sequence: get_error()", "[Sequence]")
     Sequence seq{ "test_sequence" };
     REQUIRE(seq.get_error().has_value() == false);
 
-    seq.set_error(Error{ "Test", gul14::nullopt });
+    seq.set_error(Error{ "Test", std::nullopt });
     REQUIRE(seq.get_error().has_value());
     REQUIRE(seq.get_error()->what() == "Test"s);
     REQUIRE(seq.get_error()->get_index().has_value() == false);
@@ -343,7 +343,7 @@ TEST_CASE("Sequence: is_running()", "[Sequence]")
     REQUIRE(not seq.is_running());
 
     Context ctx;
-    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+    REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
 
     REQUIRE(not seq.is_running());
 
@@ -495,7 +495,7 @@ TEST_CASE("Sequence: set_error()", "[Sequence]")
     REQUIRE(seq.get_error()->get_index().has_value());
     REQUIRE(seq.get_error()->get_index().value() == 42);
 
-    seq.set_error(gul14::nullopt);
+    seq.set_error(std::nullopt);
     REQUIRE(seq.get_error().has_value() == false);
 }
 
@@ -1277,7 +1277,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         s1.set_script("a = 2");
 
         seq.push_back(s1);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 0);
     }
     SECTION("Manipulate context variable") {
@@ -1286,7 +1286,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         s1.set_used_context_variable_names(VariableNames{"a"});
 
         seq.push_back(s1);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 2);
     }
     SECTION("Hand context variable over (not)") {
@@ -1298,7 +1298,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 2);
     }
     SECTION("Hand context variable over") {
@@ -1311,7 +1311,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 4);
     }
     SECTION("Hand variable over context without initial value") {
@@ -1324,7 +1324,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 4);
     }
     SECTION("Hand bool variable over context without initial value") {
@@ -1337,7 +1337,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
 
         seq.push_back(s1);
         seq.push_back(s2);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         CAPTURE(std::get<VarInteger>(ctx.variables["a"]));
         REQUIRE(ctx.variables["a"] == VariableValue{ VarInteger{ 4 }}); // Another variant to check variables
     }
@@ -1355,7 +1355,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s1);
         seq.push_back(s2);
         seq.push_back(s3);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         CAPTURE(std::get<VarInteger>(ctx.variables["a"]));
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 4);
         REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
@@ -1383,7 +1383,7 @@ TEST_CASE("execute(): Simple sequence with more context variables", "[Sequence]"
         seq.push_back(s2);
         seq.push_back(s3);
         seq.push_back(s4);
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         CAPTURE(std::get<VarInteger>(ctx.variables["a"]));
         REQUIRE(std::get<VarInteger>(ctx.variables["a"]) == 1);
         REQUIRE_THROWS(ctx.variables.at("b")); // nil means not-existing
@@ -3028,7 +3028,7 @@ TEST_CASE("execute_sequence(): Messages", "[execute_sequence]")
     sequence.push_back(std::move(step1));
     sequence.push_back(std::move(step2));
 
-    REQUIRE(sequence.execute(context, &comm) == gul14::nullopt);
+    REQUIRE(sequence.execute(context, &comm) == std::nullopt);
 
     // 2 sequence messages plus 4 step start/stop messages
     REQUIRE(queue.size() == 6);
@@ -3111,7 +3111,7 @@ TEST_CASE("execute_sequence(): Message callbacks", "[execute_sequence]")
         sequence.push_back(std::move(step1));
         sequence.push_back(std::move(step2));
 
-        REQUIRE(sequence.execute(context, nullptr) == gul14::nullopt);
+        REQUIRE(sequence.execute(context, nullptr) == std::nullopt);
 
         REQUIRE(str ==
             "[SEQ_START]"
@@ -3131,7 +3131,7 @@ TEST_CASE("execute_sequence(): Message callbacks", "[execute_sequence]")
         sequence.push_back(std::move(step1));
         sequence.push_back(std::move(step2));
 
-        REQUIRE(sequence.execute(context, nullptr) != gul14::nullopt);
+        REQUIRE(sequence.execute(context, nullptr) != std::nullopt);
 
         REQUIRE(str ==
             "[SEQ_START]"
@@ -3764,13 +3764,13 @@ TEST_CASE("execute(): Single step", "[Sequence]")
 
     SECTION("Index 0 (END step): Script is not executed because of the step type")
     {
-        REQUIRE(sequence.execute(context, nullptr, 0) == gul14::nullopt);
+        REQUIRE(sequence.execute(context, nullptr, 0) == std::nullopt);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 0 });
     }
 
     SECTION("Index 1 (WHILE step): Script is executed")
     {
-        REQUIRE(sequence.execute(context, nullptr, 1) == gul14::nullopt);
+        REQUIRE(sequence.execute(context, nullptr, 1) == std::nullopt);
         REQUIRE(std::get<VarInteger>(context.variables["a"]) == VarInteger{ 2 });
     }
 
@@ -3825,7 +3825,7 @@ TEST_CASE("Sequence: terminate sequence with Lua exit function", "[Sequence]")
     seq.push_back(step_check_termination);
     seq.push_back(step_while_end);
 
-    REQUIRE(seq.execute(ctx, &comm) == gul14::nullopt);
+    REQUIRE(seq.execute(ctx, &comm) == std::nullopt);
 
     // Both the sequence and all of its steps must show is_running() == false.
     REQUIRE(seq.is_running() == false);
@@ -3861,7 +3861,7 @@ TEST_CASE("Sequence: add step setup with variable", "[Sequence]")
     seq.push_back(step_action_2);
     seq.set_step_setup_script("preface = 'Alice calls '");
 
-    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+    REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Bob and Alice"
@@ -3888,7 +3888,7 @@ TEST_CASE("Sequence: add step setup with function", "[Sequence]")
     seq.push_back(step_action_2);
     seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
 
-    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+    REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
 
     REQUIRE(std::get<std::string>(ctx.variables["a"]) == "Alice calls Bob!");
     REQUIRE(std::get<std::string>(ctx.variables["b"]) == "Alice calls Charlie and"
@@ -3926,7 +3926,7 @@ TEST_CASE("Sequence: add step setup with isolated function modification", "[Sequ
     seq.push_back(step_action_3);
     seq.set_step_setup_script("function preface(name) return 'Alice calls ' .. name end");
 
-    REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+    REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
 
     REQUIRE(std::get<VarString>(ctx.variables["a"]) == "Alice calls Bob!");
     REQUIRE(std::get<VarString>(ctx.variables["b"]) == "Alice calls Charlie!");
@@ -4013,7 +4013,7 @@ TEST_CASE("Sequence: Check setter/getter function for step setup script", "[Sequ
         Context ctx;
         REQUIRE(ctx.step_setup_script.empty());
 
-        REQUIRE(seq.execute(ctx, nullptr) == gul14::nullopt);
+        REQUIRE(seq.execute(ctx, nullptr) == std::nullopt);
         REQUIRE(ctx.step_setup_script == script);
     }
 }

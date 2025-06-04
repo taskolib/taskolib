@@ -4,7 +4,7 @@
  * \date   Created on July 17, 2024
  * \brief  Implementation of the Tag class.
  *
- * \copyright Copyright 2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2024-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,22 +24,22 @@
 
 #include <ostream>
 
-#include <gul14/cat.h>
-#include <gul14/escape.h>
-#include <gul14/substring_checks.h>
+#include <gul17/cat.h>
+#include <gul17/escape.h>
+#include <gul17/substring_checks.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/Tag.h"
 
-using gul14::cat;
+using gul17::cat;
 
 namespace task {
 
-Tag::Tag(gul14::string_view name)
-    : name_{ check_validity(gul14::lowercase_ascii(name)) }
+Tag::Tag(std::string_view name)
+    : name_{ check_validity(gul17::lowercase_ascii(name)) }
 {}
 
-gul14::string_view Tag::check_validity(gul14::string_view name)
+std::string_view Tag::check_validity(std::string_view name)
 {
     if (name.empty())
         throw Error("Tag must not be empty");
@@ -50,13 +50,13 @@ gul14::string_view Tag::check_validity(gul14::string_view name)
             max_length, " bytes"));
     }
 
-    if (name.find_first_not_of(valid_characters) != gul14::string_view::npos)
-        throw Error(cat("Tag '", gul14::escape(name), "' contains invalid characters"));
+    if (name.find_first_not_of(valid_characters) != std::string_view::npos)
+        throw Error(cat("Tag '", gul17::escape(name), "' contains invalid characters"));
 
     return name;
 }
 
-const gul14::string_view Tag::valid_characters{ "abcdefghijklmnopqrstuvwxyz0123456789-" };
+const std::string_view Tag::valid_characters{ "abcdefghijklmnopqrstuvwxyz0123456789-" };
 
 std::ostream& operator<<(std::ostream& stream, const Tag& tag)
 {

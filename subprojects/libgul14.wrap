@@ -1,7 +1,0 @@
-[wrap-git]
-directory = libgul14
-url = https://github.com/gul-cpp/gul14.git
-revision = main
-
-[provide]
-libgul14 = libgul_dep

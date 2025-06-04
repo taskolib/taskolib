@@ -69,7 +69,7 @@ subdir('src/lua')
 
 inc = [ include_directories('include', 'include/taskolib/sol', 'src') ]
 
-gul_dep = dependency('libgul14', version : '> 2.6', fallback : ['libgul14', 'libgul_dep'])
+gul_dep = dependency('gul17', version : '> 2.6', fallback : ['gul17', 'libgul_dep'])
 
 deps = [
     dependency('threads'),
@@ -99,7 +99,7 @@ pkg.generate(lib,
     version : libno,
     filebase : pkg_config_name,
     libraries : [ '-Wl,-rpath,${libdir}' ],
-    requires : [ 'libgul14', 'libgit4cpp' ],
+    requires : [ 'gul17', 'libgit4cpp' ],
     subdirs : [ '', 'taskolib' / 'sol' + sol_version, 'taskolib' / 'lua' + lua_version, ],
 )
 

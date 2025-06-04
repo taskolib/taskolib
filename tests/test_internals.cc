@@ -23,11 +23,11 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
 #include <catch2/catch_test_macros.hpp>
-#include <gul14/cat.h>
+#include <gul17/cat.h>
 
 #include "internals.h"
 
-using gul14::cat;
+using gul17::cat;
 using namespace task;
 
 TEST_CASE("remove_abort_markers()", "[internals]")

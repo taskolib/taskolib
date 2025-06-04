@@ -25,7 +25,7 @@
 #include <array>
 
 #include <catch2/catch_test_macros.hpp>
-#include <gul14/join_split.h>
+#include <gul17/join_split.h>
 
 #include "taskolib/exceptions.h"
 #include "taskolib/VariableName.h"
@@ -151,9 +151,9 @@ TEST_CASE("VariableName: size()", "[VariableName]")
     REQUIRE(VariableName{ "pippo" }.size() == 5);
 }
 
-TEST_CASE("VariableName: Compatibility with gul14::join()", "[VariableName]")
+TEST_CASE("VariableName: Compatibility with gul17::join()", "[VariableName]")
 {
     const std::array<VariableName, 3> vars{ "a", "bb", "ccc" };
 
-    REQUIRE(gul14::join(vars, ", ") == "a, bb, ccc");
+    REQUIRE(gul17::join(vars, ", ") == "a, bb, ccc");
 }

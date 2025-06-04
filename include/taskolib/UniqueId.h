@@ -4,7 +4,7 @@
  * \date   Created on July 26, 2023
  * \brief  Declaration of the UniqueId class.
  *
- * \copyright Copyright 2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,11 +25,10 @@
 #ifndef TASKOLIB_UNIQUEID_H_
 #define TASKOLIB_UNIQUEID_H_
 
+#include <optional>
 #include <random>
+#include <string_view>
 #include <string>
-
-#include <gul14/optional.h>
-#include <gul14/string_view.h>
 
 namespace task {
 
@@ -54,7 +53,7 @@ public:
      * The string must represent a hexadecimal number with a maximum of 16 characters.
      * Neither leading whitespace nor a "0x" prefix are allowed.
      */
-    static gul14::optional<UniqueId> from_string(gul14::string_view str);
+    static std::optional<UniqueId> from_string(std::string_view str);
 
     /// Determine if two unique IDs are equal.
     friend bool operator==(UniqueId a, UniqueId b)

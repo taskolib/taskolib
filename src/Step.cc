@@ -4,7 +4,7 @@
  * \date    Created on December 7, 2021
  * \brief   Implementation of the Step class.
  *
- * \copyright Copyright 2021-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,9 +22,9 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/cat.h>
-#include <gul14/finalizer.h>
-#include <gul14/trim.h>
+#include <gul17/cat.h>
+#include <gul17/finalizer.h>
+#include <gul17/trim.h>
 
 #include "internals.h"
 #include "lua_details.h"
@@ -35,7 +35,7 @@
 #include "taskolib/Step.h"
 
 using namespace std::literals;
-using gul14::cat;
+using gul17::cat;
 
 namespace {
 
@@ -130,7 +130,7 @@ bool Step::execute_impl(Context& context, CommChannel* comm,
     {
         const auto result = execute_lua_script(lua, context.step_setup_script);
         if (not result.has_value())
-            throw Error(gul14::cat("[setup] ", result.error()));
+            throw Error(gul17::cat("[setup] ", result.error()));
     }
 
     copy_used_variables_from_context_to_lua(context, lua);
@@ -169,7 +169,7 @@ bool Step::execute(Context& context, CommChannel* comm, OptionalStepIndex index,
 {
     const auto now = Clock::now();
     const auto set_is_running_to_false_after_execution =
-        gul14::finally([this]() { set_running(false); });
+        gul17::finally([this]() { set_running(false); });
 
     set_time_of_last_execution(now);
     set_running(true);
@@ -225,7 +225,7 @@ Step& Step::set_indentation_level(short level)
 
 Step& Step::set_label(const std::string& label)
 {
-    label_ = gul14::trim(label);
+    label_ = gul17::trim(label);
     set_time_of_last_modification(Clock::now());
     return *this;
 }

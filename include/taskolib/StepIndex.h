@@ -4,7 +4,7 @@
  * \date   Created on October 18, 2022
  * \brief  Declaration of the StepIndex type.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -26,15 +26,15 @@
 #define TASKOLIB_STEPINDEX_H_
 
 #include <cstdint>
-#include <gul14/optional.h>
+#include <optional>
 
 namespace task {
 
 /// A type for storing the index of a Step in a Sequence.
 using StepIndex = std::uint16_t;
 
-/// An optional step index (gul14::optional<StepIndex>).
-using OptionalStepIndex = gul14::optional<StepIndex>;
+/// An optional step index (std::optional<StepIndex>).
+using OptionalStepIndex = std::optional<StepIndex>;
 
 } // namespace task
 
