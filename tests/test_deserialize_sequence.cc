@@ -1,10 +1,10 @@
 /**
- * \file   test_deserialize_sequence.cc
- * \author Lars Fröhlich, Marcus Walla
- * \date   Created on July 26, 2023
- * \brief  Test suite for free functions declared in deserialize_sequence.h.
+ * \file    test_deserialize_sequence.cc
+ * \authors Lars Fröhlich, Marcus Walla
+ * \date    Created on July 26, 2023
+ * \brief   Test suite for free functions declared in deserialize_sequence.h.
  *
- * \copyright Copyright 2023-2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2023-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,7 +25,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
 
 #include "deserialize_sequence.h"
 #include "internals_unit_test.h"

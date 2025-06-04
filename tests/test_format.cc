@@ -4,7 +4,7 @@
  * \date   Created on June 22, 2022
  * \brief  Test suite for the fmt{} library helpers.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,8 +22,8 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <catch2/catch_test_macros.hpp>
 #include <fmt/format.h>
-#include <gul14/catch.h>
 #include <gul14/trim.h>
 
 #include "taskolib/Message.h"

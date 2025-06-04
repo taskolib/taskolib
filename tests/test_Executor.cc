@@ -1,10 +1,10 @@
 /**
- * \file   test_Executor.cc
- * \author Lars Fröhlich, Marcus Walla
- * \date   Created on May 30, 2022
- * \brief  Test suite for the Executor class.
+ * \file    test_Executor.cc
+ * \authors Lars Fröhlich, Marcus Walla
+ * \date    Created on May 30, 2022
+ * \brief   Test suite for the Executor class.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,14 +22,16 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <gul14/substring_checks.h>
 #include <gul14/time_util.h>
+
 #include "taskolib/Executor.h"
 
 using namespace task;
 using namespace std::literals;
-using Catch::Matchers::Contains;
+using Catch::Matchers::ContainsSubstring;
 
 TEST_CASE("Executor: Constructor", "[Executor]")
 {
@@ -243,7 +245,7 @@ TEST_CASE("Executor: run_single_step_asynchronously()", "[Executor]")
         REQUIRE(std::get<VarInteger>(vars["a"]) == 1);
 
         REQUIRE(sequence.get_error().has_value() == true);
-        REQUIRE_THAT(sequence.get_error()->what(), Contains("Waldeinsamkeit"));
+        REQUIRE_THAT(sequence.get_error()->what(), ContainsSubstring("Waldeinsamkeit"));
         REQUIRE(sequence.get_error()->get_index().has_value() == true);
         REQUIRE(sequence.get_error()->get_index().value() == 0);
     }
@@ -529,7 +531,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
     // I. direct execution
     auto maybe_error = seq.execute(ctx, nullptr);
     REQUIRE(maybe_error.has_value() == true);
-    REQUIRE_THAT(maybe_error->what(), Contains("Rainbows"));
+    REQUIRE_THAT(maybe_error->what(), ContainsSubstring("Rainbows"));
 
     // II. run async
     Executor executor{ };
@@ -543,7 +545,7 @@ TEST_CASE("Executor: Run a sequence asynchronously with throw", "[Executor]")
     REQUIRE(executor.update(seq) == false);
 
     REQUIRE(seq.get_error().has_value() == true);
-    REQUIRE_THAT(seq.get_error()->what(), Contains("Rainbows"));
+    REQUIRE_THAT(seq.get_error()->what(), ContainsSubstring("Rainbows"));
 }
 
 TEST_CASE("Executor: Message callbacks", "[execute_sequence]")

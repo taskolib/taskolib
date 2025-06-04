@@ -4,7 +4,7 @@
  * \date   Created on July 17, 2024
  * \brief  Test suite for the Tag class.
  *
- * \copyright Copyright 2024 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2024-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,7 +24,7 @@
 
 #include <sstream>
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
 #include <gul14/join_split.h>
 
 #include "taskolib/exceptions.h"

@@ -4,7 +4,7 @@
  * \date   Created on November 26, 2021
  * \brief  Test suite for the Step class.
  *
- * \copyright Copyright 2021-2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2021-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -25,7 +25,8 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include <gul14/catch.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <gul14/time_util.h>
 
 #include "taskolib/exceptions.h"
@@ -33,7 +34,7 @@
 
 using namespace std::literals;
 using namespace task;
-using Catch::Matchers::Contains;
+using Catch::Matchers::ContainsSubstring;
 using Catch::Matchers::StartsWith;
 
 TEST_CASE("Step: Default constructor", "[Step]")
@@ -389,7 +390,7 @@ TEST_CASE("execute(): Lua exceptions", "[Step]")
         }
         catch (const Error& e)
         {
-            REQUIRE_THAT(e.what(), Contains("syntax error"));
+            REQUIRE_THAT(e.what(), ContainsSubstring("syntax error"));
             REQUIRE(e.get_index().has_value());
             REQUIRE(e.get_index().value() == 42);
         }

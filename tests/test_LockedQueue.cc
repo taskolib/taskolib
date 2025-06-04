@@ -4,7 +4,7 @@
  * \date   Created on April 1, 2022
  * \brief  Test suite for the LockedQueue class template.
  *
- * \copyright Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -24,8 +24,11 @@
 
 #include <thread>
 #include <type_traits>
-#include <gul14/catch.h>
+
+#include <catch2/catch_template_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <gul14/time_util.h>
+
 #include "taskolib/exceptions.h"
 #include "taskolib/Message.h"
 #include "taskolib/LockedQueue.h"

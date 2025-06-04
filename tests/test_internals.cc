@@ -4,7 +4,7 @@
  * \date   Created on November 4, 2022
  * \brief  Test suite for internal functions.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,14 +22,13 @@
 
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
+#include <catch2/catch_test_macros.hpp>
 #include <gul14/cat.h>
-#include <gul14/catch.h>
 
 #include "internals.h"
 
 using gul14::cat;
 using namespace task;
-using namespace Catch::Matchers;
 
 TEST_CASE("remove_abort_markers()", "[internals]")
 {
@@ -58,7 +57,7 @@ TEST_CASE("remove_abort_markers()", "[internals]")
 
         SECTION("Two markers")
         {
-            auto [msg, cause] = remove_abort_markers(gul14::cat(abort_marker, abort_marker));
+            auto [msg, cause] = remove_abort_markers(cat(abort_marker, abort_marker));
             REQUIRE(cause == ErrorCause::terminated_by_script);
             REQUIRE(msg == "Script called terminate_sequence()");
         }
@@ -66,7 +65,7 @@ TEST_CASE("remove_abort_markers()", "[internals]")
         SECTION("Two markers surrounded by text")
         {
             auto [msg, cause] = remove_abort_markers(
-                gul14::cat("lorem ipsum", abort_marker, abort_marker, "dolor sit"));
+                cat("lorem ipsum", abort_marker, abort_marker, "dolor sit"));
             REQUIRE(cause == ErrorCause::terminated_by_script);
             REQUIRE(msg == "Script called terminate_sequence()");
         }
@@ -74,7 +73,7 @@ TEST_CASE("remove_abort_markers()", "[internals]")
         SECTION("Three markers surrounded by text")
         {
             auto [msg, cause] = remove_abort_markers(
-                gul14::cat("lorem ipsum", abort_marker, abort_marker, "dolor sit", abort_marker, "amet"));
+                cat("lorem ipsum", abort_marker, abort_marker, "dolor sit", abort_marker, "amet"));
             REQUIRE(cause == ErrorCause::terminated_by_script);
             REQUIRE(msg == "Script called terminate_sequence()");
         }
