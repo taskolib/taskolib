@@ -15,7 +15,7 @@ Description: Taskolib automatization library - runtime
 Package: taskolib-dev
 Section: libdevel
 Architecture: any
-Depends: ${S:Source}
+Depends: libgit4cpp-dev, gul17-dev, ${S:Source}
 Replaces: libtaskomat-dev
 Breaks: libtaskomat-dev
 Description: Taskolib automatization library - dev files
