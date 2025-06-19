@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.4.2</span>
+   &#160;<span id="projectnumber">1.4.4</span>
    </div>
   </td>
  </tr>
@@ -72,7 +72,7 @@ $(function() {
 <div class="line">context.message_callback_function = my_message_callback;</div>
 <div class="ttc" id="aclasstask_1_1Message_html_a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d"><div class="ttname"><a href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a78e6221f6393d1356681db398f14ce6d">task::Message::Type::output</a></div><div class="ttdeci">@ output</div><div class="ttdoc">a message string that was output by a step via print()</div></div>
 <div class="ttc" id="aclasstask_1_1Message_html_a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5"><div class="ttname"><a href="classtask_1_1Message.html#a4815e8e0b100ea8f309a03856ad81cd4a995d1c2c9ad87d7934c959bf053c2ea5">task::Message::Type::sequence_stopped_with_error</a></div><div class="ttdeci">@ sequence_stopped_with_error</div><div class="ttdoc">a sequence has been stopped because of an error</div></div>
-</div><!-- fragment --><p> The callback function receives a reference to the message that is being processed. If a sequence is executed in the current thread (e.g. via <a class="el" href="classtask_1_1Sequence.html#a019e0ac09e305029bce032a1b983fd55" title="Execute the sequence (or just one of its steps) within a given context.">Sequence::execute()</a>), the callback is executed whenever a message is generated. If the sequence is handed to an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> for parallel execution, the callback is run whenever the main thread has received the message (i.e. typically within <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">Executor::update()</a>). Callbacks are never executed on the worker thread. </p>
+</div><!-- fragment --><p> The callback function receives a reference to the message that is being processed. If a sequence is executed in the current thread (e.g. via <a class="el" href="classtask_1_1Sequence.html#a26ecb8429e8974f80cd389dc348029ce" title="Execute the sequence (or just one of its steps) within a given context.">Sequence::execute()</a>), the callback is executed whenever a message is generated. If the sequence is handed to an <a class="el" href="classtask_1_1Executor.html" title="An executor runs a copy of a given Sequence (or just a single step within it) in a separate thread,...">Executor</a> for parallel execution, the callback is run whenever the main thread has received the message (i.e. typically within <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef" title="Update the local copy of the sequence from messages that have arrived from the execution thread.">Executor::update()</a>). Callbacks are never executed on the worker thread. </p>
 </div>
 <p><code>#include &lt;<a class="el" href="Context_8h_source.html">Context.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -106,7 +106,7 @@ Public Attributes</h2></td></tr>
 
 <p>A callback (or "hook") function that is invoked whenever a message is processed during the execution of a sequence. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, <a class="el" href="namespacetask.html#aa3297d57e5d2ff3b328beb5d94910f4c">task::send_message()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Executor.html#ab24061adfe403a7eabfda8caa27a9871">task::Executor::launch_async_execution()</a>, <a class="el" href="namespacetask.html#a67c09ca9afb523383961fef7f2fd305d">task::send_message()</a>, and <a class="el" href="classtask_1_1Executor.html#ab80e82198ae3f014a91b82d8ac1376ef">task::Executor::update()</a>.</p>
 
 </div>
 </div>
@@ -143,7 +143,7 @@ Public Attributes</h2></td></tr>
 <p><a class="el" href="classtask_1_1Step.html" title="A step is the main building block of a sequence.">Step</a> setup script with common functions or constants like a small library. </p>
 <p>Overwritten when a sequence is started. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step::execute_impl()</a>, and <a class="el" href="classtask_1_1Sequence.html#a7a1122dafe2e31be1d1b903584ad3fa9">task::Sequence::handle_execution()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1Step.html#a126879f0acf150f43a8e0f115cfcd263">task::Step::execute_impl()</a>, and <a class="el" href="classtask_1_1Sequence.html#ad2b3f8c9303de50e9d8e15b160bc3830">task::Sequence::handle_execution()</a>.</p>
 
 </div>
 </div>
@@ -171,7 +171,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 24 2025 14:51:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Jun 19 2025 07:20:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.4.2</span>
+   &#160;<span id="projectnumber">1.4.4</span>
    </div>
   </td>
  </tr>
@@ -58,7 +58,7 @@ $(function() {
 class task::LockedQueue&lt; MessageT &gt;</h3>
 
 <p>A thread-safe locking message queue. </p>
-<p>Messages are added to the end of the queue with <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef" title="Insert a message at the end of the queue.">push()</a> and taken from the start of the queue with <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb" title="Remove a message from the front of the queue and return it.">pop()</a>. These calls block if the queue is full or if no messages are available, respectively. <a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104" title="Try to insert a message at the end of the queue.">try_push()</a> and <a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7" title="Remove a message from the front of the queue and return it.">try_pop()</a> are non-blocking alternatives.</p>
+<p>Messages are added to the end of the queue with <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef" title="Insert a message at the end of the queue.">push()</a> and taken from the start of the queue with <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb" title="Remove a message from the front of the queue and return it.">pop()</a>. These calls block if the queue is full or if no messages are available, respectively. <a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104" title="Try to insert a message at the end of the queue.">try_push()</a> and <a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec" title="Remove a message from the front of the queue and return it.">try_pop()</a> are non-blocking alternatives.</p>
 <div class="fragment"><div class="line"><span class="comment">// Set up queue with capacity for 10 integers</span></div>
 <div class="line">LockedQueue&lt;int&gt; queue{ 10 };</div>
 <div class="line"> </div>
@@ -125,9 +125,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0dc5bcd34298a467b76eb81019d83e9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtask_1_1LockedQueue.html#a33658fefeb58e8a5189bbc98b2aa2244">SizeType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#a0dc5bcd34298a467b76eb81019d83e9c">size</a> () const</td></tr>
 <tr class="memdesc:a0dc5bcd34298a467b76eb81019d83e9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of messages in the queue.  <a href="classtask_1_1LockedQueue.html#a0dc5bcd34298a467b76eb81019d83e9c">More...</a><br /></td></tr>
 <tr class="separator:a0dc5bcd34298a467b76eb81019d83e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9021b40a76969e146dfbec1b93dc8ea7"><td class="memItemLeft" align="right" valign="top">gul14::optional&lt; <a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7">try_pop</a> ()</td></tr>
-<tr class="memdesc:a9021b40a76969e146dfbec1b93dc8ea7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a message from the front of the queue and return it.  <a href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7">More...</a><br /></td></tr>
-<tr class="separator:a9021b40a76969e146dfbec1b93dc8ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3557ba964c4a61283851a3fde38d64ec"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec">try_pop</a> ()</td></tr>
+<tr class="memdesc:a3557ba964c4a61283851a3fde38d64ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a message from the front of the queue and return it.  <a href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec">More...</a><br /></td></tr>
+<tr class="separator:a3557ba964c4a61283851a3fde38d64ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afeba8bc56d86373f39b891d311533104"><td class="memTemplParams" colspan="2">template&lt;typename MsgT , std::enable_if_t&lt; std::is_convertible_v&lt; MsgT, MessageType &gt;, bool &gt;  = true&gt; </td></tr>
 <tr class="memitem:afeba8bc56d86373f39b891d311533104"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104">try_push</a> (MsgT &amp;&amp;msg)</td></tr>
 <tr class="memdesc:afeba8bc56d86373f39b891d311533104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to insert a message at the end of the queue.  <a href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104">More...</a><br /></td></tr>
@@ -144,8 +144,8 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:af6561026d1be199ab917384b2cd98652"><td class="memItemLeft" align="right" valign="top">std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">cv_slot_available_</a></td></tr>
 <tr class="memdesc:af6561026d1be199ab917384b2cd98652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition variable, triggered when at least one slot in the queue has been freed.  <a href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">More...</a><br /></td></tr>
 <tr class="separator:af6561026d1be199ab917384b2cd98652"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb346666f23bf5cceb8b622b7756d7ed"><td class="memItemLeft" align="right" valign="top">gul14::SlidingBuffer&lt; <a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">queue_</a></td></tr>
-<tr class="separator:abb346666f23bf5cceb8b622b7756d7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26e867d72d4d4829fa3439cbcffd7d6f"><td class="memItemLeft" align="right" valign="top">gul17::SlidingBuffer&lt; <a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">queue_</a></td></tr>
+<tr class="separator:a26e867d72d4d4829fa3439cbcffd7d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a709275e2c985202e3bacbd5b99190d82"></a>
@@ -273,7 +273,7 @@ template&lt;typename MessageT &gt; </div>
 <p>It will not be removed from the queue.</p>
 <p>This call blocks until a message is available. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -304,7 +304,7 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Return the maximal number of entries in the queue. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -335,7 +335,7 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Determine whether the queue is empty. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -366,9 +366,9 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Remove a message from the front of the queue and return it. </p>
 <p>This call blocks until a message is available.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7" title="Remove a message from the front of the queue and return it.">try_pop()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec" title="Remove a message from the front of the queue and return it.">try_pop()</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">task::LockedQueue&lt; MessageT &gt;::cv_slot_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">task::LockedQueue&lt; MessageT &gt;::cv_slot_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -403,7 +403,7 @@ template&lt;typename MsgT , std::enable_if_t&lt; std::is_convertible_v&lt; MsgT,
 <p>Insert a message at the end of the queue. </p>
 <p>This call blocks until the queue has a free slot for the message. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">task::LockedQueue&lt; MessageT &gt;::cv_slot_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">task::LockedQueue&lt; MessageT &gt;::cv_slot_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -434,12 +434,12 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Return the number of messages in the queue. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
-<a id="a9021b40a76969e146dfbec1b93dc8ea7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9021b40a76969e146dfbec1b93dc8ea7">&#9670;&nbsp;</a></span>try_pop()</h2>
+<a id="a3557ba964c4a61283851a3fde38d64ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3557ba964c4a61283851a3fde38d64ec">&#9670;&nbsp;</a></span>try_pop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -450,7 +450,7 @@ template&lt;typename MessageT &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">gul14::optional&lt;<a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a>&gt; <a class="el" href="classtask_1_1LockedQueue.html">task::LockedQueue</a>&lt; MessageT &gt;::try_pop </td>
+          <td class="memname">std::optional&lt;<a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a>&gt; <a class="el" href="classtask_1_1LockedQueue.html">task::LockedQueue</a>&lt; MessageT &gt;::try_pop </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -465,9 +465,9 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Remove a message from the front of the queue and return it. </p>
 <p>This call blocks until a message is available.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7" title="Remove a message from the front of the queue and return it.">try_pop()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec" title="Remove a message from the front of the queue and return it.">try_pop()</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">task::LockedQueue&lt; MessageT &gt;::cv_slot_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#af6561026d1be199ab917384b2cd98652">task::LockedQueue&lt; MessageT &gt;::cv_slot_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -503,7 +503,7 @@ template&lt;typename MsgT , std::enable_if_t&lt; std::is_convertible_v&lt; MsgT,
 <p>This call returns true if the message was successfully enqueued or false if the queue temporarily had no space to store the message.</p>
 <p>Messages given as an rvalue are only moved from if they can actually be inserted into the queue. </p>
 
-<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#abb346666f23bf5cceb8b622b7756d7ed">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
+<p class="reference">References <a class="el" href="classtask_1_1LockedQueue.html#a8bad9ba70eb4adfc604bfcf65e30c4e3">task::LockedQueue&lt; MessageT &gt;::cv_message_available_</a>, <a class="el" href="classtask_1_1LockedQueue.html#a47882cb9d00c775c4386c0f404b41a85">task::LockedQueue&lt; MessageT &gt;::mutex_</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a26e867d72d4d4829fa3439cbcffd7d6f">task::LockedQueue&lt; MessageT &gt;::queue_</a>.</p>
 
 </div>
 </div>
@@ -560,7 +560,7 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Condition variable, triggered when at least one slot in the queue has been freed. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;::pop()</a>, <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef">task::LockedQueue&lt; MessageT &gt;::push()</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7">task::LockedQueue&lt; MessageT &gt;::try_pop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;::pop()</a>, <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef">task::LockedQueue&lt; MessageT &gt;::push()</a>, and <a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec">task::LockedQueue&lt; MessageT &gt;::try_pop()</a>.</p>
 
 </div>
 </div>
@@ -588,12 +588,12 @@ template&lt;typename MessageT &gt; </div>
 
 <p>Mutex protecting all member variables. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1LockedQueue.html#acf008fc8ead94b0b87820d39ea42f5bd">task::LockedQueue&lt; MessageT &gt;::back()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a1de6adadc2216e42fba21b41eb25cff5">task::LockedQueue&lt; MessageT &gt;::capacity()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a88a3c01c0cff332c767ca57165e9ab86">task::LockedQueue&lt; MessageT &gt;::empty()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;::pop()</a>, <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef">task::LockedQueue&lt; MessageT &gt;::push()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a0dc5bcd34298a467b76eb81019d83e9c">task::LockedQueue&lt; MessageT &gt;::size()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7">task::LockedQueue&lt; MessageT &gt;::try_pop()</a>, and <a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104">task::LockedQueue&lt; MessageT &gt;::try_push()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1LockedQueue.html#acf008fc8ead94b0b87820d39ea42f5bd">task::LockedQueue&lt; MessageT &gt;::back()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a1de6adadc2216e42fba21b41eb25cff5">task::LockedQueue&lt; MessageT &gt;::capacity()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a88a3c01c0cff332c767ca57165e9ab86">task::LockedQueue&lt; MessageT &gt;::empty()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;::pop()</a>, <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef">task::LockedQueue&lt; MessageT &gt;::push()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a0dc5bcd34298a467b76eb81019d83e9c">task::LockedQueue&lt; MessageT &gt;::size()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec">task::LockedQueue&lt; MessageT &gt;::try_pop()</a>, and <a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104">task::LockedQueue&lt; MessageT &gt;::try_push()</a>.</p>
 
 </div>
 </div>
-<a id="abb346666f23bf5cceb8b622b7756d7ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb346666f23bf5cceb8b622b7756d7ed">&#9670;&nbsp;</a></span>queue_</h2>
+<a id="a26e867d72d4d4829fa3439cbcffd7d6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26e867d72d4d4829fa3439cbcffd7d6f">&#9670;&nbsp;</a></span>queue_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -604,7 +604,7 @@ template&lt;typename MessageT &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">gul14::SlidingBuffer&lt;<a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a>&gt; <a class="el" href="classtask_1_1LockedQueue.html">task::LockedQueue</a>&lt; MessageT &gt;::queue_</td>
+          <td class="memname">gul17::SlidingBuffer&lt;<a class="el" href="classtask_1_1LockedQueue.html#a38dfc308612bdfc72d118d2f39273764">MessageType</a>&gt; <a class="el" href="classtask_1_1LockedQueue.html">task::LockedQueue</a>&lt; MessageT &gt;::queue_</td>
         </tr>
       </table>
   </td>
@@ -614,7 +614,7 @@ template&lt;typename MessageT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtask_1_1LockedQueue.html#acf008fc8ead94b0b87820d39ea42f5bd">task::LockedQueue&lt; MessageT &gt;::back()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a1de6adadc2216e42fba21b41eb25cff5">task::LockedQueue&lt; MessageT &gt;::capacity()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a88a3c01c0cff332c767ca57165e9ab86">task::LockedQueue&lt; MessageT &gt;::empty()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;::pop()</a>, <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef">task::LockedQueue&lt; MessageT &gt;::push()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a0dc5bcd34298a467b76eb81019d83e9c">task::LockedQueue&lt; MessageT &gt;::size()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a9021b40a76969e146dfbec1b93dc8ea7">task::LockedQueue&lt; MessageT &gt;::try_pop()</a>, and <a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104">task::LockedQueue&lt; MessageT &gt;::try_push()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtask_1_1LockedQueue.html#acf008fc8ead94b0b87820d39ea42f5bd">task::LockedQueue&lt; MessageT &gt;::back()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a1de6adadc2216e42fba21b41eb25cff5">task::LockedQueue&lt; MessageT &gt;::capacity()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a88a3c01c0cff332c767ca57165e9ab86">task::LockedQueue&lt; MessageT &gt;::empty()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a94e6ad815e5fe86c2c5b419243bd16bb">task::LockedQueue&lt; MessageT &gt;::pop()</a>, <a class="el" href="classtask_1_1LockedQueue.html#abfad9ae5513233c9b6e99db1a35584ef">task::LockedQueue&lt; MessageT &gt;::push()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a0dc5bcd34298a467b76eb81019d83e9c">task::LockedQueue&lt; MessageT &gt;::size()</a>, <a class="el" href="classtask_1_1LockedQueue.html#a3557ba964c4a61283851a3fde38d64ec">task::LockedQueue&lt; MessageT &gt;::try_pop()</a>, and <a class="el" href="classtask_1_1LockedQueue.html#afeba8bc56d86373f39b891d311533104">task::LockedQueue&lt; MessageT &gt;::try_push()</a>.</p>
 
 </div>
 </div>
@@ -624,7 +624,7 @@ template&lt;typename MessageT &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 24 2025 14:51:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Jun 19 2025 07:20:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

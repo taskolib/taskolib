@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.4.2</span>
+   &#160;<span id="projectnumber">1.4.4</span>
    </div>
   </td>
  </tr>
@@ -52,7 +52,7 @@ $(function() {
 <p>This is the complete list of members for <a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a6daf44fa91222b5e05a6668fbcc8b88a">copy_sequence</a>(UniqueId original_uid, const SequenceName &amp;new_name)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a6143ea5165be52bad7141247ade66176">create_sequence</a>(gul14::string_view label=&quot;&quot;, SequenceName name=SequenceName{})</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a6574c6f11b9228dd5dbea0c2c9457ec1">create_sequence</a>(std::string_view label=&quot;&quot;, SequenceName name=SequenceName{})</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a5b4cdb83e4dc60db5297d12634622fe6">create_unique_id</a>(const std::vector&lt; SequenceOnDisk &gt; &amp;sequences)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">private</span><span class="mlabel">static</span></td></tr>
   <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#adff295d92a016c88fa3372367c78da28">find_sequence_on_disk</a>(UniqueId uid, const std::vector&lt; SequenceOnDisk &gt; &amp;sequences)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">private</span><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a49a28bef2aa4989b8fc4886d39476a25">get_path</a>() const</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
@@ -63,8 +63,8 @@ $(function() {
   <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#aea1b55d76cb8d92c1bce63dc19d437a8">load_sequence</a>(UniqueId uid, const std::vector&lt; SequenceOnDisk &gt; &amp;sequences) const</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#ae65a7ddce7455c71065b6b22a0264300">load_sequence</a>(std::filesystem::path folder) const</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a9b3c2bc2b6f8ed7a63ed753bd1df08a7">load_sequence</a>(const SequenceOnDisk &amp;seq_on_disk) const</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a62fde05531e93a82d47f464afaaad2a3">make_sequence_name_from_label</a>(gul14::string_view label)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">private</span><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a86d7aba8736d05126f864da8522bf468">parse_folder_name</a>(const std::filesystem::path &amp;folder)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#ae3ccae000d56802ad1b6a66125c1b7b7">make_sequence_name_from_label</a>(std::string_view label)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">private</span><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#abe28a3b14353b2ab6b2ef5443f150f14">parse_folder_name</a>(const std::filesystem::path &amp;folder)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a9756b5e8e4b87748b849147f79b478b3">path_</a></td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#a0a709c44f3cb6c5442fe18d1def3ad6c">perform_commit</a>(std::string message, T action, std::string extra_dir=&quot;&quot;)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html#ad27c5410a38a8aff0576459b2e768e70">remove_sequence</a>(UniqueId unique_id)</td><td class="entry"><a class="el" href="classtask_1_1SequenceManager.html">task::SequenceManager</a></td><td class="entry"></td></tr>
@@ -78,7 +78,7 @@ $(function() {
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 24 2025 14:51:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Jun 19 2025 07:20:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

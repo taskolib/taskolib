@@ -1,16 +1,16 @@
 <map id="VariableName.cc" name="VariableName.cc">
-<area shape="rect" id="node1" title="Implementation of the VariableName class." alt="" coords="186,5,318,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,91,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="115,80,181,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="205,80,299,107"/>
-<area shape="rect" id="node5" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="324,80,484,107"/>
-<area shape="rect" id="node12" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="525,80,707,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="124,155,191,181"/>
-<area shape="rect" id="node7" title=" " alt="" coords="215,155,302,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="505,155,564,181"/>
-<area shape="rect" id="node9" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="327,155,481,181"/>
-<area shape="rect" id="node10" title=" " alt="" coords="309,229,376,256"/>
-<area shape="rect" id="node11" title=" " alt="" coords="401,229,527,256"/>
-<area shape="rect" id="node13" title=" " alt="" coords="589,155,675,181"/>
-<area shape="rect" id="node14" title=" " alt="" coords="699,155,847,181"/>
+<area shape="rect" id="node1" title="Implementation of the VariableName class." alt="" coords="263,5,395,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="49,80,134,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="159,80,224,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="469,155,564,181"/>
+<area shape="rect" id="node5" href="$exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="249,80,409,107"/>
+<area shape="rect" id="node12" href="$VariableName_8h.html" title="Declaration of the VariableName class and of an associated specialization of std::hash." alt="" coords="483,80,665,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="295,155,362,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,155,92,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="386,155,445,181"/>
+<area shape="rect" id="node9" href="$StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="117,155,271,181"/>
+<area shape="rect" id="node10" title=" " alt="" coords="113,229,179,256"/>
+<area shape="rect" id="node11" title=" " alt="" coords="203,229,278,256"/>
+<area shape="rect" id="node13" title=" " alt="" coords="588,155,675,181"/>
+<area shape="rect" id="node14" title=" " alt="" coords="699,155,796,181"/>
 </map>

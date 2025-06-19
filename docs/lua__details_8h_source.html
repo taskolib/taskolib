@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.4.2</span>
+   &#160;<span id="projectnumber">1.4.4</span>
    </div>
   </td>
  </tr>
@@ -84,7 +84,7 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">const</span> Context&amp; <a class="code" href="namespacetask.html#abf70ab352b40ab590afc363227d6e08c">get_context_from_registry</a>(lua_State* lua_state);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> <a class="code" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry</a>(lua_State* lua_state);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="namespacetask.html#a582591ef32f18ca5084287abb12a5754">OptionalStepIndex</a> <a class="code" href="namespacetask.html#a1ccb3dd2dcf762c092f177671fca1d5e">get_step_idx_from_registry</a>(lua_State* lua_state);</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">// Return a time point in milliseconds since the epoch, calculated from a time point t0</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// plus a duration dt. In case of overflow, the maximum representable time point is</span></div>
@@ -106,7 +106,7 @@ $(function() {
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">// script is being executed. If one of both occurs, the script terminates with an error</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">// message that contains the abort marker.</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacetask.html#a7a2f55a77a523c6df3999f736e4598e3">install_timeout_and_termination_request_hook</a>(sol::state&amp; lua, <a class="code" href="namespacetask.html#acc0d5ac00c79dac8125ed175e9d6ae5c">TimePoint</a> now,</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::chrono::milliseconds timeout, <a class="code" href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">OptionalStepIndex</a> step_idx, <span class="keyword">const</span> Context&amp; context,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::chrono::milliseconds timeout, <a class="code" href="namespacetask.html#a582591ef32f18ca5084287abb12a5754">OptionalStepIndex</a> step_idx, <span class="keyword">const</span> Context&amp; context,</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    CommChannel* comm_channel, TimeoutTrigger* sequence_timeout);</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">// Open a safe subset of the Lua standard libraries in the given Lua state.</span></div>
@@ -139,11 +139,11 @@ $(function() {
 <div class="ttc" id="anamespacetask_html_a4e70dafdac8eb79e24f90e03aec5b590"><div class="ttname"><a href="namespacetask.html#a4e70dafdac8eb79e24f90e03aec5b590">task::abort_script_with_error</a></div><div class="ttdeci">void abort_script_with_error(lua_State *lua_state, const std::string &amp;msg)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:59</div></div>
 <div class="ttc" id="anamespacetask_html_a528bc0c099e1da1ff73dae10b926128f"><div class="ttname"><a href="namespacetask.html#a528bc0c099e1da1ff73dae10b926128f">task::get_ms_since_epoch</a></div><div class="ttdeci">LuaInteger get_ms_since_epoch(TimePoint t0, std::chrono::milliseconds dt)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:176</div></div>
 <div class="ttc" id="anamespacetask_html_a557348559e03f8f0d208a7c2dd72ce9a"><div class="ttname"><a href="namespacetask.html#a557348559e03f8f0d208a7c2dd72ce9a">task::hook_abort_with_error</a></div><div class="ttdeci">void hook_abort_with_error(lua_State *lua_state, lua_Debug *)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:205</div></div>
+<div class="ttc" id="anamespacetask_html_a582591ef32f18ca5084287abb12a5754"><div class="ttname"><a href="namespacetask.html#a582591ef32f18ca5084287abb12a5754">task::OptionalStepIndex</a></div><div class="ttdeci">std::optional&lt; StepIndex &gt; OptionalStepIndex</div><div class="ttdoc">An optional step index (std::optional&lt;StepIndex&gt;).</div><div class="ttdef"><b>Definition:</b> StepIndex.h:37</div></div>
 <div class="ttc" id="anamespacetask_html_a61c33a0fd8a07764875309ab4b95e9dc"><div class="ttname"><a href="namespacetask.html#a61c33a0fd8a07764875309ab4b95e9dc">task::print_fct</a></div><div class="ttdeci">void print_fct(sol::this_state sol, sol::variadic_args va)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:258</div></div>
 <div class="ttc" id="anamespacetask_html_a62955aa8e428b13e9c51dab7a51e8c53"><div class="ttname"><a href="namespacetask.html#a62955aa8e428b13e9c51dab7a51e8c53">task::LuaInteger</a></div><div class="ttdeci">LUA_INTEGER LuaInteger</div><div class="ttdoc">The integer type used by the Lua interpreter.</div><div class="ttdef"><b>Definition:</b> Context.h:47</div></div>
 <div class="ttc" id="anamespacetask_html_a641a9ed8df01060d4121c81bc7adf8c0"><div class="ttname"><a href="namespacetask.html#a641a9ed8df01060d4121c81bc7adf8c0">task::check_script_timeout</a></div><div class="ttdeci">void check_script_timeout(lua_State *lua_state)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:92</div></div>
 <div class="ttc" id="anamespacetask_html_a7a2f55a77a523c6df3999f736e4598e3"><div class="ttname"><a href="namespacetask.html#a7a2f55a77a523c6df3999f736e4598e3">task::install_timeout_and_termination_request_hook</a></div><div class="ttdeci">void install_timeout_and_termination_request_hook(sol::state &amp;lua, TimePoint now, std::chrono::milliseconds timeout, OptionalStepIndex step_idx, const Context &amp;context, CommChannel *comm_channel, TimeoutTrigger *sequence_timeout)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:223</div></div>
-<div class="ttc" id="anamespacetask_html_a9cc5a1e6b225d929c30234e08b8a2e68"><div class="ttname"><a href="namespacetask.html#a9cc5a1e6b225d929c30234e08b8a2e68">task::OptionalStepIndex</a></div><div class="ttdeci">gul14::optional&lt; StepIndex &gt; OptionalStepIndex</div><div class="ttdoc">An optional step index (gul14::optional&lt;StepIndex&gt;).</div><div class="ttdef"><b>Definition:</b> StepIndex.h:37</div></div>
 <div class="ttc" id="anamespacetask_html_aab787a9b84854ee2aa9a60dd2d478af3"><div class="ttname"><a href="namespacetask.html#aab787a9b84854ee2aa9a60dd2d478af3">task::get_comm_channel_ptr_from_registry</a></div><div class="ttdeci">CommChannel * get_comm_channel_ptr_from_registry(lua_State *lua_state)</div><div class="ttdoc">Retrieve a pointer to the used CommChannel from the Lua registry.</div><div class="ttdef"><b>Definition:</b> lua_details.cc:134</div></div>
 <div class="ttc" id="anamespacetask_html_ab0420458f3b22f97c90b2a4a14d68b03"><div class="ttname"><a href="namespacetask.html#ab0420458f3b22f97c90b2a4a14d68b03">task::check_immediate_termination_request</a></div><div class="ttdeci">void check_immediate_termination_request(lua_State *lua_state)</div><div class="ttdef"><b>Definition:</b> lua_details.cc:74</div></div>
 <div class="ttc" id="anamespacetask_html_abf70ab352b40ab590afc363227d6e08c"><div class="ttname"><a href="namespacetask.html#abf70ab352b40ab590afc363227d6e08c">task::get_context_from_registry</a></div><div class="ttdeci">const Context &amp; get_context_from_registry(lua_State *lua_state)</div><div class="ttdoc">Retrieve a reference to the used Context from the Lua registry.</div><div class="ttdef"><b>Definition:</b> lua_details.cc:146</div></div>
@@ -152,7 +152,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 24 2025 14:51:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Jun 19 2025 07:20:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -20,7 +20,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Taskolib
-   &#160;<span id="projectnumber">1.4.2</span>
+   &#160;<span id="projectnumber">1.4.4</span>
    </div>
   </td>
  </tr>
@@ -52,16 +52,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation of <a class="el" href="namespacetask.html#acb86f7d798ec1052ae04cb23f09a287e" title="Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution...">execute_lua_script()</a> and <a class="el" href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d" title="Load a Lua script into the given Lua state and check its syntax without running it.">load_lua_script()</a>. </p>
+<div class="textblock"><p>Implementation of <a class="el" href="namespacetask.html#aaabff77abc537c20b783faa8bad153ce" title="Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution...">execute_lua_script()</a> and <a class="el" href="namespacetask.html#a4013b04d6f9102beb9a97a855653b90a" title="Load a Lua script into the given Lua state and check its syntax without running it.">load_lua_script()</a>. </p>
 <dl class="section author"><dt>Author</dt><dd>Lars Fröhlich, Marcus Walla </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>Created on November 15, 2022</dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2022 Deutsches Elektronen-Synchrotron (DESY), Hamburg</dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg</dd></dl>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 2.1 of the license, or (at your option) any later version.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
 <p>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>. </p>
 </div><div class="textblock"><code>#include &lt;stdexcept&gt;</code><br />
-<code>#include &lt;gul14/replace.h&gt;</code><br />
-<code>#include &lt;gul14/string_view.h&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
+<code>#include &lt;gul17/replace.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8h_source.html">taskolib/exceptions.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="execute__lua__script_8h_source.html">taskolib/execute_lua_script.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -69,19 +69,19 @@ Include dependency graph for execute_lua_script.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="execute__lua__script_8cc__incl.png" border="0" usemap="#aexecute__lua__script_8cc" alt=""/></div>
 <map name="aexecute__lua__script_8cc" id="aexecute__lua__script_8cc">
-<area shape="rect" title="Implementation of execute_lua_script() and load_lua_script()." alt="" coords="165,5,327,32"/>
-<area shape="rect" title=" " alt="" coords="44,169,131,196"/>
-<area shape="rect" title=" " alt="" coords="25,87,147,114"/>
-<area shape="rect" title=" " alt="" coords="172,87,320,114"/>
-<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="345,87,505,114"/>
-<area shape="rect" href="execute__lua__script_8h.html" title="Declaration of execute_lua_script() and load_lua_script()." alt="" coords="563,80,718,121"/>
-<area shape="rect" title=" " alt="" coords="238,169,305,196"/>
-<area shape="rect" title=" " alt="" coords="507,169,566,196"/>
-<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="329,169,483,196"/>
-<area shape="rect" title=" " alt="" coords="311,244,378,271"/>
-<area shape="rect" title=" " alt="" coords="403,244,529,271"/>
-<area shape="rect" title=" " alt="" coords="591,169,725,196"/>
-<area shape="rect" title=" " alt="" coords="749,169,841,196"/>
+<area shape="rect" title="Implementation of execute_lua_script() and load_lua_script()." alt="" coords="127,5,289,32"/>
+<area shape="rect" title=" " alt="" coords="18,169,105,196"/>
+<area shape="rect" title=" " alt="" coords="25,87,122,114"/>
+<area shape="rect" title=" " alt="" coords="147,87,269,114"/>
+<area shape="rect" href="exceptions_8h.html" title="Definition of the Error exception class." alt="" coords="293,87,453,114"/>
+<area shape="rect" href="execute__lua__script_8h.html" title="Declaration of execute_lua_script() and load_lua_script()." alt="" coords="512,80,667,121"/>
+<area shape="rect" title=" " alt="" coords="187,169,253,196"/>
+<area shape="rect" title=" " alt="" coords="456,169,515,196"/>
+<area shape="rect" href="StepIndex_8h.html" title="Declaration of the StepIndex type." alt="" coords="277,169,432,196"/>
+<area shape="rect" title=" " alt="" coords="273,244,340,271"/>
+<area shape="rect" title=" " alt="" coords="364,244,439,271"/>
+<area shape="rect" title=" " alt="" coords="539,169,674,196"/>
+<area shape="rect" title=" " alt="" coords="698,169,790,196"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -93,17 +93,17 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acb86f7d798ec1052ae04cb23f09a287e"><td class="memItemLeft" align="right" valign="top">gul14::expected&lt; sol::object, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#acb86f7d798ec1052ae04cb23f09a287e">task::execute_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
-<tr class="memdesc:acb86f7d798ec1052ae04cb23f09a287e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution.  <a href="namespacetask.html#acb86f7d798ec1052ae04cb23f09a287e">More...</a><br /></td></tr>
-<tr class="separator:acb86f7d798ec1052ae04cb23f09a287e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85a3be5635b05139328c99c9c1df5d7d"><td class="memItemLeft" align="right" valign="top">gul14::expected&lt; sol::load_result, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d">task::load_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
-<tr class="memdesc:a85a3be5635b05139328c99c9c1df5d7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a Lua script into the given Lua state and check its syntax without running it.  <a href="namespacetask.html#a85a3be5635b05139328c99c9c1df5d7d">More...</a><br /></td></tr>
-<tr class="separator:a85a3be5635b05139328c99c9c1df5d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaabff77abc537c20b783faa8bad153ce"><td class="memItemLeft" align="right" valign="top">gul17::expected&lt; sol::object, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#aaabff77abc537c20b783faa8bad153ce">task::execute_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
+<tr class="memdesc:aaabff77abc537c20b783faa8bad153ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a Lua script safely, intercepting all possible exceptions that may occur during its execution.  <a href="namespacetask.html#aaabff77abc537c20b783faa8bad153ce">More...</a><br /></td></tr>
+<tr class="separator:aaabff77abc537c20b783faa8bad153ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4013b04d6f9102beb9a97a855653b90a"><td class="memItemLeft" align="right" valign="top">gul17::expected&lt; sol::load_result, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetask.html#a4013b04d6f9102beb9a97a855653b90a">task::load_lua_script</a> (sol::state &amp;lua, sol::string_view script)</td></tr>
+<tr class="memdesc:a4013b04d6f9102beb9a97a855653b90a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a Lua script into the given Lua state and check its syntax without running it.  <a href="namespacetask.html#a4013b04d6f9102beb9a97a855653b90a">More...</a><br /></td></tr>
+<tr class="separator:a4013b04d6f9102beb9a97a855653b90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 24 2025 14:51:43 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Jun 19 2025 07:20:13 for Taskolib by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
