@@ -4,7 +4,7 @@
  * \date   Created on June 8, 2022
  * \brief  Declaration of the CommChannel struct.
  *
- * \copyright Copyright 2022-2023 Deutsches Elektronen-Synchrotron (DESY), Hamburg
+ * \copyright Copyright 2022-2025 Deutsches Elektronen-Synchrotron (DESY), Hamburg
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -41,7 +41,7 @@ namespace task {
  */
 struct CommChannel
 {
-    LockedQueue<Message> queue_{ 32 };
+    LockedQueue<Message> queue_{ 256 };
     std::atomic<bool> immediate_termination_requested_{ false };
 };
 
