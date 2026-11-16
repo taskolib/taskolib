@@ -15,7 +15,7 @@ project(
         'libdir=lib',
         'b_lundef=false', # use but do not link GUL
     ],
-    meson_version : '>=0.49'
+    meson_version : '>=0.54'
 )
 
 pkg_config_name = 'taskolib'
