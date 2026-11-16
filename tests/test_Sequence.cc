@@ -131,6 +131,12 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
     REQUIRE(err->get_index().has_value());
     REQUIRE(err->get_index().value() == 2);
 
+    SECTION("erase before first")
+    {
+        REQUIRE_THROWS_AS(seq.erase(seq.begin() - 1), std::out_of_range);
+        REQUIRE(seq.size() == 5);
+    }
+
     SECTION("erase first")
     {
         auto erase = seq.erase(seq.begin());
