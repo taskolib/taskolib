@@ -163,11 +163,8 @@ TEST_CASE("Sequence: erase()", "[Sequence]")
 
     SECTION("erase end")
     {
-        seq.erase(seq.end());
-        REQUIRE(not seq.empty());
-        REQUIRE(4 == seq.size());
-        REQUIRE(seq.get_error().has_value());
-        REQUIRE(seq.get_error()->get_index().value_or(-1) == 2);
+        REQUIRE_THROWS_AS(seq.erase(seq.end()), std::out_of_range);
+        REQUIRE(seq.size() == 5);
     }
 
     SECTION("erase range from beginning")

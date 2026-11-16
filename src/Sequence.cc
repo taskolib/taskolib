@@ -288,6 +288,9 @@ void Sequence::enforce_invariants()
 Sequence::ConstIterator Sequence::erase(Sequence::ConstIterator iter)
 {
     throw_if_running();
+    if (iter < steps_.cbegin() || iter >= steps_.cend())
+        throw std::out_of_range("Invalid iterator");
+
     auto return_iter = steps_.erase(iter);
 
     correct_error_index(
