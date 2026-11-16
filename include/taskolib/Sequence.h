@@ -286,7 +286,8 @@ public:
      *
      * \returns the iterator of the step after the removed one.
      *
-     * \exception Error is thrown if the sequence is currently running.
+     * \exception Error is thrown if the sequence is currently running. std::out_of_range
+     *            is thrown if the iterator is invalid.
      */
     ConstIterator erase(ConstIterator iter);
 
