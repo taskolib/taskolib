@@ -1,3 +1,9 @@
+taskolib-1-5-6 (1.5.7) unstable; urgency=low
+
+  * new version 
+
+ -- Lars Froehlich <lars.froehlich@desy.de>  Mon, 16 Nov 2026 14:48:37 +0100
+
 taskolib-1-5-6 (1.5.6) unstable; urgency=low
 
   * automatically added debian changelog entry
