@@ -1,8 +1,9 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "type": "meson",
-            "mode": "build",
+            "type": "shell",
+            "command": "ninja -C builddir",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -10,7 +11,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "label": "Meson: Build all targets",
+            "label": "Build all targets",
             "presentation": {
                 "clear": true
             }
@@ -23,7 +24,7 @@
                 "isDefault": true
             },
             "dependsOn": [
-                "Meson: Build all targets"
+                "Build all targets"
             ],
             "label": "Run unit tests",
             "presentation": {

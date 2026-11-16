@@ -21,8 +21,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Meson: Build all targets"
-
+            "preLaunchTask": "Build all targets"
         },
         {
             "name": "(gdb) Debug run_lua Playground",
@@ -60,6 +59,5 @@
                 }
             ]
         }
-
     ]
 }
